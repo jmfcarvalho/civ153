@@ -1,312 +1,245 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full overflow-hidden select-none">
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>CIV 153 - Aula 1: Introdução | DEC UFV</title>
     
-    <!-- Tailwind CSS para design ágil e responsivo -->
+    <!-- Tailwind CSS para Design Responsivo Rápido -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Montserrat (Substituto web homologado para a família Squad) -->
+
+    <!-- Google Fonts: Montserrat & League Spartan para Títulos e Corpo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,900&display=swap" rel="stylesheet">
     
     <!-- KaTeX para Renderização de Fórmulas Matemáticas de Alta Precisão -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 
-    <!-- FontAwesome para Ícones das Setas de Navegação -->
+    <!-- FontAwesome para Ícones Didáticos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- CSS Global unificado do repositório -->
-    <link rel="stylesheet" href="../../common/css/sicon-theme.css">
-
     <style>
+        /* --- VARIÁVEIS DE CORES E ESCAS TIPOGRÁFICAS CALIBRADAS --- */
+        :root {
+            --sicon-green-dark: #0D4334;
+            --sicon-green-light: #80C29D;
+            --sicon-gray-dark: #A1A1A1;
+            --sicon-gray-light: #DEDEDE;
+            --sicon-bg-light: #F4F6F5;
+
+            /* Escala Tipográfica Fluida Majorada para Caracteres Grandes */
+            --fluid-h1: clamp(2.2rem, 4.2vw, 3.4rem);  
+            --fluid-h2: clamp(1.6rem, 3.2vw, 2.4rem);  
+            --fluid-h3: clamp(1.4rem, 2.8vw, 1.95rem);
+            --fluid-body: clamp(1.25rem, 2.0vw, 1.6rem); 
+            --fluid-meta: clamp(1.05rem, 1.5vw, 1.25rem);
+            --fluid-tag: clamp(0.85rem, 1.1vw, 1.05rem);
+
+            --font-title: 'League Spartan', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #F4F6F5;
+            font-family: var(--font-body);
+            background-color: var(--sicon-bg-light);
+            overscroll-behavior: none;
         }
-        /* Ajuste do scrollbar personalizado */
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
+
+        .text-fluid-h1 { font-size: var(--fluid-h1); line-height: 1.1; font-family: var(--font-title); font-weight: 900 !important; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-size: var(--fluid-h2); line-height: 1.2; font-family: var(--font-title); font-weight: 700; letter-spacing: -0.015em; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); line-height: 1.25; font-family: var(--font-title); font-weight: 700; }
+        .text-fluid-body { font-size: var(--fluid-body); line-height: 1.6; }
+        .text-fluid-meta { font-size: var(--fluid-meta); line-height: 1.5; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+
+        /* Customização de scroll interno silencioso */
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: rgba(13, 67, 52, 0.2); border-radius: 20px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(13, 67, 52, 0.4); }
+
+        /* --- SISTEMA DE NAVEGAÇÃO REVEAL.JS NO CANTO INFERIOR DIREITO --- */
+        .reveal-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 110px;
+            height: 110px;
+            z-index: 1000;
             background: transparent;
         }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background-color: rgba(13, 67, 52, 0.2);
-            border-radius: 20px;
+        .control-arrow {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: none;
+            color: var(--sicon-gray-dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0.25;
+            pointer-events: none;
         }
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(13, 67, 52, 0.4);
+        
+        .control-arrow.nav-up    { top: 0; left: 39px; }
+        .control-arrow.nav-down  { bottom: 0; left: 39px; }
+        .control-arrow.nav-left  { top: 39px; left: 0; }
+        .control-arrow.nav-right { top: 39px; right: 0; }
+
+        .control-arrow.nav-enabled {
+            color: var(--sicon-green-light);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .control-arrow.nav-enabled:hover {
+            color: var(--sicon-green-dark);
+            transform: scale(1.1);
         }
 
-        /* Classe de brilho de alta performance exclusiva para silhuetas de ícones (sem molduras) */
-        .glow-icon {
-            filter: drop-shadow(0 0 8px rgba(128, 194, 157, 0.95)) drop-shadow(0 0 3px rgba(128, 194, 157, 0.8));
+        /* Motor do Slider com Transições Vetoriais */
+        .slide-screen {
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
         }
+
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0) scale(1); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        /* Elementos Interativos Dinâmicos */
+        .interactive-map { width: 100%; height: 280px; background: #eef5f2; border: 2px dashed #80C29D; border-radius: 1rem; position: relative; cursor: crosshair; }
+        .map-marker { position: absolute; width: 14px; height: 14px; background: #0D4334; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
     </style>
 </head>
-<body class="bg-[#F4F6F5] text-slate-800 antialiased h-full overflow-hidden select-none relative">
+<body class="w-screen h-screen overflow-hidden relative">
 
-    <!-- NOVO PAINEL FLUTUANTE HUD: Totalmente livre de fundos, caixas e molduras. Apenas setas e coordenadas limpas -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center space-y-1 w-24">
-        <span class="text-[8px] text-[#80C29D]/50 font-black uppercase tracking-widest font-mono select-none">Slide</span>
-        
-        <!-- D-Pad Flutuante Ultra-Minimalista -->
-        <div class="grid grid-cols-3 gap-1 items-center justify-center">
-            <div></div>
-            <!-- Seta Acima -->
-            <button id="nav-arrow-up" onclick="moveInGrid(0, 1)" 
-                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
-                <i class="fa-solid fa-chevron-up text-xs"></i>
-            </button>
-            <div></div>
-            
-            <!-- Seta Esquerda -->
-            <button id="nav-arrow-left" onclick="moveInGrid(-1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
-                <i class="fa-solid fa-chevron-left text-xs"></i>
-            </button>
-            <!-- Coordenadas Limpas -->
-            <div id="grid-pos-display" class="w-7 h-7 flex items-center justify-center text-[10px] font-mono text-[#80C29D] font-bold select-none">
-                0,0
-            </div>
-            <!-- Seta Direita -->
-            <button id="nav-arrow-right" onclick="moveInGrid(1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-            </button>
-            
-            <div></div>
-            <!-- Seta Abaixo -->
-            <button id="nav-arrow-down" onclick="moveInGrid(0, -1)" 
-                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
-                <i class="fa-solid fa-chevron-down text-xs"></i>
-            </button>
-            <div></div>
-        </div>
+    <!-- Indicadores Globais Fixos -->
+    <div class="fixed top-0 left-0 h-1 bg-[#80C29D] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-6 left-8 font-mono text-sm font-black text-[#A1A1A1] z-[1000]" id="slideIndicator">01 / 08</div>
+
+    <!-- Sistema de Navegação Direcional Estilo Reveal.js (Fixo no Canto Inferior Direito) -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
     </div>
 
-    <!-- Área Principal de Conteúdo Dinâmico (Preenchimento Total) -->
-    <main class="w-full h-full p-4 md:p-8 overflow-hidden relative">
+    <!-- Área de Conteúdo Principal -->
+    <main class="w-full h-full p-6 md:p-16 overflow-hidden relative">
 
-        <!-- Slide (0,0) - Capa de Apresentação Adaptativa -->
-        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Coluna Principal com Título H1 e Subtítulo H2 com Faixa Verde de Destaque -->
+        <!-- SLIDE (0,0): CAPA DA APRESENTAÇÃO -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
                 <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
-                    
-                    <!-- Card Conceitual com Faixa Lateral de 12px -->
-                    <div class="bg-white p-6 md:p-8 rounded-r-2xl border-l-[12px] border-[#0D4334] shadow-md space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="../../assets/sicon_logo/WhatsApp Image 2021-10-13 at 18.01.59.jpeg" 
-                                 alt="SICon Logo" class="h-8 w-auto object-contain"
-                                 onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/WhatsApp%20Image%202021-10-13%20at%2018.01.59.jpeg';">
-                            <span class="text-fluid-tag text-[#80C29D] font-black tracking-widest uppercase block">
-                                Universidade Federal De Viçosa • DEC
-                            </span>
+                    <div class="bg-white p-8 md:p-12 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/WhatsApp%20Image%202021-10-13%20at%2018.01.59.jpeg" alt="SICon Logo" class="h-12 w-auto object-contain">
+                            <span class="text-fluid-meta text-[#0D4334] font-black tracking-widest uppercase block">Universidade Federal de Viçosa • DEC</span>
                         </div>
-                        
-                        <!-- H1: Montserrat Heavy Bold/Black, Title Case -->
-                        <h1 class="text-fluid-h1 text-[#0D4334] font-black tracking-tight leading-none uppercase">
-                            Introdução À Mecânica Das Estruturas
-                        </h1>
-                        
-                        <!-- H2: Bold, Verde Escuro -->
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-bold tracking-tight">
-                            Aula 01 • Introdução: Arquitetura & Tecnologia
-                        </h2>
+                        <h1 class="text-fluid-h1 text-[#0D4334] uppercase">CIV 153 <br> Introdução À Mecânica Das Estruturas</h1>
+                        <h2 class="text-fluid-h2 text-[#A1A1A1] uppercase font-semibold">Aula 01 • Concepção, Arquitetura & Tecnologia</h2>
                     </div>
-
-                    <!-- Autores e Créditos -->
-                    <div class="bg-white/75 backdrop-blur p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                        <span class="text-xs font-bold text-slate-500 block uppercase tracking-wider">Professores e Colaboradores da Disciplina</span>
-                        <p class="text-fluid-meta text-slate-600 font-medium leading-relaxed">
-                            Gustavo de Souza Verissimo • José Carlos Lopes Ribeiro • <strong class="text-[#0D4334]">José Maria Franco de Carvalho</strong> • Kléos Magalhães Lenz César Jr. • Mateus Couri Petrauski • Carol Ferreira Rezende Santos
-                        </p>
+                    <div class="bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-[#DEDEDE] shadow-sm">
+                        <span class="text-xs font-bold text-[#A1A1A1] block uppercase tracking-wider mb-1">Corpo Docente</span>
+                        <p class="text-fluid-meta text-slate-700 font-bold">Prof. Dr. José Maria Franco de Carvalho e Equipe Colaboradora</p>
                     </div>
                 </div>
-
-                <!-- Coluna de Introdução e Boas-Vindas -->
-                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-6 md:p-8 rounded-2xl shadow-xl border border-white/5">
+                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-8 md:p-12 rounded-3xl shadow-2xl">
                     <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Plataforma Interativa</span>
-                        <h3 class="text-fluid-h3 text-white font-bold leading-snug">Seja Bem-Vindo Ao Portal De Aprendizado</h3>
-                        <p class="text-fluid-body text-slate-200 leading-relaxed text-sm">
-                            Esta disciplina foi planejada especificamente para graduandos de arquitetura e urbanismo com foco em inteligência construtiva tátil e digital.
-                        </p>
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Grupo SICon</span>
+                        <h3 class="text-fluid-h3 text-white font-bold leading-snug">Inteligência Construtiva</h3>
+                        <p class="text-fluid-body text-slate-200 text-sm leading-relaxed">A engenharia estrutural como fundação material e viabilidade para a expressão e concepção geométrica espacial.</p>
                     </div>
-
-                    <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center">
-                        <span class="text-[10px] font-mono text-[#80C29D] tracking-widest uppercase">Começar</span>
-                        <button onclick="moveInGrid(1, 0)" class="px-5 py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl font-bold hover:scale-105 hover:bg-[#80C29D]/95 transition-all duration-200 shadow-lg flex items-center space-x-2">
-                            <span>Avançar</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
+                    <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center text-[11px] font-mono tracking-widest text-[#80C29D] uppercase">
+                        <span>Navegação</span>
+                        <span class="animate-pulse">Use as Setas do Cursor <i class="fa-solid fa-arrow-pointer ml-1"></i></span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide (1,0) - Quiz de Expectativas Interativo -->
-        <div id="slide-quiz" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Card de Perguntas Passo a Passo -->
-                <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between min-h-[420px]">
+        <!-- SLIDE (1,0): ATIVIDADES INTERATIVAS (CONSOLIDADO: MAPA + NUVEM) -->
+        <div id="slide-interativo" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
                     <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-1">Mapeamento Inicial</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black leading-tight">Quem É Você No Mundo Da Concepção Estrutural?</h2>
-                        <p class="text-fluid-meta text-slate-500 mt-1">Sua percepção inicial nos ajuda a personalizar as dinâmicas práticas.</p>
-                        
-                        <!-- Etapas do Form -->
-                        <div class="mt-6">
-                            <!-- Passo 1 -->
-                            <div id="quiz-step-1" class="quiz-step space-y-4">
-                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">1. De qual região ou cidade você é?</label>
-                                <input type="text" id="quiz-origin" placeholder="Ex: Viçosa - MG, BH, Vitória..." 
-                                       class="w-full p-4 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#80C29D] text-sm">
-                            </div>
-
-                            <!-- Passo 2 -->
-                            <div id="quiz-step-2" class="quiz-step hidden space-y-4">
-                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">2. Qual sua maior expectativa no curso?</label>
-                                <div class="grid grid-cols-1 gap-2">
-                                    <button onclick="selectExpectation('Concepção de projetos')" class="quiz-opt w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">💡 Aprender a conceber formas arquitetônicas arrojadas e livres</button>
-                                    <button onclick="selectExpectation('Segurança estrutural')" class="quiz-opt w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🛡️ Entender a física dos esforços e caminhos de carga</button>
-                                    <button onclick="selectExpectation('Diálogo profissional')" class="quiz-opt w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">💬 Aprender a dialogar com maestria com engenheiros estruturistas</button>
-                                </div>
-                            </div>
-
-                            <!-- Passo 3 -->
-                            <div id="quiz-step-3" class="quiz-step hidden space-y-4">
-                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">3. Como você enxerga as estruturas hoje?</label>
-                                <div class="grid grid-cols-1 gap-2">
-                                    <button onclick="selectPerception('Parte estética indissociável')" class="quiz-opt-perc w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🖼️ Uma escultura que define a própria identidade espacial do edifício</button>
-                                    <button onclick="selectPerception('Apenas suporte físico')" class="quiz-opt-perc w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🔧 Um suporte puramente técnico que idealmente deve ser invisível</button>
-                                    <button onclick="selectPerception('Uma dinâmica lúdica')" class="quiz-opt-perc w-full text-left p-3 border border-slate-200 rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🎲 Um jogo de xadrez geométrico entre as forças da natureza</button>
-                                </div>
-                            </div>
-
-                            <!-- Passo 4 -->
-                            <div id="quiz-step-4" class="quiz-step hidden space-y-4 text-center">
-                                <span class="text-5xl">🏛️</span>
-                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Expectativas Registradas!</h3>
-                                <p id="quiz-profile-desc" class="text-fluid-body text-slate-600 font-medium text-sm px-4 leading-relaxed"></p>
-                                <span class="text-[10px] text-slate-400 font-semibold block mt-4">Estes dados serão comparados com seu perfil ao término da disciplina.</span>
-                            </div>
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full mb-3 inline-block">Mapeamento Turma</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] mb-2">De onde você vem?</h2>
+                        <p class="text-sm text-slate-500 mb-4">Clique no mapa abaixo para simular graficamente sua origem geográfica síncrona.</p>
+                        <div class="interactive-map" id="mapContainer">
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40 font-bold text-sm text-[#0D4334]">[Área de Mapeamento Interativo]</div>
                         </div>
-                    </div>
-
-                    <!-- Navegação do Quiz -->
-                    <div class="mt-6 pt-6 border-t border-slate-100 flex justify-between items-center">
-                        <button id="quiz-prev-btn" onclick="prevQuizStep()" class="px-4 py-2 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 transition-colors font-bold disabled:opacity-30" disabled>Anterior</button>
-                        <button id="quiz-next-btn" onclick="nextQuizStep()" class="px-4 py-2 bg-[#0D4334] text-white rounded-lg hover:bg-[#0D4334]/90 transition-colors font-bold">Avançar</button>
                     </div>
                 </div>
-
-                <!-- Card de Registro de Presença Oficial -->
-                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-8 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Frequência Digital</span>
-                        <h3 class="text-fluid-h3 font-black leading-tight">Marque Sua Presença</h3>
-                        <p class="text-fluid-meta text-slate-300 leading-relaxed text-sm">
-                            Escaneie o QR Code abaixo com seu celular para submeter seu formulário e computar sua presença oficial para a aula de hoje.
-                        </p>
-                    </div>
-
-                    <div class="my-6 flex justify-center">
-                        <div class="bg-white p-3 rounded-2xl shadow-xl">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://forms.gle/exemploQuizNivelamentoCIV153" 
-                                 alt="QR Code Chamada" class="w-32 h-32 md:w-36 md:h-36 object-contain">
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full mb-3 inline-block">Expectativas</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] mb-2">Nuvem de Percepções</h2>
+                        <p class="text-sm text-slate-500 mb-4">Insira palavras-chaves que definem sua visão sobre Mecânica.</p>
+                        <div class="flex space-x-2 mb-4">
+                            <input type="text" id="tagInput" placeholder="Ex: Estabilidade, Cálculo..." class="flex-1 px-4 py-3 text-base border border-[#DEDEDE] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#80C29D]">
+                            <button onclick="addTag()" class="px-5 py-3 bg-[#0D4334] text-xs font-bold text-white rounded-xl uppercase tracking-wider hover:bg-[#0D4334]/90">Adicionar</button>
                         </div>
-                    </div>
-
-                    <div class="text-center space-y-1">
-                        <span class="text-[9px] text-[#80C29D] font-mono block uppercase">Não conseguiu escanear?</span>
-                        <a href="https://forms.gle/exemploQuizNivelamentoCIV153" target="_blank" class="text-xs hover:underline text-white font-semibold">Acesse o Formulário Google Forms de Presença</a>
+                        <div id="tagCloud" class="flex flex-wrap gap-2 p-4 bg-[#F4F6F5] rounded-xl min-h-[140px] items-start">
+                            <span class="px-4 py-1.5 bg-[#80C29D]/20 text-[#0D4334] rounded-full text-sm font-bold">Forma</span>
+                            <span class="px-4 py-1.5 bg-[#80C29D]/20 text-[#0D4334] rounded-full text-sm font-bold">Segurança</span>
+                            <span class="px-4 py-1.5 bg-[#80C29D]/20 text-[#0D4334] rounded-full text-sm font-bold">Estabilidade</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide (2,0) - Tecnologia e Estrutura Curricular -->
-        <div id="slide-arquitetura-tecnologia" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Conteúdo Teórico de Conexão entre Disciplinas -->
-                <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
+        <!-- SLIDE (2,0): POSICIONAMENTO CURRICULAR E TRILHA UFV -->
+        <div id="slide-trilha" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
                     <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-1">Ciência Construtiva</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black">A Arquitetura Como Ciência Social Aplicada</h2>
-                        <p class="text-fluid-body text-slate-600 font-medium leading-relaxed mt-2 text-sm">
-                            A beleza plástica depende inteiramente do amparo físico. Na UFV, a grade é estruturada de forma modular para consolidar essa competência.
-                        </p>
-
-                        <!-- Diagrama Simplificado de Áreas -->
-                        <div class="mt-6 p-4 bg-[#F4F6F5] rounded-xl border border-slate-200">
-                            <div class="flex flex-col items-center space-y-4">
-                                <div class="px-4 py-2 bg-[#0D4334] text-white rounded-lg font-bold text-xs uppercase tracking-wider">Arquitetura</div>
-                                <div class="w-px h-6 bg-[#A1A1A1]"></div>
-                                <div class="px-4 py-2 bg-slate-300 text-[#0D4334] rounded-lg font-bold text-xs uppercase tracking-wider">Tecnologia</div>
-                                <div class="w-full flex justify-around items-center">
-                                    <div class="text-center">
-                                        <div class="w-px h-6 bg-[#A1A1A1] mx-auto"></div>
-                                        <div class="px-3 py-1 bg-white border border-[#DEDEDE] rounded text-[10px] font-bold text-[#0D4334]">Materiais</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="w-px h-6 bg-[#A1A1A1] mx-auto"></div>
-                                        <div class="px-3 py-1 bg-white border border-[#0D4334] rounded text-[10px] font-bold text-[#0D4334]">Estruturas</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="w-px h-6 bg-[#A1A1A1] mx-auto"></div>
-                                        <div class="px-3 py-1 bg-white border border-[#DEDEDE] rounded text-[10px] font-bold text-[#0D4334]">BIM & CAD</div>
-                                    </div>
-                                </div>
-                            </div>
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full mb-2 inline-block">Matriz de Tecnologia</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] mb-4">A Estrutura na Formação</h2>
+                        <p class="text-fluid-body text-slate-600 leading-relaxed mb-4">A expressão da arquitetura demanda estabilidade mecânica inerente. Este componente curricular desenvolve a sensibilidade intuitiva das formas sob ação de forças.</p>
+                        <div class="p-5 bg-[#F4F6F5] border border-[#DEDEDE] rounded-xl space-y-2">
+                            <div class="text-sm font-bold text-[#0D4334] flex items-center space-x-2"><i class="fa-solid fa-circle-nodes"></i> <span>Integração de Escopo:</span></div>
+                            <p class="text-sm text-slate-500 font-semibold">• Materiais e Construção Civil<br>• Modelagem Computacional & BIM<br>• <strong>Mecânica Aplicada (CIV 153)</strong></p>
                         </div>
                     </div>
-
-                    <div class="mt-4 p-3 bg-slate-50 border border-slate-100 rounded-lg text-xs text-slate-500 leading-relaxed font-semibold">
-                        Nenhuma forma se materializa sem se submeter às regras estritas de gravidade, flexão e cisalhamento.
-                    </div>
                 </div>
-
-                <!-- Linha Curricular na UFV -->
-                <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
                     <div>
-                        <span class="text-fluid-tag text-slate-400 font-bold block">Trilha Acadêmica</span>
-                        <h3 class="text-fluid-h3 text-[#0D4334] font-black mt-1">Sua Trilha Curricular Em Estruturas</h3>
-                        <p class="text-fluid-meta text-slate-500 mt-2 text-sm leading-relaxed">As quatro etapas obrigatórias de modelagem e cálculo:</p>
-                        
-                        <div class="mt-4 space-y-2">
-                            <!-- CIV 153 -->
-                            <div class="p-3 bg-[#0D4334] text-white rounded-xl flex items-center justify-between shadow-md">
-                                <span class="font-bold text-xs font-mono">CIV 153</span>
-                                <span class="text-xs font-semibold">Introdução à Mecânica das Estruturas</span>
-                                <span class="text-[9px] bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded font-black">ATUAL</span>
+                        <span class="text-fluid-tag text-[#A1A1A1] font-bold block mb-2">Encadeamento Metodológico</span>
+                        <h3 class="text-fluid-h3 text-[#0D4334] mb-4">A Trilha de Estruturas DEC/UFV</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-[#0D4334] text-white rounded-xl flex justify-between items-center shadow-md">
+                                <span class="font-mono text-sm font-bold bg-white/10 px-2 py-1 rounded">CIV 153</span>
+                                <span class="text-sm font-bold">Introdução à Mecânica das Estruturas</span>
+                                <span class="text-[10px] bg-[#80C29D] text-[#0D4334] px-3 py-1 rounded-full font-black">Foco Atual</span>
                             </div>
-                            <!-- CIV 250 -->
-                            <div class="p-3 bg-slate-50 text-slate-500 border border-slate-200 rounded-xl flex items-center justify-between">
-                                <span class="font-bold text-xs font-mono">CIV 250</span>
-                                <span class="text-xs font-medium">Fundamentos de Estruturas</span>
-                                <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
+                            <div class="p-4 bg-slate-50 text-slate-500 border border-[#DEDEDE] rounded-xl flex justify-between items-center opacity-70">
+                                <span class="font-mono text-sm font-bold bg-slate-200 px-2 py-1 rounded">CIV 250</span>
+                                <span class="text-sm font-medium">Fundamentos de Estruturas</span>
+                                <i class="fa-solid fa-lock text-sm text-slate-400"></i>
                             </div>
-                            <!-- CIV 356 -->
-                            <div class="p-3 bg-slate-50 text-slate-500 border border-slate-200 rounded-xl flex items-center justify-between">
-                                <span class="font-bold text-xs font-mono">CIV 356</span>
-                                <span class="text-xs font-medium">Sistemas Estruturais 1</span>
-                                <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
-                            </div>
-                            <!-- CIV 357 -->
-                            <div class="p-3 bg-slate-50 text-slate-500 border border-slate-200 rounded-xl flex items-center justify-between">
-                                <span class="font-bold text-xs font-mono">CIV 357</span>
-                                <span class="text-xs font-medium">Sistemas Estruturais 2</span>
-                                <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
+                            <div class="p-4 bg-slate-50 text-slate-500 border border-[#DEDEDE] rounded-xl flex justify-between items-center opacity-70">
+                                <span class="font-mono text-sm font-bold bg-slate-200 px-2 py-1 rounded">CIV 356 / 357</span>
+                                <span class="text-sm font-medium">Sistemas Estruturais I e II</span>
+                                <i class="fa-solid fa-lock text-sm text-slate-400"></i>
                             </div>
                         </div>
                     </div>
@@ -314,325 +247,206 @@
             </div>
         </div>
 
-        <!-- Slide (3,0) - Engenharia Estrutural e Mecânica -->
-        <div id="slide-engenharia-estrutural" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Card Conceitual com Faixa de 12px -->
-                <div class="lg:col-span-6 bg-white p-6 md:p-8 rounded-r-2xl border-l-[12px] border-[#0D4334] shadow-md flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Mecânica Aplicada</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black leading-tight">O Que É A Engenharia Estrutural?</h2>
-                        <blockquote class="text-fluid-body text-slate-600 font-medium leading-relaxed italic border-l-4 border-slate-200 pl-4 py-2 text-sm">
-                            "É o ramo da engenharia que se dedica à aplicação dos conhecimentos da mecânica dos sólidos ao projeto de estruturas de construções e máquinas."
-                        </blockquote>
-                        <p class="text-fluid-meta text-slate-500 leading-relaxed text-sm">
-                            A <strong>Mecânica</strong> descreve as condições de repouso e movimento sob a ação de forças. A <strong>Estática</strong> foca nas condições de equilíbrio internas e externas em corpos estacionários.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Painel Técnico de Fórmulas -->
-                <div class="lg:col-span-6 bg-[#0D4334] text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col justify-between">
-                    <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-2">Equação Geral</span>
-                        <h3 class="text-fluid-h3 text-white font-bold leading-tight">Cálculo De Tensão Resultante</h3>
-                        <p class="text-fluid-meta text-slate-300 mt-1 text-sm">A resistência das seções transversais sob flexão e compressão:</p>
-                        
-                        <!-- KaTeX Math box de calibração -->
-                        <div class="my-6 bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                            <div id="katex-tension-formula" class="text-white text-xl py-2">
-                                $$\sigma = \frac{N}{A} \pm \frac{M}{W}$$
-                            </div>
+        <!-- SLIDE (3,0): CONCEITO E COMPARAÇÃO: MECÂNICA VS ESTÁTICA -->
+        <div id="slide-conceitos" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-12 bg-white p-8 md:p-12 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-4">
+                    <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full inline-block">Mecânica dos Sólidos</span>
+                    <h2 class="text-fluid-h2 text-[#0D4334]">Engenharia Estrutural Aplicada</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                        <div class="p-6 bg-[#F4F6F5] border border-[#DEDEDE] rounded-xl">
+                            <h4 class="font-bold text-[#0D4334] text-lg mb-1">Mecânica Geral</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Ramo da física clássica dedicado a descrever e prever as condições de repouso ou movimento de corpos sob a ação de forças e conjugados externos.</p>
+                        </div>
+                        <div class="p-6 bg-white border-2 border-[#0D4334] rounded-xl">
+                            <h4 class="font-bold text-[#0D4334] text-lg mb-1">Estática Estrutural</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Estudo específico focado no equilíbrio estrito de corpos em repouso (<span id="katex-sum-f"></span>). O objetivo central é manter a estabilidade espacial invariável.</p>
                         </div>
                     </div>
+                    <blockquote class="text-sm text-slate-600 italic border-l-4 border-[#80C29D] pl-4 py-2 bg-[#F4F6F5] rounded-r-lg">
+                        "Não se pode imaginar uma forma que não necessite de uma estrutura, ou uma estrutura que não tenha uma forma." <br>
+                        <span class="block text-right font-bold text-[#0D4334] not-italic mt-1">— Yopanan C. P. Rebello (2010)</span>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
 
-                    <div class="grid grid-cols-2 gap-4 text-[10px] text-slate-300 font-medium border-t border-white/10 pt-4">
+        <!-- SLIDE (4,0): GALERIA HISTÓRICA E INSPIRACIONAL -->
+        <div id="slide-galeria" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-3 bg-[#0D4334] text-white p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-fluid-h2 text-white leading-tight uppercase">Morfologia Analítica</h2>
+                        <p class="text-sm text-slate-200 mt-2">A evolução histórica reflete o domínio sobre a transferência e distribuição de esforços físicos internos.</p>
+                    </div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-[#80C29D]">História das Estruturas</span>
+                </div>
+                <div class="lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-2xl border border-[#DEDEDE] shadow-sm flex flex-col justify-between">
                         <div>
-                            <span class="text-[#80C29D] font-bold">$\sigma$:</span> Tensão resultante ($MPa$)
+                            <h4 class="font-bold text-[#0D4334] text-base uppercase">O Partenon (Antiguidade)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Consolidação e perfeição do sistema trilítico elementar: pilares/colunas sob compressão suportando vigas horizontais sob flexão direta.</p>
                         </div>
+                        <div class="mt-4 p-2 bg-[#F4F6F5] rounded text-[11px] font-mono text-center text-[#A1A1A1]">SISTEMA TRILÍTICO CLÁSSICO</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-[#DEDEDE] shadow-sm flex flex-col justify-between">
                         <div>
-                            <span class="text-[#80C29D] font-bold">$N$:</span> Esforço Normal ($kN$)
+                            <h4 class="font-bold text-[#0D4334] text-base uppercase">Catedrais Góticas (Idade Média)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Uso de arcos ogivais e contrafortes externos para direcionar e transferir linhas de pressões de compressão, vencendo grandes alturas.</p>
                         </div>
+                        <div class="mt-4 p-2 bg-[#F4F6F5] rounded text-[11px] font-mono text-center text-[#A1A1A1]">ARCOS E VETORES DE COMPRESSÃO</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-[#DEDEDE] shadow-sm flex flex-col justify-between">
                         <div>
-                            <span class="text-[#80C29D] font-bold">$A$:</span> Área Transversal ($cm^2$)
+                            <h4 class="font-bold text-[#0D4334] text-base uppercase">Catedral de Brasília (Modernismo)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Oscar Niemeyer demonstra a maleabilidade plástica do concreto armado, unificando a forma arquitetônica exterior à própria engenharia estrutural.</p>
                         </div>
+                        <div class="mt-4 p-2 bg-[#F4F6F5] rounded text-[11px] font-mono text-center text-[#A1A1A1]">CONCRETO ARMADO DE CASCA LIVRE</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-[#DEDEDE] shadow-sm flex flex-col justify-between">
                         <div>
-                            <span class="text-[#80C29D] font-bold">$M / W$:</span> Momento fletor
+                            <h4 class="font-bold text-[#0D4334] text-base uppercase">Modelos Contemporâneos</h4>
+                            <p class="text-xs text-slate-500 mt-1">Grandes vãos suportados por treliças espaciais tridimensionais metálicas e sistemas estaiados de altíssimo desempenho tecnológico.</p>
                         </div>
+                        <div class="mt-4 p-2 bg-[#F4F6F5] rounded text-[11px] font-mono text-center text-[#A1A1A1]">TRELIÇAS DE ALTA PERFORMANCE</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide (4,0) - Gaudí e a Concepção Estrutural -->
-        <div id="slide-concepcao-gaudi" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Filosofia Gaudí -->
-                <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
+        <!-- SLIDE (5,0): MODELO MATEMÁTICO E EQUAÇÃO DE TENSÃO -->
+        <div id="slide-equacao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-l-3xl border-l-[14px] border-[#0D4334] shadow-xl flex flex-col justify-between">
                     <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Concepção Natural</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black">Poesia E Equilíbrio Estático</h2>
-                        
-                        <blockquote class="text-fluid-body text-slate-600 font-medium leading-relaxed italic border-l-4 border-[#0D4334] pl-4 py-2 text-sm">
-                            "Não se pode imaginar uma forma que não necessite de uma estrutura, ou uma estrutura que não tenha uma forma. Dessa maneira, não se pode conceber uma forma sem se conceber automaticamente uma estrutura e vice-versa."
-                        </blockquote>
-                        
-                        <div class="text-right">
-                            <span class="text-xs font-bold text-[#0D4334] block">Yopanan C. P. Rebello (2010)</span>
-                            <span class="text-[9px] text-slate-400 font-semibold uppercase">A Concepção Estrutural e a Arquitetura</span>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-500 leading-relaxed font-semibold">
-                        Gaudí é um divisor de águas na arquitetura. Ele utilizava as leis da gravidade a seu favor em vez de tentar resistir a elas.
+                        <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Análise Analítica</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334]">Estado de Tensão Resultante</h2>
+                        <p class="text-fluid-body text-slate-600 text-sm leading-relaxed">O dimensionamento geométrico seguro requer a superposição dos efeitos gerados por esforços axiais normais e momentos fletores atuantes nas seções transversais.</p>
+                        <p class="text-sm text-[#0D4334] font-bold">Pressione a seta direcional para baixo (↓) no cursor para abrir o simulador interativo de Gaudí.</p>
                     </div>
                 </div>
-
-                <!-- Chamado para o Laboratório Virtual -->
-                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Simulador Físico</span>
-                        <h3 class="text-fluid-h3 font-bold text-white leading-tight">O Mistério Dos Modelos Funiculares</h3>
-                        <p class="text-fluid-meta text-slate-300 text-sm leading-relaxed">
-                            A técnica revolucionária de Gaudí consistia em suspender cabos flexíveis e adicionar cargas gravitacionais, gerando a forma ideal para arcos de pedra.
-                        </p>
-                    </div>
-
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col items-center space-y-3">
-                        <span class="text-[9px] text-[#80C29D] font-mono font-bold uppercase tracking-widest">Interação Disponível</span>
-                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl font-bold hover:scale-[1.02] hover:bg-[#80C29D]/95 transition-all shadow-lg flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-arrow-up"></i>
-                            <span>Acessar Simulador de Gaudí</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide (4,1) - Deep Dive: Simulador Funicular Interativo -->
-        <!-- Bifurcação Vertical da aula para laboratório interativo de física de cabos -->
-        <div id="slide-gaudi-deepdive" class="slide-screen slide-hidden-up flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Esquerda: O simulador SVG Interativo -->
-                <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
+                <div class="lg:col-span-6 bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-2xl flex flex-col justify-between">
                     <div>
-                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-3">
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2">Formalismo Matemático</span>
+                        <h3 class="text-fluid-h3 text-white font-bold leading-tight">Equação de Distribuição Linear</h3>
+                        <div class="my-8 bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                            <div id="katex-tension-formula" class="text-white text-3xl py-2 min-h-[70px]"></div>
+                        </div>
+                        <p class="text-xs text-slate-300 font-light leading-relaxed">Representa numericamente a transição de tensões internas normais combinadas ao longo de elementos solicitados por flexão composta pura.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-xs font-black uppercase tracking-wider shadow-lg hover:scale-[1.01] transition-all">Acessar Simulador de Gaudí <i class="fa-solid fa-arrow-down ml-1"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): BIFURCAÇÃO VERTICAL - SIMULADOR INTERATIVO GAUDÍ -->
+        <div id="slide-gaudi-deepdive" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
                             <div>
-                                <span class="text-fluid-tag text-[#80C29D] font-black">Laboratório de Compressão</span>
-                                <h2 class="text-fluid-h2 text-[#0D4334] font-black">Equilíbrio Funicular Interativo</h2>
+                                <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Física Interativa</span>
+                                <h2 class="text-fluid-h2 text-[#0D4334]">Modelagem Funicular Invertida</h2>
                             </div>
-                            <button id="toggle-arch-mode" onclick="toggleArchMode()" class="px-4 py-2 bg-[#0D4334] text-white text-xs font-bold rounded-xl hover:bg-[#0D4334]/90 shadow transition-colors flex items-center space-x-2 self-start sm:self-center">
+                            <button id="toggle-arch-mode" onclick="toggleArchMode()" class="px-4 py-2 bg-[#0D4334] text-white text-xs font-black rounded-xl shadow-md hover:bg-[#0D4334]/90 transition-all uppercase tracking-wider flex items-center space-x-2">
                                 <i class="fa-solid fa-arrows-up-down"></i>
                                 <span id="arch-mode-label">Inverter Arco (Compressão)</span>
                             </button>
                         </div>
-                        <p class="text-fluid-meta text-slate-500 mb-4 text-xs">
-                            Arraste os sliders abaixo para ajustar a intensidade das cargas no cabo flexível e veja como a linha de forças se deforma para manter o equilíbrio estático das reações de apoio.
-                        </p>
                     </div>
-
-                    <!-- Canvas do SVG do Funicular -->
-                    <div class="bg-slate-900 rounded-xl relative p-4 h-64 md:h-72 w-full flex items-center justify-center overflow-hidden border border-slate-800 shadow-inner">
+                    <div class="bg-slate-950 rounded-2xl relative p-4 h-56 w-full flex items-center justify-center overflow-hidden shadow-inner border border-slate-800">
                         <svg id="funicular-svg" viewBox="0 0 600 300" class="w-full h-full">
-                            <!-- Cabo funicular -->
-                            <path id="cable-path" d="M 50,50 L 150,150 L 300,220 L 450,150 L 550,50" 
-                                  fill="none" stroke="#80C29D" stroke-width="4" stroke-dasharray="1 1" class="transition-all duration-300"></path>
-                            
-                            <!-- Apoios Fixos -->
+                            <path id="cable-path" d="M 50,50 L 150,150 L 300,220 L 450,150 L 550,50" fill="none" stroke="#80C29D" stroke-width="4" stroke-dasharray="2 2" class="transition-all duration-300"></path>
                             <circle cx="50" cy="50" r="8" fill="#A1A1A1"></circle>
                             <circle cx="550" cy="50" r="8" fill="#A1A1A1"></circle>
-
-                            <!-- Nós e Vetores de Força -->
                             <g id="weight-nodes">
                                 <line id="weight-line-1" x1="150" y1="150" x2="150" y2="190" stroke="#A1A1A1" stroke-width="2"></line>
                                 <circle id="weight-node-1" cx="150" cy="190" r="10" fill="#0D4334"></circle>
-
                                 <line id="weight-line-2" x1="300" y1="220" x2="300" y2="280" stroke="#A1A1A1" stroke-width="2"></line>
                                 <circle id="weight-node-2" cx="300" cy="280" r="14" fill="#0D4334"></circle>
-
                                 <line id="weight-line-3" x1="450" y1="150" x2="450" y2="190" stroke="#A1A1A1" stroke-width="2"></line>
                                 <circle id="weight-node-3" cx="450" cy="190" r="10" fill="#0D4334"></circle>
                             </g>
                         </svg>
-                        
-                        <!-- Tag Indicadora de Estado -->
-                        <span id="simulator-state-tag" class="absolute top-4 right-4 bg-[#80C29D] text-[#0D4334] text-[9px] font-mono font-black uppercase px-3 py-1 rounded-full shadow-sm">
-                            Tração Pura (Cabo Suspenso)
-                        </span>
+                        <span id="simulator-state-tag" class="absolute top-4 right-4 bg-[#80C29D] text-[#0D4334] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md">Tração Pura</span>
                     </div>
-
-                    <!-- Controles deslizantes de carga -->
-                    <div class="grid grid-cols-3 gap-4 mt-4">
-                        <div class="space-y-1">
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block">Esquerda (P1)</label>
-                            <input type="range" id="slider-p1" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block">Central (P2)</label>
-                            <input type="range" id="slider-p2" min="60" max="250" value="150" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[9px] font-bold text-slate-500 uppercase block">Direita (P3)</label>
-                            <input type="range" id="slider-p3" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
-                        </div>
+                    <div class="grid grid-cols-3 gap-4 mt-2">
+                        <div class="space-y-1"><label class="text-[9px] font-bold text-[#A1A1A1] uppercase block">Carga P1</label><input type="range" id="slider-p1" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]"></div>
+                        <div class="space-y-1"><label class="text-[9px] font-bold text-[#A1A1A1] uppercase block">Carga P2</label><input type="range" id="slider-p2" min="60" max="250" value="150" oninput="updateSimulation()" class="w-full accent-[#0D4334]"></div>
+                        <div class="space-y-1"><label class="text-[9px] font-bold text-[#A1A1A1] uppercase block">Carga P3</label><input type="range" id="slider-p3" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]"></div>
                     </div>
                 </div>
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 md:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <p class="text-xs text-slate-300 font-medium leading-relaxed">Gaudí determinava a geometria ideal de arcos tridimensionais pendurando massas proporcionais em cordas. Ao inverter a catenária verticalmente, obtém-se estabilidade por compressão axial estrita.</p>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest">Retornar ao Fluxo Principal</button>
+                </div>
+            </div>
+        </div>
 
-                <!-- Painel de Retorno da Bifurcação -->
-                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Análise Estática</span>
-                        <h3 class="text-fluid-h3 font-bold text-white leading-tight">De Cabeça Para Baixo: O Arco Catemário</h3>
-                        <p class="text-fluid-meta text-slate-300 leading-relaxed text-xs">
-                            Em sua forma suspensa sob gravidade, o cabo se curva exclusivamente sob tração pura (funicular).
-                        </p>
-                        <p class="text-fluid-meta text-slate-300 leading-relaxed text-xs">
-                            Ao espelhar este comportamento no plano vertical para cima, temos a linha de pressões perfeita para um arco trabalhando estritamente sob **compressão pura**. Esta é a base matemática de estabilidade das ogivas e cúpulas.
-                        </p>
+        <!-- SLIDE (6,0): CRITÉRIOS DE AVALIAÇÃO DO CONTRATO DIDÁTICO -->
+        <div id="slide-avaliacao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-7 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full mb-3 inline-block">Planejamento</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] mb-4">Estrutura de Distribuição de Créditos</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="p-4 bg-[#F4F6F5] border-t-4 border-[#0D4334] rounded text-center shadow-sm">
+                                <span class="block font-black text-2xl text-[#0D4334]">40pt</span>
+                                <span class="text-[11px] font-semibold text-slate-500 block mt-1">Quizzes & Forms</span>
+                            </div>
+                            <div class="p-4 bg-white border border-[#DEDEDE] border-t-4 border-[#A1A1A1] rounded text-center shadow-sm">
+                                <span class="block font-black text-2xl text-slate-700">20pt</span>
+                                <span class="text-[11px] font-semibold text-slate-500 block mt-1">Prova Prática P1</span>
+                            </div>
+                            <div class="p-4 bg-white border border-[#DEDEDE] border-t-4 border-[#A1A1A1] rounded text-center shadow-sm">
+                                <span class="block font-black text-2xl text-slate-700">20pt</span>
+                                <span class="text-[11px] font-semibold text-slate-500 block mt-1">Prova Prática P2</span>
+                            </div>
+                            <div class="p-4 bg-white border border-[#DEDEDE] border-t-4 border-[#A1A1A1] rounded text-center shadow-sm">
+                                <span class="block font-black text-2xl text-slate-700">20pt</span>
+                                <span class="text-[11px] font-semibold text-slate-500 block mt-1">Prova Prática P3</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 bg-slate-100 rounded-xl text-sm font-bold text-slate-600">Total: 100 Pontos | Nota mínima de aprovação regimental: 60 Pontos.</div>
                     </div>
-
-                    <div class="pt-4 border-t border-white/10">
-                        <button onclick="moveInGrid(0, -1)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-arrow-down"></i>
-                            <span>Retornar ao Fluxo Horizontal</span>
-                        </button>
+                </div>
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Frequência Síncrona</span>
+                        <h3 class="text-fluid-h3 font-black leading-tight text-white">Ata e Verificação Digital</h3>
+                        <p class="text-fluid-meta text-slate-300 text-xs leading-relaxed">A leitura do QR Code ou clique no hiperlink realiza o direcionamento direto para a ata oficial de presença e quiz dinâmico via Google Forms.</p>
+                    </div>
+                    <div class="my-4 flex justify-center">
+                        <div class="bg-white p-3 rounded-2xl shadow-2xl">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://forms.gle/exemploQuizNivelamentoCIV153" alt="QR Code Presença" class="w-28 h-28 object-contain">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="https://forms.gle/exemploQuizNivelamentoCIV153" target="_blank" class="text-[11px] hover:underline text-[#80C29D] font-bold uppercase tracking-wider">Acessar Formulário de Presença</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide (5,0) - Modelos Físicos de Aprendizado -->
-        <div id="slide-modelos-fisicos" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Modelagem Prática -->
-                <div class="lg:col-span-6 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <span class="text-fluid-tag text-[#80C29D] font-black block">Intuição Tátil</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black leading-tight">O Poder Dos Modelos Qualitativos</h2>
-                        <p class="text-fluid-body text-slate-600 font-medium leading-relaxed text-sm">
-                            A intuição estrutural se adquire sentindo o material. O ensaio prático e a simulação física nos mostram exatamente onde as peças flexionam, tensionam e deformam.
-                        </p>
-                        <p class="text-fluid-meta text-slate-500 leading-relaxed text-sm">
-                            A disciplina incentiva a busca de limites estáticos através de competições construtivas que estimulam as capacidades lúdicas da engenharia.
-                        </p>
-                    </div>
-
-                    <div class="mt-4 p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center space-x-3 text-slate-500 text-xs font-bold">
-                        <i class="fa-solid fa-graduation-cap text-[#0D4334]"></i>
-                        <span>Ensaio de rigidez e colapso de treliças.</span>
-                    </div>
-                </div>
-
-                <!-- Detalhamento de Atividades Práticas -->
-                <div class="lg:col-span-6 bg-[#0D4334] text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-2">Jornada Prática</span>
-                        <h3 class="text-fluid-h3 text-white font-bold leading-tight">Projetos Práticos Em Equipe</h3>
-                        <p class="text-fluid-meta text-slate-300 mt-1 text-xs">Atividades experimentais da disciplina:</p>
-                        
-                        <div class="grid grid-cols-2 gap-3 mt-4">
-                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                                <span class="text-[#80C29D] font-bold text-xs block mb-1">📐 Pórticos Tridimensionais</span>
-                                <span class="text-[9px] text-slate-300">Modelagem de nós rígidos e deformação por vento.</span>
-                            </div>
-                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                                <span class="text-[#80C29D] font-bold text-xs block mb-1">🪵 Pontes de Picolé</span>
-                                <span class="text-[9px] text-slate-300">Ensaio final de colapso por carga concentrada.</span>
-                            </div>
-                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                                <span class="text-[#80C29D] font-bold text-xs block mb-1">🔗 Equilíbrio das Treliças</span>
-                                <span class="text-[9px] text-slate-300">Resolução analítica de forças por nós.</span>
-                            </div>
-                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl">
-                                <span class="text-[#80C29D] font-bold text-xs block mb-1">🕸️ Funiculares e Tirantes</span>
-                                <span class="text-[9px] text-slate-300">Concepção de arcos livres de momento fletor.</span>
-                            </div>
+        <!-- SLIDE (7,0): BIBLIOGRAFIA RECOMENDADA (CONTRACAPA) -->
+        <div id="slide-bibliografia" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-12 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl">
+                    <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full mb-2 inline-block">Bibliografia Recomendada</span>
+                    <h2 class="text-fluid-h2 text-[#0D4334] mb-6">Referências Técnicas & de Concepção</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-[#0D4334] uppercase border-b pb-1">Técnica e Modelagem Analítica</h4>
+                            <div class="p-3 bg-[#F4F6F5] rounded border-l-4 border-[#A1A1A1]"><strong>HIBBELER, R. C.</strong> Estática: Mecânica para engenharia. 14ª ed. São Paulo: Pearson, 2017.</div>
+                            <div class="p-3 bg-[#F4F6F5] rounded border-l-4 border-[#A1A1A1]"><strong>BEER, F. P.; JOHNSTON, E. R.</strong> Mecânica Vetorial para Engenheiros - Estática. 11ª ed. Porto Alegre: AMGH, 2017.</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide (6,0) - Programa e Avaliações -->
-        <div id="slide-programa-aval" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
-                
-                <!-- Tabela de Avaliações -->
-                <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-md flex flex-col justify-between">
-                    <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-1">Cronograma de Notas</span>
-                        <h2 class="text-fluid-h2 text-[#0D4334] font-black">Distribuição De Pontos Da Disciplina</h2>
-                        
-                        <div class="mt-6 border border-slate-100 rounded-xl overflow-hidden shadow-sm">
-                            <table class="w-full text-left text-[11px] font-semibold text-slate-600">
-                                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
-                                    <tr>
-                                        <th class="p-3">Código</th>
-                                        <th class="p-3">Instrumento</th>
-                                        <th class="p-3">Foco Pedagógico</th>
-                                        <th class="p-3 text-right">Pontos</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    <tr>
-                                        <td class="p-3 font-mono font-bold text-[#0D4334]">QZ</td>
-                                        <td class="p-3">Questionários Online</td>
-                                        <td class="p-3">Compreensão de aulas</td>
-                                        <td class="p-3 text-right font-bold">15 pts</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-3 font-mono font-bold text-[#0D4334]">EX01</td>
-                                        <td class="p-3">Lista de Exercícios 1</td>
-                                        <td class="p-3">Mecânica de pontos materiais</td>
-                                        <td class="p-3 text-right font-bold">25 pts</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-3 font-mono font-bold text-[#0D4334]">EX02</td>
-                                        <td class="p-3">Lista de Exercícios 2</td>
-                                        <td class="p-3">Equilíbrio plano tridimensional</td>
-                                        <td class="p-3 text-right font-bold">25 pts</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-3 font-mono font-bold text-[#0D4334]">TP</td>
-                                        <td class="p-3">Trabalho Prático</td>
-                                        <td class="p-3">Desenvolvimento de maquete física</td>
-                                        <td class="p-3 text-right font-bold">35 pts</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-[#0D4334] uppercase border-b pb-1">Concepção Espacial Estrutural</h4>
+                            <div class="p-3 bg-[#F4F6F5] rounded border-l-4 border-[#80C29D]"><strong>REBELLO, Y. C. P.</strong> A concepção estrutural e a arquitetura. São Paulo: Zigurate, 2001.</div>
+                            <div class="p-3 bg-[#F4F6F5] rounded border-l-4 border-[#80C29D]"><strong>ENGEL, H.</strong> Sistemas de Estructuras. Barcelona: Gustavo Gili, 2001.</div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Informações Bibliográficas e Fechamento -->
-                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div>
-                        <span class="text-fluid-tag text-[#80C29D] font-black block mb-2">Leituras Recomendadas</span>
-                        <h3 class="text-fluid-h3 text-white font-bold leading-tight">Bibliografia De Apoio</h3>
-                        
-                        <div class="mt-4 space-y-3 text-[11px] text-slate-300 font-medium">
-                            <p class="border-l-2 border-[#80C29D] pl-3 leading-relaxed">
-                                <strong>BEER, F. P. & JOHNSTON, E. R.</strong><br>
-                                Mecânica Vetorial para Engenheiros - Estática. 11ª ed. McGraw-Hill, 2019.
-                            </p>
-                            <p class="border-l-2 border-[#80C29D] pl-3 leading-relaxed">
-                                <strong>HIBBELER, R. C.</strong><br>
-                                Estática: Mecânica para Engenharia. 12ª ed. Pearson, 2011.
-                            </p>
-                            <p class="border-l-2 border-[#80C29D] pl-3 leading-relaxed">
-                                <strong>REBELLO, Y. C. P.</strong><br>
-                                A Concepção Estrutural e a Arquitetura. Zigurate, 2001.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-white/10 pt-4 mt-4 flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase">
-                        <span>CIV 153 UFV</span>
-                        <span class="text-[#80C29D]">Aula Introdutória Concluída</span>
                     </div>
                 </div>
             </div>
@@ -640,196 +454,55 @@
 
     </main>
 
-    <!-- Importação do Motor de Slides Inteligente com atalhos, navegação e Joypad 2D -->
-    <script src="../../common/js/presentation-core.js"></script>
-
-    <!-- Lógicas de Navegação 2D sem Cabeçalho/Rodapé, e Simulação de Gaudí -->
     <script>
-        // Definição física da grade de slides para o Joypad (Mapeamento 2D)
+        // --- MAPEAMENTO DO PLANO BIDIMENSIONAL DO MOTOR SLIDEGRID ---
         const slideGrid = {
             '0,0': 'slide-capa',
-            '1,0': 'slide-quiz',
-            '2,0': 'slide-arquitetura-tecnologia',
-            '3,0': 'slide-engenharia-estrutural',
-            '4,0': 'slide-concepcao-gaudi',
-            '4,1': 'slide-gaudi-deepdive', // Mergulho vertical (bifurcação)
-            '5,0': 'slide-modelos-fisicos',
-            '6,0': 'slide-programa-aval'
+            '1,0': 'slide-interativo',
+            '2,0': 'slide-trilha',
+            '3,0': 'slide-conceitos',
+            '4,0': 'slide-galeria',
+            '5,0': 'slide-equacao',
+            '5,1': 'slide-gaudi-deepdive',
+            '6,0': 'slide-avaliacao',
+            '7,0': 'slide-bibliografia'
         };
 
-        // --- SISTEMA INTERATIVO DO QUIZ DE ENTRADA ---
-        let currentQuizStep = 1;
-        let selectedExpectationValue = "";
-        let selectedPerceptionValue = "";
+        let currentX = 0; let currentY = 0;
+        const totalSlidesHorizontal = 8; // Passos no fluxo horizontal
 
-        function nextQuizStep() {
-            if (currentQuizStep === 1) {
-                const originInput = document.getElementById('quiz-origin').value;
-                if (!originInput.trim()) {
-                    return;
-                }
-            } else if (currentQuizStep === 2 && !selectedExpectationValue) {
-                return;
-            } else if (currentQuizStep === 3 && !selectedPerceptionValue) {
-                return;
-            }
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
 
-            if (currentQuizStep < 4) {
-                document.getElementById(`quiz-step-${currentQuizStep}`).classList.add('hidden');
-                currentQuizStep++;
-                document.getElementById(`quiz-step-${currentQuizStep}`).classList.remove('hidden');
-                updateQuizButtons();
-            }
-
-            if (currentQuizStep === 4) {
-                generateStudentProfile();
-            }
-        }
-
-        function prevQuizStep() {
-            if (currentQuizStep > 1) {
-                document.getElementById(`quiz-step-${currentQuizStep}`).classList.add('hidden');
-                currentQuizStep--;
-                document.getElementById(`quiz-step-${currentQuizStep}`).classList.remove('hidden');
-                updateQuizButtons();
-            }
-        }
-
-        function selectExpectation(val) {
-            selectedExpectationValue = val;
-            const buttons = document.querySelectorAll('.quiz-opt');
-            buttons.forEach(btn => btn.classList.remove('bg-[#80C29D]/20', 'border-[#80C29D]'));
-            event.currentTarget.classList.add('bg-[#80C29D]/20', 'border-[#80C29D]');
-        }
-
-        function selectPerception(val) {
-            selectedPerceptionValue = val;
-            const buttons = document.querySelectorAll('.quiz-opt-perc');
-            buttons.forEach(btn => btn.classList.remove('bg-[#80C29D]/20', 'border-[#80C29D]'));
-            event.currentTarget.classList.add('bg-[#80C29D]/20', 'border-[#80C29D]');
-        }
-
-        function updateQuizButtons() {
-            document.getElementById('quiz-prev-btn').disabled = (currentQuizStep === 1);
-            if (currentQuizStep === 4) {
-                document.getElementById('quiz-next-btn').classList.add('hidden');
-            } else {
-                document.getElementById('quiz-next-btn').classList.remove('hidden');
-            }
-        }
-
-        function generateStudentProfile() {
-            const profileDesc = document.getElementById('quiz-profile-desc');
-            const origin = document.getElementById('quiz-origin').value;
+        function updateGlobalIndicators() {
+            const progressBar = document.getElementById('progressBar');
+            const slideIndicator = document.getElementById('slideIndicator');
             
-            let profileType = "Arquiteto Tecnológico";
-            let desc = `Olá, futuro arquiteto de ${origin}! Pelo seu perfil mapeado, seu arquétipo é de um `;
-
-            if (selectedExpectationValue.includes("Concepção") && selectedPerceptionValue.includes("essencial")) {
-                profileType = "Arquiteto Escultor / Artista";
-                desc += `<strong>${profileType}</strong>. Você enxerga a estrutura como a própria essência formal do projeto.`;
-            } else if (selectedExpectationValue.includes("Segurança") || selectedPerceptionValue.includes("lúdica")) {
-                profileType = "Arquiteto Construtor / Engenheiro";
-                desc += `<strong>${profileType}</strong>. Você se fascina com a racionalidade estática e a estabilidade física da forma.`;
-            } else {
-                desc += `<strong>${profileType}</strong>. Você tem um foco forte em ferramentas de gestão técnica e modelagem dimensional de ponta (BIM).`;
-            }
-
-            profileDesc.innerHTML = desc;
-        }
-
-
-        // --- SIMULADOR DE GAUDÍ (VERTICAL BIFURCATION) ---
-        let isArchInverted = false;
-
-        function toggleArchMode() {
-            isArchInverted = !isArchInverted;
-            const stateTag = document.getElementById('simulator-state-tag');
-            const modeLabel = document.getElementById('arch-mode-label');
-
-            if (isArchInverted) {
-                stateTag.innerText = "Compressão Pura (Arco de Gaudí)";
-                stateTag.classList.remove('bg-[#80C29D]', 'text-[#0D4334]');
-                stateTag.classList.add('bg-[#0D4334]', 'text-[#80C29D]', 'border', 'border-[#80C29D]/50');
-                modeLabel.innerText = "Inverter para Cabo (Tração)";
-            } else {
-                stateTag.innerText = "Tração Pura (Cabo Suspenso)";
-                stateTag.classList.add('bg-[#80C29D]', 'text-[#0D4334]');
-                stateTag.classList.remove('bg-[#0D4334]', 'text-[#80C29D]', 'border', 'border-[#80C29D]/50');
-                modeLabel.innerText = "Inverter Arco (Compressão)";
-            }
-            updateSimulation();
-        }
-
-        function updateSimulation() {
-            const p1 = parseFloat(document.getElementById('slider-p1').value);
-            const p2 = parseFloat(document.getElementById('slider-p2').value);
-            const p3 = parseFloat(document.getElementById('slider-p3').value);
-
-            // Coordenadas baseadas no equilíbrio estático dos nós
-            let y1 = 50 + (p1 * 0.7);
-            let y2 = 50 + (p2 * 0.85);
-            let y3 = 50 + (p3 * 0.7);
-
-            if (isArchInverted) {
-                y1 = 250 - (p1 * 0.7);
-                y2 = 250 - (p2 * 0.85);
-                y3 = 250 - (p3 * 0.7);
-            }
-
-            const dString = `M 50,${isArchInverted ? 250 : 50} L 150,${y1} L 300,${y2} L 450,${y3} L 550,${isArchInverted ? 250 : 50}`;
-            document.getElementById('cable-path').setAttribute('d', dString);
-
-            updateNode('weight-node-1', 'weight-line-1', 150, y1, isArchInverted ? -30 : 30);
-            updateNode('weight-node-2', 'weight-line-2', 300, y2, isArchInverted ? -45 : 45);
-            updateNode('weight-node-3', 'weight-line-3', 450, y3, isArchInverted ? -30 : 30);
-        }
-
-        function updateNode(nodeId, lineId, x, y, yOffset) {
-            const node = document.getElementById(nodeId);
-            const line = document.getElementById(lineId);
+            const progress = (currentX / (totalSlidesHorizontal - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
             
-            node.setAttribute('cx', x);
-            node.setAttribute('cy', y + yOffset);
-            
-            line.setAttribute('x1', x);
-            line.setAttribute('y1', y);
-            line.setAttribute('x2', x);
-            line.setAttribute('y2', y + yOffset);
+            let numStr = (currentX + 1).toString().padStart(2, '0');
+            let totalStr = totalSlidesHorizontal.toString().padStart(2, '0');
+            let subSlideStr = currentY > 0 ? ` [Sub-Slide v${currentY}]` : '';
+            slideIndicator.innerText = `${numStr} / ${totalStr}${subSlideStr}`;
         }
 
-        // --- SISTEMA DE ILUMINAÇÃO DO JOYPAD MODERNO E TRANSPARENTE ---
-        let currentX = 0;
-        let currentY = 0;
-
-        function hasSlide(x, y) {
-            return !!slideGrid[`${x},${y}`];
-        }
-
-        function updateNavigationArrows() {
-            const arrowUp = document.getElementById('nav-arrow-up');
-            const arrowDown = document.getElementById('nav-arrow-down');
-            const arrowLeft = document.getElementById('nav-arrow-left');
-            const arrowRight = document.getElementById('nav-arrow-right');
-            const posDisplay = document.getElementById('grid-pos-display');
-
-            if (posDisplay) posDisplay.innerText = `${currentX},${currentY}`;
-
-            // Lógica refinada para setas dinâmicas flutuantes sem caixas/bordas
-            const setupArrow = (btn, canGo) => {
-                if (canGo) {
-                    // Seta ATIVA: 100% visível, cor verde-claro oficial SICon e efeito de brilho drop-shadow sobre a silhueta do ícone
-                    btn.className = "w-7 h-7 flex items-center justify-center bg-transparent border-0 text-[#80C29D] opacity-100 glow-icon scale-110 cursor-pointer transition-all duration-300";
-                } else {
-                    // Seta INATIVA: Praticamente invisível, desabilitada e sem eventos de clique
-                    btn.className = "w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white opacity-10 pointer-events-none transition-all duration-300";
-                }
+        function updateArrowStates() {
+            const arrows = {
+                'up': { el: document.getElementById('btn-nav-up'), dx: 0, dy: -1 },
+                'down': { el: document.getElementById('btn-nav-down'), dx: 0, dy: 1 },
+                'left': { el: document.getElementById('btn-nav-left'), dx: -1, dy: 0 },
+                'right': { el: document.getElementById('btn-nav-right'), dx: 1, dy: 0 }
             };
 
-            setupArrow(arrowUp, hasSlide(currentX, currentY + 1));
-            setupArrow(arrowDown, hasSlide(currentX, currentY - 1));
-            setupArrow(arrowLeft, hasSlide(currentX - 1, currentY));
-            setupArrow(arrowRight, hasSlide(currentX + 1, currentY));
+            for (let dir in arrows) {
+                if (arrows[dir].el) {
+                    if (hasSlide(currentX + arrows[dir].dx, currentY + arrows[dir].dy)) {
+                        arrows[dir].el.classList.add('nav-enabled');
+                    } else {
+                        arrows[dir].el.classList.remove('nav-enabled');
+                    }
+                }
+            }
         }
 
         function moveInGrid(dx, dy) {
@@ -843,56 +516,125 @@
                 if (currentElement && nextElement) {
                     currentElement.classList.remove('slide-active');
 
-                    if (dx > 0) {
-                        currentElement.classList.add('slide-hidden-left');
-                    } else if (dx < 0) {
-                        currentElement.classList.add('slide-hidden-right');
-                    } else if (dy > 0) {
-                        currentElement.classList.add('slide-hidden-down');
-                    } else if (dy < 0) {
-                        currentElement.classList.add('slide-hidden-up');
-                    }
+                    if (dx > 0) currentElement.classList.add('slide-hidden-left');
+                    else if (dx < 0) currentElement.classList.add('slide-hidden-right');
+                    else if (dy > 0) currentElement.classList.add('slide-hidden-down');
+                    else if (dy < 0) currentElement.classList.add('slide-hidden-up');
 
-                    nextElement.classList.remove(
-                        'slide-hidden-left', 
-                        'slide-hidden-right', 
-                        'slide-hidden-up', 
-                        'slide-hidden-down'
-                    );
+                    nextElement.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
                     nextElement.classList.add('slide-active');
 
                     currentX = nextX;
                     currentY = nextY;
-                    updateNavigationArrows();
+                    updateGlobalIndicators();
                 }
+            }
+            updateArrowStates();
+        }
+
+        // Eventos do Teclado Físico Tradicional
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        // Suporte a gestos básicos (Swipe tátil móvel)
+        let touchStartX = 0; let touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            let deltaX = e.changedTouches[0].screenX - touchStartX;
+            let deltaY = e.changedTouches[0].screenY - touchStartY;
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 60) {
+                if (deltaX > 0) moveInGrid(-1, 0); else moveInGrid(1, 0);
+            } else if (Math.abs(deltaY) > 60) {
+                if (deltaY > 0) moveInGrid(0, -1); else moveInGrid(0, 1);
+            }
+        }, { passive: true });
+
+        // --- INTERAÇÕES DO SLIDE INTERATIVO ---
+        const mapContainer = document.getElementById('mapContainer');
+        mapContainer.addEventListener('click', function(e) {
+            const oldMarker = document.querySelector('.map-marker');
+            if(oldMarker) oldMarker.remove();
+            const rect = mapContainer.getBoundingClientRect();
+            const marker = document.createElement('div');
+            marker.classList.add('map-marker');
+            marker.style.left = `${e.clientX - rect.left}px`;
+            marker.style.top = `${e.clientY - rect.top}px`;
+            mapContainer.appendChild(marker);
+        });
+
+        function addTag() {
+            const input = document.getElementById('tagInput');
+            const text = input.value.trim();
+            if(text) {
+                const cloud = document.getElementById('tagCloud');
+                const newTag = document.createElement('span');
+                newTag.className = "px-4 py-1.5 bg-[#80C29D]/20 text-[#0D4334] rounded-full text-sm font-bold";
+                newTag.innerText = text;
+                cloud.appendChild(newTag);
+                input.value = '';
             }
         }
 
-        // Teclado
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowUp') moveInGrid(0, 1);
-            else if (e.key === 'ArrowDown') moveInGrid(0, -1);
-            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
-            else if (e.key === 'ArrowRight') moveInGrid(1, 0);
-        });
-
-        // Evento de carga inicial
-        window.addEventListener('load', () => {
-            updateSimulation();
-            updateNavigationArrows();
-
-            // Renderização do indicador de resolução local
-            const resIndicator = document.getElementById('resolution-indicator');
-            if (resIndicator) {
-                resIndicator.innerText = `${window.innerWidth}px × ${window.innerHeight}px`;
+        // --- SIMULADOR DE GAUDÍ (VETORIAL SVG) ---
+        let isArchInverted = false;
+        function toggleArchMode() {
+            isArchInverted = !isArchInverted;
+            const stateTag = document.getElementById('simulator-state-tag');
+            const modeLabel = document.getElementById('arch-mode-label');
+            if (isArchInverted) {
+                stateTag.innerText = "Compressão Pura";
+                stateTag.className = "absolute top-4 right-4 bg-[#0D4334] text-[#80C29D] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md border border-[#80C29D]/30";
+                modeLabel.innerText = "Inverter para Cabo (Tração)";
+            } else {
+                stateTag.innerText = "Tração Pura";
+                stateTag.className = "absolute top-4 right-4 bg-[#80C29D] text-[#0D4334] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md";
+                modeLabel.innerText = "Inverter Arco (Compressão)";
             }
+            updateSimulation();
+        }
 
-            // Responsividade adaptativa no resize
-            window.addEventListener('resize', () => {
-                if (resIndicator) {
-                    resIndicator.innerText = `${window.innerWidth}px × ${window.innerHeight}px`;
+        function updateSimulation() {
+            const p1 = parseFloat(document.getElementById('slider-p1').value);
+            const p2 = parseFloat(document.getElementById('slider-p2').value);
+            const p3 = parseFloat(document.getElementById('slider-p3').value);
+
+            let y1 = isArchInverted ? 250 - (p1 * 0.7) : 50 + (p1 * 0.7);
+            let y2 = isArchInverted ? 250 - (p2 * 0.85) : 50 + (p2 * 0.85);
+            let y3 = isArchInverted ? 250 - (p3 * 0.7) : 50 + (p3 * 0.7);
+
+            const dString = `M 50,${isArchInverted ? 250 : 50} L 150,${y1} L 300,${y2} L 450,${y3} L 550,${isArchInverted ? 250 : 50}`;
+            document.getElementById('cable-path').setAttribute('d', dString);
+
+            const updateNode = (nodeId, lineId, x, y, offset) => {
+                const node = document.getElementById(nodeId); const line = document.getElementById(lineId);
+                if(node && line) {
+                    node.setAttribute('cx', x); node.setAttribute('cy', y + offset);
+                    line.setAttribute('x1', x); line.setAttribute('y1', y);
+                    line.setAttribute('x2', x); line.setAttribute('y2', y + offset);
                 }
-            });
+            };
+            updateNode('weight-node-1', 'weight-line-1', 150, y1, isArchInverted ? -25 : 25);
+            updateNode('weight-node-2', 'weight-line-2', 300, y2, isArchInverted ? -35 : 35);
+            updateNode('weight-node-3', 'weight-line-3', 450, y3, isArchInverted ? -25 : 25);
+        }
+
+        // Instanciação Inicial com Validação KaTeX
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSimulation();
+            if (typeof katex !== 'undefined') {
+                katex.render("\\sum \\vec{F} = 0", document.getElementById('katex-sum-f'), { throwOnError: false });
+                katex.render("\\sigma = \\frac{N}{A} \\pm \\frac{M}{W}", document.getElementById('katex-tension-formula'), { throwOnError: false, displayMode: true });
+            }
+            updateArrowStates();
+            updateGlobalIndicators();
         });
     </script>
 </body>
