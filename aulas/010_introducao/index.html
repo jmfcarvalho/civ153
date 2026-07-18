@@ -42,44 +42,49 @@
         .custom-scroll::-webkit-scrollbar-thumb:hover {
             background-color: rgba(13, 67, 52, 0.4);
         }
+
+        /* Classe de brilho de alta performance exclusiva para silhuetas de ícones (sem molduras) */
+        .glow-icon {
+            filter: drop-shadow(0 0 8px rgba(128, 194, 157, 0.95)) drop-shadow(0 0 3px rgba(128, 194, 157, 0.8));
+        }
     </style>
 </head>
 <body class="bg-[#F4F6F5] text-slate-800 antialiased h-full overflow-hidden select-none relative">
 
-    <!-- Painel Flutuante HUD (Glassmorphism de Alta Transparência e Brilho Dinâmico) -->
-    <div class="fixed bottom-6 right-6 z-50 bg-[#0D4334]/25 text-white p-3 rounded-2xl shadow-[0_8px_32px_0_rgba(13,67,52,0.15)] border border-[#80C29D]/20 backdrop-blur-lg flex flex-col items-center space-y-2 w-28 transition-all duration-300 hover:bg-[#0D4334]/45">
-        <span class="text-[8px] text-[#80C29D]/80 font-black uppercase tracking-widest font-mono">Navegação 2D</span>
+    <!-- NOVO PAINEL FLUTUANTE HUD: Totalmente livre de fundos, caixas e molduras. Apenas setas e coordenadas limpas -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center space-y-1 w-24">
+        <span class="text-[8px] text-[#80C29D]/50 font-black uppercase tracking-widest font-mono select-none">Slide</span>
         
-        <!-- D-Pad Flutuante Avançado -->
-        <div class="grid grid-cols-3 gap-1.5 items-center justify-center">
+        <!-- D-Pad Flutuante Ultra-Minimalista -->
+        <div class="grid grid-cols-3 gap-1 items-center justify-center">
             <div></div>
             <!-- Seta Acima -->
             <button id="nav-arrow-up" onclick="moveInGrid(0, 1)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
-                <i class="fa-solid fa-chevron-up text-[9px]"></i>
+                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
+                <i class="fa-solid fa-chevron-up text-xs"></i>
             </button>
             <div></div>
             
             <!-- Seta Esquerda -->
             <button id="nav-arrow-left" onclick="moveInGrid(-1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
-                <i class="fa-solid fa-chevron-left text-[9px]"></i>
+                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
             </button>
-            <!-- Coordenadas -->
-            <div id="grid-pos-display" class="w-7 h-7 flex items-center justify-center text-[9px] font-mono text-[#80C29D] font-bold">
+            <!-- Coordenadas Limpas -->
+            <div id="grid-pos-display" class="w-7 h-7 flex items-center justify-center text-[10px] font-mono text-[#80C29D] font-bold select-none">
                 0,0
             </div>
             <!-- Seta Direita -->
             <button id="nav-arrow-right" onclick="moveInGrid(1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
-                <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
             </button>
             
             <div></div>
             <!-- Seta Abaixo -->
             <button id="nav-arrow-down" onclick="moveInGrid(0, -1)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
-                <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                    class="w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white outline-none transition-all duration-300">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
             </button>
             <div></div>
         </div>
@@ -810,14 +815,14 @@
 
             if (posDisplay) posDisplay.innerText = `${currentX},${currentY}`;
 
-            // Configuração genérica de estilos ativos vs inativos com base no seu manual
+            // Lógica refinada para setas dinâmicas flutuantes sem caixas/bordas
             const setupArrow = (btn, canGo) => {
                 if (canGo) {
-                    btn.classList.remove('opacity-20', 'border-transparent', 'pointer-events-none', 'bg-transparent');
-                    btn.classList.add('opacity-100', 'border-[#80C29D]', 'bg-[#80C29D]/20', 'text-[#80C29D]', 'shadow-[0_0_20px_rgba(128,194,157,0.6)]', 'scale-105', 'cursor-pointer');
+                    // Seta ATIVA: 100% visível, cor verde-claro oficial SICon e efeito de brilho drop-shadow sobre a silhueta do ícone
+                    btn.className = "w-7 h-7 flex items-center justify-center bg-transparent border-0 text-[#80C29D] opacity-100 glow-icon scale-110 cursor-pointer transition-all duration-300";
                 } else {
-                    btn.classList.remove('opacity-100', 'border-[#80C29D]', 'bg-[#80C29D]/20', 'text-[#80C29D]', 'shadow-[0_0_20px_rgba(128,194,157,0.6)]', 'scale-105', 'cursor-pointer');
-                    btn.classList.add('opacity-20', 'border-transparent', 'pointer-events-none', 'bg-transparent', 'text-white/40');
+                    // Seta INATIVA: Praticamente invisível, desabilitada e sem eventos de clique
+                    btn.className = "w-7 h-7 flex items-center justify-center bg-transparent border-0 text-white opacity-10 pointer-events-none transition-all duration-300";
                 }
             };
 
