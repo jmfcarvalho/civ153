@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="../../common/css/sicon-theme.css">
 
     <style>
-        /* Sobrescrita de estilos para remover margens externas e maximizar área total */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #F4F6F5;
@@ -47,55 +46,53 @@
 </head>
 <body class="bg-[#F4F6F5] text-slate-800 antialiased h-full overflow-hidden select-none relative">
 
-    <!-- STREAMING_CHUNK: Painel Flutuante de Navegação Minimalista HUD (Canto Inferior Direito) -->
-    <!-- Este painel substitui o rodapé estático, garantindo navegação em qualquer tipo de dispositivo -->
-    <div class="fixed bottom-6 right-6 z-50 bg-[#0D4334]/95 text-white p-3 rounded-2xl shadow-2xl border border-[#80C29D]/30 backdrop-blur-md flex flex-col items-center space-y-2 w-28">
-        <span class="text-[8px] text-[#80C29D] font-black uppercase tracking-widest font-mono">Navegação 2D</span>
+    <!-- Painel Flutuante HUD (Glassmorphism de Alta Transparência e Brilho Dinâmico) -->
+    <div class="fixed bottom-6 right-6 z-50 bg-[#0D4334]/25 text-white p-3 rounded-2xl shadow-[0_8px_32px_0_rgba(13,67,52,0.15)] border border-[#80C29D]/20 backdrop-blur-lg flex flex-col items-center space-y-2 w-28 transition-all duration-300 hover:bg-[#0D4334]/45">
+        <span class="text-[8px] text-[#80C29D]/80 font-black uppercase tracking-widest font-mono">Navegação 2D</span>
         
-        <!-- D-Pad minimalista flutuante -->
-        <div class="grid grid-cols-3 gap-1 items-center justify-center">
+        <!-- D-Pad Flutuante Avançado -->
+        <div class="grid grid-cols-3 gap-1.5 items-center justify-center">
             <div></div>
             <!-- Seta Acima -->
             <button id="nav-arrow-up" onclick="moveInGrid(0, 1)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/10 border border-white/10 text-white/30 transition-all duration-300 pointer-events-none hover:bg-white/20">
+                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
                 <i class="fa-solid fa-chevron-up text-[9px]"></i>
             </button>
             <div></div>
             
             <!-- Seta Esquerda -->
             <button id="nav-arrow-left" onclick="moveInGrid(-1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/10 border border-white/10 text-white/30 transition-all duration-300 pointer-events-none hover:bg-white/20">
+                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
                 <i class="fa-solid fa-chevron-left text-[9px]"></i>
             </button>
-            <!-- Coordenadas Atuais -->
+            <!-- Coordenadas -->
             <div id="grid-pos-display" class="w-7 h-7 flex items-center justify-center text-[9px] font-mono text-[#80C29D] font-bold">
                 0,0
             </div>
             <!-- Seta Direita -->
             <button id="nav-arrow-right" onclick="moveInGrid(1, 0)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/10 border border-white/10 text-white/30 transition-all duration-300 pointer-events-none hover:bg-white/20">
+                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
                 <i class="fa-solid fa-chevron-right text-[9px]"></i>
             </button>
             
             <div></div>
             <!-- Seta Abaixo -->
             <button id="nav-arrow-down" onclick="moveInGrid(0, -1)" 
-                    class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/10 border border-white/10 text-white/30 transition-all duration-300 pointer-events-none hover:bg-white/20">
+                    class="w-7 h-7 flex items-center justify-center rounded-lg border text-white transition-all duration-300">
                 <i class="fa-solid fa-chevron-down text-[9px]"></i>
             </button>
             <div></div>
         </div>
     </div>
 
-    <!-- STREAMING_CHUNK: Definindo a Área Principal de Conteúdo Dinâmico -->
-    <!-- Ocupa 100% da tela do viewport (sem limites artificiais) -->
+    <!-- Área Principal de Conteúdo Dinâmico (Preenchimento Total) -->
     <main class="w-full h-full p-4 md:p-8 overflow-hidden relative">
 
-        <!-- STREAMING_CHUNK: Slide (0,0) - Capa de Apresentação Adaptativa -->
+        <!-- Slide (0,0) - Capa de Apresentação Adaptativa -->
         <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
-                <!-- Coluna Principal com Título H1 e Subtítulo H2 encapsulados no Card de Destaque com Faixa Verde -->
+                <!-- Coluna Principal com Título H1 e Subtítulo H2 com Faixa Verde de Destaque -->
                 <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
                     
                     <!-- Card Conceitual com Faixa Lateral de 12px -->
@@ -150,7 +147,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (1,0) - Quiz de Expectativas Interativo -->
+        <!-- Slide (1,0) - Quiz de Expectativas Interativo -->
         <div id="slide-quiz" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -219,7 +216,6 @@
 
                     <div class="my-6 flex justify-center">
                         <div class="bg-white p-3 rounded-2xl shadow-xl">
-                            <!-- QR Code com redirecionamento de produção -->
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://forms.gle/exemploQuizNivelamentoCIV153" 
                                  alt="QR Code Chamada" class="w-32 h-32 md:w-36 md:h-36 object-contain">
                         </div>
@@ -233,7 +229,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (2,0) - Tecnologia e Estrutura Curricular -->
+        <!-- Slide (2,0) - Tecnologia e Estrutura Curricular -->
         <div id="slide-arquitetura-tecnologia" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -313,7 +309,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (3,0) - Engenharia Estrutural e Mecânica -->
+        <!-- Slide (3,0) - Engenharia Estrutural e Mecânica -->
         <div id="slide-engenharia-estrutural" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -364,7 +360,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (4,0) - Gaudí e a Concepção Estrutural -->
+        <!-- Slide (4,0) - Gaudí e a Concepção Estrutural -->
         <div id="slide-concepcao-gaudi" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -410,7 +406,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (4,1) - Deep Dive: Simulador Funicular Interativo -->
+        <!-- Slide (4,1) - Deep Dive: Simulador Funicular Interativo -->
         <!-- Bifurcação Vertical da aula para laboratório interativo de física de cabos -->
         <div id="slide-gaudi-deepdive" class="slide-screen slide-hidden-up flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
@@ -503,7 +499,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (5,0) - Modelos Físicos de Aprendizado -->
+        <!-- Slide (5,0) - Modelos Físicos de Aprendizado -->
         <div id="slide-modelos-fisicos" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -556,7 +552,7 @@
             </div>
         </div>
 
-        <!-- STREAMING_CHUNK: Slide (6,0) - Programa e Avaliações -->
+        <!-- Slide (6,0) - Programa e Avaliações -->
         <div id="slide-programa-aval" class="slide-screen slide-hidden-right flex flex-col justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch">
                 
@@ -639,7 +635,10 @@
 
     </main>
 
-    <!-- STREAMING_CHUNK: Lógicas de Navegação 2D sem Cabeçalho/Rodapé, e Simulação de Gaudí -->
+    <!-- Importação do Motor de Slides Inteligente com atalhos, navegação e Joypad 2D -->
+    <script src="../../common/js/presentation-core.js"></script>
+
+    <!-- Lógicas de Navegação 2D sem Cabeçalho/Rodapé, e Simulação de Gaudí -->
     <script>
         // Definição física da grade de slides para o Joypad (Mapeamento 2D)
         const slideGrid = {
@@ -794,26 +793,102 @@
             line.setAttribute('y2', y + yOffset);
         }
 
-        // Executar inicializações no carregamento da página
-        window.addEventListener('load', () => {
-            updateSimulation();
+        // --- SISTEMA DE ILUMINAÇÃO DO JOYPAD MODERNO E TRANSPARENTE ---
+        let currentX = 0;
+        let currentY = 0;
 
-            // Renderização das equações de compressão/tensão com KaTeX
-            const katexFormulaDiv = document.getElementById('katex-tension-formula');
-            if (katexFormulaDiv && typeof katex !== 'undefined') {
-                try {
-                    katex.render("\\sigma = \\frac{N}{A} \\pm \\frac{M}{W}", katexFormulaDiv, {
-                        throwOnError: false,
-                        displayMode: true
-                    });
-                } catch(err) {
-                    console.error("Falha ao renderizar KaTeX: ", err);
+        function hasSlide(x, y) {
+            return !!slideGrid[`${x},${y}`];
+        }
+
+        function updateNavigationArrows() {
+            const arrowUp = document.getElementById('nav-arrow-up');
+            const arrowDown = document.getElementById('nav-arrow-down');
+            const arrowLeft = document.getElementById('nav-arrow-left');
+            const arrowRight = document.getElementById('nav-arrow-right');
+            const posDisplay = document.getElementById('grid-pos-display');
+
+            if (posDisplay) posDisplay.innerText = `${currentX},${currentY}`;
+
+            // Configuração genérica de estilos ativos vs inativos com base no seu manual
+            const setupArrow = (btn, canGo) => {
+                if (canGo) {
+                    btn.classList.remove('opacity-20', 'border-transparent', 'pointer-events-none', 'bg-transparent');
+                    btn.classList.add('opacity-100', 'border-[#80C29D]', 'bg-[#80C29D]/20', 'text-[#80C29D]', 'shadow-[0_0_20px_rgba(128,194,157,0.6)]', 'scale-105', 'cursor-pointer');
+                } else {
+                    btn.classList.remove('opacity-100', 'border-[#80C29D]', 'bg-[#80C29D]/20', 'text-[#80C29D]', 'shadow-[0_0_20px_rgba(128,194,157,0.6)]', 'scale-105', 'cursor-pointer');
+                    btn.classList.add('opacity-20', 'border-transparent', 'pointer-events-none', 'bg-transparent', 'text-white/40');
+                }
+            };
+
+            setupArrow(arrowUp, hasSlide(currentX, currentY + 1));
+            setupArrow(arrowDown, hasSlide(currentX, currentY - 1));
+            setupArrow(arrowLeft, hasSlide(currentX - 1, currentY));
+            setupArrow(arrowRight, hasSlide(currentX + 1, currentY));
+        }
+
+        function moveInGrid(dx, dy) {
+            const nextX = currentX + dx;
+            const nextY = currentY + dy;
+
+            if (hasSlide(nextX, nextY)) {
+                const currentElement = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nextElement = document.getElementById(slideGrid[`${nextX},${nextY}`]);
+
+                if (currentElement && nextElement) {
+                    currentElement.classList.remove('slide-active');
+
+                    if (dx > 0) {
+                        currentElement.classList.add('slide-hidden-left');
+                    } else if (dx < 0) {
+                        currentElement.classList.add('slide-hidden-right');
+                    } else if (dy > 0) {
+                        currentElement.classList.add('slide-hidden-down');
+                    } else if (dy < 0) {
+                        currentElement.classList.add('slide-hidden-up');
+                    }
+
+                    nextElement.classList.remove(
+                        'slide-hidden-left', 
+                        'slide-hidden-right', 
+                        'slide-hidden-up', 
+                        'slide-hidden-down'
+                    );
+                    nextElement.classList.add('slide-active');
+
+                    currentX = nextX;
+                    currentY = nextY;
+                    updateNavigationArrows();
                 }
             }
+        }
+
+        // Teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp') moveInGrid(0, 1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, -1);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowRight') moveInGrid(1, 0);
+        });
+
+        // Evento de carga inicial
+        window.addEventListener('load', () => {
+            updateSimulation();
+            updateNavigationArrows();
+
+            // Renderização do indicador de resolução local
+            const resIndicator = document.getElementById('resolution-indicator');
+            if (resIndicator) {
+                resIndicator.innerText = `${window.innerWidth}px × ${window.innerHeight}px`;
+            }
+
+            // Responsividade adaptativa no resize
+            window.addEventListener('resize', () => {
+                if (resIndicator) {
+                    resIndicator.innerText = `${window.innerWidth}px × ${window.innerHeight}px`;
+                }
+            });
         });
     </script>
-    
-    <!-- Importação do Motor de Slides Inteligente com atalhos, navegação e Joypad 2D -->
-    <script src="../../common/js/presentation-core.js"></script>
 </body>
 </html>
