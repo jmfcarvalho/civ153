@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIV 153 - Introdução à Mecânica das Estruturas</title>
+    <!-- Importação de fontes alternativas equivalentes para ambiente web -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700;900&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0D4334;
+            --secondary: #80C29D;
+            --gray-dark: #A1A1A1;
+            --gray-light: #DEDEDE;
+            --bg: #FFFFFF;
+            --text-dark: #1A1A1A;
+            
+            --font-title: 'League Spartan', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--gray-light);
+            color: var(--text-dark);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Container do Slider */
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            background-color: var(--bg);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Tipografia */
+        h1, h2, h3 {
+            font-family: var(--font-title);
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.8rem; border-left: 8px solid var(--secondary); padding-left: 1rem; }
+        h3 { font-size: 2rem; color: var(--secondary); }
+
+        p, li {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Componentes de Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            align-items: center;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .flex-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Citações / Highlights */
+        .quote-box {
+            background-color: var(--gray-light);
+            border-left: 6px solid var(--primary);
+            padding: 2rem;
+            font-style: italic;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .quote-box p {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .quote-author {
+            display: block;
+            text-align: right;
+            font-family: var(--font-title);
+            font-style: normal;
+            margin-top: 1rem;
+            color: var(--gray-dark);
+        }
+
+        /* Imagens Fictícias / Placeholders Elegantes */
+        .image-placeholder {
+            width: 100%;
+            height: 400px;
+            background-color: var(--gray-light);
+            border: 2px dashed var(--gray-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            font-weight: bold;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 67, 52, 0.9);
+            color: white;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Elementos Interativos */
+        .interactive-map {
+            width: 100%;
+            height: 350px;
+            background: #eef5f2;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+        }
+
+        .input-pill {
+            background: var(--gray-light);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            width: 70%;
+            margin-bottom: 1rem;
+            outline: none;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+
+        .input-pill:focus {
+            border-color: var(--secondary);
+            background: white;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            justify-content: center;
+            max-width: 80%;
+        }
+
+        .tag {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Cartões de Avaliação e Bibliografia */
+        .card {
+            background: white;
+            border: 1px solid var(--gray-light);
+            border-top: 5px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card h4 {
+            font-family: var(--font-title);
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bib-card {
+            border-top: 3px solid var(--gray-dark);
+            padding: 1rem;
+            background: #fafafa;
+            font-size: 1rem;
+        }
+
+        /* Controles de Navegação Globais */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: rgba(13, 67, 52, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: var(--secondary);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            font-family: var(--font-title);
+            color: var(--gray-dark);
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slide-number" id="slideNumber">01 / 12</div>
+
+    <div class="presentation-container">
+
+        <!-- SLIDE 1: INDEX / CAPA -->
+        <div class="slide active flex-center" style="background: linear-gradient(135deg, var(--primary) 0%, #06221A 100%); color: white;">
+            <div style="margin-bottom: 2rem; border: 2px solid var(--secondary); padding: 1rem; color: var(--secondary); font-family: var(--font-title); letter-spacing: 2px;">
+                UFV | DEP. ENGENHARIA CIVIL
+            </div>
+            <h1 style="color: white; font-size: 4.5rem; max-width: 900px;">CIV 153<br><span style="color: var(--secondary);">Introdução à Mecânica das Estruturas</span></h1>
+            <p style="color: var(--gray-light); margin-top: 1rem; font-size: 1.5rem;">Aula Introdutória: Estrutura, Forma e Concepção na Arquitetura</p>
+        </div>
+
+        <!-- SLIDE 2: APRESENTAÇÃO DO PROFESSOR -->
+        <div class="slide">
+            <h2>Apresentação da Equipe</h2>
+            <div class="grid-2" style="margin-top: 2rem;">
+                <div>
+                    <h3>Corpo Docente & Monitoria</h3>
+                    <p>Seja bem-vindo(a) à base conceitual da sua jornada tecnológica na arquitetura.</p>
+                    <p><strong>Professor:</strong> Prof. Dr. [Nome do Professor]<br>Email: professor@ufv.br</p>
+                    <p><strong>Monitoria:</strong> Atendimentos semanais agendados no contraturno para suporte metodológico e resolução de exercícios.</p>
+                </div>
+                <div class="image-placeholder">
+                    [Espaço para foto da equipe ou logo do grupo de pesquisa]
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: INTERATIVO - ORIGEM -->
+        <div class="slide">
+            <h2>Atividade Interativa: De onde você vem?</h2>
+            <p>Clique no mapa abaixo para simular a indicação da sua região/cidade de origem. Vamos mapear o alcance da nossa turma!</p>
+            <div class="interactive-map" id="mapContainer">
+                <span style="color: var(--primary); pointer-events: none; opacity: 0.5; font-weight: bold;">[Clique no Mapa Interativo]</span>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: INTERATIVO - EXPECTATIVAS -->
+        <div class="slide">
+            <h2>Suas Expectativas para a Disciplina</h2>
+            <p>O que vem à sua mente quando pensa em <strong>Mecânica das Estruturas</strong>? Digite uma palavra-chave abaixo para adicionar à nossa nuvem dinâmica.</p>
+            <div class="flex-center" style="margin-top: 2rem;">
+                <input type="text" class="input-pill" id="tagInput" placeholder="Ex: Cálculo, Forma, Desafio, Estabilidade...">
+                <button class="btn" onclick="addTag()">Adicionar à Aula</button>
+                <div class="tag-cloud" id="tagCloud">
+                    <span class="tag">Forma</span>
+                    <span class="tag">Segurança</span>
+                    <span class="tag">Inovação</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: POSICIONAMENTO CURRICULAR -->
+        <div class="slide">
+            <h2>Estruturas na Formação do Arquiteto</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Contexto e Escopo</h3>
+                    <p>A estrutura não é um anexo tardio ao projeto arquitetônico, mas a própria condição de sua existência material.</p>
+                    <p>Este componente curricular desenvolve a sensibilidade mecânica necessária para que a criatividade formal dialogue de maneira técnica e viável com as leis da física.</p>
+                </div>
+                <!-- Imagem baseada no fluxograma enviado -->
+                <div class="image-placeholder">
+                    <div style="padding: 1rem; font-size: 0.9rem; text-align: left; width:100%;">
+                        <strong>Matriz de Tecnologia:</strong><br>
+                        • Engenharia de Materiais<br>
+                        • Engenharia de Construções<br>
+                        • CAD / BIM<br>
+                        • <strong>Engenharia de Estruturas (CIV 153)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: A DISCIPLINA NA UFV -->
+        <div class="slide">
+            <h2>A Trilha de Estruturas na UFV</h2>
+            <p>Entenda o encadeamento metodológico e os pré-requisitos dentro da sua matriz curricular:</p>
+            <div class="grid-3" style="margin-top: 2rem;">
+                <div class="card" style="background: #f4faf7;">
+                    <h4>Fase 1: Fundamentação</h4>
+                    <p><strong>CIV 153</strong> - Introdução à Mecânica das Estruturas</p>
+                    <p><small>Estudo do equilíbrio, estática e esforços internos fundamentais.</small></p>
+                </div>
+                <div class="card">
+                    <h4>Fase 2: Consolidação</h4>
+                    <p><strong>CIV 250</strong> - Fundamentos de Estruturas</p>
+                    <p><strong>CIV 356</strong> - Sistemas Estruturais 1</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 3: Aplicação</h4>
+                    <p><strong>CIV 357</strong> - Sistemas Estruturais 2</p>
+                    <p><small>Preparação integrada voltada para o projeto arquitetônico pleno e ENADE.</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: ENGENHARIA ESTRUTURAL -->
+        <div class="slide">
+            <h2>Conceito: Engenharia Estrutural</h2>
+            <h3>Mecânica dos Sólidos Aplicada</h3>
+            <p>Ramo das engenharias que se dedica à aplicação dos conhecimentos da **mecânica dos sólidos** ao projeto de estruturas de construções e máquinas.</p>
+            
+            <div class="quote-box">
+                <p>“Não se pode imaginar uma forma que não necessite de uma estrutura, ou uma estrutura que não tenha uma forma. (...) Dessa maneira, não se pode conceber uma forma sem se conceber automaticamente uma estrutura e vice-versa”</p>
+                <span class="quote-author">— Yopanan C. P. Rebello (2010)</span>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: GALERIA INSPIRACIONAL (ANTIGUIDADE E CLÁSSICA) -->
+        <div class="slide" style="padding: 0;">
+            <div class="grid-2" style="height: 100%; gap: 0;">
+                <div class="image-placeholder" style="height: 100%; border: none; border-radius: 0;">
+                    <!-- Simulando imagem clássica -->
+                    <div style="position: absolute; color: white; z-index: 2; text-align: center; padding: 2rem;">
+                        <h2 style="color: white; border: none;">O Partenon</h2>
+                        <p style="color: var(--gray-light);">A perfeição do sistema trilítico (Coluna e Viga)</p>
+                    </div>
+                    <div class="image-caption">Grécia Antiga | Fonte: Arquivo Histórico / Domínio Público</div>
+                </div>
+                <div class="image-placeholder" style="height: 100%; border: none; border-radius: 0; background-color: #0D4334;">
+                    <div style="position: absolute; color: white; z-index: 2; text-align: center; padding: 2rem;">
+                        <h2 style="color: white; border: none;">Catedrais Góticas</h2>
+                        <p style="color: var(--gray-light);">Arcos ogivais e contrafortes transferindo esforços de compressão</p>
+                    </div>
+                    <div class="image-caption">Idade Média | Fonte: Análise Estrutural Histórica</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: GALERIA INSPIRACIONAL (MODERNA E CONTEMPORÂNEA) -->
+        <div class="slide" style="padding: 0;">
+            <div class="grid-2" style="height: 100%; gap: 0;">
+                <div class="image-placeholder" style="height: 100%; border: none; border-radius: 0; background-color: #80C29D;">
+                    <div style="position: absolute; color: white; z-index: 2; text-align: center; padding: 2rem;">
+                        <h2 style="color: white; border: none;">Catedral de Brasília</h2>
+                        <p style="color: #0D4334;">Oscar Niemeyer: O concreto armado vencendo as formas tradicionais</p>
+                    </div>
+                    <div class="image-caption">Modernismo Brasileiro | Fonte: Acervo Técnico</div>
+                </div>
+                <div class="image-placeholder" style="height: 100%; border: none; border-radius: 0;">
+                    <div style="position: absolute; color: white; z-index: 2; text-align: center; padding: 2rem;">
+                        <h2 style="color: white; border: none;">Estruturas de Grande Vão</h2>
+                        <p style="color: var(--gray-light);">Treliças espaciais e sistemas estaiados contemporâneos</p>
+                    </div>
+                    <div class="image-caption">Arquitetura Contemporânea | Fonte: Divulgação</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: MECÂNICA X ESTÁTICA -->
+        <div class="slide">
+            <h2>Mecânica vs. Estática</h2>
+            <div class="grid-2" style="margin-top: 2rem;">
+                <div class="card">
+                    <h4>Mecânica Geral</h4>
+                    <p>Ramo da física clássica que descreve e prediz as condições de **repouso e movimento** de corpos sob a ação de forças.</p>
+                </div>
+                <div class="card" style="border-top-color: var(--secondary);">
+                    <h4>Estática Estrutural</h4>
+                    <p>Parte da mecânica que estuda estritamente as condições de **equilíbrio internas e externas** de corpos em repouso ($\sum \vec{F} = 0$).</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem;">Aqui, o foco absoluto é garantir que a estrutura permaneça em sua posição projetada de forma estável.</p>
+        </div>
+
+        <!-- SLIDE 11: CRITÉRIOS DE AVALIAÇÃO -->
+        <div class="slide">
+            <h2>Sistema de Avaliação</h2>
+            <p>A composição da sua nota final segue a distribuição rigorosa abaixo:</p>
+            <div class="grid-4" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; margin-top: 2rem;">
+                <div class="card flex-center">
+                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--primary);">40pt</span>
+                    <p style="text-align: center; font-size: 1rem;">Quizzes & Questionários</p>
+                </div>
+                <div class="card flex-center">
+                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--gray-dark);">20pt</span>
+                    <p style="text-align: center; font-size: 1rem;">Prova Escrita P1</p>
+                </div>
+                <div class="card flex-center">
+                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--gray-dark);">20pt</span>
+                    <p style="text-align: center; font-size: 1rem;">Prova Escrita P2</p>
+                </div>
+                <div class="card flex-center">
+                    <span style="font-size: 2.5rem; font-weight: 900; color: var(--gray-dark);">20pt</span>
+                    <p style="text-align: center; font-size: 1rem;">Prova Escrita P3</p>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; background: var(--gray-light); padding: 1rem; border-radius: 4px; width: 100%;">
+                <strong>Total: 100 Pontos</strong> | Mínimo para aprovação em conformidade com as normas da UFV: 60 Pontos.
+            </div>
+        </div>
+
+        <!-- SLIDE 12: BIBLIOGRAFIA -->
+        <div class="slide">
+            <h2>Bibliografia Recomendada</h2>
+            <div class="grid-2" style="font-size: 0.9rem; align-items: start;">
+                <div>
+                    <h3>Técnica e Modelagem</h3>
+                    <div class="card bib-card">
+                        <strong>HIBBELER, R. C.</strong> Estática: Mecânica para engenharia. 14ª ed. São Paulo: Pearson, 2017.
+                    </div>
+                    <div class="card bib-card" style="margin-top: 0.5rem;">
+                        <strong>HIBBELER, R. C.</strong> Resistência dos Materiais. 10ª ed. São Paulo: Pearson, 2018.
+                    </div>
+                    <div class="card bib-card" style="margin-top: 0.5rem;">
+                        <strong>BEER, F. P.; JOHNSTON, E. R.</strong> Mecânica Vetorial para Engenheiros - Estática. 11ª ed. Porto Alegre: AMGH, 2017.
+                    </div>
+                </div>
+                <div>
+                    <h3>Concepção e Arquitetura</h3>
+                    <div class="card bib-card">
+                        <strong>ENGEL, H.</strong> Sistemas de Estructuras. Barcelona: Gustavo Gili, 2001.
+                    </div>
+                    <div class="card bib-card" style="margin-top: 0.5rem;">
+                        <strong>REBELLO, Y. C. P.</strong> A concepção estrutural e a arquitetura. São Paulo: Zigurate, 2001.
+                    </div>
+                    <div class="card bib-card" style="margin-top: 0.5rem;">
+                        <strong>VASCONCELOS, A. C.</strong> Estruturas arquitetônicas: apreciação intuitiva das formas. São Paulo: Nobel, 1991.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controles de Navegação -->
+    <div class="controls">
+        <button class="control-btn" onclick="prevSlide()">&#10094;</button>
+        <button class="control-btn" onclick="nextSlide()">&#10095;</button>
+    </div>
+
+    <script>
+        // Lógica do Motor de Apresentação
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                if(index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            // Atualizar barra de progresso e indicador numérico
+            const progress = ((currentSlide) / (slides.length - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            let numStr = (currentSlide + 1).toString().padStart(2, '0');
+            let totalStr = slides.length.toString().padStart(2, '0');
+            slideNumber.innerText = `${numStr} / ${totalStr}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Navegação por Teclado (Setas Direcionais e Barra de Espaço)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Interação Slide 3: Marcador no Mapa
+        const mapContainer = document.getElementById('mapContainer');
+        mapContainer.addEventListener('click', function(e) {
+            // Remove marcadores anteriores para simulação simples
+            const oldMarker = document.querySelector('.map-marker');
+            if(oldMarker) oldMarker.remove();
+
+            const rect = mapContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const marker = document.createElement('div');
+            marker.classList.add('map-marker');
+            marker.style.left = `${x}px`;
+            marker.style.top = `${y}px`;
+            mapContainer.appendChild(marker);
+        });
+
+        // Interação Slide 4: Nuvem de Tags Dinâmica
+        function addTag() {
+            const input = document.getElementById('tagInput');
+            const text = input.value.trim();
+            if(text) {
+                const cloud = document.getElementById('tagCloud');
+                const newTag = document.createElement('span');
+                newTag.classList.add('tag');
+                newTag.innerText = text;
+                cloud.appendChild(newTag);
+                input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>

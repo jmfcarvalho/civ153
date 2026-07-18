@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula: Modelagem e Análise</title>
+    <!-- Estilos Core do Reveal.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <!-- Tema Limpo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <!-- Tema de Cores para Código (Monokai) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- SLIDE 1: Título da Aula -->
+            <section>
+                <h2>Conceitos Fundamentais de Modelagem</h2>
+                <p>Estrutura de Análise Quantitativa</p>
+                <p><small>Professor: Seu Nome <br> Disciplina Exemplo</small></p>
+            </section>
+
+            <!-- SLIDE 2: Tópicos com Revelação Gradual (Fragments) -->
+            <section>
+                <h3>Abordagem Metodológica</h3>
+                <ul>
+                    <li class="fragment">Coleta e consistência dos dados primários</li>
+                    <li class="fragment">Aplicação do formalismo matemático</li>
+                    <li class="fragment">Simulação computacional de cenários</li>
+                </ul>
+            </section>
+
+            <!-- SLIDE 3: Slides Verticais (Teoria + Equação em LaTeX) -->
+            <section>
+                <section>
+                    <h3>O Modelo Matemático</h3>
+                    <p>Pressione a seta para baixo (↓) para visualizar o formalismo analítico da função.</p>
+                </section>
+                <section>
+                    <h3>Equação de Distribuição</h3>
+                    <p>Abaixo está a representação da densidade de probabilidade:</p>
+                    <!-- Renderização via MathJax (LaTeX) -->
+                    <p>$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$</p>
+                </section>
+            </section>
+
+            <!-- SLIDE 4: Bloco de Código Técnico -->
+            <section>
+                <h3>Implementação Algorítmica</h3>
+                <p>Exemplo de cálculo de média ponderada em Python:</p>
+                <pre><code class="language-python" data-line-numbers="1|3-4">
+import numpy as np
+
+def calcular_media(valores, pesos):
+    return np.average(valores, weights=pesos)
+                </code></pre>
+            </section>
+<!-- SLIDE 5: Widget Interativo de Simulação Financeira/Matemática -->
+<section>
+    <h3>Simulador Interativo: Impacto de Juros Compostos</h3>
+    <p><small>Altere os parâmetros para visualizar a evolução do montante final em tempo real.</small></p>
+    
+    <!-- Painel de Controles do Widget -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; color: #333; font-size: 0.7em; text-align: left; max-width: 600px; margin: 0 auto;">
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold;">Capital Inicial ($C$): R$ <span id="capitalVal">1000</span></label><br>
+            <input type="range" id="capital" min="100" max="10000" value="1000" step="100" style="width: 100%;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold;">Taxa de Juros Mensal ($i$): <span id="taxaVal">2</span>%</label><br>
+            <input type="range" id="taxa" min="0.5" max="15" value="2" step="0.5" style="width: 100%;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold;">Tempo ($t$): <span id="tempoVal">12</span> meses</label><br>
+            <input type="range" id="tempo" min="1" max="48" value="12" step="1" style="width: 100%;">
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
+
+        <!-- Output Calculado Numericamente -->
+        <div style="font-size: 1.2em; font-weight: bold; text-align: center; color: #1a73e8;">
+            Montante Final ($M$): R$ <span id="montanteResultado">1268.24</span>
+        </div>
+    </div>
+
+    <!-- Script de Execução da Lógica Matemática do Widget -->
+    <script>
+        (function() {
+            const capInput = document.getElementById('capital');
+            const taxInput = document.getElementById('taxa');
+            const temInput = document.getElementById('tempo');
+
+            function rodarSimulacao() {
+                const C = parseFloat(capInput.value);
+                const i = parseFloat(taxInput.value) / 100;
+                const t = parseInt(temInput.value);
+
+                // Atualiza os labels textuais da interface
+                document.getElementById('capitalVal').innerText = C;
+                document.getElementById('taxaVal').innerText = (i * 100).toFixed(1);
+                document.getElementById('tempoVal').innerText = t;
+
+                // Aplica a fórmula matemática clássica M = C * (1 + i)^t
+                const M = C * Math.pow((1 + i), t);
+                
+                // Exibe o output formatado
+                document.getElementById('montanteResultado').innerText = M.toFixed(2);
+            }
+
+            // Atribui os escutadores de eventos para recalcular a cada clique/arrasto
+            capInput.addEventListener('input', rodarSimulacao);
+            taxInput.addEventListener('input', rodarSimulacao);
+            temInput.addEventListener('input', rodarSimulacao);
+        })();
+    </script>
+</section>
+
+        </div>
+    </div>
+
+    <!-- Scripts do Reveal.js e os Plugins Necessários -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+
+    <script>
+        // Inicialização com os novos plugins ativados
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide', // Mudamos para 'slide' para uma transição linear
+            plugins: [ RevealHighlight, RevealMath.MathJax3 ] // Injeção dos plugins
+        });
+    </script>
+</body>
+</html>
