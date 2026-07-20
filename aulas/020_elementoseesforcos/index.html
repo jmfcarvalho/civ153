@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>CIV 153 - Aula 2: Elementos, Esforços & Estabilidade | DEC UFV</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- KaTeX CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+
+<!-- KaTeX JS Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+<!-- Extension Auto-Render (Garante a varredura automática no DOM) -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ],
+            throwOnError: false
+        });"></script>
+</head>
+<body class="w-screen h-screen relative">
+
+    <!-- Indicadores Globais -->
+    <div class="fixed top-0 left-0 h-1 bg-[#80C29D] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-6 left-8 text-fluid-meta font-black text-[#A1A1A1] z-[1000]" id="slideIndicator">01 / 07</div>
+
+    <!-- Controles de Navegação -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full p-6 md:p-16 overflow-y-auto lg:overflow-hidden relative custom-scroll">
+
+        <!-- SLIDE (0,0): CAPA -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+                    <div class="bg-white p-8 md:p-12 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV Logo" class="h-8 w-auto object-contain">
+                            <div class="h-8 w-[2px] bg-[#DEDEDE]"></div>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC Logo" class="h-9 w-auto object-contain">
+                        </div>
+                        <div class="space-y-4">
+                            <h1 class="text-fluid-h1 leading-tight">
+                                CIV 153 <span class="block text-fluid-h2 tracking-normal text-[#A1A1A1] mt-1">Introdução à Mecânica das Estruturas</span>
+                            </h1>
+                            <h2 class="text-fluid-h3">
+                                Aula 02 <span class="text-[#A1A1A1] font-medium block md:inline md:ml-2">• Elementos, Esforços & Estabilidade</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="bg-[#0D4334] p-6 rounded-3xl border border-[#80C29D]/20 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div class="space-y-2">
+                            <span class="text-fluid-tag text-[#80C29D] block">Corpo Docente</span>
+                            <p class="text-fluid-body text-white font-bold">
+                                Prof. José Maria Franco de Carvalho <span class="font-normal text-slate-300">e Equipe Colaboradora</span>
+                            </p>
+                        </div>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green_text.jpeg" alt="SICon Logo" class="h-14 w-auto object-contain">
+                    </div>
+                </div>
+                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-8 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 relative overflow-hidden">
+                    <div class="space-y-4 relative z-10">
+                        <div class="flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-inner my-4">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://jmfcarvalho.github.io/civ153/aulas/02_elementos_esforcos/&color=0D4334" alt="QR Code" class="w-full max-w-[250px] h-auto object-contain aspect-square">
+                            <span class="text-fluid-tag text-[#0D4334] mt-2 block font-bold text-center">Acesso aos Slides</span>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <h3 class="text-fluid-h3 text-white font-bold leading-snug">Sistemas Estruturais</h3>
+                            <p class="text-fluid-body text-slate-300 leading-relaxed max-w-xs mx-auto">Classificação morfológica, análise vetorial de tensões e condições fundamentais de equilíbrio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA -->
+        <div id="slide-ementa" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+                <div class="lg:col-span-12 bg-white p-8 md:p-12 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full">Conteúdo Programático</span>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-10 w-auto object-contain">
+                    </div>
+                    <h2 class="text-fluid-h2">Objetivos da Aula 02</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-4">
+                        <div class="p-6 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2.5 py-1 rounded-md">Módulo 01</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Elementos Estruturais</h3>
+                                <p class="text-fluid-body text-slate-600 leading-relaxed">Geometria e classificação quanto às dimensões pré-dominantes: barras, placas, chapas, cascas e blocos.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2.5 py-1 rounded-md">Módulo 02</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Tipos de Esforços</h3>
+                                <p class="text-fluid-body text-slate-600 leading-relaxed">Solicitações internas e resposta do material: tração, compressão, flexão, torção e cisalhamento.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2.5 py-1 rounded-md">Módulo 03</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Estabilidade Estrutural</h3>
+                                <p class="text-fluid-body text-slate-600 leading-relaxed">Condições de equilíbrio estático, vinculações (apoios) e noções de rigidez estática.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): ELEMENTOS ESTRUTURAIS - CLASSIFICAÇÃO GERAL -->
+<div id="slide-elem-classificacao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+            <div class="space-y-6">
+                <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-10 w-auto object-contain">
+                    <span class="text-fluid-tag text-[#80C29D]">Morfologia</span>
+                </div>
+                <h2 class="text-fluid-h2 text-white">Classificação Geométrica</h2>
+                <p class="text-fluid-body text-slate-300 leading-relaxed">Os elementos estruturais são classificados segundo a ordem de grandeza de suas três dimensões no espaço ($L, b, h$).</p>
+            </div>
+            <div class="flex flex-col gap-2 mt-4">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                    1D: Unidimensionais <i class="fa-solid fa-arrow-down"></i>
+                </button>
+            </div>
+        </div>
+        <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+            <div class="space-y-4">
+                <button onclick="moveInGrid(0, 1)" class="w-full text-left p-4 bg-[#F4F6F5] hover:bg-[#80C29D]/20 transition-all rounded-xl border-l-4 border-[#0D4334] group">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">1. Unidimensionais (Lineares)</h3>
+                        <i class="fa-solid fa-chevron-down text-[#0D4334]"></i>
+                    </div>
+                    <p class="text-fluid-body text-slate-600 mt-1">Uma dimensão muito superior às outras duas. Ex.: Vigas, Pilares, Tirantes e Cabos.</p>
+                </button>
+                <button onclick="moveInGrid(0, 2)" class="w-full text-left p-4 bg-[#F4F6F5] hover:bg-[#80C29D]/20 transition-all rounded-xl border-l-4 border-[#80C29D] group">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">2. Bidimensionais (Superficiais)</h3>
+                        <i class="fa-solid fa-chevron-down text-[#0D4334]"></i>
+                    </div>
+                    <p class="text-fluid-body text-slate-600 mt-1">Duas dimensões predominam sobre a espessura. Ex.: Placas, Chapas, Cascas e Paredes.</p>
+                </button>
+                <button onclick="moveInGrid(0, 3)" class="w-full text-left p-4 bg-[#F4F6F5] hover:bg-[#80C29D]/20 transition-all rounded-xl border-l-4 border-[#A1A1A1] group">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">3. Tridimensionais (Volumétricos)</h3>
+                        <i class="fa-solid fa-chevron-down text-[#0D4334]"></i>
+                    </div>
+                    <p class="text-fluid-body text-slate-600 mt-1">Três dimensões da mesma ordem de grandeza. Ex.: Blocos de Fundação, Sapatas Massivas e Barragens.</p>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE (2,1): BIFURCAÇÃO 1D - UNIDIMENSIONAIS (INTERATIVO) -->
+<div id="slide-elem-1d" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- PAINEL DE CONTROLE LATERAL (COLUNA ESQUERDA) -->
+        <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#80C29D] font-bold block">Galeria de Obras Icônicas</span>
+                <h3 class="text-fluid-h3 text-white font-black">Unidimensionais (1D)</h3>
+                <div class="flex flex-col gap-2">
+                    <button onclick="show1DExample('vigas')" id="btn-1d-vigas" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Vigas</button>
+                    <button onclick="show1DExample('pilares')" id="btn-1d-pilares" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Pilares</button>
+                    <button onclick="show1DExample('tirantes')" id="btn-1d-tirantes" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Tirantes</button>
+                    <button onclick="show1DExample('cabos')" id="btn-1d-cabos" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">4. Cabos</button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] font-bold rounded-xl text-fluid-tag transition-all flex items-center justify-center gap-1">Avançar: Bidimensionais <i class="fa-solid fa-arrow-down"></i></button>
+                <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-up"></i> Retornar ao Topo (2,0)</button>
+            </div>
+        </div>
+
+        <!-- PAINEL INTERATIVO 1D (ÁREA TRANSPARENTE MAXIMIZADA E ZOOM ANIMADO) -->
+        <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[520px] border border-[#DEDEDE] group">
+            <!-- Camada de Imagem com Animação Ken Burns -->
+            <div id="viewer-1d-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/1/1a/MASP_Pano.jpg');"></div>
+            
+            <!-- Gradiente de Sobreposição Minimizado (>75% da Imagem Livre de Máscaras) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+            
+            <!-- Painel Informativo Compacto -->
+            <div class="relative z-10 p-4 md:p-6 space-y-2 text-white max-w-3xl">
+                <div class="flex items-center justify-between">
+                    <span id="title-1d" class="font-bold text-fluid-h3 text-white drop-shadow-md">Vigas • Vão Livre Monumental</span>
+                    <div class="flex space-x-2">
+                        <button onclick="nav1DSlide(-1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="nav1DSlide(1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="tag-1d" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded">MASP • São Paulo, Brasil</span>
+                    <span id="index-1d" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2">Exemplo 1 / 3</span>
+                </div>
+                <p id="desc-1d" class="text-fluid-body text-slate-200 leading-snug font-medium drop-shadow-sm">Projeto de Lina Bo Bardi. Duas vigas protendidas de 74m sustentam o edifício suspenso, transmitindo flexão pura e cortante a quatro pilares.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SLIDE (2,2): BIFURCAÇÃO 2D - BIDIMENSIONAIS (INTERATIVO) -->
+<div id="slide-elem-2d" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- PAINEL DE CONTROLE LATERAL -->
+        <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#80C29D] font-bold block">Galeria de Obras Icônicas</span>
+                <h3 class="text-fluid-h3 text-white font-black">Bidimensionais (2D)</h3>
+                <div class="flex flex-col gap-2">
+                    <button onclick="show2DExample('placas')" id="btn-2d-placas" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Placas</button>
+                    <button onclick="show2DExample('chapas')" id="btn-2d-chapas" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Chapas</button>
+                    <button onclick="show2DExample('cascas')" id="btn-2d-cascas" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Cascas</button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] font-bold rounded-xl text-fluid-tag transition-all flex items-center justify-center gap-1">Avançar: Tridimensionais <i class="fa-solid fa-arrow-down"></i></button>
+                <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-up"></i> Retornar aos 1D (2,1)</button>
+            </div>
+        </div>
+
+        <!-- VISUALIZADOR DE FOTOS (ÁREA TRANSPARENTE MAXIMIZADA) -->
+        <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[500px] border border-[#DEDEDE] group">
+            <!-- Camada de Imagem Animada Dinâmica -->
+            <div id="viewer-2d-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/30/Museu_de_Arte_do_Rio_em_2013.jpg');"></div>
+            
+            <!-- Gradiente Minimizado (>75% da Imagem Livre de Máscaras) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+            
+            <!-- Painel Informativo Compacto -->
+            <div class="relative z-10 p-4 md:p-6 space-y-2 text-white max-w-3xl">
+                <div class="flex items-center justify-between">
+                    <span id="title-2d" class="font-bold text-fluid-h3 text-white drop-shadow-md">Placas • Laje Ondulada de Cobertura</span>
+                    <div class="flex space-x-2">
+                        <button onclick="nav2DSlide(-1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="nav2DSlide(1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="tag-2d" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded">Museu de Arte do Rio (MAR) • Rio de Janeiro, Brasil</span>
+                    <span id="index-2d" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2">Exemplo 1 / 3</span>
+                </div>
+                <p id="desc-2d" class="text-fluid-body text-slate-200 leading-relaxed font-medium">Cobertura fluida de concreto armado em forma de onda sustentada por pilares, trabalhando como placa submetida a flexão e cortante.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SLIDE (2,3): BIFURCAÇÃO 3D - TRIDIMENSIONAIS (INTERATIVO) -->
+<div id="slide-elem-3d" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- PAINEL DE CONTROLE LATERAL -->
+        <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#80C29D] font-bold block">Galeria de Obras Icônicas</span>
+                <h3 class="text-fluid-h3 text-white font-black">Tridimensionais (3D)</h3>
+                <div class="flex flex-col gap-2">
+                    <button onclick="show3DExample('fundacao')" id="btn-3d-fundacao" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Blocos de Fundação</button>
+                    <button onclick="show3DExample('sapatas')" id="btn-3d-sapatas" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Sapatas Massivas</button>
+                    <button onclick="show3DExample('barragens')" id="btn-3d-barragens" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Barragens</button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button onclick="moveInGrid(1, -3)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] font-bold rounded-xl text-fluid-tag transition-all flex items-center justify-center gap-1">Avançar: Esforços (3,0) <i class="fa-solid fa-arrow-right"></i></button>
+                <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-up"></i> Retornar aos 2D (2,2)</button>
+            </div>
+        </div>
+
+        <!-- VISUALIZADOR DE FOTOS (ÁREA TRANSPARENTE MAXIMIZADA) -->
+        <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[500px] border border-[#DEDEDE] group">
+            <!-- Camada de Imagem Animada Dinâmica -->
+            <div id="viewer-3d-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Itaipu_sunset_panoramic_02_2013_110.jpg/1280px-Itaipu_sunset_panoramic_02_2013_110.jpg');"></div>
+            
+            <!-- Gradiente Minimizado (>75% da Imagem Livre de Máscaras) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+            
+            <!-- Painel Informativo Compacto -->
+            <div class="relative z-10 p-4 md:p-6 space-y-2 text-white max-w-3xl">
+                <div class="flex items-center justify-between">
+                    <span id="title-3d" class="font-bold text-fluid-h3 text-white drop-shadow-md">Barragens • Estruturas Gravidade</span>
+                    <div class="flex space-x-2">
+                        <button onclick="nav3DSlide(-1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="nav3DSlide(1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="tag-3d" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded">Usina de Itaipu • Brasil/Paraguai</span>
+                    <span id="index-3d" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2">Exemplo 1 / 1</span>
+                </div>
+                <p id="desc-3d" class="text-fluid-body text-slate-200 leading-relaxed font-medium">Volume massivo de concreto estrutural onde comprimento, largura e altura têm ordens de grandeza semelhantes. Resistência garantida predominantemente pelo peso próprio do bloco volumétrico contra o empuxo hidráulico.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+        <!-- SLIDE (3,0): ESFORÇOS SOLICITANTES -->
+        <div id="slide-esforcos-fundamentais" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 md:p-8 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-10 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D]">Estática Interna</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Esforços Solicitantes</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed">Cargas externas geram reações de tensão e deformação no interior do sólido de forma a garantir a integridade do corpo.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold tracking-wider transition-all flex items-center justify-center gap-2 mt-4">
+                        Abrir Simulador de Esforços <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-8 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-h3 text-[#0D4334] block">Tração Axial </br> ($N > 0$)</span>
+                            <p class="text-fluid-body text-slate-600 mt-1">Forças que tendem a alongar a peça no sentido do seu eixo longitudinal.</p>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-h3 text-[#0D4334] block">Compressão Axial </br> ($N < 0$)</span>
+                            <p class="text-fluid-body text-slate-600 mt-1">Forças que tendem a encurtar a peça ao longo do seu eixo longitudinal.</p>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-h3 text-[#0D4334] block">Flexão Pura </br> ($M$)</span>
+                            <p class="text-fluid-body text-slate-600 mt-1">Momentos que provocam curvatura no eixo da peça, gerando zonas tracionadas e comprimidas simultaneamente.</p>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-h3 text-[#0D4334] block">Cisalhamento </br> ($V$)</span>
+                            <p class="text-fluid-body text-slate-600 mt-1">Forças transversais que tendem a fazer deslizar seções transversais adjacentes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- SLIDE (3,1): SIMULADOR INTERATIVO DE ESFORÇOS (ÁREA EXPANDIDA E SLIDER) -->
+<div id="slide-esforcos-simulador" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- CONTROLES E SELETOR DE INTENSIDADE (COLUNA ESQUERDA) -->
+        <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#80C29D] font-bold block uppercase tracking-wider">Simulador Interativo</span>
+                <h3 class="text-fluid-h3 text-white font-black ">Seletor de Carga</h3>
+                
+                <div class="flex flex-col gap-2">
+                    <button onclick="setEffortType('tracao')" id="btn-tracao" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Tração Pura</button>
+                    <button onclick="setEffortType('compressao')" id="btn-compressao" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Compressão</button>
+                    <button onclick="setEffortType('flexao')" id="btn-flexao" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Flexão Pura</button>
+                    <button onclick="setEffortType('cisalhamento')" id="btn-cisalhamento" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">4. Cisalhamento</button>
+                </div>
+
+                <!-- CONTROLE CONTINUO DE INTENSIDADE (SLIDER) -->
+                <div class="pt-4 border-t border-white/10 space-y-3">
+                    <div class="flex justify-between items-center text-fluid-tag">
+                        <span class="font-bold text-[#80C29D]">Intensidade ($F$):</span>
+                        <span id="intensity-value" class="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded text-fluid-meta">50%</span>
+                    </div>
+                    <input type="range" id="intensity-slider" min="0" max="100" value="50" oninput="updateDeformation()" class="w-full accent-[#80C29D] cursor-pointer h-2 bg-white/20 rounded-lg">
+                    <span class="text-fluid-meta text-slate-300 block text-center font-medium">Arraste para deformar (0% = Repouso)</span>
+                </div>
+            </div>
+            
+            <button onclick="moveInGrid(0, -1)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all uppercase tracking-wider mt-2 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-up"></i> Retornar ao Fluxo (3,0)
+            </button>
+        </div>
+
+        <!-- CANVAS DO ELEMENTO EXPANDIDO (COLUNA DIREITA) -->
+        <div class="lg:col-span-8 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between items-center text-center min-h-[520px]">
+            <div id="effort-title" class="text-fluid-h3 text-[#0D4334] font-black">Tração Axial (Alongamento Longitudinal)</div>
+            
+            <!-- CANVAS DO SVG AMPLIAÇÃO MAXIMIZADA -->
+            <div class="w-full h-96 bg-slate-950 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden shadow-inner border border-slate-800">
+                <svg id="effort-svg" viewBox="0 0 500 300" class="w-full h-full">
+                    <!-- Marcador Universal de Seta Vermelha -->
+                    <defs>
+                        <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#E53E3E" />
+                        </marker>
+                    </defs>
+
+                    <!-- Elemento Quadrado Padrão em Repouso: (160,60) até (340,240) -> 180x180px -->
+                    <polygon id="beam-body" points="160,60 340,60 340,240 160,240" fill="#80C29D" stroke="#0D4334" stroke-width="4" class="transition-all duration-75" />
+                    
+                    <!-- Camada de Vetores Vermelhos Reativos -->
+                    <g id="vector-arrows"></g>
+                </svg>
+            </div>
+            
+            <p id="effort-desc" class="text-fluid-body text-slate-600 mt-3 font-medium">Os vetores em vermelho aplicados provocam a deformação contínua do sólido a partir do estado inicial neutro.</p>
+        </div>
+
+    </div>
+</div>
+
+       <!-- SLIDE (4,0): ESTABILIDADE ESTRUTURAL -->
+<div id="slide-estabilidade-conceito" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- CARD ESQUERDA: EQUILÍBRIO E EQUAÇÕES DA ESTÁTICA -->
+        <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full">Condição de Equilíbrio</span>
+                <h2 class="text-fluid-h2 text-[#0D4334]">Estabilidade Estática</h2>
+                <p class="text-fluid-body text-slate-600 font-medium leading-relaxed">O número de restrições deve impedir todos os movimentos de corpo rígido.</p>
+                
+                <!-- CONTAINER DAS EQUAÇÕES DA ESTÁTICA EM LINHAS SEPARADAS -->
+                <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334] space-y-2">
+                    <span class="text-fluid-tag font-bold text-[#0D4334] block mb-1">Equações Fundamentais da Estática (2D):</span>
+                    <div class="text-fluid-body py-0.5 text-center bg-white rounded-lg border border-[#DEDEDE] shadow-sm">$$\sum F_x = 0$$</div>
+                    <div class="text-fluid-body py-0.5 text-center bg-white rounded-lg border border-[#DEDEDE] shadow-sm">$$\sum F_y = 0$$</div>
+                    <div class="text-fluid-body py-0.5 text-center bg-white rounded-lg border border-[#DEDEDE] shadow-sm">$$\sum M_z = 0$$</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD DIREITA: CLASSIFICAÇÃO DE ESTATICIDADE -->
+        <div class="lg:col-span-7 bg-[#0D4334] text-white p-6 md:p-8 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 flex flex-col justify-between">
+            <div class="space-y-4">
+                <h3 class="text-fluid-h3 text-white">Classificação de Estaticidade</h3>
+                <div class="space-y-3">
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/10">
+                        <strong class="text-fluid-tag text-[#80C29D] block">Hipostática ($N_r < N_e$)</strong>
+                        <p class="text-fluid-body text-slate-200">Peça instável ou mecanismo; não possui vínculos suficientes para impedir deslocamentos rígidos.</p>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/10">
+                        <strong class="text-fluid-tag text-[#80C29D] block">Isostática ($N_r = N_e$)</strong>
+                        <p class="text-fluid-body text-slate-200">Peça estaticamente determinada; o número de reações de apoio equivale exatamente às equações da estática.</p>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/10">
+                        <strong class="text-fluid-tag text-[#80C29D] block">Hiperstática ($N_r > N_e$)</strong>
+                        <p class="text-fluid-body text-slate-200">Peça com vínculos excedentes. Garante maior segurança, contudo exige métodos de deformação para análise.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold tracking-wider transition-all mt-4">
+                Analisar Vinculações (Apoios) <i class="fa-solid fa-arrow-down"></i>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+        <!-- SLIDE (4,1): BIFURCAÇÃO VINCULAÇÕES (SIMULADOR INTERATIVO DE APOIOS) -->
+<div id="slide-estabilidade-vinc" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll bg-[#F4F6F5]">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+        
+        <!-- CONTROLES E SELETOR DE VINCULAÇÃO (COLUNA ESQUERDA) -->
+        <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+            <div class="space-y-4">
+                <span class="text-fluid-tag text-[#80C29D] font-bold block uppercase tracking-wider">Simulador de Condições de Contorno</span>
+                <h3 class="text-fluid-h3 text-white font-black">Seletor de Apoio</h3>
+                
+                <div class="flex flex-col gap-2">
+                    <button onclick="setSupportType(1)" id="btn-support-1" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left uppercase shadow-md">1. Apoio de 1º Gênero (Móvel)</button>
+                    <button onclick="setSupportType(2)" id="btn-support-2" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left uppercase">2. Apoio de 2º Gênero (Fixo)</button>
+                    <button onclick="setSupportType(3)" id="btn-support-3" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left uppercase">3. Apoio de 3º Gênero (Engaste)</button>
+                </div>
+
+                <!-- CONTROLE CONTINUO DE INTENSIDADE DA CARGA -->
+                <div class="pt-4 border-t border-white/10 space-y-3">
+                    <div class="flex justify-between items-center text-fluid-tag">
+                        <span class="font-bold text-[#80C29D] uppercase">Carga Inclinada ($P$):</span>
+                        <span id="support-intensity-value" class="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded text-fluid-meta">50%</span>
+                    </div>
+                    <input type="range" id="support-intensity-slider" min="0" max="100" value="50" oninput="updateSupportSimulation()" class="w-full accent-[#80C29D] cursor-pointer h-2 bg-white/20 rounded-lg">
+                    <span class="text-fluid-meta text-slate-300 block text-center font-medium">Arraste para alterar a carga externa aplicada</span>
+                </div>
+            </div>
+            
+            <button onclick="moveInGrid(0, -1)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all uppercase tracking-wider mt-2 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (4,0)
+            </button>
+        </div>
+
+        <!-- CANVAS DO SIMULADOR VETORIAL (COLUNA DIREITA) -->
+        <div class="lg:col-span-8 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between items-center text-center min-h-[520px]">
+            <div id="support-title" class="text-fluid-h3 text-[#0D4334] font-black uppercase">1º Gênero (Apoio Móvel)</div>
+            
+           <!-- CANVAS SVG COM FUNDO BRANCO E ALTO CONTRASTE -->
+<div class="w-full h-96 bg-white rounded-2xl flex items-center justify-center p-4 relative overflow-hidden shadow-md border border-[#DEDEDE]">
+    <svg id="support-svg" viewBox="0 0 600 320" class="w-full h-full">
+        <defs>
+            <!-- Marcador de Seta Vermelha para Reações -->
+            <marker id="arrow-red-sup" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#E53E3E" />
+            </marker>
+            <!-- Marcador de Seta Preta para Carga Aplicada -->
+            <marker id="arrow-black-sup" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#000000" />
+            </marker>
+        </defs>
+
+        <!-- Apoio e Estrutura Renderizados Dinamicamente via JS -->
+        <g id="support-elements-group"></g>
+    </svg>
+</div>
+            
+            <p id="support-desc" class="text-fluid-body text-slate-600 mt-3 font-medium">Análise de movimentação, rotação e reações ativas sob atuação de força inclinada.</p>
+        </div>
+
+    </div>
+</div>
+
+        <!-- SLIDE (5,0): QUIZ SÍNCRONO -->
+        <div id="slide-quiz-sincrono" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+                <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-6">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full">Atividade In-Class</span>
+                        <h2 class="text-fluid-h1 text-[#0D4334]">🎯 Quiz Aula 02</h2>
+                        <p class="text-fluid-body text-slate-700 font-medium">Verificação imediata de presença e fixação dos conceitos de esforços e estabilidade.</p>
+                        <div class="p-4 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl space-y-1">
+                            <span class="text-fluid-tag font-bold text-[#0D4334]">Regras de Validação:</span>
+                            <p class="text-fluid-body text-slate-600">• Login corporativo obrigatório (<strong>@ufv.br</strong>).</p>
+                            <p class="text-fluid-body text-slate-600">• Apenas uma submissão computada por matrícula.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 bg-[#0D4334] text-white p-8 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 flex flex-col justify-between items-center text-center space-y-6">
+                    <div class="flex flex-col items-center justify-center bg-white p-6 rounded-3xl shadow-2xl w-full max-w-[260px] aspect-square mx-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/aula02-quiz/viewform&color=0D4334" alt="QR Code Quiz Aula 02" class="w-full h-full object-contain">
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/aula02-quiz/viewform" target="_blank" class="inline-flex items-center gap-2 px-8 py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-black tracking-wider shadow-md hover:bg-white transition-all">
+                        Link Direto para o Form
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): ENCERRAMENTO -->
+        <div id="slide-encerramento" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll bg-[#F4F6F5]">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch p-4">
+                <div class="lg:col-span-12 bg-white p-8 md:p-12 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full">Conclusão</span>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-10 w-auto object-contain">
+                    </div>
+                    <h2 class="text-fluid-h2 text-[#0D4334]">Próximos Passos & Leitura</h2>
+                    <p class="text-fluid-body text-slate-700 leading-relaxed font-medium">Na próxima sessão daremos início ao estudo da Estática das Treliças Planas e Métodos de Resolução dos Nós.</p>
+                    <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                        <strong class="text-fluid-tag text-[#0D4334] block mb-1">Leitura Recomendada:</strong>
+                        <p class="text-fluid-body text-slate-600">HIBBELER, R. C. <em>Estática: Mecânica para Engenharia</em>. Capítulos 3 e 5.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
