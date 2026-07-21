@@ -25,7 +25,7 @@ const slideGrid = {
 
 let currentX = 0; 
 let currentY = 0;
-const totalSlidesHorizontal = 10;
+const totalSlidesHorizontal = 7;
 
 function hasSlide(x, y) { 
     return !!slideGrid[`${x},${y}`]; 

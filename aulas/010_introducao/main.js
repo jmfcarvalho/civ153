@@ -217,28 +217,28 @@ const morphologyData = [
         year: "432 a.C.",
         system: "Sistema Trilítico Clássico",
         description: "Consolidação e perfeição do sistema trilítico elementar: pilares e colunas robustas trabalhando sob compressão pura para suportar vigas e entablamentos horizontais submetidos à flexão direta.",
-        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/1200px-The_Parthenon_in_Athens.jpg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Parthenon.jpg/1280px-Parthenon.jpg"
     },
     {
         title: "Catedrais Góticas",
         year: "Séc. XII - XIV",
         system: "Arcos e Vetores de Compressão",
         description: "Avanço estrutural medieval fundamentado no uso de arcos ogivais, abóbadas de nervuras e contrafortes externos. Permitiu direcionar e transferir com precisão as linhas de pressões de compressão, aliviando as paredes e atingindo alturas recordes.",
-        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Amiens_Chamber_South.jpg/1200px-Amiens_Chamber_South.jpg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/6/61/Cologne_Cathedral_interior.JPG"
     },
     {
         title: "Catedral de Brasília",
         year: "1970",
         system: "Concreto Armado de Casca Livre",
         description: "Oscar Niemeyer e Joaquim Cardozo demonstram a genialidade plástica do concreto armado. As 16 colunas hiperbólicas curvas trabalham de forma integrada, unificando a identidade estética e formal exterior à própria função de estabilidade da estrutura.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/catedral_brasilia.jpeg" // Corrigido fallback que apontava incorretamente para subdiretório de mídia interna do MediaWiki
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Catedral_Metropolitana_de_Brasilia.jpg/960px-Catedral_Metropolitana_de_Brasilia.jpg" // Corrigido fallback que apontava incorretamente para subdiretório de mídia interna do MediaWiki
     },
     {
         title: "Estruturas Contemporâneas",
         year: "Atualidade",
         system: "Treliças de Alta Performance e Sistemas Estaiados",
         description: "Superação de vãos monumentais utilizando ligas metálicas especiais, treliças espaciais tridimensionais metálicas, cabos de aço de alta resistência e concreto de ultra-alto desempenho (UHPC), otimizando a distribuição vetorial interna.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/millau_viaduct.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fb/Millau_Viaduct%2C_France_%2839307678014%29.jpg/1920px-Millau_Viaduct%2C_France_%2839307678014%29.jpg"
     }
 ];
 
@@ -280,21 +280,21 @@ const gaudiPresentationData = [
         scope: "Técnica",
         location: "Maquetes Invertidas de Cordas",
         description: "Cordas sob tensão pura sustentavam saquinhos de areia proporcionais às cargas reais das paredes. O formato de equilíbrio geométrico estável encontrado, quando fotografado e invertido de cabeça para baixo, ditava a forma perfeita do arco comprimido.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/gaudi_model_stereo.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/0/09/SagradaFamiliaStatikmodell.jpg"
     },
     {
         title: "Cripta da Colônia Güell",
         scope: "Aplicação",
         location: "Santa Coloma de Cervelló",
         description: "O laboratório de testes empíricos de Gaudí. Foram necessários 10 anos de experimentação com modelos funiculares para calcular a estabilidade estrutural complexa e a inclinação orgânica das colunas de tijolo.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/cripta_guell.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cripta_de_la_Col%C3%B2nia_G%C3%BCell_1.jpg/960px-Cripta_de_la_Col%C3%B2nia_G%C3%BCell_1.jpg"
     },
     {
         title: "Sagrada Família",
         scope: "Obra-Prima",
         location: "Barcelona, Espanha",
         description: "A consolidação absoluta do método: as colunas ramificadas como árvores transmitem cargas por compressão direta sem o uso de contrafortes medievais góticos, maximizando o espaço interno e a entrada de luz vertical.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/sagrada_familia.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Sagrada_Familia_nave_roof_detail.jpg"
     }
 ];
 
@@ -341,28 +341,28 @@ const conceptPresentationData = [
         mechanism: "Tração Axial",
         meta: "Viaduto de Millau • França",
         description: "O Viaduto de Millau (2004), projetado por Michel Virlogeux e Norman Foster, representa o auge da engenharia de cabos. Mastros verticais de aço de alta performance transmitem as cargas diretamente para o solo por meio de tirantes inclinados de aço sob tração pura, eliminando os momentos fletores massivos e permitindo vencer vãos monumentais com seções esbeltas.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/millau_viaduct.jpeg"
+        bg: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa1pf0Vvr7a_wPh_t8dZpPJyKQ08SPVb2XdavUe63_iO_6C6mSaJ-HPodO&s=10"
     },
     {
         title: "Pontes Suspensas (Cabos)",
         mechanism: "Polinômio Funicular",
         meta: "Ponte Golden Gate • EUA",
         description: "Inaugurada em 1937 em São Francisco, a estrutura demonstra a física dos cabos suspensos sob carregamento distribuído. O cabo principal assume uma geometria parabólica funicular perfeita sob ação do peso próprio da pista suspensa por pendurais verticais. O sistema trabalha exclusivamente sob forças permanentes de tração tridimensional estável.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/golden_gate.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Golden_Gate_Bridge_as_seen_from_Battery_East.jpg/1920px-Golden_Gate_Bridge_as_seen_from_Battery_East.jpg"
     },
     {
         title: "Arcos de Alvenaria (Compressão)",
         mechanism: "Linha de Pressões",
         meta: "Aqueduto de Segóvia • Espanha",
         description: "Construído pelos romanos no século II d.C., o monumento é um exemplo supremo de engenharia sem argamassa. Cada bloco de pedra talhada (aduela) transfere a carga gravitacional para o bloco vizinho por meio de forças perpendiculares de compressão pura. O desenho geométrico semicircular garante que a linha de pressões interna permaneça no terço médio das seções.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/segovia_aqueduct.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Aqueduct_of_Segovia_08.jpg/1280px-Aqueduct_of_Segovia_08.jpg"
     },
     {
         title: "Cascas de Concreto (Estabilidade)",
         mechanism: "Compressão de Membrana",
         meta: "Kresge Auditorium • EUA",
         description: "Desenvolvido por Eero Saarinen em 1955 no MIT, o edifício utiliza uma casca delgada de concreto armado de curvatura contínua. As cargas lineares e superficiais são transformadas puramente em tensões de membrana axiais de compressão pura. A forma tridimensional contínua elimina os momentos fletores locais e mitiga os riscos de flambagem elástica das bordas.",
-        bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/kresge_auditorium.jpeg"
+        bg: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/2017_Kresge_Auditorium_%28MIT_Building_W16%29%2C_48_Massachusetts_Avenue%2C_Cambridge%2C_Massachusetts_1_front1.jpg/1920px-2017_Kresge_Auditorium_%28MIT_Building_W16%29%2C_48_Massachusetts_Avenue%2C_Cambridge%2C_Massachusetts_1_front1.jpg"
     }
 ];
 
@@ -664,31 +664,31 @@ window.addEventListener('DOMContentLoaded', () => {
  */
 const bibBasicPresentationData = [
     {
-        title: "HIBBELER, R. C. Estática: Mecânica para engenharia. 10ª ed. São Paulo: Pearson, 2005[cite: 1].",
+        title: "HIBBELER, R. C. Estática: Mecânica para engenharia. 10ª ed. São Paulo: Pearson, 2005.",
         type: "Mecânica Analítica",
         availability: "Biblioteca Central UFV",
-        description: "Referência canônica indispensável para o entendimento rigoroso do equilíbrio estrito de corpos rígidos submetidos a sistemas de forças vetoriais de compressão e tração[cite: 1]. Contem o formalismo matemático e os teoremas fundamentais para o isolamento de nós e cálculo de esforços axiais internos em treliças planas e espaciais.",
+        description: "Referência canônica indispensável para o entendimento rigoroso do equilíbrio estrito de corpos rígidos submetidos a sistemas de forças vetoriais de compressão e tração. Contem o formalismo matemático e os teoremas fundamentais para o isolamento de nós e cálculo de esforços axiais internos em treliças planas e espaciais.",
         bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/bib_hibbeler_static.jpeg"
     },
     {
-        title: "BEER, F. P.; JOHNSTON, E. R. Mecânica vetorial para engenheiros - Estática. 11ª ed. São Paulo: McGraw-Hill, 2019[cite: 1].",
+        title: "BEER, F. P.; JOHNSTON, E. R. Mecânica vetorial para engenheiros - Estática. 11ª ed. São Paulo: McGraw-Hill, 2019.",
         type: "Formalismo Vetorial",
-        availability: "22 Exemplares Disponíveis[cite: 1]",
-        description: "Abordagem rigorosa voltada para a modelagem geométrica vetorial de forças coplanares e espaciais[cite: 1]. Essencial para a resolução e verificação analítica manual de reações de apoio e determinação vetorial de solicitações axiais em sistemas de barras articuladas.",
+        availability: "22 Exemplares Disponíveis",
+        description: "Abordagem rigorosa voltada para a modelagem geométrica vetorial de forças coplanares e espaciais. Essencial para a resolução e verificação analítica manual de reações de apoio e determinação vetorial de solicitações axiais em sistemas de barras articuladas.",
         bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/bib_beer_static.jpeg"
     },
     {
-        title: "REBELLO, Y. C. P. A concepção estrutural e a arquitetura. São Paulo: Editora Zigurate, 2001[cite: 1].",
+        title: "REBELLO, Y. C. P. A concepção estrutural e a arquitetura. São Paulo: Editora Zigurate, 2001.",
         type: "Concepção Estrutural",
         availability: "Biblioteca Central UFV",
-        description: "Obra seminal para a compreensão intuitiva e qualitativa da física dos edifícios[cite: 1]. Traduz as formulações matemáticas em conceitos espaciais, demonstrando como a geometria arquitetônica atua ativamente na distribuição e otimização dos caminhos de forças internas.",
+        description: "Obra seminal para a compreensão intuitiva e qualitativa da física dos edifícios. Traduz as formulações matemáticas em conceitos espaciais, demonstrando como a geometria arquitetônica atua ativamente na distribuição e otimização dos caminhos de forças internas.",
         bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/bib_rebello_concepcao.jpeg"
     },
     {
-        title: "ENGEL, H. Sistemas de estructuras. Barcelona: Editorial Gustavo Gili, 2001[cite: 1].",
+        title: "ENGEL, H. Sistemas de estructuras. Barcelona: Editorial Gustavo Gili, 2001.",
         type: "Morfologia Espacial",
-        availability: "Acervo Técnico DEC[cite: 1]",
-        description: "Atlas morfológico completo que classifica os sistemas estruturais a partir de sua atuação mecânica (forma, vetor, seção ou superfície)[cite: 1]. Fundamental para o entendimento do comportamento funicular de cabos, arcos e da malha vetorial tridimensional de coberturas em treliça.",
+        availability: "Acervo Técnico DEC",
+        description: "Atlas morfológico completo que classifica os sistemas estruturais a partir de sua atuação mecânica (forma, vetor, seção ou superfície). Fundamental para o entendimento do comportamento funicular de cabos, arcos e da malha vetorial tridimensional de coberturas em treliça.",
         bg: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/bib_engel_sistemas.jpeg"
     }
 ];
