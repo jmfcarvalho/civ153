@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>CIV 153 - Aula 03: Modelos Estruturais | DEC UFV</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <!-- Indicadores Globais -->
+    <div class="fixed top-0 left-0 h-1 bg-[#80C29D] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-6 left-8 text-fluid-meta font-bold text-[#A1A1A1] z-[1000]" id="slideIndicator">01 / 10</div>
+
+    <!-- Controles de Navegação -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full p-4 md:p-12 overflow-y-auto lg:overflow-hidden relative custom-scroll">
+
+        <!-- SLIDE (0,0): CAPA -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+                    <div class="bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV Logo" class="h-8 w-auto object-contain">
+                            <div class="h-8 w-[2px] bg-[#DEDEDE]"></div>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC Logo" class="h-9 w-auto object-contain">
+                        </div>
+                        <div class="space-y-2">
+                            <h1 class="text-fluid-h1 leading-tight">
+                                CIV 153 <span class="block text-fluid-h2 tracking-normal text-[#A1A1A1] mt-1">Introdução à Mecânica das Estruturas</span>
+                            </h1>
+                            <h2 class="text-fluid-h3 text-[#0D4334]">
+                                Aula 03 <span class="text-[#A1A1A1] font-medium block md:inline md:ml-2">• Modelos Estruturais</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="bg-[#0D4334] p-6 rounded-3xl border border-[#80C29D]/20 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div class="space-y-1">
+                            <span class="text-fluid-tag text-[#80C29D] block font-bold">Corpo Docente</span>
+                            <p class="text-fluid-body text-white font-bold">
+                                Prof. José Maria Franco de Carvalho <span class="font-normal text-slate-300">e Equipe Colaboradora</span>
+                            </p>
+                        </div>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green_text.jpeg" alt="SICon Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-lg">
+                    </div>
+                </div>
+                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 relative overflow-hidden">
+                    <div class="space-y-4 relative z-10 text-center">
+                        <div class="flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-inner my-2">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://jmfcarvalho.github.io/civ153/aulas/030_modelosestruturais/&color=0D4334" alt="QR Code" class="w-full max-w-[220px] h-auto object-contain aspect-square">
+                            <span class="text-fluid-tag text-[#0D4334] mt-2 block font-bold">Acesso aos Slides</span>
+                        </div>
+                        <h3 class="text-fluid-h3 text-white font-bold">Sistemas & Tipologias</h3>
+                        <p class="text-fluid-meta text-slate-300 max-w-xs mx-auto font-medium">Análise morfológica de cabos, membranas, arcos, cascas e reticulados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA -->
+        <div id="slide-ementa" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-12 bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Conteúdo Programático</span>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                    </div>
+                    <h2 class="text-fluid-h2 text-[#0D4334]">Visão Geral da Aula 03</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 my-2">
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">01</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Cabos e Mastros</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Trabalho sob tração pura e flexibilidade geométrica.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">02</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Membranas</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Superfícies tracionadas bidimensionais pré-tensionadas.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">03</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Arcos</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Forma funicular para compressão predominantemente pura.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">04</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Superfícies</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Chapas, placas e cascas delgadas rígidas.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">05</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Reticulados</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Sistemas formados por barras: treliças, vigas e pórticos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): CABOS E MASTROS -->
+        <div id="slide-cabos" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Modelos Unidimensionais</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Cabos e Mastros</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Os cabos resistem exclusivamente a esforços de tração pura, adaptando sua geometria à curva funicular das cargas externas.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4">
+                        Explorar Galeria de Cabos <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Invariabilidade de Tração</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Devido à nula rigidez à flexão, o cabo altera sua forma instantaneamente diante de novas cargas concentradas.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#80C29D]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Função dos Mastros</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Elementos verticais ou inclinados trabalhando sob forte compressão para absorver as componentes dos cabos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): BIFURCAÇÃO CABOS (GALERIA INTERATIVA) -->
+        <div id="slide-cabos-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Estruturas Suspensas</h3>
+                        <div class="flex flex-col gap-2" id="controls-cabos"></div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (2,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-cabos-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-cabos" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('cabos', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('cabos', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-cabos" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-cabos" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-cabos" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): MEMBRANAS -->
+        <div id="slide-membranas" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Modelos Bidimensionais</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Membranas Tensocretas</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Elementos superficiais flexíveis de espessura reduzida que transmitem cargas por tração no plano da superfície.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4">
+                        Explorar Galeria de Membranas <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Pré-Tensão Externa</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Exigem dupla curvatura anticlásica (curvaturas opostas) para evitar vibração e dobras sob ação do vento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): BIFURCAÇÃO MEMBRANAS (GALERIA INTERATIVA) -->
+        <div id="slide-membranas-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Tensoestruturas</h3>
+                        <div class="flex flex-col gap-2" id="controls-membranas"></div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (3,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-membranas-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-membranas" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('membranas', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('membranas', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-membranas" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-membranas" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-membranas" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): ARCOS -->
+        <div id="slide-arcos" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Compressão Funicular</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Arcos Estruturais</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Estruturas de eixo curvo projetadas para que o momento fletor seja minimizado, atuando sob compressão predominantemente pura.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4">
+                        Explorar Galeria de Arcos <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Empuxo Horizontal</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Os arcos transmitem forças inclinadas para os seus apoios, exigindo contrafortes ou tirantes para absorver o empuxo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1): BIFURCAÇÃO ARCOS (GALERIA INTERATIVA) -->
+        <div id="slide-arcos-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Sistemas em Arco</h3>
+                        <div class="flex flex-col gap-2" id="controls-arcos"></div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (4,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-arcos-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-arcos" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('arcos', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('arcos', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-arcos" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-arcos" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-arcos" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): SUPERFÍCIES (CHAPAS, PLACAS E CASCAS) -->
+        <div id="slide-superficies" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Modelos Bidimensionais</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Chapas, Placas e Cascas</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Elementos delgados contínuos nos quais a espessura é muito menor que a largura e o comprimento.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4">
+                        Explorar Galeria de Superfícies <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Chapas</h3>
+                            <p class="text-fluid-meta text-slate-600">Cargas atuando estritamente no plano médio (ex.: paredes estruturais e vigas-parede).</p>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border-l-4 border-[#80C29D]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Placas</h3>
+                            <p class="text-fluid-meta text-slate-600">Cargas perpendiculares ao plano médio provocando flexão (ex.: lajes planas).</p>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border-l-4 border-[#A1A1A1]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Cascas</h3>
+                            <p class="text-fluid-meta text-slate-600">Superfícies de plano médio curvo trabalhando sob esforços normais no plano da membrana.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): BIFURCAÇÃO SUPERFÍCIES (GALERIA INTERATIVA) -->
+        <div id="slide-superficies-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Superfícies Delgadas</h3>
+                        <div class="flex flex-col gap-2" id="controls-superficies"></div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (5,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-superficies-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-superficies" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('superficies', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('superficies', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-superficies" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-superficies" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-superficies" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): RETICULADOS - TRELIÇAS -->
+        <div id="slide-trelicas" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Sistemas Reticulados</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Treliças Planas e Espaciais</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Estruturas compostas por barras esbeltas interconectadas em nós rotulados, submetidas unicamente a forças axiais.</p>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-4">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
+                            Explorar Galeria de Treliças <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
+                            Abrir Montador Interativo 2D <i class="fa-solid fa-draw-polygon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Nós Ideais Rotulados</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Cargas aplicadas exclusivamente nos nós garantem a ausência de momentos fletores nas barras do sistema.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,1): BIFURCAÇÃO TRELIÇAS (GALERIA INTERATIVA DE OBRAS) -->
+        <div id="slide-trelicas-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Sistemas Treliçados</h3>
+                        <div class="flex flex-col gap-2" id="controls-trelicas"></div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                            Ir ao Montador Interativo <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (6,0)
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-trelicas-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-trelicas" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('trelicas', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('trelicas', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-trelicas" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-trelicas" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-trelicas" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,2): MONTADOR INTERATIVO DE TRELIÇAS 2D -->
+        <div id="slide-trelicas-montador" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Laboratório Virtual</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Montador de Treliças</h3>
+                        <p class="text-fluid-meta text-slate-300">Clique na área cinza para inserir novos nós e formar triângulos contínuos.</p>
+                        <div class="p-3 bg-white/10 rounded-xl space-y-1 text-fluid-meta">
+                            <p><strong>• Nós (Vermelho):</strong> Pontos articulados.</p>
+                            <p><strong>• Apoios (Azul):</strong> Vínculos de 2º gênero.</p>
+                            <p><strong>• Barras (Preto):</strong> Elementos axiais espessos.</p>
+                            <p><strong>• Zoom/Pan:</strong> Scroll do mouse ou movimento de pinça no toque.</p>
+                        </div>
+                        <button onclick="resetTrussCanvas()" class="w-full py-2 bg-red-500/80 hover:bg-red-600 text-white font-bold rounded-xl text-fluid-tag transition-all">
+                            <i class="fa-solid fa-rotate-left"></i> Reiniciar Treliça
+                        </button>
+                    </div>
+                    <button onclick="moveInGrid(0, -2)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (6,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 bg-[#F4F6F5] rounded-3xl shadow-xl relative overflow-hidden flex flex-col border border-[#DEDEDE] min-h-[480px]">
+                    <canvas id="trussCanvas" class="w-full h-full cursor-crosshair bg-[#DEDEDE]/40" style="touch-action: none;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): RETICULADOS - VIGAS E PÓRTICOS -->
+        <div id="slide-porticos" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Sistemas Reticulados</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Vigas e Pórticos</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Sistemas contínuos com ligações rígidas capazes de transmitir momentos fletores entre os elementos.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4">
+                        Explorar Galeria de Pórticos <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border-l-4 border-[#0D4334]">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Continuidade de Nós Rígidos</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">A rigidez das conexões possibilita a redistribuição de momentos fletores entre vigas e pilares.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,1): BIFURCAÇÃO PÓRTICOS (GALERIA INTERATIVA) -->
+        <div id="slide-porticos-galeria" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Obras de Referência</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Vigas e Pórticos</h3>
+                        <div class="flex flex-col gap-2" id="controls-porticos"></div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (7,0)
+                    </button>
+                </div>
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] border border-[#DEDEDE]">
+                    <div id="viewer-porticos-img" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 p-6 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-porticos" class="font-bold text-fluid-h3 text-white"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery('porticos', -1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery('porticos', 1)" class="p-2 bg-black/40 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-lg transition-all backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-porticos" class="font-mono text-fluid-tag font-bold bg-[#80C29D] text-[#0D4334] px-2 py-0.5 rounded"></span>
+                            <span id="index-porticos" class="font-mono text-fluid-tag text-[#80C29D] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-porticos" class="text-fluid-meta text-slate-200 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,2): LABORATORIO VIRTUAL DE PORTICOS -->
+        <div id="slide-porticos-simulador" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                
+                <!-- PAINEL DE CONTROLE (COLUNA ESQUERDA) -->
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block uppercase tracking-wider">Laboratório Virtual</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Análise de Pórticos</h3>
+                        
+                        <div class="flex flex-col gap-2">
+                            <button onclick="setFrameType('rotulado')" id="btn-frame-rotulado" class="py-2.5 px-4 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Vigas Rotuladas</button>
+                            <button onclick="setFrameType('rigido')" id="btn-frame-rigido" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Ligações Rígidas</button>
+                            <button onclick="setFrameType('contraventado')" id="btn-frame-contraventado" class="py-2.5 px-4 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Pórtico Contraventado</button>
+                        </div>
+
+                        <!-- SLIDER DE CARGA HORIZONTAL -->
+                        <div class="pt-4 border-t border-white/10 space-y-2">
+                            <div class="flex justify-between items-center text-fluid-tag">
+                                <span class="font-bold text-[#80C29D]">Força Horizontal ($F$):</span>
+                                <span id="frame-force-value" class="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded text-fluid-meta">0%</span>
+                            </div>
+                            <input type="range" id="frame-force-slider" min="0" max="100" value="0" oninput="updateFrameDeformation()" class="w-full accent-[#80C29D] cursor-pointer h-2 bg-white/20 rounded-lg">
+                            <span class="text-fluid-meta text-slate-300 block text-center font-medium">Arraste para aplicar carga lateral no topo</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="moveInGrid(0, -2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (7,0)
+                    </button>
+                </div>
+
+                <!-- CANVAS SVG DO PORTICO (COLUNA DIREITA) -->
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between items-center text-center min-h-[480px]">
+                    <div id="frame-sim-title" class="text-fluid-h3 text-[#0D4334] font-bold">Pórtico com Vigas Rotuladas</div>
+                    
+                    <div class="w-full h-80 bg-[#80C29D] rounded-2xl flex items-center justify-center p-2 relative overflow-hidden shadow-inner border border-[#0D4334]/20 my-auto">
+                        <svg id="frame-svg" viewBox="0 0 500 360" class="w-full h-full">
+                            <defs>
+                                <marker id="arrow-red-frame" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#E53E3E" />
+                                </marker>
+                            </defs>
+                            <g id="frame-elements-group"></g>
+                        </svg>
+                    </div>
+
+                    <p id="frame-sim-desc" class="text-fluid-meta text-slate-600 font-medium">Pilares fletem sob ação do vetor de topo enquanto vigas articuladas deslocam-se sem curvatura.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SLIDE (8,0): QUIZ SÍNCRONO -->
+        <div id="slide-quiz" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Atividade In-Class</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334]">Quiz Aula 03</h2>
+                        <p class="text-fluid-body text-slate-700 font-medium">Validação de presença e verificação de fixação sobre modelos estruturais.</p>
+                        <div class="p-4 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl space-y-1">
+                            <span class="text-fluid-tag font-bold text-[#0D4334]">Instruções:</span>
+                            <p class="text-fluid-meta text-slate-600">• Login via e-mail institucional (<strong>@ufv.br</strong>).</p>
+                            <p class="text-fluid-meta text-slate-600">• Submissão única individual.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 bg-[#0D4334] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 flex flex-col justify-between items-center text-center space-y-4">
+                    <div class="flex flex-col items-center justify-center bg-white p-4 rounded-3xl shadow-2xl w-full max-w-[240px] aspect-square mx-auto my-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header&color=0D4334" alt="QR Code Quiz" class="w-full h-full object-contain">
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSez2QHwlZ1Ry3XBy0HoQMyuqk1_Cols-meENfL3gZA2FFfhxQ/viewform?usp=header" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold shadow-md hover:bg-white transition-all">
+                        Link Direto para o Formulário
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (9,0): ENCERRAMENTO -->
+        <div id="slide-encerramento" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-12 bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Conclusão</span>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                    </div>
+                    <h2 class="text-fluid-h2 text-[#0D4334]">Próximos Passos</h2>
+                    <p class="text-fluid-body text-slate-700 leading-relaxed font-medium">Na próxima sessão daremos início ao estudo das Propriedades Geométricas das Áreas Planas (Centro de Gravidade e Momento de Inércia).</p>
+                    <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                        <strong class="text-fluid-tag text-[#0D4334] block mb-1">Leitura Recomendada:</strong>
+                        <p class="text-fluid-meta text-slate-600">REBELLO, Y. C. P. A concepção estrutural e a arquitetura. São Paulo: Editora Zigurate, 2001.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
