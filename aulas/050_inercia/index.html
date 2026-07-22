@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>CIV 153 - Aula 03: Modelos Estruturais | DEC UFV</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <!-- Indicador de Progresso Superior e Contador de Slides -->
+    <div class="fixed top-0 left-0 h-1.5 bg-[#80C29D] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-6 left-8 text-fluid-meta font-bold text-[#A1A1A1] z-[1000]" id="slideIndicator">01 / 10</div>
+
+    <!-- Controles Nacionais Nativos da Apresentação em Malha 2D -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" title="Slide Superior"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" title="Slide Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" title="Próximo Slide"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" title="Slide Inferior (Sub-tópico)"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- MAIN SLIDE CONTAINER -->
+    <main class="w-full h-full p-4 md:p-8 overflow-hidden relative">
+
+        <!-- SLIDE (0,0): CAPA DA AULA 05 -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+                    <div class="bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV Logo" class="h-8 w-auto object-contain">
+                            <div class="h-8 w-[2px] bg-[#DEDEDE]"></div>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC Logo" class="h-9 w-auto object-contain">
+                        </div>
+                        <div class="space-y-2">
+                            <h1 class="text-fluid-h1 leading-tight">
+                                CIV 153 <span class="block text-fluid-h2 tracking-normal text-[#A1A1A1] mt-1">Introdução à Mecânica das Estruturas</span>
+                            </h1>
+                            <h2 class="text-fluid-h3 text-[#0D4334]">
+                                Aula 05 <span class="text-[#A1A1A1] font-medium block md:inline md:ml-2">• Momento de Inércia, Produto de Inércia e Teorema dos Eixos Paralelos</span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="bg-[#0D4334] p-6 rounded-3xl border border-[#80C29D]/20 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div class="space-y-1">
+                            <span class="text-fluid-tag text-[#80C29D] block font-bold">Corpo Docente</span>
+                            <p class="text-fluid-body text-white font-bold">
+                                Prof. José Maria Franco de Carvalho <span class="font-normal text-slate-300">e Equipe Colaboradora</span>
+                            </p>
+                        </div>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green_text.jpeg" alt="SICon Logo" class="h-12 w-auto object-contain bg-white p-1 rounded-lg">
+                    </div>
+                </div>
+                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 relative overflow-hidden">
+                    <div class="space-y-4 relative z-10 text-center">
+                        <div class="flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-inner my-2">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://jmfcarvalho.github.io/civ153/aulas/050_inercia/&color=0D4334" alt="QR Code Slides" class="w-full max-w-[190px] h-auto object-contain aspect-square">
+                            <span class="text-fluid-tag text-[#0D4334] mt-2 block font-bold">Acesso aos Slides Interativos</span>
+                        </div>
+                        <h3 class="text-fluid-h3 text-white font-bold">Inércia Rotacional e Geometria</h3>
+                        <p class="text-fluid-meta text-slate-300 max-w-xs mx-auto font-medium">Momentos de 2ª ordem, Teorema de Steiner, produto de inércia e otimização estrutural de seções caixão e perfil I.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA DA AULA 05 -->
+        <div id="slide-ementa" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-12 bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Conteúdo Programático</span>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                    </div>
+                    <h2 class="text-fluid-h2 text-[#0D4334]">Visão Geral da Aula 05</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 my-2">
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">01</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Fundamentos de Inércia</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Analogia física: patinadora, equilibrista e conservação de momento angular.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">02</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Momento de Inércia </br> ($I_x, I_y$)</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Momento de 2ª ordem, cálculo integral literal do retângulo e galeria de formas.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">03</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Atividades Interativas</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Comparativos paramétricos: Seção Cheia vs. Caixão vs. Perfil I.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">04</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Teorema de Steiner</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Eixos paralelos</br> ($I_x = I_{\bar{x}} + A d^2$)</br> e transferência de momentos.</p>
+                        </div>
+                        <div class="p-4 bg-[#F4F6F5] border border-[#DEDEDE] rounded-2xl flex flex-col justify-between">
+                            <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold w-fit">05</span>
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-2">Produto de Inércia & Construtor</h3>
+                            <p class="text-fluid-meta text-slate-600 mt-1">Conceituação de $I_{xy}$ e Construtor com eixos móveis e quadrantes coloridos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): INTRODUÇÃO E CONCEITOS FUNDAMENTAIS -->
+        <div id="slide-introducao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10 space-y-4">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Física da Rotação</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Inércia Rotacional e Conservação</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">A inércia de rotação mede a resistência de um corpo a alterar sua velocidade angular. Quanto mais distante a massa está do eixo de rotação, maior é o Momento de Inércia </br> ($I = \int r^2 dm$).</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 hover:bg-white">
+                            Laboratório: Conservação do Momento Angular <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
+                            Laboratório: Simulação de Órbita Planetária <i class="fa-solid fa-globe"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <!-- Quadro Comparativo com Animações / Ilustrações Didáticas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Fenômeno 1: Patinadora -->
+                        <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
+                            <div>
+                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">1. Patinadora no Gelo</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1">Efeito dos Braços Recolhidos</h3>
+                                <p class="text-fluid-meta text-slate-600 mt-1">Pela conservação do momento angular ($L = I \cdot \omega = \text{const}$): ao recolher braços e pernas, o raio diminui, reduzindo $I$. Para $L$ ser constante, a velocidade angular $\omega$ aumenta drasticamente!</p>
+                            </div>
+                            <div class="w-full h-40 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
+                                <svg viewBox="0 0 200 120" class="w-full h-full">
+                                    <!-- Animação vetorial estilizada da Patinadora -->
+                                    <circle cx="100" cy="30" r="12" fill="#80C29D" />
+                                    <line x1="100" y1="42" x2="100" y2="85" stroke="#80C29D" stroke-width="6" />
+                                    <!-- Braços fechados vs abertos -->
+                                    <path d="M 100 55 Q 85 70 100 80 Q 115 70 100 55" fill="none" stroke="#FFFFFF" stroke-width="4">
+                                        <animate attributeName="d" values="M 100 55 Q 85 70 100 80 Q 115 70 100 55; M 60 50 Q 100 55 140 50; M 100 55 Q 85 70 100 80 Q 115 70 100 55" dur="3s" repeatCount="indefinite"/>
+                                    </path>
+                                    <!-- Vetor de Rotação Giro -->
+                                    <ellipse cx="100" cy="100" rx="35" ry="8" fill="none" stroke="#80C29D" stroke-width="2" stroke-dasharray="4,4">
+                                        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="1s" repeatCount="indefinite"/>
+                                    </ellipse>
+                                </svg>
+                                <span class="absolute bottom-1 right-2 text-[10px] text-white/70 font-mono">L = I · ω = constante</span>
+                            </div>
+                        </div>
+
+                        <!-- Fenômeno 2: Equilibrista -->
+                        <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
+                            <div>
+                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">2. Equilibrista na Corda</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1">Função da Barra Longa</h3>
+                                <p class="text-fluid-meta text-slate-600 mt-1">A barra longa afasta massas para as extremidades, elevando enormemente o Momento de Inércia ($I$). Isso aumenta a resistência a acelerações rotacionais, tornando o tombo muito mais lento e controlável.</p>
+                            </div>
+                            <div class="w-full h-40 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
+                                <svg viewBox="0 0 200 120" class="w-full h-full">
+                                    <!-- Corda Bamba -->
+                                    <line x1="10" y1="95" x2="190" y2="95" stroke="#A1A1A1" stroke-width="3" />
+                                    <!-- Equilibrista com oscilação lenta -->
+                                    <g id="equilibrist">
+                                        <circle cx="100" cy="35" r="10" fill="#80C29D" />
+                                        <line x1="100" y1="45" x2="100" y2="95" stroke="#FFFFFF" stroke-width="5" />
+                                        <!-- Barra do equilibrista super longa -->
+                                        <line x1="25" y1="58" x2="175" y2="58" stroke="#80C29D" stroke-width="5" />
+                                        <circle cx="25" cy="58" r="6" fill="#E53E3E" />
+                                        <circle cx="175" cy="58" r="6" fill="#E53E3E" />
+                                        <animateTransform attributeName="transform" type="rotate" values="-4 100 95; 4 100 95; -4 100 95" dur="4s" repeatCount="indefinite"/>
+                                    </g>
+                                </svg>
+                                <span class="absolute bottom-1 right-2 text-[10px] text-white/70 font-mono">Elevado I = Estabilidade</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): BIFURCAÇÃO INTERATIVA - CONSERVAÇÃO DO MOMENTO ANGULAR -->
+        <div id="slide-conservacao-momento" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Laboratório de Mecânica Rotacional</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Conservação do Momento Angular</h3>
+                        <p class="text-fluid-meta text-slate-300">Altere a Massa ($m$) e o Raio ($r$) para observar o impacto direto no Momento de Inércia ($I = m r^2$) e na Velocidade Angular ($\omega = L/I$).</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Massa da Partícula ($m$): <span id="skater-m-val" class="font-bold text-[#80C29D]">5 kg</span></label>
+                                <input type="range" id="slider-skater-m" min="1" max="15" value="5" oninput="updateSkaterSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Raio do Raio de Giro ($r$): <span id="skater-r-val" class="font-bold text-[#80C29D]">2.0 m</span></label>
+                                <input type="range" id="slider-skater-r" min="0.5" max="4.0" step="0.1" value="2.0" oninput="updateSkaterSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Tópico Principal (2,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-meta text-slate-500 block font-bold">Momento Angular ($L$)</span>
+                            <span class="text-fluid-h3 text-[#0D4334] font-bold">100.0 kg·m²/s</span>
+                            <span class="text-[10px] text-slate-400 block">(Constante no sistema)</span>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="text-fluid-meta text-slate-500 block font-bold">Momento de Inércia ($I = m r^2$)</span>
+                            <span id="skater-i-res" class="text-fluid-h3 text-[#0D4334] font-bold">20.0 kg·m²</span>
+                        </div>
+                        <div class="p-3 bg-[#0D4334] text-white rounded-xl">
+                            <span class="text-fluid-meta text-[#80C29D] block font-bold">Velocidade Angular ($\omega = L/I$)</span>
+                            <span id="skater-w-res" class="text-fluid-h3 text-white font-bold">5.00 rad/s</span>
+                        </div>
+                    </div>
+
+                    <!-- Animação do Movimento de Rotação em Canvas SVG -->
+                    <div class="w-full h-64 bg-slate-900 rounded-2xl border border-[#DEDEDE] flex items-center justify-center relative overflow-hidden">
+                        <svg id="skater-canvas" viewBox="0 0 400 240" class="w-full h-full">
+                            <!-- Eixo de Rotação Central -->
+                            <line x1="200" y1="20" x2="200" y2="220" stroke="#80C29D" stroke-width="2" stroke-dasharray="4,4" />
+                            <circle cx="200" cy="120" r="8" fill="#80C29D" />
+                            
+                            <!-- Grupo Giratório -->
+                            <g id="skater-rot-group">
+                                <line id="skater-arm-1" x1="200" y1="120" x2="280" y2="120" stroke="#FFFFFF" stroke-width="4" />
+                                <line id="skater-arm-2" x1="200" y1="120" x2="120" y2="120" stroke="#FFFFFF" stroke-width="4" />
+                                <circle id="skater-mass-1" cx="280" cy="120" r="12" fill="#E53E3E" />
+                                <circle id="skater-mass-2" cx="120" cy="120" r="12" fill="#E53E3E" />
+                            </g>
+                            <path id="skater-orbit-path" d="M 120 120 A 80 80 0 1 0 280 120 A 80 80 0 1 0 120 120" fill="none" stroke="#80C29D" stroke-width="1.5" stroke-dasharray="3,3" />
+                        </svg>
+                        <div class="absolute top-3 left-4 bg-black/60 px-3 py-1 rounded-full text-white text-fluid-tag">
+                            <i class="fa-solid fa-sync fa-spin text-[#80C29D] mr-1"></i> Regra: $r \downarrow \implies \omega \uparrow$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,2): BIFURCAÇÃO INTERATIVA - ÓRBITA DOS PLANETAS -->
+        <div id="slide-orbitas-planetas" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Astrofísica da Rotação</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Órbitas Planetárias (2ª Lei de Kepler)</h3>
+                        <p class="text-fluid-meta text-slate-300">Como a força gravitacional é central (torque nulo), o momento angular orbital é estritamente conservado: no **Periélio** (menor $r$), a velocidade tangencial $v$ é máxima. No **Afélio** (maior $r$), a velocidade $v$ é mínima.</p>
+                        <div class="p-3 bg-white/10 rounded-xl space-y-1 text-fluid-meta">
+                            <p><strong>Periélio:</strong> $r_{\min} \implies v_{\max}$</p>
+                            <p><strong>Afélio:</strong> $r_{\max} \implies v_{\min}$</p>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, -2)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Tópico Principal (2,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="w-full h-80 bg-slate-950 rounded-2xl border border-[#DEDEDE] flex items-center justify-center relative overflow-hidden">
+                        <svg id="planet-canvas" viewBox="0 0 450 260" class="w-full h-full">
+                            <!-- Órbita Elíptica -->
+                            <ellipse cx="225" cy="130" rx="170" ry="90" fill="none" stroke="#80C29D" stroke-width="2" stroke-dasharray="4,4" />
+                            <!-- Sol no Foco da Elipse -->
+                            <circle cx="150" cy="130" r="16" fill="#F6AD55" />
+                            <circle cx="150" cy="130" r="24" fill="#F6AD55" fill-opacity="0.3" />
+                            <text x="140" y="100" fill="#F6AD55" font-bold font-size="12">Sol (Foco)</text>
+
+                            <!-- Planeta em Movimento -->
+                            <g id="planet-group">
+                                <circle id="planet-body" cx="395" cy="130" r="9" fill="#63B3ED" />
+                                <line id="planet-radius-line" x1="150" y1="130" x2="395" y2="130" stroke="#63B3ED" stroke-width="1.5" opacity="0.6" />
+                            </g>
+                        </svg>
+                        <div class="absolute bottom-3 left-4 bg-black/70 p-2.5 rounded-xl text-white text-fluid-meta space-y-1">
+                            <div>Raio Instantâneo ($r$): <span id="planet-r-disp" class="text-[#80C29D] font-bold">--</span></div>
+                            <div>Velocidade Orbital ($v$): <span id="planet-v-disp" class="text-amber-400 font-bold">--</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): MOMENTO DE INÉRCIA -->
+        <div id="slide-conceito-inercia" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Momento de 2ª Ordem</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Momento de Inércia da Área</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">O Momento de Inércia de uma área plana mede a distribuição da área em relação a um eixo. Na Resistência dos Materiais, ele determina a resistência da seção transversal à flexão.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4 hover:bg-white">
+                        Desenvolvimento Integral Passo a Passo (Retângulo) <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Formulação Matemática Geral</h3>
+                        <p class="text-fluid-body text-slate-700">Com o elemento diferencial de área $dA$ localizado nas coordenadas $(x,y)$, os momentos de inércia em relação aos eixos $x$ e $y$ são dados por:</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
+                            <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                                <span class="text-fluid-tag text-[#0D4334] font-bold block mb-1">Em relação ao Eixo X:</span>
+                                <div class="text-fluid-h3 text-[#0D4334] font-bold">$$I_x = \int_A y^2 \, dA$$</div>
+                                <span class="text-fluid-meta text-slate-500 block mt-1">Unidade: $[m^4]$ ou $[cm^4]$</span>
+                            </div>
+                            <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                                <span class="text-fluid-tag text-[#0D4334] font-bold block mb-1">Em relação ao Eixo Y:</span>
+                                <div class="text-fluid-h3 text-[#0D4334] font-bold">$$I_y = \int_A x^2 \, dA$$</div>
+                                <span class="text-fluid-meta text-slate-500 block mt-1">Unidade: $[m^4]$ ou $[cm^4]$</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl">
+                            <p class="text-fluid-meta text-slate-700 font-medium"><strong>Nota Física Fundamental:</strong> Como as distâncias $y$ e $x$ aparecem elevadas ao quadrado, o momento de inércia de área é <strong>rigorosamente sempre positivo</strong> ($I > 0$).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): BIFURCAÇÃO DEMONSTRAÇÃO DO CÁLCULO INTEGRAL DO RETÂNGULO -->
+        <div id="slide-calculo-retangulo" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Demonstração Passo a Passo</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Cálculo Integral do Retângulo</h3>
+                        <p class="text-fluid-meta text-slate-300">Escolha o eixo de referência para acompanhar o desenvolvimento da integração infinitesimal da faixa $dA = b \, dy$.</p>
+                        
+                        <div class="flex flex-col gap-2 pt-2">
+                            <button onclick="setRectDerivationStep('basal')" id="btn-rect-basal" class="py-2.5 px-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold text-left shadow-md">1. Eixo Basal ($I_x = \frac{b h^3}{3}$)</button>
+                            <button onclick="setRectDerivationStep('centroidal')" id="btn-rect-centroidal" class="py-2.5 px-3 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded-xl text-fluid-tag font-bold text-left">2. Eixo Centroidal ($I_{\bar{x}} = \frac{b h^3}{12}$)</button>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (3,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <h3 id="rect-deriv-title" class="text-fluid-h2 text-[#0D4334] font-bold"></h3>
+                        <div id="rect-deriv-content" class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] text-fluid-body text-slate-700 space-y-2"></div>
+                    </div>
+
+                    <div class="w-full h-44 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex items-center justify-center p-2 relative">
+                        <svg id="rect-deriv-svg" viewBox="0 0 360 160" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): GALERIA DE FORMAS GEOMÉTRICAS BÁSICAS -->
+        <div id="slide-galeria-formas" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Quadro Completo de Fórmulas</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Propriedades Geométricas</h3>
+                        <p class="text-fluid-meta text-slate-300">Navegue pelas figuras elementares da engenharia para consultar suas áreas e momentos de inércia centroidais.</p>
+                        <div class="flex flex-col gap-2" id="controls-shapes-gallery">
+                            <!-- Botoes de selecao gerados via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between border-b border-[#DEDEDE] pb-2">
+                            <h3 id="shape-title" class="text-fluid-h2 text-[#0D4334] font-bold"></h3>
+                            <span id="shape-tag" class="text-fluid-tag bg-[#80C29D] text-[#0D4334] px-3 py-1 rounded-full font-bold"></span>
+                        </div>
+                        <p id="shape-desc" class="text-fluid-body text-slate-600 font-medium"></p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                            <span class="text-fluid-tag text-[#0D4334] font-bold block">Área ($A$)</span>
+                            <div id="shape-formula-a" class="text-fluid-h3 text-[#0D4334] mt-1"></div>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                            <span class="text-fluid-tag text-[#0D4334] font-bold block">Inércia $I_{\bar{x}}$</span>
+                            <div id="shape-formula-ix" class="text-fluid-h3 text-[#0D4334] mt-1"></div>
+                        </div>
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                            <span class="text-fluid-tag text-[#0D4334] font-bold block">Inércia $I_{\bar{y}}$</span>
+                            <div id="shape-formula-iy" class="text-fluid-h3 text-[#0D4334] mt-1"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-52 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex items-center justify-center p-2">
+                        <svg id="shape-svg-display" viewBox="0 0 360 190" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): ATIVIDADE INTERATIVA 1 - SEÇÃO RETANGULAR -->
+        <div id="slide-retangulo-interativo" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Atividade Interativa 01</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Seção Retangular Paramétrica</h3>
+                        <p class="text-fluid-meta text-slate-300">Ajuste os cursores de base ($b$) e altura ($h$). A imagem redesenha em escala proporcional real sem distorção.</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Base ($b$): <span id="act1-b-val" class="font-bold text-[#80C29D]">15 cm</span></label>
+                                <input type="range" id="slider-act1-b" min="5" max="40" value="15" oninput="updateAct1Rect()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Altura ($h$): <span id="act1-h-val" class="font-bold text-[#80C29D]">30 cm</span></label>
+                                <input type="range" id="slider-act1-h" min="5" max="40" value="30" oninput="updateAct1Rect()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1 hover:bg-white">
+                            Próximo: Comparativo Seção Caixão <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <!-- Tabela de Propriedades da Seção Retangular -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#0D4334] text-white">
+                                    <th class="p-3 rounded-tl-xl">Parâmetro Geométrico</th>
+                                    <th class="p-3">Fórmula Analítica</th>
+                                    <th class="p-3 rounded-tr-xl">Valor Numérico Calculado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#DEDEDE] bg-[#F4F6F5]">
+                                <tr>
+                                    <td class="p-3 font-bold text-[#0D4334]">Área da Seção ($A$)</td>
+                                    <td class="p-3 font-mono">$b \cdot h$</td>
+                                    <td id="act1-res-a" class="p-3 font-bold text-[#0D4334]">450.00 cm²</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-[#0D4334]">Inércia Centroidal ($I_{\bar{x}}$)</td>
+                                    <td class="p-3 font-mono">$\frac{b h^3}{12}$</td>
+                                    <td id="act1-res-ix" class="p-3 font-bold text-[#0D4334]">33750.00 cm⁴</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-[#0D4334]">Inércia Centroidal ($I_{\bar{y}}$)</td>
+                                    <td class="p-3 font-mono">$\frac{h b^3}{12}$</td>
+                                    <td id="act1-res-iy" class="p-3 font-bold text-[#0D4334]">8437.50 cm⁴</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Desenho SVG Proporcional da Seção Retangular -->
+                    <div class="w-full h-60 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex items-center justify-center p-2 relative">
+                        <svg id="act1-svg" viewBox="0 0 380 220" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): BIFURCAÇÃO ATIVIDADE INTERATIVA 2 - RETÂNGULO CHEIO VS SEÇÃO CAIXÃO -->
+        <div id="slide-caixao-comparativo" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Atividade Interativa 02</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Retângulo vs. Seção Caixão</h3>
+                        <p class="text-fluid-meta text-slate-300">Compare a eficiência estrutural da seção tubular vazada (caixão) frente ao bloco maciço equivalente.</p>
+
+                        <div class="space-y-2 pt-1">
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Base Externa ($b$): <span id="box-b-val" class="font-bold text-[#80C29D]">20 cm</span></label>
+                                <input type="range" id="slider-box-b" min="10" max="40" value="20" oninput="updateBoxSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Altura Externa ($h$): <span id="box-h-val" class="font-bold text-[#80C29D]">30 cm</span></label>
+                                <input type="range" id="slider-box-h" min="10" max="40" value="30" oninput="updateBoxSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Espessura Mesas ($t_f$): <span id="box-tf-val" class="font-bold text-[#80C29D]">3 cm</span></label>
+                                <input type="range" id="slider-box-tf" min="1" max="8" value="3" oninput="updateBoxSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Espessura Almas ($t_w$): <span id="box-tw-val" class="font-bold text-[#80C29D]">2 cm</span></label>
+                                <input type="range" id="slider-box-tw" min="1" max="8" value="2" oninput="updateBoxSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                            Próximo: Comparativo Perfil I <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-arrow-up"></i> Retornar à Atividade 1 (5,0)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <!-- Tabela de 3 Colunas Comparativa -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#0D4334] text-white">
+                                    <th class="p-2.5 rounded-tl-xl">Propriedade</th>
+                                    <th class="p-2.5">Retangular Cheia</th>
+                                    <th class="p-2.5">Seção Caixão</th>
+                                    <th class="p-2.5 rounded-tr-xl">% Redução / Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#DEDEDE] bg-[#F4F6F5]">
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Área da Seção ($A$)</td>
+                                    <td id="box-a-solid" class="p-2.5">600.0 cm²</td>
+                                    <td id="box-a-box" class="p-2.5">216.0 cm²</td>
+                                    <td id="box-a-diff" class="p-2.5 font-bold text-emerald-600">-64.0% (Massa)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Inércia $I_{\bar{x}}$</td>
+                                    <td id="box-ix-solid" class="p-2.5">45000.0 cm⁴</td>
+                                    <td id="box-ix-box" class="p-2.5">31232.0 cm⁴</td>
+                                    <td id="box-ix-diff" class="p-2.5 font-bold text-amber-600">-30.6% (Inércia)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Inércia $I_{\bar{y}}$</td>
+                                    <td id="box-iy-solid" class="p-2.5">20000.0 cm⁴</td>
+                                    <td id="box-iy-box" class="p-2.5">11712.0 cm⁴</td>
+                                    <td id="box-iy-diff" class="p-2.5 font-bold text-amber-600">-41.4% (Inércia)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Duas Imagens Lado a Lado SVG -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="h-44 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col items-center justify-center p-2 relative">
+                            <span class="absolute top-2 left-3 text-fluid-tag text-[#0D4334] font-bold">1. Seção Retangular Cheia</span>
+                            <svg id="box-svg-solid" viewBox="0 0 200 150" class="w-full h-full mt-2"></svg>
+                        </div>
+                        <div class="h-44 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col items-center justify-center p-2 relative">
+                            <span class="absolute top-2 left-3 text-fluid-tag text-[#0D4334] font-bold">2. Seção Caixão Vazada</span>
+                            <svg id="box-svg-box" viewBox="0 0 200 150" class="w-full h-full mt-2"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,2): BIFURCAÇÃO ATIVIDADE INTERATIVA 3 - RETÂNGULO CHEIO VS PERFIL I -->
+        <div id="slide-perfil-i-comparativo" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Atividade Interativa 03</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Retângulo vs. Perfil I</h3>
+                        <p class="text-fluid-meta text-slate-300">Análise do consagrado Perfil I da engenharia estrutural: concentração de material nas mesas distantes do eixo centroidal.</p>
+
+                        <div class="space-y-2 pt-1">
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Base Flanges ($b$): <span id="ibeam-b-val" class="font-bold text-[#80C29D]">20 cm</span></label>
+                                <input type="range" id="slider-ibeam-b" min="10" max="40" value="20" oninput="updateIBeamSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Altura Total ($h$): <span id="ibeam-h-val" class="font-bold text-[#80C29D]">30 cm</span></label>
+                                <input type="range" id="slider-ibeam-h" min="10" max="40" value="30" oninput="updateIBeamSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Espessura Mesas ($t_f$): <span id="ibeam-tf-val" class="font-bold text-[#80C29D]">3 cm</span></label>
+                                <input type="range" id="slider-ibeam-tf" min="1" max="8" value="3" oninput="updateIBeamSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Espessura Alma ($t_w$): <span id="ibeam-tw-val" class="font-bold text-[#80C29D]">2 cm</span></label>
+                                <input type="range" id="slider-ibeam-tw" min="1" max="8" value="2" oninput="updateIBeamSim()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, -2)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar à Atividade 1 (5,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#0D4334] text-white">
+                                    <th class="p-2.5 rounded-tl-xl">Propriedade</th>
+                                    <th class="p-2.5">Retangular Cheia</th>
+                                    <th class="p-2.5">Perfil I Simétrico</th>
+                                    <th class="p-2.5 rounded-tr-xl">% Redução / Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#DEDEDE] bg-[#F4F6F5]">
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Área da Seção ($A$)</td>
+                                    <td id="ibeam-a-solid" class="p-2.5">600.0 cm²</td>
+                                    <td id="ibeam-a-ibeam" class="p-2.5">168.0 cm²</td>
+                                    <td id="ibeam-a-diff" class="p-2.5 font-bold text-emerald-600">-72.0% (Massa)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Inércia $I_{\bar{x}}$</td>
+                                    <td id="ibeam-ix-solid" class="p-2.5">45000.0 cm⁴</td>
+                                    <td id="ibeam-ix-ibeam" class="p-2.5">23160.0 cm⁴</td>
+                                    <td id="ibeam-ix-diff" class="p-2.5 font-bold text-amber-600">-48.5% (Inércia)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-[#0D4334]">Inércia $I_{\bar{y}}$</td>
+                                    <td id="ibeam-iy-solid" class="p-2.5">20000.0 cm⁴</td>
+                                    <td id="ibeam-iy-ibeam" class="p-2.5">4016.0 cm⁴</td>
+                                    <td id="ibeam-iy-diff" class="p-2.5 font-bold text-amber-600">-79.9% (Inércia)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="h-44 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col items-center justify-center p-2 relative">
+                            <span class="absolute top-2 left-3 text-fluid-tag text-[#0D4334] font-bold">1. Seção Retangular Cheia</span>
+                            <svg id="ibeam-svg-solid" viewBox="0 0 200 150" class="w-full h-full mt-2"></svg>
+                        </div>
+                        <div class="h-44 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col items-center justify-center p-2 relative">
+                            <span class="absolute top-2 left-3 text-fluid-tag text-[#0D4334] font-bold">2. Perfil I com Alma Única</span>
+                            <svg id="ibeam-svg-ibeam" viewBox="0 0 200 150" class="w-full h-full mt-2"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): SUMA DE MOMENTOS DE INÉRCIA E NECESSIDADE DE EIXO COMUM -->
+        <div id="slide-soma-inercias" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Problema da Aditividade</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Soma de Momentos de Inércia</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">Não podemos somar diretamente os momentos de inércia $I_{\bar{x}i}$ calculados em relação aos eixos centroidais locais de cada subárea! É **obrigatório** transferir todas as parcelas para um eixo comum de referência.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 hover:bg-white">
+                            Demonstração Matemática de Steiner <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
+                            Laboratório: Teorema dos Eixos Paralelos <i class="fa-solid fa-sliders"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-3">
+                    <div class="p-4 bg-amber-500/10 border-l-4 border-amber-500 rounded-r-xl space-y-1">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Erro Clássico a Evitar:</h3>
+                        <p class="text-fluid-body text-slate-700">$$\text{Incorreto: } I_{X,\text{total}} \neq \sum I_{\bar{x}i}$$</p>
+                        <p class="text-fluid-meta text-slate-600">Somar momentos em eixos paralelos distintos violaria o conceito de momento de 2ª ordem, pois as distâncias à linha neutra seriam ignoradas.</p>
+                    </div>
+
+                    <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Solução da Engenharia:</h3>
+                        <p class="text-fluid-body text-slate-700">Utilizar o **Teorema dos Eixos Paralelos (Teorema de Steiner)** para transportar o momento de inércia de cada elemento básico do seu centroide local ($\bar{x}_i, \bar{y}_i$) para o eixo global de interesse ($X, Y$).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,1): BIFURCAÇÃO DESENVOLVIMENTO MATEMÁTICO DO TEOREMA DE STEINER -->
+        <div id="slide-teorema-steiner" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Dedução Analítica</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Teorema dos Eixos Paralelos</h3>
+                        <p class="text-fluid-meta text-slate-300">Demonstração rigorosa a partir da mudança de coordenadas $y = y' + d_y$, onde $y'$ é medido a partir do centroide local.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (6,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="p-5 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] space-y-3 text-fluid-body text-[#0D4334]">
+                        <h3 class="text-fluid-h3 font-bold">Passo a Passo da Integração:</h3>
+                        <p>1. Definição do eixo paralelo deslocado a uma distância $d_y$:</p>
+                        $$I_x = \int_A y^2 \, dA = \int_A (y' + d_y)^2 \, dA$$
+                        
+                        <p>2. Expansão do trinômio quadrado perfeito:</p>
+                        $$I_x = \int_A (y')^2 \, dA + 2 d_y \int_A y' \, dA + d_y^2 \int_A dA$$
+
+                        <p>3. Identificação das parcelas integrais:</p>
+                        <ul class="list-disc list-inside text-fluid-meta text-slate-700 pl-2 space-y-1">
+                            <li>$\int_A (y')^2 \, dA = I_{\bar{x}}$ (Momento de inércia centroidal local).</li>
+                            <li>$\int_A y' \, dA = Q_{\bar{x}} = 0$ (Momento estático no centroide é **nulo**).</li>
+                            <li>$\int_A dA = A$ (Área total do elemento).</li>
+                        </ul>
+
+                        <div class="p-3 bg-[#0D4334] text-white rounded-xl text-center font-bold text-fluid-h3 mt-2">
+                            $$I_x = I_{\bar{x}} + A \cdot d_y^2$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,2): BIFURCAÇÃO LABORATÓRIO INTERATIVO DO TEOREMA DE STEINER -->
+        <div id="slide-lab-steiner" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 rounded-3xl shadow-xl flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Simulador de Eixos Paralelos</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Cantoneira de Abas Desiguais</h3>
+                        <p class="text-fluid-meta text-slate-300">Desloque os eixos de referência ($d_x, d_y$). Observe o acréscimo de inércia proporcional ao termo $A \cdot d^2$.</p>
+
+                        <div class="space-y-3 pt-2">
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Deslocamento Eixo X ($d_y$): <span id="steiner-dy-val" class="font-bold text-[#80C29D]">0 cm</span></label>
+                                <input type="range" id="slider-steiner-dy" min="-15" max="15" value="0" oninput="updateSteinerLab()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-fluid-meta text-slate-200 block">Deslocamento Eixo Y ($d_x$): <span id="steiner-dx-val" class="font-bold text-[#80C29D]">0 cm</span></label>
+                                <input type="range" id="slider-steiner-dx" min="-15" max="15" value="0" oninput="updateSteinerLab()" class="w-full accent-[#80C29D] h-2 bg-white/20 rounded-lg cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, -2)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (6,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-fluid-meta">
+                        <div class="p-3 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE]">
+                            <span class="font-bold text-[#0D4334] block">Inércia Centroidal ($I_{\bar{x}}$):</span>
+                            <span id="steiner-ix-cent" class="text-fluid-h3 font-bold text-[#0D4334]">1250.0 cm⁴</span>
+                        </div>
+                        <div class="p-3 bg-[#0D4334] text-white rounded-xl">
+                            <span class="font-bold text-[#80C29D] block">Inércia Eixo Deslocado ($I_x = I_{\bar{x}} + A d_y^2$):</span>
+                            <span id="steiner-ix-shift" class="text-fluid-h3 font-bold text-white">1250.0 cm⁴</span>
+                            <span id="steiner-ix-pct" class="text-xs text-[#80C29D] block font-bold">+0.0% de variação</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas SVG de Cantoneira com Eixos Centroidais e Deslocados -->
+                    <div class="w-full h-64 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex items-center justify-center p-2 relative">
+                        <svg id="steiner-svg" viewBox="0 0 380 240" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): PRODUTO DE INÉRCIA -->
+        <div id="slide-produto-inercia" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                            <span class="text-fluid-tag text-[#80C29D] font-bold">Inércia Cruzada</span>
+                        </div>
+                        <h2 class="text-fluid-h2 text-white">Produto de Inércia</br> ($I_{xy}$)</h2>
+                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">O produto de inércia mede a assimetria da distribuição de área em relação aos eixos cartesianos. Ao contrário dos momentos de inércia $I_x$ e $I_y$, o produto de inércia $I_{xy}$ **pode ser positivo, negativo ou nulo**.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 mt-4 hover:bg-white">
+                        Abrir Construtor Interativo de 5 Retângulos <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Formulação e Propriedade de Simetria</h3>
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] text-center">
+                            <div class="text-fluid-h3 text-[#0D4334] font-bold">$$I_{xy} = \int_A x \cdot y \, dA$$</div>
+                        </div>
+
+                        <div class="p-4 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl space-y-1">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Teorema da Simetria:</h3>
+                            <p class="text-fluid-body text-slate-700">Se a seção plana possuir **pelo menos um eixo de simetria** paralelo aos eixos de referência, o Produto de Inércia centroidal é **estritamente nulo** ($I_{\bar{x}\bar{y}} = 0$).</p>
+                        </div>
+
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] space-y-1">
+                            <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Teorema de Steiner para $I_{xy}$:</h3>
+                            <div class="text-fluid-h3 text-[#0D4334] font-bold font-mono text-center">$$I_{xy} = I_{\bar{x}\bar{y}} + A \cdot d_x \cdot d_y$$</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,1): BIFURCAÇÃO CONSTRUTOR INTERATIVO AVANÇADO DE SEÇÕES COMPOSTAS -->
+        <div id="slide-builder-compostas" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-5 rounded-3xl shadow-xl flex flex-col justify-between space-y-3 border border-white/10">
+                    <div class="space-y-2">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Laboratório de Seções Compostas</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Construtor de até 5 Retângulos</h3>
+                        
+                        <!-- Presets Rápidos -->
+                        <div class="space-y-1">
+                            <label class="text-fluid-meta text-slate-200 block font-bold">Modelos Pré-definidos (Presets):</label>
+                            <div class="grid grid-cols-3 gap-1">
+                                <button onclick="loadBuilderPreset('rect')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Retângulo</button>
+                                <button onclick="loadBuilderPreset('angle')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Cantoneira L</button>
+                                <button onclick="loadBuilderPreset('tee')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Seção T</button>
+                                <button onclick="loadBuilderPreset('ibeam')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Perfil I</button>
+                                <button onclick="loadBuilderPreset('box')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Caixão</button>
+                                <button onclick="loadBuilderPreset('box-septo')" class="py-1 px-2 bg-white/10 hover:bg-[#80C29D] hover:text-[#0D4334] text-white rounded text-[11px] font-bold">Caixão/Septo</button>
+                            </div>
+                        </div>
+
+                        <!-- Ativação e Deslocamento dos 5 Retângulos -->
+                        <div class="space-y-1 pt-1 max-h-[180px] overflow-y-auto custom-scroll pr-1" id="builder-rect-controls">
+                            <!-- Inserido dinamicamente via JS -->
+                        </div>
+                    </div>
+
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> Retornar ao Conceito (7,0)
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-5 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-3">
+                    <!-- Tabela de Resultados do Construtor -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#0D4334] text-white">
+                                    <th class="p-2 rounded-tl-xl">Referencial de Eixos</th>
+                                    <th class="p-2">Área ($cm²$)</th>
+                                    <th class="p-2">Centroide $(\bar{X}, \bar{Y})$</th>
+                                    <th class="p-2">$I_x$ ($cm⁴$)</th>
+                                    <th class="p-2">$I_y$ ($cm⁴$)</th>
+                                    <th class="p-2 rounded-tr-xl">$I_{xy}$ ($cm⁴$)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#DEDEDE] bg-[#F4F6F5]">
+                                <tr>
+                                    <td class="p-2 font-bold text-[#0D4334]">Eixos Centroidais ($\bar{x}, \bar{y}$)</td>
+                                    <td id="bld-a-tot" class="p-2 font-bold">--</td>
+                                    <td id="bld-c-pos" class="p-2 font-bold text-amber-600">--</td>
+                                    <td id="bld-ix-cent" class="p-2 font-bold">--</td>
+                                    <td id="bld-iy-cent" class="p-2 font-bold">--</td>
+                                    <td id="bld-ixy-cent" class="p-2 font-bold">--</td>
+                                </tr>
+                                <tr class="bg-[#80C29D]/20">
+                                    <td class="p-2 font-bold text-[#0D4334]">Eixos Interativos ($X, Y$)</td>
+                                    <td id="bld-a-tot2" class="p-2 font-bold">--</td>
+                                    <td id="bld-interactive-pos" class="p-2 font-bold text-[#0D4334]">--</td>
+                                    <td id="bld-ix-inter" class="p-2 font-bold text-[#0D4334]">--</td>
+                                    <td id="bld-iy-inter" class="p-2 font-bold text-[#0D4334]">--</td>
+                                    <td id="bld-ixy-inter" class="p-2 font-bold text-[#0D4334]">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Canvas SVG do Construtor com Eixos Interativos e Quadrantes Coloridos -->
+                    <div class="w-full h-72 bg-slate-900 rounded-2xl border border-[#DEDEDE] flex items-center justify-center relative overflow-hidden cursor-crosshair" id="builder-svg-container">
+                        <svg id="builder-svg" viewBox="0 0 500 300" class="w-full h-full"></svg>
+                        
+                        <div class="absolute top-2 left-3 bg-black/60 px-3 py-1 rounded-full text-white text-[11px] font-bold pointer-events-none">
+                            <span class="inline-block w-2.5 h-2.5 bg-blue-500/60 rounded mr-1"></span> Quadrantes Positivos ($x \cdot y > 0$) 
+                            <span class="inline-block w-2.5 h-2.5 bg-red-500/60 rounded ml-3 mr-1"></span> Quadrantes Negativos ($x \cdot y < 0$)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (8,0): QUIZ SÍNCRONO DA AULA 05 -->
+        <div id="slide-quiz" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Atividade In-Class</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334]">Quiz Aula 05</h2>
+                        <p class="text-fluid-body text-slate-700 font-medium">Validação de presença e verificação de fixação sobre Momentos de Inércia, Teorema de Steiner e Produto de Inércia.</p>
+                        <div class="p-4 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl space-y-1">
+                            <span class="text-fluid-tag font-bold text-[#0D4334]">Instruções:</span>
+                            <p class="text-fluid-meta text-slate-600">• Login obrigatório via e-mail institucional (<strong>@ufv.br</strong>).</p>
+                            <p class="text-fluid-meta text-slate-600">• Submissão única individual realizada em tempo real.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 bg-[#0D4334] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 flex flex-col justify-between items-center text-center space-y-4">
+                    <div class="flex flex-col items-center justify-center bg-white p-4 rounded-3xl shadow-2xl w-full max-w-[220px] aspect-square mx-auto my-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/1FAIpQLSfwAmhtPqwkapScSofsVK7CcWQdL0mQd9WrrcwHh-8jPD3wQA/viewform?usp=header&color=0D4334" alt="QR Code Quiz" class="w-full h-full object-contain">
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfwAmhtPqwkapScSofsVK7CcWQdL0mQd9WrrcwHh-8jPD3wQA/viewform?usp=header" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold shadow-md hover:bg-white transition-all">
+                        Link Direto para o Formulário Google Forms
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (9,0): ENCERRAMENTO E EXERCÍCIOS OFF-CLASS -->
+        <div id="slide-encerramento" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+                <div class="lg:col-span-7 bg-white p-8 md:p-10 rounded-r-3xl border-l-[16px] border-[#0D4334] shadow-xl space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-fluid-tag text-[#0D4334] bg-[#0D4334]/10 px-3 py-1 rounded-full font-bold">Conclusão & Tarefas Extraclasse</span>
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_green.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                        </div>
+                        <h2 class="text-fluid-h2 text-[#0D4334]">Próximos Passos (Aula 06)</h2>
+                        <p class="text-fluid-body text-slate-700 leading-relaxed font-medium">
+                            Na próxima sessão abordaremos a <strong>Rotação de Eixos e Eixos Principais de Inércia (Círculo de Mohr para Inércia)</strong>, descobrindo as direções onde a inércia de flexão é máxima e mínima e onde o produto de inércia se anula.
+                        </p>
+                        
+                        <div class="p-4 bg-[#F4F6F5] rounded-xl border border-[#DEDEDE] space-y-1">
+                            <strong class="text-fluid-tag text-[#0D4334] block">Instruções para os Exercícios Off-Class:</strong>
+                            <p class="text-fluid-meta text-slate-600">• Resolva a lista de exercícios extraclasse sobre Momento e Produto de Inércia.</p>
+                            <p class="text-fluid-meta text-slate-600">• Submeta o memorial de cálculo digitalizado pelo formulário Google Forms ao lado.</p>
+                        </div>
+                        
+                        <div class="p-4 bg-[#0D4334]/5 border-l-4 border-[#80C29D] rounded-r-xl">
+                            <strong class="text-fluid-tag text-[#0D4334] block mb-1">Leitura Recomendada:</strong>
+                            <p class="text-fluid-meta text-slate-600">BEER, F. P. et al. Mecânica dos Materiais. 7ª Edição. AMGH, 2021. Cap. 7: Momentos Principais de Inércia e Círculo de Mohr.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#80C29D]/30 flex flex-col justify-between items-center text-center space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-fluid-tag text-[#80C29D] font-bold block">Entrega Obrigatória</span>
+                        <h3 class="text-fluid-h3 text-white font-bold">Exercícios Off-Class</h3>
+                        <p class="text-fluid-meta text-slate-300">Escaneie o QR Code abaixo para acessar o formulário de entrega dos exercícios extraclasse.</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-center bg-white p-4 rounded-3xl shadow-2xl w-full max-w-[210px] aspect-square mx-auto my-auto">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/1FAIpQLScU4x0GBO-IpPj4Mc4tuya_fzs7awJBfoTZTnhGfBe5-sgZzA/viewform?usp=header&color=0D4334" alt="QR Code Exercícios Off-Class" class="w-full h-full object-contain">
+                    </div>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScU4x0GBO-IpPj4Mc4tuya_fzs7awJBfoTZTnhGfBe5-sgZzA/viewform?usp=header" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold shadow-md hover:bg-white transition-all w-full justify-center">
+                        <i class="fa-solid fa-file-arrow-up"></i> Formulário de Entrega Off-Class
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
