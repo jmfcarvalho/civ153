@@ -119,84 +119,80 @@
         </div>
 
         <!-- SLIDE (2,0): INTRODUÇÃO E CONCEITOS FUNDAMENTAIS -->
-        <div id="slide-introducao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
-                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10 space-y-4">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
-                            <span class="text-fluid-tag text-[#80C29D] font-bold">Física da Rotação</span>
-                        </div>
-                        <h2 class="text-fluid-h2 text-white">Inércia Rotacional e Conservação</h2>
-                        <p class="text-fluid-body text-slate-300 leading-relaxed font-medium">A inércia de rotação mede a resistência de um corpo a alterar sua velocidade angular. Quanto mais distante a massa está do eixo de rotação, maior é o Momento de Inércia </br> ($I = \int r^2 dm$).</p>
-                    </div>
-                    <div class="space-y-2">
-                        <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 hover:bg-white">
-                            Laboratório: Conservação do Momento Angular <i class="fa-solid fa-arrow-down"></i>
-                        </button>
-                        <button onclick="moveInGrid(0, 2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
-                            Laboratório: Simulação de Órbita Planetária <i class="fa-solid fa-globe"></i>
-                        </button>
-                    </div>
+<div id="slide-introducao" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-16 custom-scroll">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2">
+        <!-- Coluna Esquerda: Teoria e Navegação -->
+        <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 rounded-3xl flex flex-col justify-between shadow-2xl border border-white/10 space-y-4">
+            <div class="space-y-4">
+                <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/logo_white.jpeg" alt="SICon Logo" class="h-8 w-auto object-contain">
+                    <span class="text-fluid-tag text-[#80C29D] font-bold">Física da Rotação</span>
                 </div>
-
-                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
-                    <!-- Quadro Comparativo com Animações / Ilustrações Didáticas -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Fenômeno 1: Patinadora -->
-                        <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
-                            <div>
-                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">1. Patinadora no Gelo</span>
-                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1">Efeito dos Braços Recolhidos</h3>
-                                <p class="text-fluid-meta text-slate-600 mt-1">Pela conservação do momento angular ($L = I \cdot \omega = \text{const}$): ao recolher braços e pernas, o raio diminui, reduzindo $I$. Para $L$ ser constante, a velocidade angular $\omega$ aumenta drasticamente!</p>
-                            </div>
-                            <div class="w-full h-40 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
-                                <svg viewBox="0 0 200 120" class="w-full h-full">
-                                    <!-- Animação vetorial estilizada da Patinadora -->
-                                    <circle cx="100" cy="30" r="12" fill="#80C29D" />
-                                    <line x1="100" y1="42" x2="100" y2="85" stroke="#80C29D" stroke-width="6" />
-                                    <!-- Braços fechados vs abertos -->
-                                    <path d="M 100 55 Q 85 70 100 80 Q 115 70 100 55" fill="none" stroke="#FFFFFF" stroke-width="4">
-                                        <animate attributeName="d" values="M 100 55 Q 85 70 100 80 Q 115 70 100 55; M 60 50 Q 100 55 140 50; M 100 55 Q 85 70 100 80 Q 115 70 100 55" dur="3s" repeatCount="indefinite"/>
-                                    </path>
-                                    <!-- Vetor de Rotação Giro -->
-                                    <ellipse cx="100" cy="100" rx="35" ry="8" fill="none" stroke="#80C29D" stroke-width="2" stroke-dasharray="4,4">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="1s" repeatCount="indefinite"/>
-                                    </ellipse>
-                                </svg>
-                                <span class="absolute bottom-1 right-2 text-[10px] text-white/70 font-mono">L = I · ω = constante</span>
-                            </div>
-                        </div>
-
-                        <!-- Fenômeno 2: Equilibrista -->
-                        <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
-                            <div>
-                                <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">2. Equilibrista na Corda</span>
-                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1">Função da Barra Longa</h3>
-                                <p class="text-fluid-meta text-slate-600 mt-1">A barra longa afasta massas para as extremidades, elevando enormemente o Momento de Inércia ($I$). Isso aumenta a resistência a acelerações rotacionais, tornando o tombo muito mais lento e controlável.</p>
-                            </div>
-                            <div class="w-full h-40 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
-                                <svg viewBox="0 0 200 120" class="w-full h-full">
-                                    <!-- Corda Bamba -->
-                                    <line x1="10" y1="95" x2="190" y2="95" stroke="#A1A1A1" stroke-width="3" />
-                                    <!-- Equilibrista com oscilação lenta -->
-                                    <g id="equilibrist">
-                                        <circle cx="100" cy="35" r="10" fill="#80C29D" />
-                                        <line x1="100" y1="45" x2="100" y2="95" stroke="#FFFFFF" stroke-width="5" />
-                                        <!-- Barra do equilibrista super longa -->
-                                        <line x1="25" y1="58" x2="175" y2="58" stroke="#80C29D" stroke-width="5" />
-                                        <circle cx="25" cy="58" r="6" fill="#E53E3E" />
-                                        <circle cx="175" cy="58" r="6" fill="#E53E3E" />
-                                        <animateTransform attributeName="transform" type="rotate" values="-4 100 95; 4 100 95; -4 100 95" dur="4s" repeatCount="indefinite"/>
-                                    </g>
-                                </svg>
-                                <span class="absolute bottom-1 right-2 text-[10px] text-white/70 font-mono">Elevado I = Estabilidade</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 class="text-fluid-h2 text-white font-['Montserrat'] font-black">Inércia Rotacional e Conservação</h2>
+                <p class="text-fluid-body text-slate-300 leading-relaxed font-medium font-['Roboto']">
+                    A inércia de rotação mede a resistência de um corpo a alterar sua velocidade angular. Quanto mais distante a massa está do eixo de rotação, maior é o Momento de Inércia <br> ($I = \int r^2 dm$).
+                </p>
+            </div>
+            <div class="space-y-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-2.5 bg-[#80C29D] text-[#0D4334] rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2 hover:bg-white">
+                    Laboratório: Conservação do Momento Angular <i class="fa-solid fa-arrow-down"></i>
+                </button>
+                <button onclick="moveInGrid(0, 2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all flex items-center justify-center gap-2">
+                    Laboratório: Simulação de Órbita Planetária <i class="fa-solid fa-globe"></i>
+                </button>
             </div>
         </div>
+
+        <!-- Coluna Direita: Vídeos Demonstrativos -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Fenômeno 1: Patinadora (Vídeo) -->
+                <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">1. Patinadora no Gelo</span>
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1 font-['Roboto']">Efeito dos Braços Recolhidos</h3>
+                        <p class="text-fluid-meta text-slate-600 mt-1 font-['Roboto']">
+                            Pela conservação do momento angular ($L = I \cdot \omega = \text{const}$): ao recolher braços e pernas, o raio diminui, reduzindo $I$. Para $L$ ser constante, a velocidade angular $\omega$ aumenta drasticamente!
+                        </p>
+                    </div>
+                    <div class="w-full h-44 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+        <!-- Rota do arquivo bruto (RAW) -->
+        <source src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/patinadora.mp4" type="video/mp4">
+        <!-- Rota relativa local fallback -->
+        <source src="./assets/images/patinadora.mp4" type="video/mp4">
+        Seu navegador não suporta a exibição deste vídeo.
+    </video>
+                        <span class="absolute bottom-1 right-2 text-[10px] text-white/90 bg-black/60 px-1.5 py-0.5 rounded font-mono">L = I · ω = constante</span>
+                    </div>
+                </div>
+
+                <!-- Fenômeno 2: Equilibrista (Vídeo) -->
+                <div class="p-4 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE] flex flex-col justify-between space-y-3">
+                    <div>
+                        <span class="text-fluid-tag bg-[#0D4334] text-[#80C29D] px-2 py-0.5 rounded font-bold">2. Equilibrista na Corda</span>
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-bold mt-1 font-['Roboto']">Função da Barra Longa</h3>
+                        <p class="text-fluid-meta text-slate-600 mt-1 font-['Roboto']">
+                            A barra longa afasta massas para as extremidades, elevando enormemente o Momento de Inércia ($I$). Isso aumenta a resistência a acelerações rotacionais, tornando o tombo muito mais lento e controlável.
+                        </p>
+                    </div>
+                    <div class="w-full h-44 bg-slate-900 rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-[#DEDEDE]">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+        <!-- Rota do arquivo bruto (RAW) -->
+        <source src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/equilibrista.mp4" type="video/mp4">
+        <!-- Rota relativa local fallback -->
+        <source src="./assets/images/equilibrista.mp4" type="video/mp4">
+        Seu navegador não suporta a exibição deste vídeo.
+    </video>
+                        <span class="absolute bottom-1 right-2 text-[10px] text-white/90 bg-black/60 px-1.5 py-0.5 rounded font-mono">Elevado I = Estabilidade</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- SLIDE (2,1): BIFURCAÇÃO INTERATIVA - CONSERVAÇÃO DO MOMENTO ANGULAR -->
         <div id="slide-conservacao-momento" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-4 custom-scroll">
