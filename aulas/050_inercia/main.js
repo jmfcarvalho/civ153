@@ -244,7 +244,19 @@
                     <text x="248" y="58" fill="#E53E3E" font-bold font-size="11">dA = b · dy</text>
                 `
             }
+            
         };
+        function updateStep(stepKey) {
+    const step = rectDerivSteps[stepKey];
+    document.getElementById('title-container').innerHTML = step.title;
+    document.getElementById('content-container').innerHTML = step.content;
+    document.getElementById('draw-container').innerHTML = step.draw();
+    
+    // Aciona o processamento do MathJax para atualizar as fórmulas na tela
+    if (window.MathJax) {
+        MathJax.typesetPromise([document.getElementById('content-container'), document.getElementById('title-container')]);
+    }
+}
 
         function setRectDerivationStep(key) {
             ['basal', 'centroidal'].forEach(k => {
