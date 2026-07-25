@@ -30,6 +30,8 @@
     
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=PT+Sans+Narrow:wght@400;700&display=swap');
         /* ============================================================================
            1. PALETA DE CORES & TIPOGRAFIA FLUIDA (Manual PMS)
            ============================================================================ */
@@ -51,8 +53,9 @@
             --fluid-meta: clamp(0.88rem, 1.3vw, 1.1rem);
             --fluid-tag: clamp(0.80rem, 1.1vw, 1.0rem);
 
-            --font-title: 'Liberation San', 'Arial', sans-serif;
-            --font-body: 'Liberation Sans Narrow', 'PT Sans Narrow', 'Arial Narrow', sans-serif;
+/* Pilha Tipográfica Institucional PMS (Liberation Sans + Fallbacks) */
+--font-title: 'Montserrat', 'Arial Black', sans-serif;
+--font-body: 'Liberation Sans Narrow', 'PT Sans Narrow', 'Arial Narrow', sans-serif;
         }
 
         /* Reset e bloqueio de rolagens parasitas */
@@ -77,10 +80,13 @@
         .text-fluid-h1 {
             font-family: var(--font-title);
             font-size: var(--fluid-h1);
-            font-weight: 800;
+            font-weight: 900;
             line-height: 1.1;
             color: var(--pms-red);
             letter-spacing: 0.01em;
+            display: inline-block;
+transform: scaleX(0.9);
+transform-origin: left center;
         }
 
         .text-fluid-h2 {
@@ -89,7 +95,11 @@
             font-weight: 800;
             line-height: 1.15;
             color: var(--pms-red);
-            letter-spacing: 0.01em;
+            letter-spacing: 0.00em;
+            display: inline-block;
+transform: scaleX(0.9);
+transform-origin: left center;
+
         }
 
         .text-fluid-h3 {
@@ -97,6 +107,7 @@
             font-size: var(--fluid-h3);
             font-weight: 700;
             line-height: 1.2;
+            letter-spacing: 0.04em;
         }
 
         .text-fluid-body {
@@ -213,8 +224,6 @@
                             <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV Logo" class="h-8 w-auto object-contain">
                             <div class="h-6 w-[2px] bg-[#DEDEDE]"></div>
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC Logo" class="h-8 w-auto object-contain">
-                            <div class="h-6 w-[2px] bg-[#DEDEDE]"></div>
-                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS Logo" class="h-12 w-auto object-contain">
                         </div>
                         <div class="space-y-2">
                             <h1 class="text-fluid-h1 leading-tight">
@@ -227,19 +236,21 @@
                     </div>
                     <div class="bg-[#333333] text-white p-6 rounded-3xl border border-[#D1A705]/40 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div class="space-y-1">
-                            <span class="text-fluid-tag text-[#D1A705] block font-bold">Corpo Docente & Coordenação</span>
-                            <p class="text-fluid-body text-white font-bold">
+                            <span class="text-fluid-tag text-[#D1A705] block font-bold">Docente & Coordenação</span>
+                            <p class="text-fluid-body text-white font-bold h-15">
                                 Prof. José Maria Franco de Carvalho
                             </p>
                         </div>
-                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS Logo White" class="h-12 w-auto object-contain bg-white/60 p-1.5 rounded-lg border border-white/20">
-                    </div>
+    <a href="https://pms.ufv.br" target="_blank" rel="noopener noreferrer" class="inline-block">
+        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms_black_text.png" alt="PMS Logo Black Text" class="h-20 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-white/20">
+    </a>
+</div>
                 </div>
                 <div class="lg:col-span-4 flex flex-col justify-between bg-[#333333] text-white p-6 rounded-3xl shadow-2xl border-2 border-[#D1A705]/40 relative overflow-hidden">
                     <div class="space-y-4 relative z-10 text-center">
                         <div class="flex flex-col items-center justify-center bg-white p-4 rounded-2xl shadow-inner my-2">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://pms.ufv.br/aulas/06_rotacao_inercia_mohr/&color=901812" alt="QR Code Slides" class="w-full max-w-[200px] h-auto object-contain aspect-square">
-                            <span class="text-fluid-tag text-[#333333] mt-2 block font-bold">Acesso Didático (pms.ufv.br)</span>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://pms.ufv.br/aulas/060_eixosprincipais/&color=901812" alt="QR Code Slides" class="w-full max-w-[200px] h-auto object-contain aspect-square">
+                            <span class="text-fluid-tag text-[#333333] mt-2 block font-bold">Acesso Didático</span>
                         </div>
                         <h3 class="text-fluid-h3 text-white font-bold">Propriedades Geométricas</h3>
                         <p class="text-fluid-meta text-slate-200 max-w-xs mx-auto font-medium">Transformação de coordenadas de inércia, estado principal e construção geométrica de Otto Mohr.</p>
@@ -627,7 +638,7 @@
                             <p class="text-fluid-meta text-slate-600">• Login obrigatório com e-mail institucional (@ufv.br).</p>
                             <p class="text-fluid-meta text-slate-600">• Resposta individual durante o horário de aula.</p>
                         </div>
-                    </div>pms_logo
+                    </div>
                     <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS Logo" class="h-12 w-auto object-contain self-start">
                 </div>
 
@@ -637,9 +648,9 @@
                         <h3 class="text-fluid-h3 text-white font-bold">Formulário de Avaliação Síncrona</h3>
                     </div>
                     <div class="flex flex-col items-center justify-center bg-white p-4 rounded-3xl shadow-2xl w-full max-w-[220px] aspect-square mx-auto my-auto">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header&color=901812" alt="QR Code Quiz In-Class" class="w-full h-full object-contain">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://docs.google.com/forms/d/e/1FAIpQLScrtyRVtVa0eap4k3TeUKYvXZWgdvBl1BQzqzfP6YiS-xxkCw/viewform?usp=header&color=901812" alt="QR Code Quiz In-Class" class="w-full h-full object-contain">
                     </div>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#D1A705] text-[#333333] rounded-xl text-fluid-tag font-bold shadow-md hover:bg-white transition-all">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScrtyRVtVa0eap4k3TeUKYvXZWgdvBl1BQzqzfP6YiS-xxkCw/viewform?usp=header" target="_blank" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[#D1A705] text-[#333333] rounded-xl text-fluid-tag font-bold shadow-md hover:bg-white transition-all">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Quiz In-Class
                     </a>
                 </div>
@@ -658,14 +669,10 @@
                             Resolução do problema de rotação e momentos principais para o perfil Z assimétrico, submetendo o memorial via Google Forms.
                         </p>
                         <div class="flex items-center gap-4 bg-white p-3 rounded-2xl w-fit">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header&color=333333" alt="QR Off Class" class="w-24 h-24 object-contain">
-                            <div class="text-left space-y-1">
-                                <span class="text-fluid-tag text-[#333333] block font-bold">Prazo de Envio:</span>
-                                <p class="text-fluid-meta text-slate-600">Até a próxima aula prática.</p>
-                            </div>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://docs.google.com/forms/d/e/1FAIpQLSd0g71KWmYuxMI-E0wteZK7Nn-opj53oNbsIgDLpu3kFNPLbw/viewform?usp=header&color=333333" alt="QR Off Class" class="w-30 h-30 object-contain">
                         </div>
                     </div>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header" target="_blank" class="w-full py-2.5 bg-[#D1A705] text-[#333333] text-center rounded-xl text-fluid-tag font-bold hover:bg-white transition-all">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0g71KWmYuxMI-E0wteZK7Nn-opj53oNbsIgDLpu3kFNPLbw/viewform?usp=header" target="_blank" class="w-full py-2.5 bg-[#D1A705] text-[#333333] text-center rounded-xl text-fluid-tag font-bold hover:bg-white transition-all">
                         Acessar Formulário Off-Class
                     </a>
                 </div>
@@ -692,7 +699,7 @@
                     <div class="p-3 bg-[#333333] text-white rounded-2xl flex justify-between items-center">
                         <div>
                             <span class="text-fluid-tag text-[#D1A705] block font-bold">Próxima Aula (Aula 07):</span>
-                            <p class="text-fluid-meta text-slate-200">Tensões Normais e Flexão Simples/Composta em Vigas.</p>
+                            <p class="text-fluid-meta text-slate-200">Forças e Resultantes.</p>
                         </div>
                         <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS White" class="h-12 w-auto">
                     </div>
