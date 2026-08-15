@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 - Aula 030: Modelos Estruturais | PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================================= -->
+    <!-- CENTRAL RESOURCE DIRECTORY                                               -->
+    <!-- ========================================================================= -->
+    <script>
+        const COURSE_ASSETS = {
+            logos: {
+                ufv: "https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png",
+                pms: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png"
+            },
+            
+            slideBackgrounds: {
+                "0_0": "bg-geometric1.png",
+                "1_0": "bg-concrete1.png",
+                "2_0": "bg-blocks1.png",
+                "2_1": "",
+                "3_0": "bg-polymer1.png",
+                "3_1": "",
+                "4_0": "bg-clay1.png",
+                "4_1": "",
+                "5_0": "bg-blocks2.png",
+                "5_1": "",
+                "6_0": "bg-geometric2.png",
+                "6_1": "",
+                "6_2": "",
+                "7_0": "bg-concrete1.png",
+                "7_1": "",
+                "7_2": "",
+                "8_0": "bg-geometric1.png",
+                "9_0": "bg-blocks3.png"
+            },
+
+            externalLinks: {
+                presentationAccess: "https://jmfcarvalho.github.io/civ153/030.html",
+                googleFormsQuiz: "https://docs.google.com/forms/d/e/1FAIpQLSffAiejHSHFtquj4eZ1zLvc5wnQgd7VFOXcpClceJdUInkrjw/viewform?usp=header",
+                weeklyAssignment: "https://docs.google.com/forms/d/e/1FAIpQLSdgz4DSRn8fWad0mDApLpQlzPAED_72djbrlSLM5j0FiUnZ_A/viewform?usp=header",
+                pmsPortal: "https://jmfcarvalho.github.io/civ153/"
+            },
+
+            qrCodeGenerator: (url, color = "901812") => 
+                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&color=${color}`
+        };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: STYLES & IMMUTABLE CSS VARIABLES                              -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-bg: #F4F6F5;
+            --pms-card-light: rgba(255, 255, 255, 0.65);
+            --pms-card-dark: rgba(51, 51, 51, 0.70);
+            --pms-text-muted: #444444;
+
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans Narrow', sans-serif;
+
+            --fluid-h1: clamp(1.8rem, 3.4vw, 2.8rem);
+            --fluid-h2: clamp(1.4rem, 2.4vw, 2.0rem);
+            --fluid-h3: clamp(1.2rem, 1.8vw, 1.5rem);
+            --fluid-body: clamp(1.0rem, 1.4vw, 1.25rem);
+            --fluid-meta: clamp(0.85rem, 1.1vw, 1.05rem);
+            --fluid-tag: clamp(0.75rem, 0.95vw, 0.95rem);
+        }
+
+        html, body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background-color: var(--pms-bg);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 900; color: var(--pms-red); line-height: 1.05; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.35; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); color: var(--pms-text-muted); font-weight: 600; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .card-borderless-glass {
+            border: none !important;
+            background-color: var(--pms-card-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-dark {
+            border: none !important;
+            background-color: var(--pms-card-dark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass:hover, .card-borderless-glass-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.10);
+        }
+
+        .bg-right-fade {
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
+            position: relative;
+        }
+        .bg-right-fade::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--pms-bg) 20%, rgba(244, 246, 245, 0.65) 50%, rgba(244, 246, 245, 0.15) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            overflow-y: auto;
+        }
+        .slide-screen > * { position: relative; z-index: 2; }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left   { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right  { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up     { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down   { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 1.25rem; right: 1.5rem; width: 130px; height: 130px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 44px; height: 44px; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50%; color: #A1A1A1; font-size: 1.3rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; opacity: 0.25; pointer-events: none;
+            transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            border: none;
+        }
+        .control-arrow.nav-up { top: 0; left: 43px; }
+        .control-arrow.nav-down { bottom: 0; left: 43px; }
+        .control-arrow.nav-left { top: 43px; left: 0; }
+        .control-arrow.nav-right { top: 43px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-red); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--pms-red); color: #FFFFFF; transform: scale(1.15); }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--pms-red); border-radius: 8px; }
+
+        @keyframes kenburns {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.08) translate(-1%, -1%); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+        .animate-kenburns { animation: kenburns 16s ease-in-out infinite alternate; }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <!-- TOP PROGRESS BAR -->
+    <div class="fixed top-0 left-0 h-2 bg-[#D1A705] transition-all duration-500 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <!-- RESPONSIVE SLIDE INDICATOR -->
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-8 text-fluid-meta font-bold text-[#333333] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-md z-[1000] flex items-center space-x-3">
+        <span class="w-3 h-3 rounded-full bg-[#901812]"></span>
+        <span id="slideIndicator">Slide (0,0)</span>
+    </div>
+
+    <!-- TOUCH CONTROLS -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: HTML BODY & SLIDE STRUCTURE                                    -->
+    <!-- ========================================================================= -->
+    <main class="w-full h-full relative">
+
+        <!-- SLIDE (0,0): CAPA -->
+        <div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center gap-4">
+                <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm">
+                    <img id="img-logo-ufv-0-0" alt="UFV Logo" class="h-10 sm:h-12 w-auto">
+                    <div class="h-10 w-[1px] bg-[#DEDEDE]"></div>
+                    <span class="text-fluid-tag text-[#333333]">CIV 153</span>
+                </div>
+                <a id="link-pms-portal-0-0" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <img id="img-logo-pms-0-0" alt="PMS Logo" class="h-12 sm:h-16 w-auto">
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full my-auto py-6">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="p-8 sm:p-12 rounded-3xl card-borderless-glass border-l-[16px] border-[#901812]">
+                        <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">CIV 153 — DEPARTAMENTO DE ENGENHARIA CIVIL</span>
+                        <h1 class="text-fluid-h1 mb-4">MODELOS ESTRUTURAIS<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Aula 030: Tipologias, Comportamento & Sistemas</span></h1>
+                        <p class="text-fluid-body text-[#444444]">Análise morfológica e qualitativa de cabos, membranas, arcos, cascas, treliças e pórticos.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div class="bg-white/85 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                        <img id="qr-presentation-cover-0-0" alt="Acesso aos Slides QR Code" class="w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[320px] mx-auto rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhe no Smartphone</span>
+                    </div>
+                    <div class="text-center space-y-1">
+                        <span class="text-fluid-tag text-[#D1A705] block">Docente Responsável</span>
+                        <p class="text-fluid-body font-bold text-white">Prof. Dr. José Maria Franco de Carvalho</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA / VISÃO GERAL -->
+        <div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">CONTEÚDO PROGRAMÁTICO</span>
+                    <h2 class="text-fluid-h2">Visão Geral da Aula 030</h2>
+                </div>
+                <img id="img-logo-pms-1-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 my-auto w-full py-4 items-stretch">
+                <div class="p-5 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-md font-bold w-fit">01</span>
+                    <h3 class="text-fluid-h3 text-[#901812]">Cabos & Mastros</h3>
+                    <p class="text-fluid-meta text-[#444444]">Atuação estrita sob tração pura e flexibilidade funicular adaptativa.</p>
+                </div>
+                <div class="p-5 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-md font-bold w-fit">02</span>
+                    <h3 class="text-fluid-h3 text-[#901812]">Membranas</h3>
+                    <p class="text-fluid-meta text-[#444444]">Superfícies bidimensionais delgadas com pré-tensão anticlásica.</p>
+                </div>
+                <div class="p-5 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-md font-bold w-fit">03</span>
+                    <h3 class="text-fluid-h3 text-[#901812]">Arcos</h3>
+                    <p class="text-fluid-meta text-[#444444]">Forma funicular para compressão axial predominante e empuxo lateral.</p>
+                </div>
+                <div class="p-5 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-md font-bold w-fit">04</span>
+                    <h3 class="text-fluid-h3 text-[#901812]">Superfícies</h3>
+                    <p class="text-fluid-meta text-[#444444]">Chapas (no plano), placas (fora do plano) e cascas espaciais rígidas.</p>
+                </div>
+                <div class="p-5 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-md font-bold w-fit">05</span>
+                    <h3 class="text-fluid-h3 text-[#901812]">Reticulados</h3>
+                    <p class="text-fluid-meta text-[#444444]">Sistemas de barras interconectadas: treliças rotuladas e pórticos rígidos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): CABOS E MASTROS -->
+        <div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MODELOS UNIDIMENSIONAIS</span>
+                    <h2 class="text-fluid-h2">Cabos e Mastros</h2>
+                </div>
+                <img id="img-logo-pms-2-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Mecânica Funicular</span>
+                        <h3 class="text-fluid-h3 text-white">Tração Pura & Forma</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Os cabos possuem rigidez à flexão nula e adaptam sua geometria à linha funicular de cargas, trabalhando exclusivamente sob tração axial.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                        Explorar Galeria de Cabos (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/70 rounded-2xl">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold">Invariabilidade da Tração</h3>
+                            <p class="text-fluid-body text-[#444444] mt-1">Ao receber novas cargas pontuais ou distribuídas, o cabo reconfigura sua curvatura sem desenvolver momentos fletores internos.</p>
+                        </div>
+                        <div class="p-4 bg-white/70 rounded-2xl">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold">Função Resistente dos Mastros</h3>
+                            <p class="text-fluid-body text-[#444444] mt-1">Elementos verticais ou inclinados que operam sob forte compressão axial para absorver as componentes de tração dos cabos.</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">DEC • Universidade Federal de Viçosa</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): BIFURCAÇÃO CABOS (GALERIA INTERATIVA) -->
+        <div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Estruturas Suspensas e Estaiadas</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (2,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-cabos-2-1"></div>
+                    </div>
+                    <button onclick="moveInGrid(1, -1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                        Avançar: Membranas (3,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-cabos-img-2-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-cabos-2-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('cabos', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('cabos', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-cabos-2-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-cabos-2-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-cabos-2-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): MEMBRANAS -->
+        <div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MODELOS BIDIMENSIONAIS</span>
+                    <h2 class="text-fluid-h2">Membranas e Tensoestruturas</h2>
+                </div>
+                <img id="img-logo-pms-3-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Superfícies Tracionadas</span>
+                        <h3 class="text-fluid-h3 text-white">Equilíbrio de Membrana</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Elementos laminares flexíveis de espessura reduzida que transmitem esforços exclusivamente por tração bidimensional no plano médio da superfície.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                        Explorar Galeria de Membranas (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-4 bg-white/70 rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Pré-Tensão e Dupla Curvatura</h3>
+                        <p class="text-fluid-body text-[#444444] mt-1">Exigem geometria anticlásica (paraboloides hiperbólicos ou conoides) e pré-tensão contínua para evitar enrugamento e flambagem dinâmica por ação dos ventos.</p>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Tensoestruturas & Coberturas Leves</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): BIFURCAÇÃO MEMBRANAS (GALERIA INTERATIVA) -->
+        <div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Tensoestruturas</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (3,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-membranas-3-1"></div>
+                    </div>
+                    <button onclick="moveInGrid(1, -1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                        Avançar: Arcos (4,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-membranas-img-3-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-membranas-3-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('membranas', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('membranas', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-membranas-3-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-membranas-3-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-membranas-3-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): ARCOS -->
+        <div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">COMPRESSÃO FUNICULAR</span>
+                    <h2 class="text-fluid-h2">Arcos Estruturais</h2>
+                </div>
+                <img id="img-logo-pms-4-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Geometria Curva</span>
+                        <h3 class="text-fluid-h3 text-white">Compressão Predominante</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Estruturas de eixo curvo projetadas para que a linha de pressões coincida com o eixo baricêntrico, minimizando os momentos fletores sob ação de cargas gravitacionais.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                        Explorar Galeria de Arcos (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-4 bg-white/70 rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Empuxo Horizontal nos Apoios</h3>
+                        <p class="text-fluid-body text-[#444444] mt-1">Os arcos transmitem forças inclinadas para as bases, exigindo contrafortes, blocos massivos de fundação ou tirantes inferiores para conter o empuxo horizontal.</p>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Morfologia Funicular Invertida</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1): BIFURCAÇÃO ARCOS (GALERIA INTERATIVA) -->
+        <div id="slide-4-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Sistemas em Arco</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (4,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-arcos-4-1"></div>
+                    </div>
+                    <button onclick="moveInGrid(1, -1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                        Avançar: Superfícies (5,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-arcos-img-4-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-arcos-4-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('arcos', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('arcos', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-arcos-4-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-arcos-4-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-arcos-4-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): SUPERFÍCIES (CHAPAS, PLACAS E CASCAS) -->
+        <div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MODELOS BIDIMENSIONAIS</span>
+                    <h2 class="text-fluid-h2">Chapas, Placas e Cascas</h2>
+                </div>
+                <img id="img-logo-pms-5-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Morfologia de Superfície</span>
+                        <h3 class="text-fluid-h3 text-white">Elementos Laminares Rígidos</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Corpos contínuos delgados em que a espessura é muito inferior às dimensões de plano médio, classificados pela direção de carregamento e curvatura.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                        Explorar Galeria de Cascas (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                        <div class="p-3 bg-white/70 rounded-xl">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold">Chapas</h3>
+                            <p class="text-fluid-meta text-[#444444]">Forças atuando estritamente no plano médio (ex.: vigas-parede e painéis estruturais).</p>
+                        </div>
+                        <div class="p-3 bg-white/70 rounded-xl">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold">Placas</h3>
+                            <p class="text-fluid-meta text-[#444444]">Forças perpendiculares ao plano médio provocando flexão e cortante (ex.: lajes maciças).</p>
+                        </div>
+                        <div class="p-3 bg-white/70 rounded-xl">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold">Cascas</h3>
+                            <p class="text-fluid-meta text-[#444444]">Superfícies de plano médio curvo que trabalham sob esforços normais de membrana.</p>
+                        </div>
+                    </div>
+                    <div class="p-2 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Teoria de Membrana e Flexão de Placas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): BIFURCAÇÃO SUPERFÍCIES (GALERIA INTERATIVA) -->
+        <div id="slide-5-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Superfícies e Cascas</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (5,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-superficies-5-1"></div>
+                    </div>
+                    <button onclick="moveInGrid(1, -1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                        Avançar: Treliças (6,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-superficies-img-5-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-superficies-5-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('superficies', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('superficies', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-superficies-5-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-superficies-5-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-superficies-5-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): RETICULADOS - TRELIÇAS -->
+        <div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">SISTEMAS RETICULADOS</span>
+                    <h2 class="text-fluid-h2">Treliças Planas e Espaciais</h2>
+                </div>
+                <img id="img-logo-pms-6-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Triangulação Rígida</span>
+                        <h3 class="text-fluid-h3 text-white">Barras Axiais Rotuladas</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Associações reticuladas indeformáveis de barras articuladas em nós ideais, submetidas puramente a tração e compressão axial.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                            Galeria de Obras (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-3 bg-white/10 hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase min-h-[48px]">
+                            Montador Interativo (↓↓) <i class="fa-solid fa-draw-polygon ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-4 bg-white/70 rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Hipótese de Nó Ideal</h3>
+                        <p class="text-fluid-body text-[#444444] mt-1">Cargas aplicadas exclusivamente nos nós rotulados anulam os momentos fletores primários nas barras, permitindo grande esbeltez e eficiência mecânica.</p>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Treliças de Cobertura, Pontes e Space Frames</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,1): BIFURCAÇÃO TRELIÇAS (GALERIA) -->
+        <div id="slide-6-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Sistemas Treliçados</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (6,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-trelicas-6-1"></div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] text-white font-bold rounded-xl text-fluid-tag hover:bg-[#D1A705] hover:text-[#333333] transition-all">
+                            Ir ao Montador 2D (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(1, -1)" class="w-full py-2 bg-white/10 text-white rounded-xl text-fluid-tag hover:bg-white/20 transition-all">
+                            Avançar: Pórticos (7,0)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-trelicas-img-6-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-trelicas-6-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('trelicas', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('trelicas', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-trelicas-6-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-trelicas-6-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-trelicas-6-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,2): MONTADOR INTERATIVO DE TRELIÇAS 2D -->
+        <div id="slide-6-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-3">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Montador de Treliças 2D</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (6,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+                <div class="lg:col-span-4 p-5 sm:p-7 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Triangulação Dinâmica</span>
+                        <p class="text-fluid-meta text-[#DEDEDE]">Clique na área do canvas para adicionar novos nós e formar triângulos rígidos indeformáveis.</p>
+                        
+                        <div class="p-3 bg-white/10 rounded-2xl space-y-1 text-fluid-meta">
+                            <p><strong>• Nós (Vermelho):</strong> Articulações perfeitas.</p>
+                            <p><strong>• Apoios (Azul):</strong> Vínculos de 2º gênero.</p>
+                            <p><strong>• Barras (Preto):</strong> Elementos axiais estruturais.</p>
+                            <p><strong>• Zoom / Pan:</strong> Scroll do mouse ou pinça móvel.</p>
+                        </div>
+
+                        <button onclick="resetTrussCanvas_6_2()" class="w-full py-2.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-xl text-fluid-tag transition-all">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reiniciar Treliça
+                        </button>
+                    </div>
+                    <button onclick="moveInGrid(1, -2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all">
+                        Avançar para Pórticos (7,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 p-4 rounded-3xl card-borderless-glass flex flex-col justify-between relative min-h-[460px] overflow-hidden">
+                    <canvas id="trussCanvas_6_2" class="w-full h-full cursor-crosshair rounded-2xl bg-white/50 border border-black/5" style="touch-action: none; min-height: 420px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): RETICULADOS - VIGAS E PÓRTICOS -->
+        <div id="slide-7-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">SISTEMAS RETICULADOS</span>
+                    <h2 class="text-fluid-h2">Vigas e Pórticos Rígidos</h2>
+                </div>
+                <img id="img-logo-pms-7-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Nós Rígidos</span>
+                        <h3 class="text-fluid-h3 text-white">Continuidade Estrutural</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Sistemas formados por vigas e pilares conectados por nós rígidos monolíticos, capazes de transmitir momentos fletores e resistir a ações laterais.</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase shadow-md min-h-[48px]">
+                            Galeria de Pórticos (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-3 bg-white/10 hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag uppercase min-h-[48px]">
+                            Simulador de Pórticos (↓↓) <i class="fa-solid fa-building-columns ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-4 bg-white/70 rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Transferência de Momentos Fletores</h3>
+                        <p class="text-fluid-body text-[#444444] mt-1">A restrição angular mútua entre viga e pilar redistribui as solicitações internas, diminuindo os momentos fletores de vão positivo e conferindo estabilidade global ao edifício.</p>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Estruturas de Concreto Armado e Aço Soldado</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,1): BIFURCAÇÃO PÓRTICOS (GALERIA) -->
+        <div id="slide-7-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">OBRAS DE REFERÊNCIA (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Vigas e Pórticos</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (7,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Selecione o Exemplo</span>
+                        <div class="flex flex-col gap-2" id="controls-porticos-7-1"></div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] text-white font-bold rounded-xl text-fluid-tag hover:bg-[#D1A705] hover:text-[#333333] transition-all">
+                            Ir ao Simulador (↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(1, -1)" class="w-full py-2 bg-white/10 text-white rounded-xl text-fluid-tag hover:bg-white/20 transition-all">
+                            Avançar: Quiz (8,0)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[460px] card-borderless-glass group p-6">
+                    <div id="viewer-porticos-img-7-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-porticos-7-1" class="font-bold text-fluid-h3 text-white drop-shadow-md"></span>
+                            <div class="flex space-x-2">
+                                <button onclick="navGallery_030('porticos', -1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="navGallery_030('porticos', 1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-porticos-7-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md"></span>
+                            <span id="index-porticos-7-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2"></span>
+                        </div>
+                        <p id="desc-porticos-7-1" class="text-fluid-body text-slate-200 leading-snug"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,2): SIMULADOR DE PÓRTICOS MULTI-ANDARES -->
+        <div id="slide-7-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-3">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Análise de Pórticos e Contraventamento</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-2.5 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar ao Topo (7,0)
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+                <div class="lg:col-span-4 p-5 sm:p-7 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Configuração do Sistema</span>
+                        
+                        <div class="flex flex-col gap-2">
+                            <button onclick="setFrameType_7_2('rotulado')" id="btn-frame-rotulado-7-2" class="py-2.5 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Vigas Rotuladas</button>
+                            <button onclick="setFrameType_7_2('rigido')" id="btn-frame-rigido-7-2" class="py-2.5 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Ligações Rígidas</button>
+                            <button onclick="setFrameType_7_2('contraventado')" id="btn-frame-contraventado-7-2" class="py-2.5 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Pórtico Contraventado</button>
+                        </div>
+
+                        <div class="pt-4 border-t border-white/10 space-y-2">
+                            <div class="flex justify-between items-center text-fluid-tag">
+                                <span class="font-bold text-[#D1A705]">Força Horizontal ($F$):</span>
+                                <span id="frame-force-value-7-2" class="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded text-fluid-meta">0%</span>
+                            </div>
+                            <input type="range" id="frame-force-slider-7-2" min="0" max="100" value="0" oninput="updateFrameDeformation_7_2()" class="w-full accent-[#D1A705] cursor-pointer h-3 bg-white/20 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <button onclick="moveInGrid(1, -2)" class="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-fluid-tag font-bold transition-all">
+                        Avançar para Quiz (8,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-glass flex flex-col justify-between items-center text-center min-h-[460px]">
+                    <div id="frame-sim-title-7-2" class="text-fluid-h3 text-[#901812] font-bold">Pórtico com Vigas Rotuladas</div>
+                    
+                    <div class="w-full h-80 bg-[#333333] rounded-2xl flex items-center justify-center p-2 relative overflow-hidden shadow-inner my-auto border border-black/10">
+                        <svg id="frame-svg-7-2" viewBox="0 0 500 360" class="w-full h-full">
+                            <defs>
+                                <marker id="arrow-red-frame-7-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
+                                </marker>
+                            </defs>
+                            <g id="frame-elements-group-7-2"></g>
+                        </svg>
+                    </div>
+
+                    <p id="frame-sim-desc-7-2" class="text-fluid-meta text-[#666666] font-medium">Pilares fletem sob ação do vetor de topo enquanto vigas articuladas deslocam-se sem curvatura.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (8,0): QUIZ SÍNCRONO -->
+        <div id="slide-8-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">ATIVIDADE SÍNCRONA</span>
+                    <h2 class="text-fluid-h2">Quiz Aula 030: Modelos Estruturais</h2>
+                </div>
+                <img id="img-logo-pms-8-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Avaliação In-Class</span>
+                        <h3 class="text-fluid-h3 text-[#333333] mt-1 mb-2">Validação de Participação</h3>
+                        <p class="text-fluid-body text-[#444444] mb-3">Responda ao formulário eletrônico para validar sua presença síncrona e consolidar a fixação das tipologias estruturais.</p>
+                        
+                        <div class="p-4 bg-white/70 rounded-2xl text-fluid-meta text-[#444444] space-y-2">
+                            <p class="flex items-center"><i class="fa-solid fa-id-card text-[#901812] mr-2"></i> Computação automática de frequência.</p>
+                            <p class="flex items-center"><i class="fa-solid fa-user-lock text-[#901812] mr-2"></i> Acesso com login institucional (@ufv.br).</p>
+                            <p class="flex items-center"><i class="fa-solid fa-unlock-keyhole text-[#901812] mr-2"></i> Submissão individual única.</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">CIV 153 — Introdução à Mecânica das Estruturas</div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between text-center items-center">
+                    <div class="space-y-3 w-full">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Registro Síncrono</span>
+                        <h3 class="text-fluid-h2 text-white font-black">Escaneie com a Câmera</h3>
+                        <div class="bg-white p-4 rounded-3xl shadow-xl max-w-[240px] sm:max-w-[280px] mx-auto my-2">
+                            <img id="qr-quiz-forms-8-0" alt="Quiz QR Code" class="w-full h-auto rounded-lg">
+                        </div>
+                        <a id="btn-quiz-direct-8-0" target="_blank" class="inline-flex items-center justify-center space-x-2 px-8 py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl text-fluid-tag uppercase shadow-md transition-all min-h-[48px] w-full sm:w-auto">
+                            <i class="fa-solid fa-square-poll-vertical text-xl"></i>
+                            <span>Abrir Formulário no Navegador</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                        </a>
+                    </div>
+                    <div class="p-2.5 bg-white/5 rounded-xl text-fluid-meta text-[#DEDEDE] w-full">Ata eletrônica síncrona da aula.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (9,0): ENCERRAMENTO E PRÓXIMA AULA -->
+        <div id="slide-9-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">CONCLUSÃO</span>
+                    <h2 class="text-fluid-h2">Próximos Passos & Leitura</h2>
+                </div>
+                <img id="img-logo-pms-9-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Continuidade do Semestre</span>
+                        <h3 class="text-fluid-h3 text-[#333333] mt-1 mb-2">Aula 040: Centroide de Áreas Planas</h3>
+                        <p class="text-fluid-body text-[#444444]">Na próxima aula iniciaremos o estudo quantitativo das Propriedades Geométricas das Seções Transversais, determinando o Centro de Gravidade ($x_G, y_G$) e momentos estáticos de primeira ordem.</p>
+                        
+                        <div class="p-4 bg-white/70 rounded-2xl mt-4 space-y-1">
+                            <strong class="text-fluid-tag text-[#901812] block">Leitura Obrigatória:</strong>
+                            <p class="text-fluid-meta text-[#444444]">REBELLO, Y. C. P. <em>A concepção estrutural e a arquitetura</em>. São Paulo: Zigurate, 2001. Capítulos 1 a 3.</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/40 rounded-xl text-fluid-meta text-[#666666]">Departamento de Engenharia Civil • UFV</div>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between text-center items-center">
+                    <div class="space-y-3 w-full my-auto">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">Repositório Oficial</span>
+                        <h3 class="text-fluid-h3 text-white">Materiais e Apresentações</h3>
+                        <p class="text-fluid-meta text-[#DEDEDE] max-w-sm mx-auto">Acesse o portal da disciplina para revisar todas as apresentações HTML5 e notas técnicas.</p>
+                        <div class="pt-2">
+                            <a id="btn-assignment-direct-9-0" target="_blank" class="inline-flex items-center space-x-2 text-fluid-body font-bold text-[#D1A705] hover:underline">
+                                <span>Acessar Portal da Disciplina</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-white/5 rounded-xl text-fluid-meta text-[#DEDEDE] w-full">CIV 153 — Introdução à Mecânica das Estruturas</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: JAVASCRIPT LOGIC, ANIMATIONS & INTERACTIVITY                  -->
+    <!-- ========================================================================= -->
+    <script>
+        const slideGrid = { 
+            '0,0': 'slide-0-0',
+            '1,0': 'slide-1-0',
+            '2,0': 'slide-2-0',
+            '2,1': 'slide-2-1',
+            '3,0': 'slide-3-0',
+            '3,1': 'slide-3-1',
+            '4,0': 'slide-4-0',
+            '4,1': 'slide-4-1',
+            '5,0': 'slide-5-0',
+            '5,1': 'slide-5-1',
+            '6,0': 'slide-6-0',
+            '6,1': 'slide-6-1',
+            '6,2': 'slide-6-2',
+            '7,0': 'slide-7-0',
+            '7,1': 'slide-7-1',
+            '7,2': 'slide-7-2',
+            '8,0': 'slide-8-0',
+            '9,0': 'slide-9-0'
+        };
+
+        let currentX = 0, currentY = 0;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            const keysHorizontal = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const totalH = keysHorizontal.length;
+            document.getElementById('progressBar').style.width = `${(currentX / Math.max(totalH - 1, 1)) * 100}%`;
+            
+            const subSlideText = currentY > 0 ? ` [v${currentY}]` : '';
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX}, ${currentY})${subSlideText}`;
+            
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                cur.classList.remove('slide-active');
+                
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                currentX = nx; currentY = ny;
+                updateUI();
+
+                if (slideGrid[`${nx},${ny}`] === 'slide-6-2') {
+                    setTimeout(initTrussCanvas_6_2, 100);
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        // Touch Gestures
+        let touchStartX = 0, touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.target.id === 'trussCanvas_6_2') return;
+
+            const dx = e.changedTouches[0].screenX - touchStartX;
+            const dy = e.changedTouches[0].screenY - touchStartY;
+            if (Math.abs(dx) > 50 || Math.abs(dy) > 50) {
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0) moveInGrid(-1, 0); else moveInGrid(1, 0);
+                } else {
+                    if (dy > 0) moveInGrid(0, -1); else moveInGrid(0, 1);
+                }
+            }
+        }, { passive: true });
+
+        // =====================================================================
+        // GALERIA DE OBRAS ICÔNICAS (SLIDES 2,1 / 3,1 / 4,1 / 5,1 / 6,1 / 7,1)
+        // =====================================================================
+        const galleryData_030 = {
+            cabos: [
+                {
+                    title: "Ponte Golden Gate",
+                    tag: "São Francisco, EUA",
+                    desc: "Cabo funicular de suspensão principal sob tração contínua transferindo cargas aos pilones verticais.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/0/0c/GoldenGateBridge-001.jpg"
+                },
+                {
+                    title: "Viaduto de Millau",
+                    tag: "Millau, França",
+                    desc: "Ponte estaiada composta por tirantes e cabos múltiplos de aço de alta resistência em leque.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Creissels_et_Viaduct_de_Millau.jpg/1920px-Creissels_et_Viaduct_de_Millau.jpg"
+                }
+            ],
+            membranas: [
+                {
+                    title: "Estádio Olímpico de Munique",
+                    tag: "Munique, Alemanha",
+                    desc: "Projeto de Frei Otto. Rede de cabos e membranas contínuas pré-tensionadas de curvatura anticlásica.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/2022-08-21_Olympiapark_M%C3%BCnchen_by_Sandro_Halank%E2%80%93025.jpg/1920px-2022-08-21_Olympiapark_M%C3%BCnchen_by_Sandro_Halank%E2%80%93025.jpg"
+                },
+                {
+                    title: "Domo do Milênio",
+                    tag: "Londres, Reino Unido",
+                    desc: "Grande cobertura de membrana suportada por mastros externos de aço e rede de cabos tracionados.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Millennium_Dome_1.jpg"
+                }
+            ],
+            arcos: [
+                {
+                    title: "Gateway Arch",
+                    tag: "St. Louis, EUA",
+                    desc: "Arco catenário monumental de aço inoxidável trabalhando sob compressão pura sem momentos fletores.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/d/de/St_Louis_night_expblend.jpg"
+                },
+                {
+                    title: "Aqueduto das Águas Livres",
+                    tag: "Lisboa, Portugal",
+                    desc: "Arcos ogivais em alvenaria estrutural de pedra resistindo aos esforços gravitacionais por compressão nas juntas.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Aqueduto_das_Aguas_Livres_Lisboa.jpg"
+                }
+            ],
+            superficies: [
+                {
+                    title: "Igreja da Pampulha",
+                    tag: "Belo Horizonte, Brasil",
+                    desc: "Projeto de Oscar Niemeyer e cálculo de Joaquim Cardozo. Cascas parabólicas delgadas em concreto armado.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Igrejinha_de_S%C3%A3o_Francisco_de_Assis_6.jpeg/960px-Igrejinha_de_S%C3%A3o_Francisco_de_Assis_6.jpeg"
+                },
+                {
+                    title: "Ópera de Sydney",
+                    tag: "Sydney, Austrália",
+                    desc: "Cascas pré-moldadas de concreto em seções esféricas tridimensionais integradas transferindo cargas no plano.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Sydney_Australia._%2821339175489%29.jpg/1920px-Sydney_Australia._%2821339175489%29.jpg"
+                }
+            ],
+            trelicas: [
+                {
+                    title: "Torre Eiffel",
+                    tag: "Paris, França",
+                    desc: "Estrutura reticulada em ferro forjado composta por triângulos articulados submetidos unicamente a tração e compressão.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/4/49/Torre_Eiffel.jpg?utm_source=pt.wikibooks.org&utm_campaign=index&utm_content=original"
+                },
+                {
+                    title: "Ponte Firth of Forth",
+                    tag: "Edimburgo, Escócia",
+                    desc: "Ponte em treliça cantilever de grande porte projetada em aço tubular para absorver esforços axiais maciços.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/9/9b/Forth_Bridge.jpg"
+                },
+                {
+                    title: "Estádio AT&T",
+                    tag: "Arlington, EUA",
+                    desc: "Grandes arcos reticulados em treliça espacial de aço suportando cobertura retrátil de longo vão.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/5/52/Cowboys_Stadium_full_view.jpg"
+                },
+                {
+                    title: "Centro Heydar Aliyev",
+                    tag: "Baku, Azerbaijão",
+                    desc: "Projeto de Zaha Hadid. Malha tridimensional de treliça espacial (space frame) sustentando geometrias orgânicas livres.",
+                    img: "https://metalica.com.br/wp-content/uploads/2024/01/Heydar-Aliyev-Center-14-600x404.jpg"
+                }
+            ],
+            porticos: [
+                {
+                    title: "MASP",
+                    tag: "São Paulo, Brasil",
+                    desc: "Projeto de Lina Bo Bardi. Grande pórtico de concreto armado com vigas protendidas de 74m de vão livre.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Vista_a%C3%A9rea_de_la_Avenida_Paulista_de_S%C3%A3o_Paulo_05.jpg/1920px-Vista_a%C3%A9rea_de_la_Avenida_Paulista_de_S%C3%A3o_Paulo_05.jpg"
+                },
+                {
+                    title: "Crown Hall (IIT)",
+                    tag: "Chicago, EUA",
+                    desc: "Projeto de Mies van der Rohe. Pórticos externos de aço soldando vigas e pilares para liberar o espaço interno.",
+                    img: "https://en.wikiarquitectura.com/wp-content/uploads/2017/01/Crown-Hall-Mies-1920x1200.jpg"
+                }
+            ]
+        };
+
+        const currentGalleryIndices_030 = { cabos: 0, membranas: 0, arcos: 0, superficies: 0, trelicas: 0, porticos: 0 };
+        const categorySlideMap_030 = { cabos: '2-1', membranas: '3-1', arcos: '4-1', superficies: '5-1', trelicas: '6-1', porticos: '7-1' };
+
+        function renderGalleryControls_030(cat) {
+            const tag = categorySlideMap_030[cat];
+            const container = document.getElementById(`controls-${cat}-${tag}`);
+            if (!container) return;
+
+            container.innerHTML = galleryData_030[cat].map((item, idx) => `
+                <button onclick="selectGalleryItem_030('${cat}', ${idx})" 
+                        class="w-full py-2.5 px-3.5 rounded-xl text-fluid-tag font-bold transition-all text-left uppercase cursor-pointer ${idx === currentGalleryIndices_030[cat] ? 'bg-[#901812] text-white shadow-md' : 'bg-white/10 hover:bg-[#901812] text-[#DEDEDE]'}">
+                    ${idx + 1}. ${item.title}
+                </button>
+            `).join('');
+        }
+
+        function updateGalleryView_030(cat) {
+            const tag = categorySlideMap_030[cat];
+            const item = galleryData_030[cat][currentGalleryIndices_030[cat]];
+            const imgEl = document.getElementById(`viewer-${cat}-img-${tag}`);
+            const titleEl = document.getElementById(`title-${cat}-${tag}`);
+            const tagEl = document.getElementById(`tag-${cat}-${tag}`);
+            const indexEl = document.getElementById(`index-${cat}-${tag}`);
+            const descEl = document.getElementById(`desc-${cat}-${tag}`);
+
+            if (imgEl) imgEl.style.backgroundImage = `url('${item.img}')`;
+            if (titleEl) titleEl.innerText = item.title;
+            if (tagEl) tagEl.innerText = item.tag;
+            if (indexEl) indexEl.innerText = `Exemplo ${currentGalleryIndices_030[cat] + 1} / ${galleryData_030[cat].length}`;
+            if (descEl) descEl.innerText = item.desc;
+
+            renderGalleryControls_030(cat);
+        }
+
+        function selectGalleryItem_030(cat, idx) {
+            currentGalleryIndices_030[cat] = idx;
+            updateGalleryView_030(cat);
+        }
+
+        function navGallery_030(cat, dir) {
+            const list = galleryData_030[cat];
+            currentGalleryIndices_030[cat] = (currentGalleryIndices_030[cat] + dir + list.length) % list.length;
+            updateGalleryView_030(cat);
+        }
+
+        // =====================================================================
+        // MONTADOR INTERATIVO DE TRELIÇAS 2D (SLIDE 6,2)
+        // =====================================================================
+        let trussNodes_6_2 = [];
+        let trussBars_6_2 = [];
+        let trussCanvas_6_2, trussCtx_6_2;
+        let zoomLevel_6_2 = 1.0;
+        let panOffset_6_2 = { x: 0, y: 0 };
+        let isDraggingPan_6_2 = false;
+        let startPan_6_2 = { x: 0, y: 0 };
+        let initialTouchDist_6_2 = 0;
+        let zoomAnchor_6_2 = { x: 0, y: 0 };
+
+        function resetTrussCanvas_6_2() {
+            const w = trussCanvas_6_2 ? trussCanvas_6_2.width : 800;
+            const h = trussCanvas_6_2 ? trussCanvas_6_2.height : 500;
+            
+            const baseWidth = Math.min(w * 0.45, 300);
+            const centerX = w / 2;
+            const baseY = h * 0.82;
+
+            const n1 = { id: 0, x: centerX - baseWidth / 2, y: baseY, isSupport: true };
+            const n2 = { id: 1, x: centerX + baseWidth / 2, y: baseY, isSupport: true };
+            const n3 = { id: 2, x: centerX, y: baseY - (Math.sqrt(3) / 2) * baseWidth, isSupport: false };
+
+            trussNodes_6_2 = [n1, n2, n3];
+            trussBars_6_2 = [
+                { from: 0, to: 1 },
+                { from: 1, to: 2 },
+                { from: 2, to: 0 }
+            ];
+
+            zoomAnchor_6_2 = { x: centerX, y: baseY };
+            zoomLevel_6_2 = 1.0;
+            panOffset_6_2 = { x: 0, y: 0 };
+            drawTruss_6_2();
+        }
+
+        function initTrussCanvas_6_2() {
+            trussCanvas_6_2 = document.getElementById('trussCanvas_6_2');
+            if (!trussCanvas_6_2) return;
+
+            const rect = trussCanvas_6_2.parentElement.getBoundingClientRect();
+            trussCanvas_6_2.width = rect.width;
+            trussCanvas_6_2.height = rect.height;
+            trussCtx_6_2 = trussCanvas_6_2.getContext('2d');
+
+            resetTrussCanvas_6_2();
+
+            trussCanvas_6_2.onmousedown = (e) => {
+                if (e.button === 0) {
+                    const r = trussCanvas_6_2.getBoundingClientRect();
+                    const clickX = zoomAnchor_6_2.x + (e.clientX - r.left - zoomAnchor_6_2.x - panOffset_6_2.x) / zoomLevel_6_2;
+                    const clickY = zoomAnchor_6_2.y + (e.clientY - r.top - zoomAnchor_6_2.y - panOffset_6_2.y) / zoomLevel_6_2;
+                    addNodeToTruss_6_2(clickX, clickY);
+                } else if (e.button === 2) {
+                    isDraggingPan_6_2 = true;
+                    startPan_6_2 = { x: e.clientX - panOffset_6_2.x, y: e.clientY - panOffset_6_2.y };
+                }
+            };
+
+            trussCanvas_6_2.onmousemove = (e) => {
+                if (isDraggingPan_6_2) {
+                    panOffset_6_2.x = e.clientX - startPan_6_2.x;
+                    panOffset_6_2.y = e.clientY - startPan_6_2.y;
+                    drawTruss_6_2();
+                }
+            };
+
+            trussCanvas_6_2.onmouseup = () => { isDraggingPan_6_2 = false; };
+            trussCanvas_6_2.oncontextmenu = (e) => e.preventDefault();
+
+            trussCanvas_6_2.onwheel = (e) => {
+                e.preventDefault();
+                const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+                zoomLevel_6_2 = Math.max(0.4, Math.min(3.0, zoomLevel_6_2 * zoomFactor));
+                drawTruss_6_2();
+            };
+
+            trussCanvas_6_2.ontouchstart = (e) => {
+                if (e.touches.length === 1) {
+                    const r = trussCanvas_6_2.getBoundingClientRect();
+                    const clickX = zoomAnchor_6_2.x + (e.touches[0].clientX - r.left - zoomAnchor_6_2.x - panOffset_6_2.x) / zoomLevel_6_2;
+                    const clickY = zoomAnchor_6_2.y + (e.touches[0].clientY - r.top - zoomAnchor_6_2.y - panOffset_6_2.y) / zoomLevel_6_2;
+                    addNodeToTruss_6_2(clickX, clickY);
+                } else if (e.touches.length === 2) {
+                    initialTouchDist_6_2 = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                }
+            };
+
+            trussCanvas_6_2.ontouchmove = (e) => {
+                if (e.touches.length === 2) {
+                    e.preventDefault();
+                    const currentDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const factor = currentDist / initialTouchDist_6_2;
+                    zoomLevel_6_2 = Math.max(0.4, Math.min(3.0, zoomLevel_6_2 * (factor > 1 ? 1.03 : 0.97)));
+                    initialTouchDist_6_2 = currentDist;
+                    drawTruss_6_2();
+                }
+            };
+        }
+
+        function hasBar_6_2(idA, idB) {
+            return trussBars_6_2.some(b => (b.from === idA && b.to === idB) || (b.from === idB && b.to === idA));
+        }
+
+        function addBar_6_2(idA, idB) {
+            if (idA !== idB && !hasBar_6_2(idA, idB)) {
+                trussBars_6_2.push({ from: idA, to: idB });
+            }
+        }
+
+        function addNodeToTruss_6_2(x, y) {
+            const newNodeId = trussNodes_6_2.length;
+            const newNode = { id: newNodeId, x, y, isSupport: false };
+
+            const sorted = [...trussNodes_6_2].sort((a, b) => {
+                const dA = Math.hypot(a.x - x, a.y - y);
+                const dB = Math.hypot(b.x - x, b.y - y);
+                return dA - dB;
+            });
+
+            const n1 = sorted[0];
+            const n2 = sorted[1];
+
+            trussNodes_6_2.push(newNode);
+            addBar_6_2(n1.id, newNodeId);
+            addBar_6_2(n2.id, newNodeId);
+
+            if (!hasBar_6_2(n1.id, n2.id)) {
+                addBar_6_2(n1.id, n2.id);
+            }
+
+            if (sorted.length >= 3) {
+                const n3 = sorted[2];
+                if (hasBar_6_2(n1.id, n3.id) && !hasBar_6_2(n2.id, n3.id)) {
+                    addBar_6_2(newNodeId, n3.id);
+                }
+            }
+
+            drawTruss_6_2();
+        }
+
+        function drawTruss_6_2() {
+            if (!trussCtx_6_2 || !trussCanvas_6_2) return;
+
+            trussCtx_6_2.clearRect(0, 0, trussCanvas_6_2.width, trussCanvas_6_2.height);
+            trussCtx_6_2.save();
+
+            trussCtx_6_2.translate(zoomAnchor_6_2.x + panOffset_6_2.x, zoomAnchor_6_2.y + panOffset_6_2.y);
+            trussCtx_6_2.scale(zoomLevel_6_2, zoomLevel_6_2);
+            trussCtx_6_2.translate(-zoomAnchor_6_2.x, -zoomAnchor_6_2.y);
+
+            // 1. Barras (Preto)
+            trussCtx_6_2.strokeStyle = '#333333';
+            trussCtx_6_2.lineWidth = 5;
+            trussCtx_6_2.lineCap = 'round';
+
+            trussBars_6_2.forEach(bar => {
+                const nA = trussNodes_6_2.find(n => n.id === bar.from);
+                const nB = trussNodes_6_2.find(n => n.id === bar.to);
+                if (nA && nB) {
+                    trussCtx_6_2.beginPath();
+                    trussCtx_6_2.moveTo(nA.x, nA.y);
+                    trussCtx_6_2.lineTo(nB.x, nB.y);
+                    trussCtx_6_2.stroke();
+                }
+            });
+
+            // 2. Apoios (Azul PMS)
+            trussNodes_6_2.filter(n => n.isSupport).forEach(node => {
+                const triSize = 18;
+                trussCtx_6_2.fillStyle = '#2563EB';
+                trussCtx_6_2.strokeStyle = '#333333';
+                trussCtx_6_2.lineWidth = 2;
+
+                trussCtx_6_2.beginPath();
+                trussCtx_6_2.moveTo(node.x, node.y);
+                trussCtx_6_2.lineTo(node.x - triSize, node.y + triSize);
+                trussCtx_6_2.lineTo(node.x + triSize, node.y + triSize);
+                trussCtx_6_2.closePath();
+                trussCtx_6_2.fill();
+                trussCtx_6_2.stroke();
+
+                trussCtx_6_2.strokeStyle = '#333333';
+                trussCtx_6_2.lineWidth = 3;
+                trussCtx_6_2.beginPath();
+                trussCtx_6_2.moveTo(node.x - triSize - 4, node.y + triSize);
+                trussCtx_6_2.lineTo(node.x + triSize + 4, node.y + triSize);
+                trussCtx_6_2.stroke();
+            });
+
+            // 3. Nós (Vermelho PMS)
+            trussNodes_6_2.forEach(node => {
+                trussCtx_6_2.fillStyle = '#901812';
+                trussCtx_6_2.strokeStyle = '#FFFFFF';
+                trussCtx_6_2.lineWidth = 2;
+
+                trussCtx_6_2.beginPath();
+                trussCtx_6_2.arc(node.x, node.y, 7, 0, Math.PI * 2);
+                trussCtx_6_2.fill();
+                trussCtx_6_2.stroke();
+            });
+
+            trussCtx_6_2.restore();
+        }
+
+        // =====================================================================
+        // SIMULADOR DE PÓRTICOS MULTI-ANDARES (SLIDE 7,2)
+        // =====================================================================
+        let currentFrameMode_7_2 = 'rotulado';
+
+        function setFrameType_7_2(mode) {
+            currentFrameMode_7_2 = mode;
+            ['rotulado', 'rigido', 'contraventado'].forEach(m => {
+                const btn = document.getElementById(`btn-frame-${m}-7-2`);
+                if (btn) {
+                    btn.className = (m === mode)
+                        ? "py-2.5 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md"
+                        : "py-2.5 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            updateFrameDeformation_7_2();
+        }
+
+        function updateFrameDeformation_7_2() {
+            const slider = document.getElementById('frame-force-slider-7-2');
+            const valDisp = document.getElementById('frame-force-value-7-2');
+            const titleEl = document.getElementById('frame-sim-title-7-2');
+            const descEl = document.getElementById('frame-sim-desc-7-2');
+            const group = document.getElementById('frame-elements-group-7-2');
+
+            if (!slider || !group) return;
+
+            const k = parseFloat(slider.value) / 100;
+            if (valDisp) valDisp.innerText = `${slider.value}%`;
+
+            const x0 = [100, 250, 400];
+            const yLevels = [300, 220, 140, 60];
+            const pilarColor = "#FFFFFF";
+
+            let html = '';
+
+            // Apoios Engastados na Base
+            x0.forEach(x => {
+                html += `
+                    <line x1="${x - 18}" y1="300" x2="${x + 18}" y2="300" stroke="${pilarColor}" stroke-width="4" />
+                    <path d="M ${x - 15} 310 L ${x - 5} 300 M ${x - 5} 310 L ${x + 5} 300 M ${x + 5} 310 L ${x + 15} 300" stroke="${pilarColor}" stroke-width="2" />
+                `;
+            });
+
+            function calcParabolicSway(y, maxSway) {
+                const dy = (300 - y) / 240;
+                return maxSway * Math.pow(dy, 2);
+            }
+
+            if (currentFrameMode_7_2 === 'rotulado') {
+                if (titleEl) titleEl.innerText = "Pórtico com Vigas Rotuladas";
+                if (descEl) descEl.innerText = "Pilares fletem em curvatura contínua com vértice no engaste da base. As vigas rotuladas deslocam-se sem momentos fletores.";
+
+                const maxSway = k * 65;
+                const dx = yLevels.map(y => calcParabolicSway(y, maxSway));
+
+                x0.forEach(xBase => {
+                    const pBaseX = xBase, pBaseY = 300;
+                    const pTopX = xBase + dx[3], pTopY = 60;
+                    const ctrlX = xBase, ctrlY = 180;
+                    html += `<path d="M ${pBaseX} ${pBaseY} Q ${ctrlX} ${ctrlY}, ${pTopX} ${pTopY}" fill="none" stroke="${pilarColor}" stroke-width="6" stroke-linecap="round" />`;
+                });
+
+                [1, 2, 3].forEach(lvl => {
+                    const y = yLevels[lvl];
+                    const rOffset = 8;
+
+                    const x_v1_start = x0[0] + dx[lvl] + rOffset;
+                    const x_v1_end = x0[1] + dx[lvl] - rOffset;
+                    html += `<line x1="${x_v1_start}" y1="${y}" x2="${x_v1_end}" y2="${y}" stroke="${pilarColor}" stroke-width="5" />`;
+
+                    const x_v2_start = x0[1] + dx[lvl] + rOffset;
+                    const x_v2_end = x0[2] + dx[lvl] - rOffset;
+                    html += `<line x1="${x_v2_start}" y1="${y}" x2="${x_v2_end}" y2="${y}" stroke="${pilarColor}" stroke-width="5" />`;
+
+                    [x_v1_start, x_v1_end, x_v2_start, x_v2_end].forEach(rx => {
+                        html += `<circle cx="${rx}" cy="${y}" r="4.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1.5" />`;
+                    });
+                });
+
+                const loadLen = 25 + k * 40;
+                const topX = x0[0] + dx[3];
+                html += `<line x1="${topX - loadLen}" y1="60" x2="${topX - 4}" y2="60" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-frame-7-2)" />`;
+            }
+            else if (currentFrameMode_7_2 === 'rigido') {
+                if (titleEl) titleEl.innerText = "Pórtico com Ligações Rígidas";
+                if (descEl) descEl.innerText = "As conexões rígidas transferem momentos fletores, provocando curvatura dupla em 'S' nas vigas e pilares, aumentando a rigidez global.";
+
+                const maxSway = k * 42;
+                const dx = yLevels.map(y => Math.pow((300 - y) / 240, 1.2) * maxSway);
+
+                x0.forEach(xBase => {
+                    for (let i = 0; i < 3; i++) {
+                        const yA = yLevels[i], yB = yLevels[i + 1];
+                        const xA = xBase + dx[i], xB = xBase + dx[i + 1];
+                        html += `<path d="M ${xA} ${yA} C ${xA} ${yA - 30}, ${xB} ${yB + 30}, ${xB} ${yB}" fill="none" stroke="${pilarColor}" stroke-width="6" />`;
+                    }
+                });
+
+                [1, 2, 3].forEach(lvl => {
+                    const y = yLevels[lvl];
+                    for (let m = 0; m < 2; m++) {
+                        const xA = x0[m] + dx[lvl], xB = x0[m + 1] + dx[lvl];
+                        const flex = k * 10;
+                        html += `<path d="M ${xA} ${y} C ${xA + 30} ${y + flex}, ${xB - 30} ${y - flex}, ${xB} ${y}" fill="none" stroke="${pilarColor}" stroke-width="5" />`;
+                    }
+                });
+
+                const loadLen = 25 + k * 40;
+                const topX = x0[0] + dx[3];
+                html += `<line x1="${topX - loadLen}" y1="60" x2="${topX - 4}" y2="60" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-frame-7-2)" />`;
+            }
+            else if (currentFrameMode_7_2 === 'contraventado') {
+                if (titleEl) titleEl.innerText = "Pórtico Contraventado (Delta Invertido)";
+                if (descEl) descEl.innerText = "Mínimo deslocamento lateral. O módulo contraventado atua como treliça rígida e impede deformações excessivas por flexão.";
+
+                const maxSway = k * 18;
+                const dx = yLevels.map(y => calcParabolicSway(y, maxSway));
+                const rOffset = 8;
+
+                for (let i = 0; i < 3; i++) {
+                    const yA = yLevels[i], yB = yLevels[i + 1];
+                    const xA1 = x0[0] + dx[i], xB1 = x0[0] + dx[i + 1];
+                    const xA2 = x0[1] + dx[i], xB2 = x0[1] + dx[i + 1];
+
+                    html += `<line x1="${xA1}" y1="${yA}" x2="${xB1}" y2="${yB}" stroke="${pilarColor}" stroke-width="6" />`;
+                    html += `<line x1="${xA2}" y1="${yA}" x2="${xB2}" y2="${yB}" stroke="${pilarColor}" stroke-width="6" />`;
+
+                    const x_v1_start = xB1 + rOffset;
+                    const x_v1_end = xB2 - rOffset;
+                    html += `<line x1="${x_v1_start}" y1="${yB}" x2="${x_v1_end}" y2="${yB}" stroke="${pilarColor}" stroke-width="5" />`;
+                    html += `<circle cx="${x_v1_start}" cy="${yB}" r="4.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1.5" />`;
+                    html += `<circle cx="${x_v1_end}" cy="${yB}" r="4.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1.5" />`;
+
+                    const xMidB = (xB1 + xB2) / 2;
+                    const angL = Math.atan2(yA - yB, xA1 - xMidB);
+                    const dL_startX = xA1 - Math.cos(angL) * rOffset;
+                    const dL_startY = yA - Math.sin(angL) * rOffset;
+                    const dL_endX = xMidB + Math.cos(angL) * rOffset;
+                    const dL_endY = yB + Math.sin(angL) * rOffset;
+
+                    const angR = Math.atan2(yA - yB, xA2 - xMidB);
+                    const dR_startX = xA2 - Math.cos(angR) * rOffset;
+                    const dR_startY = yA - Math.sin(angR) * rOffset;
+                    const dR_endX = xMidB + Math.cos(angR) * rOffset;
+                    const dR_endY = yB + Math.sin(angR) * rOffset;
+
+                    html += `<line x1="${dL_startX}" y1="${dL_startY}" x2="${dL_endX}" y2="${dL_endY}" stroke="#D1A705" stroke-width="4" />`;
+                    html += `<line x1="${dR_startX}" y1="${dR_startY}" x2="${dR_endX}" y2="${dR_endY}" stroke="#D1A705" stroke-width="4" />`;
+
+                    [dL_startX, dR_startX].forEach((sx, idx) => {
+                        const sy = idx === 0 ? dL_startY : dR_startY;
+                        html += `<circle cx="${sx}" cy="${sy}" r="3.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1" />`;
+                    });
+                }
+
+                const pRBaseX = x0[2], pRBaseY = 300;
+                const pRTopX = x0[2] + dx[3], pRTopY = 60;
+                const ctrlX = x0[2], ctrlY = 180;
+                html += `<path d="M ${pRBaseX} ${pRBaseY} Q ${ctrlX} ${ctrlY}, ${pRTopX} ${pRTopY}" fill="none" stroke="${pilarColor}" stroke-width="6" stroke-linecap="round" />`;
+
+                [1, 2, 3].forEach(lvl => {
+                    const y = yLevels[lvl];
+                    const x_v2_start = x0[1] + dx[lvl] + rOffset;
+                    const x_v2_end = x0[2] + dx[lvl] - rOffset;
+                    html += `<line x1="${x_v2_start}" y1="${y}" x2="${x_v2_end}" y2="${y}" stroke="${pilarColor}" stroke-width="5" />`;
+                    html += `<circle cx="${x_v2_start}" cy="${y}" r="4.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1.5" />`;
+                    html += `<circle cx="${x_v2_end}" cy="${y}" r="4.5" fill="#D1A705" stroke="${pilarColor}" stroke-width="1.5" />`;
+                });
+
+                const loadLen = 25 + k * 40;
+                const topX = x0[0] + dx[3];
+                html += `<line x1="${topX - loadLen}" y1="60" x2="${topX - 4}" y2="60" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-frame-7-2)" />`;
+            }
+
+            group.innerHTML = html;
+        }
+
+        // =====================================================================
+        // CENTRAL INITIALIZATION ENGINE
+        // =====================================================================
+        function initializeAssets() {
+            const setSrc = (id, src) => { const el = document.getElementById(id); if (el) el.src = src; };
+            const setHref = (id, href) => { const el = document.getElementById(id); if (el) el.href = href; };
+
+            setSrc('img-logo-ufv-0-0', COURSE_ASSETS.logos.ufv);
+            setSrc('img-logo-pms-0-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-1-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-2-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-3-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-4-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-5-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-6-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-7-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-8-0', COURSE_ASSETS.logos.pms);
+            setSrc('img-logo-pms-9-0', COURSE_ASSETS.logos.pms);
+
+            setHref('link-pms-portal-0-0', COURSE_ASSETS.externalLinks.pmsPortal);
+            setHref('btn-quiz-direct-8-0', COURSE_ASSETS.externalLinks.googleFormsQuiz);
+            setHref('btn-assignment-direct-9-0', COURSE_ASSETS.externalLinks.pmsPortal);
+
+            Object.keys(slideGrid).forEach(key => {
+                const bgKey = key.replace(',', '_');
+                const slideEl = document.getElementById(slideGrid[key]);
+                const bgUrl = COURSE_ASSETS.slideBackgrounds[bgKey];
+                if (slideEl && bgUrl && bgUrl.trim() !== "") {
+                    slideEl.style.backgroundImage = `url('${bgUrl}')`;
+                    slideEl.classList.add('bg-right-fade');
+                }
+            });
+
+            setSrc('qr-presentation-cover-0-0', COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.presentationAccess));
+            setSrc('qr-quiz-forms-8-0', COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.googleFormsQuiz));
+
+            Object.keys(galleryData_030).forEach(cat => updateGalleryView_030(cat));
+            updateFrameDeformation_7_2();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAssets();
+            updateUI();
+        });
+    </script>
+</body>
+</html>

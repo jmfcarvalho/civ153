@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>CIV 153 - Aula 1: Introdução | DEC UFV</title>
+    
+    <!-- Tailwind CSS para Design Responsivo Rápido -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Montserrat Calibrado com os Pesos Médio, Negrito e Heavy Bold/Black (900) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,900&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX para Renderização de Fórmulas Matemáticas de Alta Precisão -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <!-- FontAwesome para Ícones Didáticos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- VARIÁVEIS DE CORES E ESCAS TIPOGRÁFICAS CALIBRADAS (MANUAL PÁG. 05) --- */
+        :root {
+            --sicon-green-dark: #0D4334;
+            --sicon-green-light: #80C29D;
+            --sicon-gray-dark: #A1A1A1;
+            --sicon-gray-light: #DEDEDE;
+            --sicon-bg-light: #F4F6F5;
+
+            /* Escala Tipográfica Fluida Calibrada via CSS clamp()[cite: 1] */
+            --fluid-h1: clamp(1.6rem, 3.25vw, 2.6rem);  
+            --fluid-h2: clamp(1.26rem, 2.5vw, 1.9rem);  
+            --fluid-h3: clamp(1.26rem, 2.3vw, 1.72rem);
+            --fluid-body: clamp(1.1rem, 1.6vw, 1.32rem); 
+            --fluid-meta: clamp(0.92rem, 1.26vw, 1.09rem);
+            --fluid-tag: clamp(0.7rem, 0.9vw, 0.85rem);
+        }
+
+        /* CONFIGURAÇÃO DE FALLBACKS DE FONTES OFICIAIS DO GRUPO[cite: 1] */
+        @font-face {
+            font-family: 'Squad';
+            src: local('Squad Regular'), local('Squad');
+            font-weight: 400;
+        }
+
+        @font-face {
+            font-family: 'Squad';
+            src: local('Squad Heavy Regular'), local('Squad Heavy');
+            font-weight: 900;
+        }
+
+        body {
+            font-family: 'Squad', 'Montserrat', sans-serif;
+            background-color: var(--sicon-bg-light);
+            overscroll-behavior: none;
+        }
+
+        /* MAPEAMENTO DE CLASSES TIPOGRÁFICAS COM SUPORTE A HEAVY BOLD E TITLE CASE */
+        .text-fluid-h1 {
+            font-size: var(--fluid-h1);
+            line-height: 1.15;
+            font-weight: 900 !important; /* Força Montserrat Heavy Bold / Black (900)[cite: 1] */
+            letter-spacing: -0.02em;
+        }
+        .text-fluid-h2 {
+            font-size: var(--fluid-h2);
+            line-height: 1.25;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+        }
+        .text-fluid-h3 {
+            font-size: var(--fluid-h3);
+            line-height: 1.3;
+            font-weight: 700;
+        }
+        .text-fluid-body {
+            font-size: var(--fluid-body);
+            line-height: 1.6;
+        }
+        .text-fluid-meta {
+            font-size: var(--fluid-meta);
+            line-height: 1.5;
+        }
+        .text-fluid-tag {
+            font-size: var(--fluid-tag);
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* CUSTOMIZAÇÃO DA BARRA DE ROLAGEM INTERNA SILENCIOSA */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(13, 67, 52, 0.2);
+            border-radius: 20px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(13, 67, 52, 0.4);
+        }
+
+        /* MOTOR DE TRANSIÇÃO E ARQUITETURA DE SLIDES COMPACTA */
+        .slide-screen {
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Estado ativo do slide na tela */
+        .slide-active {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        /* Ocultação vetorial dos slides nas direções de navegação do Grid */
+        .slide-hidden-left {
+            opacity: 0;
+            transform: translate3d(-100%, 0, 0);
+        }
+        .slide-hidden-right {
+            opacity: 0;
+            transform: translate3d(100%, 0, 0);
+        }
+        .slide-hidden-up {
+            opacity: 0;
+            transform: translate3d(0, -100%, 0);
+        }
+        .slide-hidden-down {
+            opacity: 0;
+            transform: translate3d(0, 100%, 0);
+        }
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden relative">
+
+    <!-- Área de Conteúdo Fluida e Dinâmica (Ocupa 100% da viewport, sem Header ou Footer) -->
+    <main class="w-full h-full p-4 md:p-12 overflow-hidden relative">
+
+        <!-- SLIDE (0,0): CAPA DE APRESENTAÇÃO E IDENTIFICAÇÃO INSTITUCIONAL -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-12 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+                    <div class="bg-white p-6 md:p-10 rounded-r-3xl border-l-[14px] border-[#0D4334] shadow-xl space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/sicon_logo/WhatsApp%20Image%202021-10-13%20at%2018.01.59.jpeg" 
+                                 alt="SICon Logo" class="h-10 w-auto object-contain">
+                            <span class="text-fluid-meta text-[#0D4334] font-black tracking-widest uppercase block">
+                                Universidade Federal De Viçosa • DEC
+                            </span>
+                        </div>
+                        
+                        <h1 class="text-fluid-h1 text-[#0D4334] md:font-black font-extrabold tracking-tight leading-none uppercase">
+                            Introdução À Mecânica Das Estruturas
+                        </h1>
+                        
+                        <h2 class="text-fluid-h2 text-[#A1A1A1] md:font-bold font-semibold tracking-tight uppercase">
+                            Aula 01 • Concepção, Arquitetura & Tecnologia
+                        </h2>
+                    </div>
+
+                    <div class="bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-[#DEDEDE] shadow-sm space-y-2">
+                        <span class="text-xs font-bold text-[#A1A1A1] block uppercase tracking-wider">Corpo Docente e Colaboradores</span>
+                        <p class="text-fluid-meta text-slate-700 font-medium leading-relaxed">
+                            Gustavo de Souza Verissimo • José Carlos Lopes Ribeiro • <strong class="text-[#0D4334]">José Maria Franco de Carvalho</strong> • Kléos Magalhães Lenz César Jr. • Mateus Couri Petrauski • Carol Ferreira Rezende Santos
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 flex flex-col justify-between bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-2xl border border-white/5">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Portal Interativo</span>
+                        <h3 class="text-fluid-h3 text-white font-bold leading-snug">Inteligência Construtiva</h3>
+                        <p class="text-fluid-body text-slate-200 leading-relaxed font-medium text-sm">
+                            Esta disciplina integra modelagem e cálculo mecânico especificamente projetado para a otimização geométrica espacial e estrutural.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-white/10 flex justify-between items-center text-[11px] font-mono tracking-widest text-[#80C29D] uppercase">
+                        <span>Acesso</span>
+                        <span class="animate-pulse">Deslize para o Lado <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): QUIZ INTERATIVO E VERIFICAÇÃO DE PRESENÇA -->
+        <div id="slide-quiz" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full pb-12 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-7 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between min-h-[460px]">
+                    <div>
+                        <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">Mapeamento Inicial</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold leading-tight">Percepção de Concepção Funicular</h2>
+                        
+                        <div class="mt-6">
+                            <!-- Passo 1 -->
+                            <div id="quiz-step-1" class="quiz-step space-y-4">
+                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">1. De qual região ou cidade você é?</label>
+                                <input type="text" id="quiz-origin" placeholder="Ex: Viçosa - MG, Belo Horizonte..." 
+                                       class="w-full p-4 border border-[#DEDEDE] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#80C29D] font-medium text-sm">
+                            </div>
+
+                            <!-- Passo 2 -->
+                            <div id="quiz-step-2" class="quiz-step hidden space-y-4">
+                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">2. Qual sua maior expectativa no curso?</label>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <button onclick="selectExpectation('Concepção', this)" class="quiz-opt w-full text-left p-4 border border-[#DEDEDE] rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">💡 Conceber formas arquitetônicas arrojadas e de geometria livre</button>
+                                    <button onclick="selectExpectation('Segurança', this)" class="quiz-opt w-full text-left p-4 border border-[#DEDEDE] rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🛡️ Dominar os caminhos internos de carga e tensões físicas</button>
+                                </div>
+                            </div>
+
+                            <!-- Passo 3 -->
+                            <div id="quiz-step-3" class="quiz-step hidden space-y-4">
+                                <label class="block text-fluid-h3 font-bold text-[#0D4334]">3. Como você enxerga as estruturas hoje?</label>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <button onclick="selectPerception('Escultura', this)" class="quiz-opt-perc w-full text-left p-4 border border-[#DEDEDE] rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🖼️ Uma escultura que define e viabiliza a identidade espacial do edifício</button>
+                                    <button onclick="selectPerception('Suporte', this)" class="quiz-opt-perc w-full text-left p-4 border border-[#DEDEDE] rounded-xl hover:bg-[#80C29D]/10 hover:border-[#80C29D] transition-all text-xs font-semibold text-slate-700">🔧 Um componente técnico que deve subordinar-se à funcionalidade</button>
+                                </div>
+                            </div>
+
+                            <!-- Passo 4 -->
+                            <div id="quiz-step-4" class="quiz-step hidden space-y-4 text-center py-6">
+                                <span class="text-6xl inline-block mb-2">🏛️</span>
+                                <h3 class="text-fluid-h3 text-[#0D4334] font-bold">Registro Concluído</h3>
+                                <p id="quiz-profile-desc" class="text-fluid-body text-slate-600 font-medium text-sm px-4 mt-2"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button id="quiz-prev-btn" onclick="prevQuizStep()" class="px-5 py-2 bg-slate-100 text-slate-500 rounded-xl font-bold disabled:opacity-30" disabled>Anterior</button>
+                        <button id="quiz-next-btn" onclick="nextQuizStep()" class="px-5 py-2 bg-[#0D4334] text-white rounded-xl font-bold hover:bg-[#0D4334]/90 transition-colors">Avançar</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Frequência Síncrona</span>
+                        <h3 class="text-fluid-h3 font-black leading-tight text-white">Submissão Digital</h3>
+                        <p class="text-fluid-meta text-slate-300 text-sm leading-relaxed">
+                            A leitura do QR Code ou clique no hiperlink realiza o direcionamento direto para a ata oficial de presença via Google Forms.
+                        </p>
+                    </div>
+
+                    <div class="my-6 flex justify-center">
+                        <div class="bg-white p-4 rounded-2xl shadow-2xl">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://forms.gle/exemploQuizNivelamentoCIV153" 
+                                 alt="QR Code Presença" class="w-36 h-36 object-contain">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="https://forms.gle/exemploQuizNivelamentoCIV153" target="_blank" class="text-xs hover:underline text-[#80C29D] font-semibold tracking-wide">Acessar Formulário Google Forms de Presença</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): ARQUITETURA COMO CIÊNCIA SOCIAL APLICADA -->
+        <div id="slide-arquitetura-tecnologia" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-7 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2">Interdependência</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold">Tecnologia do Ambiente Construído</h2>
+                        <p class="text-fluid-body text-slate-600 font-medium mt-3 text-sm leading-relaxed">
+                            A expressão espacial demanda estabilidade mecânica inerente. O equilíbrio das estruturas define as linhas limites de tensões admissíveis da forma.
+                        </p>
+
+                        <!-- Fluxograma Modular Técnico -->
+                        <div class="mt-8 p-6 bg-[#F4F6F5] rounded-2xl border border-[#DEDEDE]">
+                            <div class="flex flex-col items-center space-y-4">
+                                <div class="px-5 py-2 bg-[#0D4334] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md">Arquitetura</div>
+                                <div class="w-px h-8 bg-[#A1A1A1]"></div>
+                                <div class="px-5 py-2 bg-slate-300 text-[#0D4334] rounded-xl font-bold text-xs uppercase tracking-widest">Tecnologia Estrutural</div>
+                                <div class="w-full flex justify-around items-center pt-2">
+                                    <div class="text-center">
+                                        <div class="px-4 py-2 bg-white border border-[#DEDEDE] rounded-lg text-[11px] font-bold text-slate-600 shadow-sm">Materiais</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="px-4 py-2 bg-white border-2 border-[#0D4334] rounded-lg text-[11px] font-bold text-[#0D4334] shadow-sm">Mecânica</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="px-4 py-2 bg-white border border-[#DEDEDE] rounded-lg text-[11px] font-bold text-slate-600 shadow-sm">Modelagem BIM</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#A1A1A1] font-bold block uppercase tracking-wider text-xs">Caminho de Formação</span>
+                        <h3 class="text-fluid-h3 text-[#0D4334] font-black mt-2">Trilha de Engenharia Civil</h3>
+                        
+                        <div class="mt-6 space-y-3">
+                            <div class="p-4 bg-[#0D4334] text-white rounded-2xl flex items-center justify-between shadow-md">
+                                <span class="font-bold text-xs font-mono bg-white/10 px-2 py-1 rounded">CIV 153</span>
+                                <span class="text-xs font-semibold">Introdução à Mecânica das Estruturas</span>
+                                <span class="text-[10px] bg-[#80C29D] text-[#0D4334] px-3 py-1 rounded-full font-black uppercase">Foco</span>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-slate-400 border border-[#DEDEDE] rounded-2xl flex items-center justify-between opacity-60">
+                                <span class="font-bold text-xs font-mono bg-slate-200 px-2 py-1 rounded">CIV 250</span>
+                                <span class="text-xs font-medium">Fundamentos de Estruturas</span>
+                                <i class="fa-solid fa-lock text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): EQUILÍBRIO MECÂNICO E CÁLCULO DE TENSÕES -->
+        <div id="slide-engenharia-estrutural" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-6 bg-white p-6 md:p-10 rounded-r-3xl border-l-[14px] border-[#0D4334] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Análise Vetorial</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold leading-tight">Mecânica dos Sólidos Rígidos</h2>
+                        <blockquote class="text-fluid-body text-slate-600 font-medium leading-relaxed italic border-l-4 border-[#A1A1A1] pl-4 py-2 text-sm mt-4 bg-slate-50 rounded-r-lg">
+                            "A mecânica descreve e prevê as condições de repouso ou movimento de corpos submetidos à ação de sistemas de forças externas e conjugados."
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-2xl flex flex-col justify-between border border-white/5">
+                    <div>
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2">Modelo Matemático</span>
+                        <h3 class="text-fluid-h3 text-white font-bold leading-tight">Estado de Tensão Resultante</h3>
+                        
+                        <div class="my-8 bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
+                            <div id="katex-tension-formula" class="text-white text-2xl py-2 min-h-[60px]">
+                                <!-- Renderizado estritamente via KaTeX -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): CONCEPÇÃO GAUDÍ -->
+        <div id="slide-concepcao-gaudi" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-7 bg-white p-6 md:p-10 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Morfologia Analítica</span>
+                        <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold">Equilíbrio e Geometria Natural</h2>
+                        <blockquote class="text-fluid-body text-slate-600 font-medium leading-relaxed italic border-l-4 border-[#0D4334] pl-4 py-2 text-sm mt-4 bg-slate-50 rounded-r-lg">
+                            "Dessa maneira, não se pode conceber uma forma sem se conceber automaticamente uma estrutura e vice-versa."
+                        </blockquote>
+                        <p class="text-right text-xs font-bold text-[#0D4334] uppercase tracking-wider">— Yopanan Rebello (2001)</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-[#0D4334] text-white p-6 md:p-10 rounded-3xl shadow-2xl flex flex-col justify-between border border-white/5">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold bg-[#80C29D]/20 text-[#80C29D] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Laboratório Tridimensional</span>
+                        <h3 class="text-fluid-h3 font-bold text-white leading-tight">Modelagem Funicular Invertida</h3>
+                        <p class="text-fluid-meta text-slate-300 text-sm font-medium">
+                            Suspendendo cordas com pesos proporcionais obtém-se a geometria funicular ideal sob tração pura. Ao invertê-la verticalmente, define-se a linha de pressões estável para compressão axial estrita.
+                        </p>
+                    </div>
+
+                    <div class="pt-6 border-t border-white/10">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#80C29D] text-[#0D4334] rounded-2xl font-black hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center space-x-3 text-xs uppercase tracking-widest">
+                            <span>Acessar Simulador de Gaudí</span> <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1): SIMULADOR FUNICULAR INTERATIVO (BIFURCAÇÃO VERTICAL) -->
+        <div id="slide-gaudi-deepdive" class="slide-screen slide-hidden-up flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                
+                <div class="lg:col-span-8 bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
+                            <div>
+                                <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block">Física Interativa</span>
+                                <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold">Catenária e Linha de Pressões</h2>
+                            </div>
+                            <button id="toggle-arch-mode" onclick="toggleArchMode()" class="px-5 py-3 bg-[#0D4334] text-white text-xs font-black rounded-xl shadow-lg hover:bg-[#0D4334]/90 transition-all uppercase tracking-widest flex items-center space-x-2">
+                                <i class="fa-solid fa-arrows-up-down"></i>
+                                <span id="arch-mode-label">Inverter Arco (Compressão)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Vetorial SVG do Funicular Mecânico -->
+                    <div class="bg-slate-950 rounded-2xl relative p-4 h-64 md:h-80 w-full flex items-center justify-center overflow-hidden shadow-inner border border-slate-800">
+                        <svg id="funicular-svg" viewBox="0 0 600 300" class="w-full h-full">
+                            <path id="cable-path" d="M 50,50 L 150,150 L 300,220 L 450,150 L 550,50" fill="none" stroke="#80C29D" stroke-width="4" stroke-dasharray="2 2" class="transition-all duration-300"></path>
+                            <circle cx="50" cy="50" r="8" fill="#A1A1A1"></circle>
+                            <circle cx="550" cy="50" r="8" fill="#A1A1A1"></circle>
+                            <g id="weight-nodes">
+                                <line id="weight-line-1" x1="150" y1="150" x2="150" y2="190" stroke="#A1A1A1" stroke-width="2"></line>
+                                <circle id="weight-node-1" cx="150" cy="190" r="10" fill="#0D4334"></circle>
+                                <line id="weight-line-2" x1="300" y1="220" x2="300" y2="280" stroke="#A1A1A1" stroke-width="2"></line>
+                                <circle id="weight-node-2" cx="300" cy="280" r="14" fill="#0D4334"></circle>
+                                <line id="weight-line-3" x1="450" y1="150" x2="450" y2="190" stroke="#A1A1A1" stroke-width="2"></line>
+                                <circle id="weight-node-3" cx="450" cy="190" r="10" fill="#0D4334"></circle>
+                            </g>
+                        </svg>
+                        <span id="simulator-state-tag" class="absolute top-4 right-4 bg-[#80C29D] text-[#0D4334] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md transition-colors duration-300">
+                            Tração Pura
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-[#A1A1A1] uppercase tracking-wider block">Carga Esquerda (P1)</label>
+                            <input type="range" id="slider-p1" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-[#A1A1A1] uppercase tracking-wider block">Carga Central (P2)</label>
+                            <input type="range" id="slider-p2" min="60" max="250" value="150" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-[#A1A1A1] uppercase tracking-wider block">Carga Direita (P3)</label>
+                            <input type="range" id="slider-p3" min="40" max="200" value="100" oninput="updateSimulation()" class="w-full accent-[#0D4334]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 bg-[#0D4334] text-white p-6 md:p-8 rounded-3xl shadow-xl flex flex-col justify-between border border-white/5">
+                    <p class="text-xs text-slate-300 font-medium leading-relaxed">
+                        Alterando os seletores de intensidade linear, a geometria vetorial recalcula a posição espacial instantânea dos nós de equilíbrio da estrutura.
+                    </p>
+                    <button onclick="moveInGrid(0, -1)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest">
+                        Retornar ao Fluxo Horizontal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): MODELOS FÍSICOS DE APRENDIZADO -->
+        <div id="slide-modelos-fisicos" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-12 bg-white p-8 md:p-12 rounded-3xl border border-[#DEDEDE] shadow-xl">
+                    <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">Intuição Tátil</span>
+                    <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold">Análise Qualitativa de Modelos</h2>
+                    <p class="text-fluid-body text-slate-600 font-medium mt-4 text-base leading-relaxed">
+                        A dedução mecânica intuitiva consolida-se por meio do manuseio físico direto dos materiais sob flexão, compressão e flambagem localizada.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): CRONOGRAMA E AVALIAÇÃO CRÍTICA -->
+        <div id="slide-programa-aval" class="slide-screen slide-hidden-right flex flex-col justify-start md:justify-center overflow-y-auto max-h-full py-6 custom-scroll">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-7xl mx-auto items-stretch">
+                <div class="lg:col-span-12 bg-white p-8 md:p-12 rounded-3xl border border-[#DEDEDE] shadow-xl">
+                    <span class="text-xs font-bold bg-[#0D4334]/10 text-[#0D4334] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">Cronograma</span>
+                    <h2 class="text-fluid-h2 text-[#0D4334] md:font-bold font-semibold">Estrutura de Distribuição de Créditos</h2>
+                    <p class="text-fluid-body text-slate-500 font-medium mt-2 text-sm">Questionários Digitais (15 pts) • Exercícios Práticos (50 pts) • Projeto Maquete (35 pts).</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- MAPEAMENTO PLANO BIDIMENSIONAL DO MOTOR (SLIDEGRID) ---
+        const slideGrid = {
+            '0,0': 'slide-capa',
+            '1,0': 'slide-quiz',
+            '2,0': 'slide-arquitetura-tecnologia',
+            '3,0': 'slide-engenharia-estrutural',
+            '4,0': 'slide-concepcao-gaudi',
+            '4,1': 'slide-gaudi-deepdive',
+            '5,0': 'slide-modelos-fisicos',
+            '6,0': 'slide-programa-aval'
+        };
+
+        let currentX = 0;
+        let currentY = 0;
+
+        // --- SISTEMA INTELLIGENT TOUCH SWIPE (CONTROLE GESTUAL MÓVEL) ---
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const minSwipeThreshold = 50;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            let deltaX = e.changedTouches[0].screenX - touchStartX;
+            let deltaY = e.changedTouches[0].screenY - touchStartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (Math.abs(deltaX) > minSwipeThreshold) {
+                    if (deltaX > 0) moveInGrid(-1, 0); // Swipe Direita -> Slide Anterior
+                    else moveInGrid(1, 0);             // Swipe Esquerda -> Próximo Slide
+                }
+            } else {
+                if (Math.abs(deltaY) > minSwipeThreshold) {
+                    if (deltaY > 0) moveInGrid(0, -1); // Swipe Baixo -> Slide Inferior
+                    else moveInGrid(0, 1);             // Swipe Cima -> Deep Dive Vertical
+                }
+            }
+        }, { passive: true });
+
+        // --- CORE NAVIGATION ENGINE (MUDANÇA DE ESTADOS NO GRID) ---
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function moveInGrid(dx, dy) {
+            const nextX = currentX + dx;
+            const nextY = currentY + dy;
+
+            if (hasSlide(nextX, nextY)) {
+                const currentElement = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nextElement = document.getElementById(slideGrid[`${nextX},${nextY}`]);
+
+                if (currentElement && nextElement) {
+                    currentElement.classList.remove('slide-active');
+
+                    if (dx > 0) currentElement.classList.add('slide-hidden-left');
+                    else if (dx < 0) currentElement.classList.add('slide-hidden-right');
+                    else if (dy > 0) currentElement.classList.add('slide-hidden-down');
+                    else if (dy < 0) currentElement.classList.add('slide-hidden-up');
+
+                    // Reset de classes mutáveis no elemento de destino
+                    nextElement.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                    nextElement.classList.add('slide-active');
+
+                    currentX = nextX;
+                    currentY = nextY;
+                }
+            }
+        }
+
+        // Mapeamento de Teclado Físico Tradicional
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp') moveInGrid(0, 1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, -1);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowRight') moveInGrid(1, 0);
+        });
+
+        // --- SISTEMA INTERATIVO DO QUIZ DE ENTRADA ---
+        let currentQuizStep = 1;
+        let selectedExpectationValue = "";
+        let selectedPerceptionValue = "";
+
+        function nextQuizStep() {
+            if (currentQuizStep === 1) {
+                const originInput = document.getElementById('quiz-origin').value;
+                if (!originInput.trim()) return;
+            } else if (currentQuizStep === 2 && !selectedExpectationValue) return;
+            else if (currentQuizStep === 3 && !selectedPerceptionValue) return;
+
+            if (currentQuizStep < 4) {
+                document.getElementById(`quiz-step-${currentQuizStep}`).classList.add('hidden');
+                currentQuizStep++;
+                document.getElementById(`quiz-step-${currentQuizStep}`).classList.remove('hidden');
+                updateQuizButtons();
+            }
+            if (currentQuizStep === 4) generateStudentProfile();
+        }
+
+        function prevQuizStep() {
+            if (currentQuizStep > 1) {
+                document.getElementById(`quiz-step-${currentQuizStep}`).classList.add('hidden');
+                currentQuizStep--;
+                document.getElementById(`quiz-step-${currentQuizStep}`).classList.remove('hidden');
+                updateQuizButtons();
+            }
+        }
+
+        function selectExpectation(val, element) {
+            selectedExpectationValue = val;
+            document.querySelectorAll('.quiz-opt').forEach(btn => btn.classList.remove('bg-[#80C29D]/20', 'border-[#80C29D]'));
+            element.classList.add('bg-[#80C29D]/20', 'border-[#80C29D]');
+        }
+
+        function selectPerception(val, element) {
+            selectedPerceptionValue = val;
+            document.querySelectorAll('.quiz-opt-perc').forEach(btn => btn.classList.remove('bg-[#80C29D]/20', 'border-[#80C29D]'));
+            element.classList.add('bg-[#80C29D]/20', 'border-[#80C29D]');
+        }
+
+        function updateQuizButtons() {
+            document.getElementById('quiz-prev-btn').disabled = (currentQuizStep === 1);
+            if (currentQuizStep === 4) document.getElementById('quiz-next-btn').classList.add('hidden');
+            else document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function generateStudentProfile() {
+            const origin = document.getElementById('quiz-origin').value;
+            document.getElementById('quiz-profile-desc').innerHTML = `Perfil de <strong>${origin}</strong> sincronizado de forma estrita com a ementa de Concepção Estrutural da UFV.`;
+        }
+
+        // --- ENGINE DO SIMULADOR FUNICULAR DE GAUDÍ ---
+        let isArchInverted = false;
+
+        function toggleArchMode() {
+            isArchInverted = !isArchInverted;
+            const stateTag = document.getElementById('simulator-state-tag');
+            const modeLabel = document.getElementById('arch-mode-label');
+
+            if (isArchInverted) {
+                stateTag.innerText = "Compressão Pura";
+                stateTag.className = "absolute top-4 right-4 bg-[#0D4334] text-[#80C29D] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md border border-[#80C29D]/30";
+                modeLabel.innerText = "Inverter para Cabo (Tração)";
+            } else {
+                stateTag.innerText = "Tração Pura";
+                stateTag.className = "absolute top-4 right-4 bg-[#80C29D] text-[#0D4334] text-[10px] font-mono font-black uppercase px-4 py-1.5 rounded-full shadow-md";
+                modeLabel.innerText = "Inverter Arco (Compressão)";
+            }
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            const p1 = parseFloat(document.getElementById('slider-p1').value);
+            const p2 = parseFloat(document.getElementById('slider-p2').value);
+            const p3 = parseFloat(document.getElementById('slider-p3').value);
+
+            let y1 = isArchInverted ? 250 - (p1 * 0.7) : 50 + (p1 * 0.7);
+            let y2 = isArchInverted ? 250 - (p2 * 0.85) : 50 + (p2 * 0.85);
+            let y3 = isArchInverted ? 250 - (p3 * 0.7) : 50 + (p3 * 0.7);
+
+            const dString = `M 50,${isArchInverted ? 250 : 50} L 150,${y1} L 300,${y2} L 450,${y3} L 550,${isArchInverted ? 250 : 50}`;
+            document.getElementById('cable-path').setAttribute('d', dString);
+
+            const updateNode = (nodeId, lineId, x, y, offset) => {
+                const node = document.getElementById(nodeId);
+                const line = document.getElementById(lineId);
+                if(node && line) {
+                    node.setAttribute('cx', x); node.setAttribute('cy', y + offset);
+                    line.setAttribute('x1', x); line.setAttribute('y1', y);
+                    line.setAttribute('x2', x); line.setAttribute('y2', y + offset);
+                }
+            };
+
+            updateNode('weight-node-1', 'weight-line-1', 150, y1, isArchInverted ? -30 : 30);
+            updateNode('weight-node-2', 'weight-line-2', 300, y2, isArchInverted ? -45 : 45);
+            updateNode('weight-node-3', 'weight-line-3', 450, y3, isArchInverted ? -30 : 30);
+        }
+
+        // Instanciação Inicial do Ambiente
+        window.addEventListener('load', () => {
+            updateSimulation();
+            if (typeof katex !== 'undefined') {
+                katex.render("\\sigma = \\frac{N}{A} \\pm \\frac{M}{W}", document.getElementById('katex-tension-formula'), {
+                    throwOnError: false,
+                    displayMode: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>

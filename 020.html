@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 665 | Structural Elements, Internal Stresses & Stability - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================================= -->
+    <!-- CENTRAL RESOURCE DIRECTORY (EASY IDENTIFICATION AND QUICK EDITS)           -->
+    <!-- ========================================================================= -->
+    <script>
+        const COURSE_ASSETS = {
+            logos: {
+                ufv: "https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png",
+                pms: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png"
+            },
+            slideBackgrounds: {
+                "0_0": "bg-geometric1.png",
+                "1_0": "bg-concrete1.png",
+                "2_0": "bg-blocks1.png",
+                "2_1": "",
+                "2_2": "",
+                "2_3": "",
+                "3_0": "bg-polymer1.png",
+                "3_1": "",
+                "4_0": "bg-geometric2.png",
+                "4_1": "",
+                "5_0": "bg-concrete1.png",
+                "6_0": "bg-blocks2.png"
+            },
+            externalLinks: {
+                presentationAccess: "https://jmfcarvalho.github.io/civ153/aulas/020_elementoseesforcos/",
+                googleFormsQuiz: "https://docs.google.com/forms/d/e/1FAIpQLSez2QHwlZ1Ry3XBy0HoQMyuqk1_Cols-meENfL3gZA2FFfhxQ/viewform?usp=header",
+                weeklyAssignment: "https://docs.google.com/forms/d/e/1FAIpQLSez2QHwlZ1Ry3XBy0HoQMyuqk1_Cols-meENfL3gZA2FFfhxQ/viewform?usp=header",
+                pmsPortal: "https://pms.ufv.br"
+            },
+            qrCodeGenerator: (url, color = "901812") => 
+                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&color=${color}`
+        };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: STYLES & IMMUTABLE CSS VARIABLES                               -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-bg: #F4F6F5;
+            --pms-card-light: rgba(255, 255, 255, 0.65);
+            --pms-card-dark: rgba(51, 51, 51, 0.70);
+            --pms-text-muted: #444444;
+
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans Narrow', sans-serif;
+
+            --fluid-h1: clamp(2.6rem, 5.5vw, 4.8rem);
+            --fluid-h2: clamp(2.0rem, 4.2vw, 3.2rem);
+            --fluid-h3: clamp(1.5rem, 2.8vw, 2.2rem);
+            --fluid-body: clamp(1.2rem, 2.0vw, 1.65rem);
+            --fluid-meta: clamp(1.0rem, 1.5vw, 1.35rem);
+            --fluid-tag: clamp(0.95rem, 1.3vw, 1.2rem);
+        }
+
+        html, body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background-color: var(--pms-bg);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 900; color: var(--pms-red); line-height: 1.05; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.4; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); color: var(--pms-text-muted); font-weight: 600; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .katex-display {
+            font-size: clamp(1.4rem, 3.0vw, 2.4rem) !important;
+            margin: 0.8rem 0 !important;
+        }
+        .katex { font-size: 1.15em; }
+
+        .card-borderless-glass {
+            border: none !important;
+            background-color: var(--pms-card-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-dark {
+            border: none !important;
+            background-color: var(--pms-card-dark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass:hover, .card-borderless-glass-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.10);
+        }
+
+        .bg-right-fade {
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
+            position: relative;
+        }
+        .bg-right-fade::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--pms-bg) 20%, rgba(244, 246, 245, 0.65) 50%, rgba(244, 246, 245, 0.15) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            overflow-y: auto;
+        }
+        .slide-screen > * { position: relative; z-index: 2; }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 1.25rem; right: 1.5rem; width: 130px; height: 130px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 44px; height: 44px; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50%; color: #A1A1A1; font-size: 1.3rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; opacity: 0.25; pointer-events: none;
+            transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .control-arrow.nav-up { top: 0; left: 43px; }
+        .control-arrow.nav-down { bottom: 0; left: 43px; }
+        .control-arrow.nav-left { top: 43px; left: 0; }
+        .control-arrow.nav-right { top: 43px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-red); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--pms-red); color: #FFFFFF; transform: scale(1.15); }
+
+        @keyframes kenburns {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.08) translate(-1%, -1%); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+        .animate-kenburns { animation: kenburns 16s ease-in-out infinite alternate; }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <div class="fixed top-0 left-0 h-2 bg-[#D1A705] transition-all duration-500 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-8 text-fluid-meta font-bold text-[#333333] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-md z-[1000] flex items-center space-x-3">
+        <span class="w-3 h-3 rounded-full bg-[#901812]"></span>
+        <span id="slideIndicator">Slide (0,0)</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: HTML BODY & SLIDE STRUCTURE                                    -->
+    <!-- ========================================================================= -->
+    <main class="w-full h-full relative">
+
+        <!-- SLIDE (0,0): COVER -->
+        <div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center gap-4">
+                <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm">
+                    <img id="img-logo-ufv-0-0" alt="UFV Logo" class="h-10 sm:h-12 w-auto">
+                    <div class="h-10 w-[1px] bg-[#DEDEDE]"></div>
+                    <span class="text-fluid-tag text-[#333333]">CIV 665</span>
+                </div>
+                <a id="link-pms-portal-0-0" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <img id="img-logo-pms-0-0" alt="PMS Logo" class="h-12 sm:h-16 w-auto">
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full my-auto py-6">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="p-8 sm:p-12 rounded-3xl card-borderless-glass border-l-[16px] border-[#901812]">
+                        <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2">CIV 665 — LECTURE 02</span>
+                        <h1 class="text-fluid-h1 mb-4">STRUCTURAL SYSTEMS<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Elements, Internal Stresses & Equilibrium</span></h1>
+                        <p class="text-fluid-body text-[#444444]">Morphological Classification, Vector Stress State Analysis, and Boundary Determinacy.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div class="bg-white/85 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                        <img id="qr-presentation-cover-0-0" alt="Slide Access QR Code" class="w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[320px] mx-auto rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Follow On Smartphone</span>
+                    </div>
+                    <div class="text-center space-y-1">
+                        <span class="text-fluid-tag text-[#D1A705] block">Course Instructor</span>
+                        <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): SYLLABUS / OBJECTIVES -->
+        <div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">LECTURE PROGRAM</span>
+                    <h2 class="text-fluid-h2">Lecture 02 Overview</h2>
+                </div>
+                <img id="img-logo-pms-1-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-md">Module 01</span>
+                        <h3 class="text-fluid-h3 text-[#901812]">Structural Elements</h3>
+                        <p class="text-fluid-body text-[#444444]">Spatial dimensional ratios ($L, b, h$): 1D linear elements, 2D surface plates/shells, and 3D volumetric mass blocks.</p>
+                    </div>
+                </div>
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-md">Module 02</span>
+                        <h3 class="text-fluid-h3 text-[#901812]">Internal Stress Resultants</h3>
+                        <p class="text-fluid-body text-[#444444]">Constitutive behavioral mechanics: axial tension/compression, pure flexure, and transverse shear distortion.</p>
+                    </div>
+                </div>
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-md">Module 03</span>
+                        <h3 class="text-fluid-h3 text-[#901812]">Static Stability</h3>
+                        <p class="text-fluid-body text-[#444444]">Static equilibrium governing equations, support kinematics, degrees of indeterminacy, and reactive constraint systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): STRUCTURAL ELEMENTS OVERVIEW -->
+        <div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MORPHOLOGICAL TAXONOMY</span>
+                    <h2 class="text-fluid-h2">Geometric Classification</h2>
+                </div>
+                <img id="img-logo-pms-2-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] block">DIMENSIONAL ORDER OF MAGNITUDE</span>
+                        <h3 class="text-fluid-h3 text-white">Spatial Geometry ($L, b, h$)</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Structural members are categorized by the relative scale between their three spatial dimensions, governing applicable mathematical field theories.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Explore 1D Linear Elements (Press ↓) <i class="fa-solid fa-arrow-down ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 space-y-4">
+                    <button onclick="moveInGrid(0, 1)" class="w-full text-left p-6 rounded-2xl card-borderless-glass hover:bg-white/90 transition-all border-l-8 border-[#901812] block">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-fluid-h3 text-[#901812]">1. One-Dimensional (1D Linear)</h3>
+                            <i class="fa-solid fa-chevron-down text-[#901812]"></i>
+                        </div>
+                        <p class="text-fluid-body text-[#444444] mt-1">One dimension is significantly larger than the cross-section. E.g., Beams, Columns, Ties, Cables.</p>
+                    </button>
+                    <button onclick="moveInGrid(0, 2)" class="w-full text-left p-6 rounded-2xl card-borderless-glass hover:bg-white/90 transition-all border-l-8 border-[#D1A705] block">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-fluid-h3 text-[#901812]">2. Two-Dimensional (2D Surface)</h3>
+                            <i class="fa-solid fa-chevron-down text-[#901812]"></i>
+                        </div>
+                        <p class="text-fluid-body text-[#444444] mt-1">Two in-plane dimensions dominate over thickness. E.g., Slabs/Plates, Deep Beams/Walls, Shells.</p>
+                    </button>
+                    <button onclick="moveInGrid(0, 3)" class="w-full text-left p-6 rounded-2xl card-borderless-glass hover:bg-white/90 transition-all border-l-8 border-[#333333] block">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-fluid-h3 text-[#901812]">3. Three-Dimensional (3D Volumetric)</h3>
+                            <i class="fa-solid fa-chevron-down text-[#901812]"></i>
+                        </div>
+                        <p class="text-fluid-body text-[#444444] mt-1">All three spatial dimensions share the same order of magnitude. E.g., Foundation Blocks, Gravity Dams.</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): 1D GALLERY -->
+        <div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">TAXONOMY BRANCH (Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">1D Linear Structures</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Return to Main Flow
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">STRUCTURAL MEMBER</span>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="show1DExample_2_1('vigas')" id="btn-1d-vigas-2-1" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Beams (Flexure)</button>
+                            <button onclick="show1DExample_2_1('pilares')" id="btn-1d-pilares-2-1" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Columns (Compression)</button>
+                            <button onclick="show1DExample_2_1('tirantes')" id="btn-1d-tirantes-2-1" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Tension Ties (Tension)</button>
+                            <button onclick="show1DExample_2_1('cabos')" id="btn-1d-cabos-2-1" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">4. Cables (Funicular)</button>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                        Next: 2D Elements (Press ↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] card-borderless-glass group p-6">
+                    <div id="viewer-1d-img-2-1" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-1d-2-1" class="font-bold text-fluid-h3 text-white drop-shadow-md">Beams • Long-Span Flexure</span>
+                            <div class="flex space-x-2">
+                                <button onclick="nav1DSlide_2_1(-1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="nav1DSlide_2_1(1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-1d-2-1" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md">MASP • São Paulo, Brazil</span>
+                            <span id="index-1d-2-1" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2">Example 1 / 4</span>
+                        </div>
+                        <p id="desc-1d-2-1" class="text-fluid-body text-slate-200 leading-snug">Two prestressed 74m concrete beams sustain the suspended volume, carrying full flexural moments and shear forces to columns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,2): 2D GALLERY -->
+        <div id="slide-2-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">TAXONOMY BRANCH (Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">2D Surface Structures</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Return to Main Flow
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">SURFACE TYPOLOGY</span>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="show2DExample_2_2('placas')" id="btn-2d-placas-2-2" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Plates / Slabs (Out-of-Plane)</button>
+                            <button onclick="show2DExample_2_2('chapas')" id="btn-2d-chapas-2-2" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Deep Beams / Walls (In-Plane)</button>
+                            <button onclick="show2DExample_2_2('cascas')" id="btn-2d-cascas-2-2" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Thin Shells (Curvature Membrane)</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                            Next: 3D Elements (Press ↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 text-white rounded-xl text-fluid-tag hover:bg-white/20 transition-all">
+                            Back to 1D (Press ↑)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] card-borderless-glass group p-6">
+                    <div id="viewer-2d-img-2-2" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-2d-2-2" class="font-bold text-fluid-h3 text-white drop-shadow-md">Plates • Undulated Concrete Canopy</span>
+                            <div class="flex space-x-2">
+                                <button onclick="nav2DSlide_2_2(-1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="nav2DSlide_2_2(1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-2d-2-2" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md">MAR • Rio de Janeiro, Brazil</span>
+                            <span id="index-2d-2-2" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2">Example 1 / 3</span>
+                        </div>
+                        <p id="desc-2d-2-2" class="text-fluid-body text-slate-200 leading-snug">Continuous wave-shaped reinforced concrete slab subjected to transverse out-of-plane bending and shear.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,3): 3D GALLERY -->
+        <div id="slide-2-3" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">TAXONOMY BRANCH (Y=3)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">3D Volumetric Structures</h2>
+                </div>
+                <button onclick="moveInGrid(0, -3)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Return to Main Flow
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-4">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">MASSIVE SOLID ELEMENTS</span>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="show3DExample_2_3('fundacao')" id="btn-3d-fundacao-2-3" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Pile Caps / Blocks</button>
+                            <button onclick="show3DExample_2_3('sapatas')" id="btn-3d-sapatas-2-3" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Massive Spread Footings</button>
+                            <button onclick="show3DExample_2_3('barragens')" id="btn-3d-barragens-2-3" class="py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Gravity Dams</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="moveInGrid(1, -3)" class="w-full py-3 bg-[#D1A705] text-[#333333] font-bold rounded-xl text-fluid-tag hover:bg-white transition-all">
+                            Proceed to Stresses (Slide 3,0) <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, -1)" class="w-full py-2 bg-white/10 text-white rounded-xl text-fluid-tag hover:bg-white/20 transition-all">
+                            Back to 2D (Press ↑)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-end min-h-[480px] card-borderless-glass group p-6">
+                    <div id="viewer-3d-img-2-3" class="absolute inset-0 bg-cover bg-center transition-all duration-700 animate-kenburns"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"></div>
+                    <div class="relative z-10 space-y-2 text-white max-w-3xl">
+                        <div class="flex items-center justify-between">
+                            <span id="title-3d-2-3" class="font-bold text-fluid-h3 text-white drop-shadow-md">Gravity Dams • Massive Solid Equilibrium</span>
+                            <div class="flex space-x-2">
+                                <button onclick="nav3DSlide_2_3(-1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="nav3DSlide_2_3(1)" class="p-3 bg-black/50 hover:bg-[#901812] text-white rounded-xl transition-all min-h-[48px] min-w-[48px]"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="tag-3d-2-3" class="font-mono text-fluid-tag font-bold bg-[#D1A705] text-[#333333] px-3 py-1 rounded-md">Itaipu Dam • Brazil / Paraguay</span>
+                            <span id="index-3d-2-3" class="font-mono text-fluid-tag text-[#DEDEDE] border-l border-white/30 pl-2">Example 1 / 1</span>
+                        </div>
+                        <p id="desc-3d-2-3" class="text-fluid-body text-slate-200 leading-snug">Massive concrete geometry resisting hydrostatic water thrust purely through self-weight, where 3D stress tensors govern equilibrium.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): INTERNAL STRESS RESULTANTS -->
+        <div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">INTERNAL SOLID EQUILIBRIUM</span>
+                    <h2 class="text-fluid-h2">Internal Stress Resultants</h2>
+                </div>
+                <img id="img-logo-pms-3-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] block">CROSS-SECTIONAL EQUILIBRIUM</span>
+                        <h3 class="text-fluid-h3 text-white">Stress States</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">External forces induce distributed internal stress components ($\sigma, \tau$) to satisfy continuous material integrity.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Launch Stress Deformation Lab (Press ↓) <i class="fa-solid fa-flask ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-6 rounded-2xl card-borderless-glass space-y-2">
+                        <span class="text-fluid-h3 text-[#901812] block font-bold">Axial Tension ($N > 0$)</span>
+                        <p class="text-fluid-body text-[#444444]">Collinear normal forces extending the longitudinal axis with Poisson lateral contraction.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl card-borderless-glass space-y-2">
+                        <span class="text-fluid-h3 text-[#901812] block font-bold">Axial Compression ($N < 0$)</span>
+                        <p class="text-fluid-body text-[#444444]">Collinear normal forces shortening the axis with transverse lateral expansion.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl card-borderless-glass space-y-2">
+                        <span class="text-fluid-h3 text-[#901812] block font-bold">Pure Bending ($M$)</span>
+                        <p class="text-fluid-body text-[#444444]">Force couple inducing curvature, creating simultaneous compression and tension zones across the neutral axis.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl card-borderless-glass space-y-2">
+                        <span class="text-fluid-h3 text-[#901812] block font-bold">Transverse Shear ($V$)</span>
+                        <p class="text-fluid-body text-[#444444]">Tangential transversal forces inducing sliding distortion across adjacent planes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): STRESS SIMULATOR LAB -->
+        <div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">INTERACTIVE LAB (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Constitutive Deformation Simulator</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Return to Theory
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-5">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Stress Mode</h3>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="setEffortType_3_1('tracao')" id="btn-tracao-3-1" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1. Axial Tension ($N > 0$)</button>
+                        <button onclick="setEffortType_3_1('compressao')" id="btn-compressao-3-1" class="py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2. Compression ($N < 0$)</button>
+                        <button onclick="setEffortType_3_1('flexao')" id="btn-flexao-3-1" class="py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3. Pure Flexure ($M$)</button>
+                        <button onclick="setEffortType_3_1('cisalhamento')" id="btn-cisalhamento-3-1" class="py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left">4. Direct Shear ($V$)</button>
+                    </div>
+
+                    <div class="space-y-2 pt-2 border-t border-black/10">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Stress Intensity ($F$):</span>
+                            <span id="intensity-value-3-1" class="text-[#901812] font-bold">50%</span>
+                        </label>
+                        <input type="range" id="intensity-slider-3-1" min="0" max="100" value="50" class="w-full accent-[#901812] h-4" oninput="updateDeformation_3_1()">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between items-center text-center">
+                    <div id="effort-title-3-1" class="text-fluid-h3 text-[#D1A705] font-bold">Axial Tension (Longitudinal Elongation)</div>
+                    <div class="w-full h-80 bg-black/40 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden backdrop-blur-md">
+                        <svg id="effort-svg-3-1" viewBox="0 0 500 300" class="w-full h-full">
+                            <defs>
+                                <marker id="arrow-red-3-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
+                                </marker>
+                            </defs>
+                            <polygon id="beam-body-3-1" points="160,60 340,60 340,240 160,240" fill="rgba(144, 24, 18, 0.7)" stroke="#D1A705" stroke-width="3" />
+                            <g id="vector-arrows-3-1"></g>
+                        </svg>
+                    </div>
+                    <p id="effort-desc-3-1" class="text-fluid-meta text-[#DEDEDE]">Gold vector arrows represent applied stress resultants inducing deformation relative to the resting reference frame.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): STRUCTURAL STABILITY & DETERMINACY -->
+        <div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">RIGID BODY MECHANICS</span>
+                    <h2 class="text-fluid-h2">Static Equilibrium & Determinacy</h2>
+                </div>
+                <img id="img-logo-pms-4-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <span class="text-fluid-tag text-[#901812]">2D EQUILIBRIUM EQUATIONS</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Fundamental Conditions</h3>
+                    <p class="text-fluid-body text-[#444444]">To prevent rigid body kinematics in a 2D plane ($x, y$), support reactions must satisfy three scalar conditions:</p>
+                    <div class="bg-white/80 p-4 rounded-2xl text-center space-y-2 shadow-inner">
+                        $$\sum F_x = 0 \quad \Big| \quad \sum F_y = 0 \quad \Big| \quad \sum M_z = 0$$
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <h3 class="text-fluid-h3 text-white">Degree of Determinacy ($N_r \text{ vs } N_e$)</h3>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-white/10 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Unstable / Mechanism ($N_r < N_e$)</span>
+                            <p class="text-fluid-meta text-[#DEDEDE]">Insufficient constraints. The structure experiences unconstrained rigid body motion under load.</p>
+                        </div>
+                        <div class="p-4 bg-white/10 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Statically Determinate / Isostatic ($N_r = N_e$)</span>
+                            <p class="text-fluid-meta text-[#DEDEDE]">Reactions are uniquely determined using equilibrium equations alone without kinematic displacement formulations.</p>
+                        </div>
+                        <div class="p-4 bg-white/10 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Indeterminate / Hyperstatic ($N_r > N_e$)</span>
+                            <p class="text-fluid-meta text-[#DEDEDE]">Redundant constraints enhance structural safety and stiffness, requiring compatibility equations to solve.</p>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Analyze Support Kinematics (Press ↓) <i class="fa-solid fa-arrow-down ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1): BOUNDARY CONDITIONS LAB -->
+        <div id="slide-4-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">BOUNDARY CONDITIONS (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Support Kinematics Simulator</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Return to Equilibrium
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-5">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Support Type</h3>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="setSupportType_4_1(1)" id="btn-support-1-4-1" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md">1st Order (Roller / Pin-Roller)</button>
+                        <button onclick="setSupportType_4_1(2)" id="btn-support-2-4-1" class="py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left">2nd Order (Hinged / Pinned)</button>
+                        <button onclick="setSupportType_4_1(3)" id="btn-support-3-4-1" class="py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left">3rd Order (Fixed / Clamped)</button>
+                    </div>
+
+                    <div class="space-y-2 pt-2 border-t border-black/10">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Inclined Force ($P$):</span>
+                            <span id="support-intensity-value-4-1" class="text-[#901812] font-bold">50%</span>
+                        </label>
+                        <input type="range" id="support-intensity-slider-4-1" min="0" max="100" value="50" class="w-full accent-[#901812] h-4" oninput="updateSupportSimulation_4_1()">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between items-center text-center">
+                    <div id="support-title-4-1" class="text-fluid-h3 text-[#D1A705] font-bold">1st Order: Roller Support (1 Reactive Constraint)</div>
+                    <div class="w-full h-80 bg-black/40 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden backdrop-blur-md">
+                        <svg id="support-svg-4-1" viewBox="0 0 600 320" class="w-full h-full">
+                            <defs>
+                                <marker id="arrow-red-sup-4-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
+                                </marker>
+                                <marker id="arrow-black-sup-4-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#FFFFFF" />
+                                </marker>
+                            </defs>
+                            <g id="support-elements-group-4-1"></g>
+                        </svg>
+                    </div>
+                    <p id="support-desc-4-1" class="text-fluid-meta text-[#DEDEDE]">Displacement kinematics and developed reactive forces (gold) under inclined external loading (white).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): LIVE QUIZ ASSESSMENT -->
+        <div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">SYNCHRONOUS ACTIVITY</span>
+                    <h2 class="text-fluid-h2">In-Class Assessment Quiz</h2>
+                </div>
+                <img id="img-logo-pms-5-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-6 p-6 sm:p-10 rounded-3xl card-borderless-glass space-y-6">
+                    <span class="text-fluid-tag text-[#D1A705]">GOOGLE FORMS LIVE QUIZ</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Elements, Stresses & Stability</h3>
+                    <p class="text-fluid-body text-[#444444]">Scan the QR Code on screen with your mobile camera or click the button below to complete the synchronous verification test.</p>
+                    
+                    <div class="pt-2">
+                        <a id="btn-quiz-direct-5-0" target="_blank" class="w-full py-4 px-8 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-square-poll-vertical text-2xl text-[#D1A705]"></i>
+                            <span>Open Assessment Form</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-lg ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">SCAN TO JOIN INSTANTLY</span>
+                    <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[260px] sm:max-w-[320px] lg:max-w-[360px] mx-auto shadow-lg">
+                        <img id="qr-quiz-forms-5-0" alt="Google Forms Quiz QR Code" class="w-full h-auto rounded-lg">
+                    </div>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Requires verified institutional login (@ufv.br).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): CLOSING & REFERENCES -->
+        <div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">CLOSING MODULE</span>
+                    <h2 class="text-fluid-h2">References & Next Session</h2>
+                </div>
+                <img id="img-logo-pms-6-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Key Bibliographic References</h3>
+                    <ul class="space-y-4 text-fluid-body text-[#444444]">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-book text-[#901812] mt-1"></i>
+                            <span><strong>Rebello, Y. C. P.</strong> (2001). <em>A Concepção Estrutural e a Arquitetura</em>. Zigurate.</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-book text-[#901812] mt-1"></i>
+                            <span><strong>Beer, F. P., Johnston, E. R., DeWolf, J. T., & Mazurek, D. F.</strong> (2020). <em>Mechanics of Materials</em> (8th ed.). McGraw-Hill.</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-book text-[#901812] mt-1"></i>
+                            <span><strong>Hibbeler, R. C.</strong> (2018). <em>Structural Analysis</em> (10th ed.). Pearson.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">NEXT SESSION PREVIEW</span>
+                    <h3 class="text-fluid-h3 text-white mb-2">Geometric Properties of Plane Areas</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">Centroids, First Moment of Area ($Q$), Principal Moments of Inertia ($I_x, I_y$), and Mohr's Circle formulations.</p>
+                    <div class="pt-4">
+                        <a id="btn-assignment-direct-6-0" target="_blank" class="inline-flex items-center space-x-2 text-fluid-body font-bold text-[#D1A705] hover:underline">
+                            <span>Open Course Materials</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: JAVASCRIPT LOGIC, ANIMATIONS & INTERACTIVITY                   -->
+    <!-- ========================================================================= -->
+    <script>
+        const slideGrid = { 
+            '0,0': 'slide-0-0',
+            '1,0': 'slide-1-0',
+            '2,0': 'slide-2-0',
+            '2,1': 'slide-2-1',
+            '2,2': 'slide-2-2',
+            '2,3': 'slide-2-3',
+            '3,0': 'slide-3-0',
+            '3,1': 'slide-3-1',
+            '4,0': 'slide-4-0',
+            '4,1': 'slide-4-1',
+            '5,0': 'slide-5-0',
+            '6,0': 'slide-6-0'
+        };
+
+        let currentX = 0, currentY = 0;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function initializeAssets() {
+            const logoUfv00 = document.getElementById('img-logo-ufv-0-0');
+            if (logoUfv00) logoUfv00.src = COURSE_ASSETS.logos.ufv;
+
+            const logoPms00 = document.getElementById('img-logo-pms-0-0');
+            if (logoPms00) logoPms00.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms10 = document.getElementById('img-logo-pms-1-0');
+            if (logoPms10) logoPms10.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms20 = document.getElementById('img-logo-pms-2-0');
+            if (logoPms20) logoPms20.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms30 = document.getElementById('img-logo-pms-3-0');
+            if (logoPms30) logoPms30.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms40 = document.getElementById('img-logo-pms-4-0');
+            if (logoPms40) logoPms40.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms50 = document.getElementById('img-logo-pms-5-0');
+            if (logoPms50) logoPms50.src = COURSE_ASSETS.logos.pms;
+
+            const logoPms60 = document.getElementById('img-logo-pms-6-0');
+            if (logoPms60) logoPms60.src = COURSE_ASSETS.logos.pms;
+
+            const linkPortal00 = document.getElementById('link-pms-portal-0-0');
+            if (linkPortal00) linkPortal00.href = COURSE_ASSETS.externalLinks.pmsPortal;
+
+            Object.keys(slideGrid).forEach(key => {
+                const bgKey = key.replace(',', '_');
+                const slideEl = document.getElementById(slideGrid[key]);
+                const bgUrl = COURSE_ASSETS.slideBackgrounds[bgKey];
+
+                if (slideEl) {
+                    if (bgUrl && bgUrl.trim() !== "") {
+                        slideEl.style.backgroundImage = `url('${bgUrl}')`;
+                        slideEl.classList.add('bg-right-fade');
+                    } else {
+                        slideEl.style.backgroundImage = 'none';
+                        slideEl.classList.remove('bg-right-fade');
+                    }
+                }
+            });
+
+            const qrCover00 = document.getElementById('qr-presentation-cover-0-0');
+            if (qrCover00) qrCover00.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.presentationAccess);
+
+            const qrQuiz50 = document.getElementById('qr-quiz-forms-5-0');
+            if (qrQuiz50) qrQuiz50.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.googleFormsQuiz);
+
+            const btnQuiz50 = document.getElementById('btn-quiz-direct-5-0');
+            if (btnQuiz50) btnQuiz50.href = COURSE_ASSETS.externalLinks.googleFormsQuiz;
+
+            const btnAssign60 = document.getElementById('btn-assignment-direct-6-0');
+            if (btnAssign60) btnAssign60.href = COURSE_ASSETS.externalLinks.weeklyAssignment;
+        }
+
+        function updateUI() {
+            const keysHorizontal = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const totalH = keysHorizontal.length;
+            document.getElementById('progressBar').style.width = `${(currentX / Math.max(totalH - 1, 1)) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX}, ${currentY})`;
+            
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                cur.classList.remove('slide-active');
+                
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                currentX = nx; currentY = ny;
+                updateUI();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        // =====================================================================
+        // DATA & HANDLERS FOR 1D GALLERY (SLIDE 2,1)
+        // =====================================================================
+        const data1D_2_1 = {
+            vigas: [
+                {
+                    title: "Beams • Long-Span Flexure",
+                    tag: "MASP • São Paulo, Brazil",
+                    desc: "Lina Bo Bardi's design. Two 74m prestressed concrete beams sustain the clear span, transmitting flexure and shear to four columns.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Vista_a%C3%A9rea_de_la_Avenida_Paulista_de_S%C3%A3o_Paulo_05.jpg/1920px-Vista_a%C3%A9rea_de_la_Avenida_Paulista_de_S%C3%A3o_Paulo_05.jpg"
+                },
+                {
+                    title: "Box Girders • Large Fluvial Crossing",
+                    tag: "Rio-Niterói Bridge • Brazil",
+                    desc: "Central 300m steel box girder. The tubular geometry optimizes torsional stiffness and weight distribution.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Bridge_to_Niteroi.jpg/1920px-Bridge_to_Niteroi.jpg"
+                },
+                {
+                    title: "Cantilever Truss • The Link",
+                    tag: "One Za'abeel • Dubai, UAE",
+                    desc: "World's longest cantilevered building. A 230m spatial steel truss suspended 100m in the air between two towers.",
+                    img: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/One_Za%27abeel_20241102.jpg/960px-One_Za%27abeel_20241102.jpg"
+                },
+                {
+                    title: "Cantilevered Beams • Fallingwater",
+                    tag: "Mill Run • Pennsylvania, USA",
+                    desc: "Frank Lloyd Wright's masterwork. Reinforced concrete cantilever beams anchored to rock formations extending over the waterfall.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Fallingwater3.jpg/1920px-Fallingwater3.jpg"
+                }
+            ],
+            pilares: [
+                {
+                    title: "Columns • Classical Compression Members",
+                    tag: "Parthenon • Athens, Greece",
+                    desc: "432 BC marble columns subjected to pure axial compression, transmitting entablature gravity loads to bedrock.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/1280px-The_Parthenon_in_Athens.jpg"
+                },
+                {
+                    title: "Columns • Sculptural Slender Members",
+                    tag: "Alvorada Palace • Brasília, Brazil",
+                    desc: "Oscar Niemeyer's curved reinforced concrete columns designed for compressive loads with controlled geometric eccentricity.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bras%C3%ADlia_-_Pal%C3%A1cio_do_Planalto_em_2018_02.jpg/1280px-Bras%C3%ADlia_-_Pal%C3%A1cio_do_Planalto_em_2018_02.jpg"
+                }
+            ],
+            tirantes: [
+                {
+                    title: "Stay Cables • Cable-Stayed Viaduct",
+                    tag: "Millau Viaduct • France",
+                    desc: "High-strength steel stay cables operating under pure tension, transferring deck loads directly to structural pylons.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Creissels_et_Viaduct_de_Millau.jpg/1920px-Creissels_et_Viaduct_de_Millau.jpg"
+                },
+                {
+                    title: "Tensile Ties • Cable-Net Stadium Roof",
+                    tag: "Munich Olympic Stadium • Germany",
+                    desc: "Frei Otto's lightweight pretensioned cable networks sustaining continuous acrylic membrane surfaces across expansive spans.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/2022-08-21_Olympiapark_M%C3%BCnchen_by_Sandro_Halank%E2%80%93025.jpg/1920px-2022-08-21_Olympiapark_M%C3%BCnchen_by_Sandro_Halank%E2%80%93025.jpg"
+                }
+            ],
+            cabos: [
+                {
+                    title: "Suspension Cables • Funicular Main System",
+                    tag: "Golden Gate Bridge • San Francisco, USA",
+                    desc: "Multi-wire flexible steel main cables under pure tension, forming a funicular catenary shape matching distributed gravity loads.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/0/0c/GoldenGateBridge-001.jpg"
+                },
+                {
+                    title: "Tensile Cables • Lightweight Pedestrian Bridge",
+                    tag: "Frankenberg Footbridge • Germany",
+                    desc: "Slender suspended cable system transferring live deck loads to end mast anchoring supports.",
+                    img: "https://www.sbp.de/app/uploads/2021/12/LGS-F-80-2019_MAX.jpg"
+                }
+            ]
+        };
+
+        let curType1D_2_1 = 'vigas';
+        let curIndex1D_2_1 = 0;
+
+        function updateViewer_2_1(dim, data) {
+            const box = document.getElementById(`viewer-${dim}-img-2-1`);
+            const title = document.getElementById(`title-${dim}-2-1`);
+            const tag = document.getElementById(`tag-${dim}-2-1`);
+            const desc = document.getElementById(`desc-${dim}-2-1`);
+
+            if (box && data) {
+                box.style.backgroundImage = `url('${data.img}')`;
+                if (title) title.innerText = data.title;
+                if (tag) tag.innerText = data.tag;
+                if (desc) desc.innerText = data.desc;
+            }
+        }
+
+        function show1DExample_2_1(type) {
+            curType1D_2_1 = type;
+            curIndex1D_2_1 = 0;
+            ['vigas', 'pilares', 'tirantes', 'cabos'].forEach(t => {
+                const btn = document.getElementById(`btn-1d-${t}-2-1`);
+                if (btn) {
+                    btn.className = (t === type) 
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md" 
+                        : "py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            const list = data1D_2_1[type];
+            const indexEl = document.getElementById('index-1d-2-1');
+            if (indexEl) indexEl.innerText = `Example 1 / ${list.length}`;
+            updateViewer_2_1('1d', list[0]);
+        }
+
+        function nav1DSlide_2_1(dir) {
+            const list = data1D_2_1[curType1D_2_1];
+            curIndex1D_2_1 = (curIndex1D_2_1 + dir + list.length) % list.length;
+            const el = document.getElementById('index-1d-2-1');
+            if (el) el.innerText = `Example ${curIndex1D_2_1 + 1} / ${list.length}`;
+            updateViewer_2_1('1d', list[curIndex1D_2_1]);
+        }
+
+        // =====================================================================
+        // DATA & HANDLERS FOR 2D GALLERY (SLIDE 2,2)
+        // =====================================================================
+        const data2D_2_2 = {
+            placas: [
+                {
+                    title: "Plates • Undulated Concrete Canopy",
+                    tag: "MAR • Rio de Janeiro, Brazil",
+                    desc: "Fluid wave-shaped reinforced concrete canopy supported on columns, working as a plate under out-of-plane bending.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Museu_de_Arte_do_Rio_1.jpg"
+                },
+                {
+                    title: "Plates • Flat Slender Roof Slabs",
+                    tag: "Barcelona Pavilion • Spain",
+                    desc: "Mies van der Rohe's flat reinforced concrete slab carrying transverse loads to cruciform steel columns.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/The_Barcelona_Pavilion%2C_Barcelona%2C_2010.jpg/1920px-The_Barcelona_Pavilion%2C_Barcelona%2C_2010.jpg"
+                },
+                {
+                    title: "Plates • Catenary Suspended Concrete Sheet",
+                    tag: "Portugal Pavilion (Expo 98) • Lisbon",
+                    desc: "Álvaro Siza's 20cm thin reinforced concrete sheet draped in catenary over a 70m clear span.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pavilh%C3%A3o_de_Portugal_4.JPG/1280px-Pavilh%C3%A3o_de_Portugal_4.JPG"
+                }
+            ],
+            chapas: [
+                {
+                    title: "Deep Beams / Walls • SESC Pompeia",
+                    tag: "SESC Pompeia • São Paulo, Brazil",
+                    desc: "Lina Bo Bardi's exposed concrete wall-beams and aerial footbridges transferring high in-plane shear and bending.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/SESCPompeia3.jpg/1280px-SESCPompeia3.jpg"
+                },
+                {
+                    title: "Wall Plates • Cantilevered Pavilion",
+                    tag: "Adriana Varejão Gallery • Inhotim, Brazil",
+                    desc: "Rodrigo Cerviño's monolithic concrete volume where structural walls act as deep plates supporting a major cantilever.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Instituto_Cultural_Inhotim_Pavillion.jpg/1920px-Instituto_Cultural_Inhotim_Pavillion.jpg"
+                }
+            ],
+            cascas: [
+                {
+                    title: "Shells • Funicular Thin Dome",
+                    tag: "Oca do Ibirapuera • São Paulo, Brazil",
+                    desc: "Oscar Niemeyer & Joaquim Cardozo's spherical thin concrete shell transferring surface loads via in-plane membrane compression.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/6/66/OCA_-_IBIRAPUERA_02.jpg"
+                },
+                {
+                    title: "Shells • Spherical Precast Shells",
+                    tag: "Sydney Opera House • Australia",
+                    desc: "Jørn Utzon & Ove Arup's precast concrete arched shell segments transferring loads three-dimensionally.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Sydney_Australia._%2821339175489%29.jpg/1920px-Sydney_Australia._%2821339175489%29.jpg"
+                },
+                {
+                    title: "Shells • Hyperbolic Paraboloids",
+                    tag: "Los Manantiales • Mexico City, Mexico",
+                    desc: "Félix Candela's intersecting hypar thin concrete shells with a minimum thickness of only 4 cm.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/5/59/Restaurante_Los_Manantiales_07.jpg"
+                }
+            ]
+        };
+
+        let curType2D_2_2 = 'placas';
+        let curIndex2D_2_2 = 0;
+
+        function updateViewer_2_2(dim, data) {
+            const box = document.getElementById(`viewer-${dim}-img-2-2`);
+            const title = document.getElementById(`title-${dim}-2-2`);
+            const tag = document.getElementById(`tag-${dim}-2-2`);
+            const desc = document.getElementById(`desc-${dim}-2-2`);
+
+            if (box && data) {
+                box.style.backgroundImage = `url('${data.img}')`;
+                if (title) title.innerText = data.title;
+                if (tag) tag.innerText = data.tag;
+                if (desc) desc.innerText = data.desc;
+            }
+        }
+
+        function show2DExample_2_2(type) {
+            curType2D_2_2 = type;
+            curIndex2D_2_2 = 0;
+            ['placas', 'chapas', 'cascas'].forEach(t => {
+                const btn = document.getElementById(`btn-2d-${t}-2-2`);
+                if (btn) {
+                    btn.className = (t === type) 
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md" 
+                        : "py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            const list = data2D_2_2[type];
+            const indexEl = document.getElementById('index-2d-2-2');
+            if (indexEl) indexEl.innerText = `Example 1 / ${list.length}`;
+            updateViewer_2_2('2d', list[0]);
+        }
+
+        function nav2DSlide_2_2(dir) {
+            const list = data2D_2_2[curType2D_2_2];
+            curIndex2D_2_2 = (curIndex2D_2_2 + dir + list.length) % list.length;
+            const el = document.getElementById('index-2d-2-2');
+            if (el) el.innerText = `Example ${curIndex2D_2_2 + 1} / ${list.length}`;
+            updateViewer_2_2('2d', list[curIndex2D_2_2]);
+        }
+
+        // =====================================================================
+        // DATA & HANDLERS FOR 3D GALLERY (SLIDE 2,3)
+        // =====================================================================
+        const data3D_2_3 = {
+            fundacao: [
+                {
+                    title: "Pile Caps • 3D Strut-and-Tie Blocks",
+                    tag: "Massive Foundation Blocks",
+                    desc: "Volumetric elements distributing high column point loads into piles through spatial compression struts.",
+                    img: "https://5.imimg.com/data5/SELLER/Default/2020/9/QW/YH/PU/81100593/precast-concrete-foundations-500x500.jpg"
+                }
+            ],
+            sapatas: [
+                {
+                    title: "Massive Footings • Rigid Base Transfer",
+                    tag: "Heavy Foundation Footings",
+                    desc: "Three-dimensional solids transmitting column axial force and overturning moments into supporting subgrade.",
+                    img: "https://www.cwpconcrete.com/wp-content/uploads/2025/07/CWP-socials-square-1000x1000.png"
+                }
+            ],
+            barragens: [
+                {
+                    title: "Gravity Dams • Massive Solid Equilibrium",
+                    tag: "Itaipu Dam • Brazil / Paraguay",
+                    desc: "Massive volumetric structure resisting hydrostatic thrust purely through self-weight, where 3D stress tensors govern equilibrium.",
+                    img: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Usina_Hidroel%C3%A9trica_Itaipu_Binacional_-_Itaipu_Dam_%2817359159332%29.jpg"
+                }
+            ]
+        };
+
+        let curType3D_2_3 = 'fundacao';
+        let curIndex3D_2_3 = 0;
+
+        function updateViewer_2_3(dim, data) {
+            const box = document.getElementById(`viewer-${dim}-img-2-3`);
+            const title = document.getElementById(`title-${dim}-2-3`);
+            const tag = document.getElementById(`tag-${dim}-2-3`);
+            const desc = document.getElementById(`desc-${dim}-2-3`);
+
+            if (box && data) {
+                box.style.backgroundImage = `url('${data.img}')`;
+                if (title) title.innerText = data.title;
+                if (tag) tag.innerText = data.tag;
+                if (desc) desc.innerText = data.desc;
+            }
+        }
+
+        function show3DExample_2_3(type) {
+            curType3D_2_3 = type;
+            curIndex3D_2_3 = 0;
+            ['fundacao', 'sapatas', 'barragens'].forEach(t => {
+                const btn = document.getElementById(`btn-3d-${t}-2-3`);
+                if (btn) {
+                    btn.className = (t === type) 
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md" 
+                        : "py-3 px-4 bg-white/10 hover:bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            const list = data3D_2_3[type];
+            const el = document.getElementById('index-3d-2-3');
+            if (el) el.innerText = `Example 1 / ${list.length}`;
+            updateViewer_2_3('3d', list[0]);
+        }
+
+        function nav3DSlide_2_3(dir) {
+            const list = data3D_2_3[curType3D_2_3];
+            curIndex3D_2_3 = (curIndex3D_2_3 + dir + list.length) % list.length;
+            const el = document.getElementById('index-3d-2-3');
+            if (el) el.innerText = `Example ${curIndex3D_2_3 + 1} / ${list.length}`;
+            updateViewer_2_3('3d', list[curIndex3D_2_3]);
+        }
+
+        // =====================================================================
+        // STRESS DEFORMATION SIMULATOR (SLIDE 3,1)
+        // =====================================================================
+        let currentEffortMode_3_1 = 'tracao';
+
+        function setEffortType_3_1(mode) {
+            currentEffortMode_3_1 = mode;
+            ['tracao', 'compressao', 'flexao', 'cisalhamento'].forEach(m => {
+                const btn = document.getElementById(`btn-${m}-3-1`);
+                if (btn) {
+                    btn.className = (m === mode) 
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md" 
+                        : "py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            updateDeformation_3_1();
+        }
+
+        function updateDeformation_3_1() {
+            const slider = document.getElementById('intensity-slider-3-1');
+            const valueDisp = document.getElementById('intensity-value-3-1');
+            const titleEl = document.getElementById('effort-title-3-1');
+            const descEl = document.getElementById('effort-desc-3-1');
+            const beam = document.getElementById('beam-body-3-1');
+            const vectorGroup = document.getElementById('vector-arrows-3-1');
+
+            if (!slider || !beam || !vectorGroup) return;
+
+            const k = parseFloat(slider.value) / 100;
+            if (valueDisp) valueDisp.innerText = `${slider.value}%`;
+
+            const centerX = 250, centerY = 150, halfSize = 90;
+
+            if (currentEffortMode_3_1 === 'tracao') {
+                if (titleEl) titleEl.innerText = "Axial Tension (Longitudinal Elongation)";
+                if (descEl) descEl.innerText = "Gold tensile vectors pull opposite lateral faces apart. The member elongates horizontally with Poisson lateral contraction.";
+
+                const deltaX = k * 65, deltaY = k * 35;
+                const x1 = centerX - halfSize - deltaX, x2 = centerX + halfSize + deltaX;
+                const y1 = centerY - halfSize + deltaY, y2 = centerY + halfSize - deltaY;
+
+                beam.setAttribute('points', `${x1},${y1} ${x2},${y1} ${x2},${y2} ${x1},${y2}`);
+                const arrowLen = 35 + k * 25;
+                vectorGroup.innerHTML = `
+                    <line x1="${x1}" y1="${centerY}" x2="${x1 - arrowLen}" y2="${centerY}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                    <line x1="${x2}" y1="${centerY}" x2="${x2 + arrowLen}" y2="${centerY}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                `;
+            } else if (currentEffortMode_3_1 === 'compressao') {
+                if (titleEl) titleEl.innerText = "Axial Compression (Longitudinal Shortening)";
+                if (descEl) descEl.innerText = "Gold compressive vectors push against the faces. The member shortens along the load path with lateral Poisson expansion.";
+
+                const deltaX = k * 50, deltaY = k * 45;
+                const x1 = centerX - halfSize + deltaX, x2 = centerX + halfSize - deltaX;
+                const y1 = centerY - halfSize - deltaY, y2 = centerY + halfSize + deltaY;
+
+                beam.setAttribute('points', `${x1},${y1} ${x2},${y1} ${x2},${y2} ${x1},${y2}`);
+                const arrowLen = 35 + k * 25;
+                vectorGroup.innerHTML = `
+                    <line x1="${x1 - arrowLen}" y1="${centerY}" x2="${x1}" y2="${centerY}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                    <line x1="${x2 + arrowLen}" y1="${centerY}" x2="${x2}" y2="${centerY}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                `;
+            } else if (currentEffortMode_3_1 === 'flexao') {
+                if (titleEl) titleEl.innerText = "Pure Flexure (Bending Moment Curvature)";
+                if (descEl) descEl.innerText = "Bending moment couples rotate boundary planes, generating top compression fibers and bottom tension fibers.";
+
+                const rotX = k * 40;
+                const x1_top = centerX - halfSize + rotX, x2_top = centerX + halfSize - rotX;
+                const x1_bot = centerX - halfSize - rotX, x2_bot = centerX + halfSize + rotX;
+
+                beam.setAttribute('points', `${x1_top},60 ${x2_top},60 ${x2_bot},240 ${x1_bot},240`);
+                const r = 22;
+                vectorGroup.innerHTML = `
+                    <g transform="translate(${x1_top - 25}, ${centerY})">
+                        <path d="M 0 ${r} A ${r} ${r} 0 1 1 ${r} -${r/2}" fill="none" stroke="#D1A705" stroke-width="4" marker-end="url(#arrow-red-3-1)" />
+                    </g>
+                    <g transform="translate(${x2_top + 25}, ${centerY})">
+                        <path d="M 0 ${r} A ${r} ${r} 0 1 0 -${r} -${r/2}" fill="none" stroke="#D1A705" stroke-width="4" marker-end="url(#arrow-red-3-1)" />
+                    </g>
+                `;
+            } else if (currentEffortMode_3_1 === 'cisalhamento') {
+                if (titleEl) titleEl.innerText = "Direct Shear (Angular Distortion)";
+                if (descEl) descEl.innerText = "Opposing transverse forces slide adjacent cross-sections, producing angular distortion.";
+
+                const shiftY = k * 45;
+                const x1 = centerX - halfSize, x2 = centerX + halfSize;
+                const y1_left = 60 - shiftY, y2_left = 240 - shiftY;
+                const y1_right = 60 + shiftY, y2_right = 240 + shiftY;
+
+                beam.setAttribute('points', `${x1},${y1_left} ${x2},${y1_right} ${x2},${y2_right} ${x1},${y2_left}`);
+                const arrowLen = 50 + k * 15;
+                vectorGroup.innerHTML = `
+                    <line x1="${x1 - 25}" y1="${centerY - shiftY + arrowLen/2}" x2="${x1 - 25}" y2="${centerY - shiftY - arrowLen/2}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                    <line x1="${x2 + 25}" y1="${centerY + shiftY - arrowLen/2}" x2="${x2 + 25}" y2="${centerY + shiftY + arrowLen/2}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-3-1)" />
+                `;
+            }
+        }
+
+        // =====================================================================
+        // SUPPORT KINEMATICS SIMULATOR (SLIDE 4,1)
+        // =====================================================================
+        let currentSupportGenre_4_1 = 1;
+
+        function setSupportType_4_1(genre) {
+            currentSupportGenre_4_1 = genre;
+            [1, 2, 3].forEach(g => {
+                const btn = document.getElementById(`btn-support-${g}-4-1`);
+                if (btn) {
+                    btn.className = (g === genre) 
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold transition-all text-left shadow-md" 
+                        : "py-3 px-4 bg-white/50 text-[#333333] hover:bg-[#901812] hover:text-white rounded-xl text-fluid-tag font-bold transition-all text-left";
+                }
+            });
+            updateSupportSimulation_4_1();
+        }
+
+        function updateSupportSimulation_4_1() {
+            const slider = document.getElementById('support-intensity-slider-4-1');
+            const valueDisp = document.getElementById('support-intensity-value-4-1');
+            const titleEl = document.getElementById('support-title-4-1');
+            const descEl = document.getElementById('support-desc-4-1');
+            const group = document.getElementById('support-elements-group-4-1');
+
+            if (!slider || !group) return;
+
+            const k = parseFloat(slider.value) / 100;
+            if (valueDisp) valueDisp.innerText = `${slider.value}%`;
+
+            const basePinX = 180, basePinY = 200, barLength = 220, barThick = 12;
+
+            if (currentSupportGenre_4_1 === 1) {
+                if (titleEl) titleEl.innerText = "1st Order: Roller Support (1 Reactive Constraint)";
+                if (descEl) descEl.innerText = "Horizontal displacement is unrestrained. The inclined load translates the support to the left and rotates the pin, developing only a vertical reaction Vy (gold).";
+
+                const shiftX = k * 70;
+                const pinX = basePinX - shiftX, pinY = basePinY;
+                const angleRad = (k * 18 * Math.PI) / 180;
+                const barEndX = pinX + barLength * Math.cos(angleRad);
+                const barEndY = pinY + barLength * Math.sin(angleRad);
+
+                const deltaX = 20 + k * 20, deltaY = 45 + k * 45;
+                const loadStartX = barEndX + deltaX, loadStartY = barEndY - deltaY;
+                const reactLen = 25 + k * 50;
+
+                group.innerHTML = `
+                    <line x1="50" y1="262" x2="520" y2="262" stroke="#888888" stroke-width="2" stroke-dasharray="4 4" />
+                    <line x1="${pinX - 45}" y1="250" x2="${pinX + 45}" y2="250" stroke="#FFFFFF" stroke-width="4" />
+                    <line x1="${pinX - 55}" y1="258" x2="${pinX + 55}" y2="258" stroke="#FFFFFF" stroke-width="2" />
+                    <polygon points="${pinX},${pinY} ${pinX - 30},250 ${pinX + 30},250" fill="rgba(255,255,255,0.2)" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" />
+                    <circle cx="${pinX}" cy="${pinY}" r="5" fill="#D1A705" />
+                    <line x1="${pinX}" y1="${pinY}" x2="${barEndX}" y2="${barEndY}" stroke="#901812" stroke-width="${barThick}" stroke-linecap="round" />
+                    <line x1="${loadStartX}" y1="${loadStartY}" x2="${barEndX}" y2="${barEndY}" stroke="#FFFFFF" stroke-width="5" marker-end="url(#arrow-black-sup-4-1)" />
+                    <text x="${loadStartX + 5}" y="${loadStartY - 5}" fill="#FFFFFF" font-family="Montserrat" font-weight="bold" font-size="14">P</text>
+                    ${k > 0 ? `
+                        <line x1="${pinX}" y1="${258 + reactLen}" x2="${pinX}" y2="260" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-sup-4-1)" />
+                        <text x="${pinX + 12}" y="${260 + reactLen / 2}" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">V_y</text>
+                    ` : ''}
+                `;
+            } else if (currentSupportGenre_4_1 === 2) {
+                if (titleEl) titleEl.innerText = "2nd Order: Pinned Support (2 Reactive Constraints)";
+                if (descEl) descEl.innerText = "Both translations are restrained. The bar rotates around the pin, developing vertical Vy and horizontal Vx reactions (gold) to equilibrate the applied load P.";
+
+                const pinX = basePinX, pinY = basePinY;
+                const angleRad = (k * 18 * Math.PI) / 180;
+                const barEndX = pinX + barLength * Math.cos(angleRad);
+                const barEndY = pinY + barLength * Math.sin(angleRad);
+
+                const deltaX = 20 + k * 20, deltaY = 45 + k * 45;
+                const loadStartX = barEndX + deltaX, loadStartY = barEndY - deltaY;
+                const reactLenY = 25 + k * 50, reactLenX = 20 + k * 40;
+
+                group.innerHTML = `
+                    <polygon points="${pinX},${pinY} ${pinX - 30},250 ${pinX + 30},250" fill="rgba(255,255,255,0.2)" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" />
+                    <line x1="${pinX - 40}" y1="250" x2="${pinX + 40}" y2="250" stroke="#FFFFFF" stroke-width="4" />
+                    <circle cx="${pinX}" cy="${pinY}" r="5" fill="#D1A705" />
+                    <line x1="${pinX}" y1="${pinY}" x2="${barEndX}" y2="${barEndY}" stroke="#901812" stroke-width="${barThick}" stroke-linecap="round" />
+                    <line x1="${loadStartX}" y1="${loadStartY}" x2="${barEndX}" y2="${barEndY}" stroke="#FFFFFF" stroke-width="5" marker-end="url(#arrow-black-sup-4-1)" />
+                    <text x="${loadStartX + 5}" y="${loadStartY - 5}" fill="#FFFFFF" font-family="Montserrat" font-weight="bold" font-size="14">P</text>
+                    ${k > 0 ? `
+                        <line x1="${pinX}" y1="${250 + reactLenY}" x2="${pinX}" y2="252" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-sup-4-1)" />
+                        <text x="${pinX + 12}" y="${250 + reactLenY / 2}" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">V_y</text>
+                        <line x1="${pinX - reactLenX}" y1="${pinY}" x2="${pinX}" y2="${pinY}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-sup-4-1)" />
+                        <text x="${pinX - reactLenX - 35}" y="${pinY - 10}" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">V_x</text>
+                    ` : ''}
+                `;
+            } else if (currentSupportGenre_4_1 === 3) {
+                if (titleEl) titleEl.innerText = "3rd Order: Fixed / Clamped Support (3 Reactive Constraints)";
+                if (descEl) descEl.innerText = "All translations and rotations are restrained. Vertical Vy, horizontal Vx, and counteracting moment M (gold) develop to maintain static equilibrium.";
+
+                const wallX = basePinX, barStartY = basePinY;
+                const barEndX = wallX + barLength, barEndY = barStartY;
+
+                const deltaX = 20 + k * 20, deltaY = 45 + k * 45;
+                const loadStartX = barEndX + deltaX, loadStartY = barEndY - deltaY;
+                const reactLenY = 25 + k * 50, reactLenX = 20 + k * 40;
+                const arcR = 22 + k * 12;
+
+                group.innerHTML = `
+                    <line x1="${wallX}" y1="120" x2="${wallX}" y2="280" stroke="#FFFFFF" stroke-width="5" />
+                    <path d="M ${wallX-15} 135 L ${wallX} 120 M ${wallX-15} 165 L ${wallX} 150 M ${wallX-15} 195 L ${wallX} 180 M ${wallX-15} 225 L ${wallX} 210 M ${wallX-15} 255 L ${wallX} 240 M ${wallX-15} 285 L ${wallX} 270" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+                    <line x1="${wallX}" y1="${barStartY}" x2="${barEndX}" y2="${barEndY}" stroke="#901812" stroke-width="${barThick}" stroke-linecap="square" />
+                    <line x1="${loadStartX}" y1="${loadStartY}" x2="${barEndX}" y2="${barEndY}" stroke="#FFFFFF" stroke-width="5" marker-end="url(#arrow-black-sup-4-1)" />
+                    <text x="${loadStartX + 5}" y="${loadStartY - 5}" fill="#FFFFFF" font-family="Montserrat" font-weight="bold" font-size="14">P</text>
+                    ${k > 0 ? `
+                        <line x1="${wallX + 25}" y1="${barStartY + reactLenY}" x2="${wallX + 25}" y2="${barStartY + 10}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-sup-4-1)" />
+                        <text x="${wallX + 35}" y="${barStartY + reactLenY / 2}" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">V_y</text>
+                        <line x1="${wallX - reactLenX}" y1="${barStartY + 25}" x2="${wallX}" y2="${barStartY + 25}" stroke="#D1A705" stroke-width="5" marker-end="url(#arrow-red-sup-4-1)" />
+                        <text x="${wallX - reactLenX - 35}" y="${barStartY + 30}" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">V_x</text>
+                        <g transform="translate(${wallX + 35}, ${barStartY - 25})">
+                            <path d="M ${arcR} 0 A ${arcR} ${arcR} 0 1 0 -${arcR} 0" fill="none" stroke="#D1A705" stroke-width="4" marker-end="url(#arrow-red-sup-4-1)" />
+                            <text x="${arcR + 6}" y="5" fill="#D1A705" font-family="Montserrat" font-weight="bold" font-size="14">M</text>
+                        </g>
+                    ` : ''}
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAssets();
+            updateUI();
+            show1DExample_2_1('vigas');
+            show2DExample_2_2('placas');
+            show3DExample_2_3('fundacao');
+            updateDeformation_3_1();
+            updateSupportSimulation_4_1();
+        });
+    </script>
+</body>
+</html>

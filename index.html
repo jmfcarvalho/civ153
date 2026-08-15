@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 | Introdução à Mecânica das Estruturas - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================================= -->
+    <!-- CENTRAL RESOURCE DIRECTORY                                               -->
+    <!-- ========================================================================= -->
+    <script>
+        const COURSE_ASSETS = {
+            logos: {
+                ufv: "https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png",
+                pms: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png"
+            },
+            
+            slideBackgrounds: {
+                "0_0": "bg-geometric1.png"
+            },
+
+            externalLinks: {
+                presentationAccess: "https://jmfcarvalho.github.io/civ153/",
+                pmsPortal: "https://jmfcarvalho.github.io/civ153/"
+            },
+
+            classLinks: [
+                { id: "010", file: "010.html", title: "Aula 010", desc: "Introdução e Apresentação do Curso" },
+                { id: "020", file: "020.html", title: "Aula 020", desc: "Elementos e Esforços Estruturais" },
+                { id: "030", file: "030.html", title: "Aula 030", desc: "Modelos Estruturais e Hipóteses" },
+                { id: "040", file: "040.html", title: "Aula 040", desc: "Centroide de Áreas Planas" },
+                { id: "050", file: "050.html", title: "Aula 050", desc: "Momentos de Inércia de Seções" },
+                { id: "060", file: "060.html", title: "Aula 060", desc: "Eixos Principais e Rotação de Eixos" },
+                { id: "070", file: "070.html", title: "Aula 070", desc: "Forças, Vetores e Resultante" },
+                { id: "080", file: "080.html", title: "Aula 080", desc: "Momento e Redução de Sistemas de Forças" },
+                { id: "090", file: "090.html", title: "Aula 090", desc: "Equilíbrio Estático no Plano e Espaço" },
+                { id: "100", file: "100.html", title: "Aula 100", desc: "Vinculações e Condições de Apoio" },
+                { id: "110", file: "110.html", title: "Aula 110", desc: "Cálculo de Reações de Apoio" },
+                { id: "120", file: "120.html", title: "Aula 120", desc: "Conceito Fundamental de Tensão" },
+                { id: "130", file: "130.html", title: "Aula 130", desc: "Barras Tracionadas e Diagrama Tensão x Deformação" },
+                { id: "140", file: "140.html", title: "Aula 140", desc: "Tensão Admissível e Coeficientes de Segurança" },
+                { id: "150", file: "150.html", title: "Aula 150", desc: "Comportamento de Barras Comprimidas" },
+                { id: "160", file: "160.html", title: "Aula 160", desc: "Carga Crítica de Flambagem (Euler)" },
+                { id: "170", file: "170.html", title: "Aula 170", desc: "Dimensionamento de Barras Axiais" },
+                { id: "180", file: "180.html", title: "Aula 180", desc: "Análise de Treliças Isostáticas" },
+                { id: "190", file: "190.html", title: "Aula 190", desc: "Introdução a Treliças Hiperestáticas" },
+                { id: "200", file: "200.html", title: "Aula 200", desc: "Dimensionamento e Otimização de Treliças" }
+            ],
+
+            qrCodeGenerator: (url, color = "901812") => 
+                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&color=${color}`
+        };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: STYLES & IMMUTABLE CSS VARIABLES                              -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-bg: #F4F6F5;
+            --pms-card-light: rgba(255, 255, 255, 0.65);
+            --pms-card-dark: rgba(51, 51, 51, 0.70);
+            --pms-text-muted: #444444;
+
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans Narrow', sans-serif;
+
+            --fluid-h1: clamp(1.8rem, 3.4vw, 2.8rem);
+            --fluid-h2: clamp(1.4rem, 2.4vw, 2.0rem);
+            --fluid-h3: clamp(1.2rem, 1.8vw, 1.5rem);
+            --fluid-body: clamp(1.0rem, 1.4vw, 1.25rem);
+            --fluid-meta: clamp(0.85rem, 1.1vw, 1.05rem);
+            --fluid-tag: clamp(0.75rem, 0.95vw, 0.95rem);
+        }
+
+        html, body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background-color: var(--pms-bg);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 900; color: var(--pms-red); line-height: 1.05; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.3; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); color: var(--pms-text-muted); font-weight: 600; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .card-borderless-glass {
+            border: none !important;
+            background-color: var(--pms-card-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-dark {
+            border: none !important;
+            background-color: var(--pms-card-dark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bg-right-fade {
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
+            position: relative;
+        }
+        .bg-right-fade::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--pms-bg) 20%, rgba(244, 246, 245, 0.65) 50%, rgba(244, 246, 245, 0.15) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            overflow-y: auto;
+        }
+        .slide-screen > * { position: relative; z-index: 2; }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+
+        .class-btn {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            min-height: 48px;
+        }
+        .class-btn:hover {
+            background: var(--pms-red);
+            color: #FFFFFF !important;
+            transform: translateY(-2px) scale(1.008);
+            box-shadow: 0 8px 16px -4px rgba(144, 24, 18, 0.35);
+        }
+        .class-btn:hover .class-num {
+            color: var(--pms-gold) !important;
+        }
+        .class-btn:hover .class-desc {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+        .class-btn:hover .class-icon {
+            color: #FFFFFF !important;
+            transform: translateX(4px);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--pms-red);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <!-- TOP PROGRESS BAR -->
+    <div class="fixed top-0 left-0 h-2 bg-[#D1A705] transition-all duration-500 z-[1000]" id="progressBar" style="width: 100%;"></div>
+
+    <!-- RESPONSIVE SLIDE INDICATOR -->
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-8 text-fluid-meta font-bold text-[#333333] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-md z-[1000] flex items-center space-x-3">
+        <span class="w-3 h-3 rounded-full bg-[#901812]"></span>
+        <span id="slideIndicator">Slide (0,0) — Índice</span>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: HTML BODY & SLIDE STRUCTURE                                    -->
+    <!-- ========================================================================= -->
+    <main class="w-full h-full relative">
+
+        <!-- SLIDE (0,0): COURSE INDEX / CLASS DIRECTORY -->
+        <div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-4 sm:p-8 md:p-10 h-full">
+            <header class="w-full flex justify-between items-center gap-4 shrink-0 mb-3">
+                <div class="flex items-center space-x-3 sm:space-x-5 bg-white/75 backdrop-blur-md px-5 py-2.5 rounded-2xl shadow-sm">
+                    <img id="img-logo-ufv-0-0" src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV Logo" class="h-8 sm:h-10 w-auto">
+                    <div class="h-8 w-[1px] bg-[#DEDEDE]"></div>
+                    <span class="text-fluid-tag text-[#333333] font-bold">CIV 153</span>
+                </div>
+                <a id="link-pms-portal-0-0" href="https://jmfcarvalho.github.io/civ153/" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-3 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <img id="img-logo-pms-0-0" src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS Logo" class="h-9 sm:h-12 w-auto">
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch w-full my-auto flex-1 overflow-hidden py-1">
+                <!-- LEFT SIDE: TITLE & COURSE INFO -->
+                <div class="lg:col-span-4 flex flex-col justify-between space-y-3">
+                    <div class="p-5 sm:p-7 rounded-3xl card-borderless-glass border-l-[12px] border-[#901812]">
+                        <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-1 uppercase font-bold">DEPARTAMENTO DE ENGENHARIA CIVIL — UFV</span>
+                        <h1 class="text-fluid-h1 mb-2">INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS<span class="block text-fluid-h2 text-[#333333] font-bold mt-1">Plano e Índice de Aulas</span></h1>
+                        <p class="text-fluid-body text-[#444444]">Selecione um dos módulos abaixo para acessar as apresentações, notas de aula, formulações analíticas e laboratórios interativos.</p>
+                    </div>
+
+                    <!-- QR CODE CARD -->
+                    <div class="p-4 sm:p-5 rounded-3xl card-borderless-glass-dark text-white flex items-center space-x-4 shadow-lg">
+                        <div class="bg-white/90 backdrop-blur-md p-2 rounded-xl shrink-0">
+                            <img id="qr-presentation-cover-0-0" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F&color=901812" alt="Acesso ao Curso QR Code" class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg">
+                        </div>
+                        <div class="space-y-0.5">
+                            <span class="text-fluid-tag text-[#D1A705] block font-bold">Acesso Rápido Mobile</span>
+                            <p class="text-fluid-meta text-[#DEDEDE] leading-tight">Aponte a câmera para acompanhar a disciplina em seu smartphone.</p>
+                            <span class="text-fluid-tag text-white font-bold block pt-1">Prof. José Maria Franco de Carvalho</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE: INTERACTIVE CLASS BUTTONS GRID -->
+                <div class="lg:col-span-8 p-4 sm:p-5 rounded-3xl card-borderless-glass flex flex-col h-full overflow-hidden">
+                    <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-black/10 shrink-0">
+                        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">
+                            <i class="fa-solid fa-layer-group mr-2"></i>Diretório de Aulas (010 – 200)
+                        </span>
+                        <span class="text-fluid-meta text-[#444444]">20 Módulos Disponíveis</span>
+                    </div>
+
+                    <div id="class-grid-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 overflow-y-auto custom-scrollbar pr-1 flex-1">
+                        <!-- BUTTONS DYNAMICALLY RENDERED VIA JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: JAVASCRIPT LOGIC                                               -->
+    <!-- ========================================================================= -->
+    <script>
+        const slideGrid = { 
+            '0,0': 'slide-0-0'
+        };
+
+        let currentX = 0, currentY = 0;
+
+        function renderClassButtons() {
+            const container = document.getElementById('class-grid-container');
+            if (!container) return;
+
+            container.innerHTML = COURSE_ASSETS.classLinks.map(cls => `
+                <a href="${cls.file}" 
+                   class="class-btn p-3 rounded-2xl border border-black/5 flex items-center justify-between group shadow-sm">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <span class="class-num font-mono text-fluid-h3 font-extrabold text-[#901812] transition-colors shrink-0">
+                            ${cls.id}
+                        </span>
+                        <div class="truncate">
+                            <span class="block font-bold text-fluid-body text-[#333333] group-hover:text-white transition-colors truncate">
+                                ${cls.title}
+                            </span>
+                            <span class="class-desc text-fluid-meta text-[#666666] transition-colors block truncate">
+                                ${cls.desc}
+                            </span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-long class-icon text-[#901812] text-base ml-2 transition-all shrink-0"></i>
+                </a>
+            `).join('');
+        }
+
+        function initializeAssets() {
+            const logoUfv00 = document.getElementById('img-logo-ufv-0-0');
+            if (logoUfv00) logoUfv00.src = COURSE_ASSETS.logos.ufv;
+
+            const logoPms00 = document.getElementById('img-logo-pms-0-0');
+            if (logoPms00) logoPms00.src = COURSE_ASSETS.logos.pms;
+
+            const linkPortal00 = document.getElementById('link-pms-portal-0-0');
+            if (linkPortal00) linkPortal00.href = COURSE_ASSETS.externalLinks.pmsPortal;
+
+            const slide00 = document.getElementById('slide-0-0');
+            const bgUrl = COURSE_ASSETS.slideBackgrounds["0_0"];
+            if (slide00 && bgUrl && bgUrl.trim() !== "") {
+                slide00.style.backgroundImage = `url('${bgUrl}')`;
+                slide00.classList.add('bg-right-fade');
+            }
+
+            const qrCover00 = document.getElementById('qr-presentation-cover-0-0');
+            if (qrCover00) qrCover00.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.presentationAccess);
+
+            renderClassButtons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAssets();
+        });
+    </script>
+</body>
+</html>

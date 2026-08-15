@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 - Aula 05: Momento de Inércia | PMS UFV</title>
+    
+    <!-- CDNs Essenciais -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================================= -->
+    <!-- DIRETÓRIO CENTRAL DE RECURSOS (PMS ASSETS)                               -->
+    <!-- ========================================================================= -->
+    <script>
+        const COURSE_ASSETS = {
+            logos: {
+                ufv: "https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png",
+                pms: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png"
+            },
+            slideBackgrounds: {
+                "0_0": "bg-geometric1.png",
+                "1_0": "bg-geometric2.png",
+                "2_0": "bg-concrete1.png",
+                "2_1": "", // Laboratório Virtual (Fundo Branco)
+                "2_2": "", // Laboratório Virtual (Fundo Branco)
+                "3_0": "bg-blocks1.png",
+                "3_1": "bg-blocks2.png",
+                "4_0": "bg-blocks3.png",
+                "5_0": "", // Laboratório Virtual (Fundo Branco)
+                "5_1": "", // Laboratório Virtual (Fundo Branco)
+                "5_2": "", // Laboratório Virtual (Fundo Branco)
+                "6_0": "bg-geometric1.png",
+                "6_1": "bg-geometric2.png",
+                "6_2": "", // Laboratório Virtual (Fundo Branco)
+                "7_0": "bg-blocks4.png",
+                "7_1": "", // Laboratório Virtual (Fundo Branco)
+                "8_0": "bg-paint1.png",
+                "9_0": "bg-concrete1.png"
+            },
+            externalLinks: {
+                presentationAccess: "https://jmfcarvalho.github.io/civ153/aulas/050_inercia/",
+                googleFormsQuiz: "https://docs.google.com/forms/d/e/1FAIpQLSfwAmhtPqwkapScSofsVK7CcWQdL0mQd9WrrcwHh-8jPD3wQA/viewform?usp=header",
+                weeklyAssignment: "https://docs.google.com/forms/d/e/1FAIpQLScU4x0GBO-IpPj4Mc4tuya_fzs7awJBfoTZTnhGfBe5-sgZzA/viewform?usp=header",
+                pmsPortal: "https://pms.ufv.br"
+            },
+            qrCodeGenerator: (url, color = "901812") => 
+                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&color=${color}`
+        };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- SEÇÃO 1: ESTILOS & VARIÁVEIS CSS (DESIGN SYSTEM PMS)                     -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-bg: #F4F6F5;
+            --pms-card-light: rgba(255, 255, 255, 0.70);
+            --pms-card-dark: rgba(51, 51, 51, 0.75);
+            --pms-text-muted: #444444;
+
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans Narrow', sans-serif;
+
+            --fluid-h1: clamp(2.2rem, 4.5vw, 3.8rem);
+            --fluid-h2: clamp(1.8rem, 3.5vw, 2.8rem);
+            --fluid-h3: clamp(1.4rem, 2.4vw, 2.0rem);
+            --fluid-body: clamp(1.1rem, 1.6vw, 1.4rem);
+            --fluid-meta: clamp(0.95rem, 1.3vw, 1.2rem);
+            --fluid-tag: clamp(0.85rem, 1.1vw, 1.05rem);
+        }
+
+        html, body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background-color: var(--pms-bg);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 900; color: var(--pms-red); line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.15; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.4; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); color: var(--pms-text-muted); font-weight: 600; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .katex-display { font-size: clamp(1.3rem, 2.5vw, 2.0rem) !important; margin: 0.5rem 0 !important; }
+        .katex { font-size: 1.1em; }
+
+        .card-borderless-glass {
+            border: none !important;
+            background-color: var(--pms-card-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-dark {
+            border: none !important;
+            background-color: var(--pms-card-dark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-white {
+            border: none !important;
+            background-color: #FFFFFF;
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        .bg-right-fade {
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
+            position: relative;
+        }
+        .bg-right-fade::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--pms-bg) 20%, rgba(244, 246, 245, 0.75) 55%, rgba(244, 246, 245, 0.25) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            overflow-y: auto;
+        }
+        .slide-screen > * { position: relative; z-index: 2; }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 1.25rem; right: 1.5rem; width: 130px; height: 130px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 44px; height: 44px; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50%; color: #A1A1A1; font-size: 1.3rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; opacity: 0.25; pointer-events: none;
+            transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .control-arrow.nav-up { top: 0; left: 43px; }
+        .control-arrow.nav-down { bottom: 0; left: 43px; }
+        .control-arrow.nav-left { top: 43px; left: 0; }
+        .control-arrow.nav-right { top: 43px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-red); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--pms-red); color: #FFFFFF; transform: scale(1.15); }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <div class="fixed top-0 left-0 h-2 bg-[#D1A705] transition-all duration-500 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-8 text-fluid-meta font-bold text-[#333333] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-md z-[1000] flex items-center space-x-3">
+        <span class="w-3 h-3 rounded-full bg-[#901812]"></span>
+        <span id="slideIndicator">Slide (0,0)</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SEÇÃO 2: CORPO HTML E ESTRUTURA DOS SLIDES                               -->
+    <!-- ========================================================================= -->
+    <main class="w-full h-full relative">
+
+        <!-- SLIDE (0,0): CAPA DA AULA 05 -->
+        <div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center gap-4">
+                <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm">
+                    <img id="img-logo-ufv-0-0" alt="UFV Logo" class="h-10 sm:h-12 w-auto">
+                    <div class="h-10 w-[1px] bg-[#DEDEDE]"></div>
+                    <span class="text-fluid-tag text-[#333333]">CIV 153</span>
+                </div>
+                <a id="link-pms-portal-0-0" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <img id="img-logo-pms-0-0" alt="PMS Logo" class="h-12 sm:h-16 w-auto">
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full my-auto py-6">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="p-8 sm:p-12 rounded-3xl card-borderless-glass border-l-[16px] border-[#901812]">
+                        <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2">CIV 153 — INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS</span>
+                        <h1 class="text-fluid-h1 mb-4">AULA 05: MOMENTO DE INÉRCIA<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Teorema de Steiner & Produto de Inércia</span></h1>
+                        <p class="text-fluid-body text-[#444444]">Momentos de 2ª ordem, Teorema dos Eixos Paralelos, Produto de Inércia e Otimização Estrutural de Seções Vazadas.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div class="bg-white/85 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                        <img id="qr-presentation-cover-0-0" alt="QR Code Acesso aos Slides" class="w-full max-w-[200px] sm:max-w-[240px] mx-auto rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhe no Smartphone</span>
+                    </div>
+                    <div class="text-center space-y-1">
+                        <span class="text-fluid-tag text-[#D1A705] block">Docente Responsável</span>
+                        <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA DA AULA 05 -->
+        <div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">ESTRUTURA DIDÁTICA</span>
+                    <h2 class="text-fluid-h2">Visão Geral da Aula 05</h2>
+                </div>
+                <img id="img-logo-pms-1-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 my-auto w-full py-4">
+                <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-xl w-fit font-bold">01</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Fundamentos</h3>
+                    <p class="text-fluid-meta">Analogia física: patinadora, equilibrista e conservação do momento angular.</p>
+                </div>
+                <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-xl w-fit font-bold">02</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Inércia de Área</h3>
+                    <p class="text-fluid-meta">Momento de 2ª ordem ($I_x, I_y$), integração do retângulo e galeria de formas.</p>
+                </div>
+                <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-xl w-fit font-bold">03</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Laboratórios</h3>
+                    <p class="text-fluid-meta">Comparativos paramétricos: Bloco Maciço vs. Seção Caixão vs. Perfil I.</p>
+                </div>
+                <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-xl w-fit font-bold">04</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Teorema Steiner</h3>
+                    <p class="text-fluid-meta">Eixos paralelos ($I = \bar{I} + Ad^2$), transferência de eixos e cantoneira L.</p>
+                </div>
+                <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-xl w-fit font-bold">05</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Produto Inércia</h3>
+                    <p class="text-fluid-meta">Propriedades de $I_{xy}$, simetria e Construtor com eixos móveis e quadrantes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): INTRODUÇÃO E CONCEITOS FÍSICOS -->
+        <div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">FÍSICA DA ROTAÇÃO</span>
+                    <h2 class="text-fluid-h2">Inércia Rotacional e Conservação</h2>
+                </div>
+                <img id="img-logo-pms-2-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <span class="text-fluid-tag text-[#D1A705] block">MOMENTO DE 2ª ORDEM DA MASSA</span>
+                        <h3 class="text-fluid-h3 text-white">Resistência à Aceleração Angular</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">A inércia mede a resistência de um corpo a alterar sua velocidade angular. Quanto mais distante a massa estiver do eixo de rotação ($I = \int r^2 dm$), maior é a resistência mecânica.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md flex items-center justify-center gap-2">
+                            Laboratório: Conservação do Momento Angular <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md flex items-center justify-center gap-2">
+                            Laboratório: Órbitas Planetárias (Kepler) <i class="fa-solid fa-globe"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-fluid-tag text-[#901812] font-bold">1. Patinadora no Gelo</span>
+                            <h3 class="text-fluid-h3 text-[#333333] mt-1">Braços Recolhidos</h3>
+                            <p class="text-fluid-meta">Conservação de momento angular ($L = I \cdot \omega = \text{const}$). Ao recolher a massa, o raio $r \downarrow \implies I \downarrow \implies \omega \uparrow$.</p>
+                        </div>
+                        <div class="w-full h-40 bg-black/10 rounded-2xl overflow-hidden relative flex items-center justify-center">
+                            <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                                <source src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/patinadora.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-3xl card-borderless-glass flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-fluid-tag text-[#901812] font-bold">2. Equilibrista na Corda</span>
+                            <h3 class="text-fluid-h3 text-[#333333] mt-1">Vara Longa</h3>
+                            <p class="text-fluid-meta">A vara longa afasta as massas do eixo, aumentando enormemente $I$. O tombo rotacional torna-se significativamente mais lento.</p>
+                        </div>
+                        <div class="w-full h-40 bg-black/10 rounded-2xl overflow-hidden relative flex items-center justify-center">
+                            <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                                <source src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/images/equilibrista.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): LAB CONSERVAÇÃO MOMENTO ANGULAR (FUNDO BRANCO) -->
+        <div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Conservação do Momento Angular</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-5 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Controles da Partícula</h3>
+                    
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Massa ($m$):</span>
+                            <span id="skater-m-val" class="text-[#901812] font-bold">5.0 kg</span>
+                        </label>
+                        <input type="range" id="slider-skater-m" min="1" max="15" step="0.5" value="5" oninput="updateSkaterSim()" class="w-full accent-[#901812] h-4">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Raio ($r$):</span>
+                            <span id="skater-r-val" class="text-[#901812] font-bold">2.0 m</span>
+                        </label>
+                        <input type="range" id="slider-skater-r" min="0.5" max="4.0" step="0.1" value="2.0" oninput="updateSkaterSim()" class="w-full accent-[#901812] h-4">
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-fluid-meta space-y-1">
+                        <p><strong>Condição do Sistema:</strong> $L = 100\text{ kg}\cdot\text{m}^2/\text{s}$ (Constante)</p>
+                        <p><strong>Formulação:</strong> $I = m \cdot r^2 \implies \omega = L / I$</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4 flex flex-col justify-between">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Momento de Inércia ($I$)</span>
+                            <span id="skater-i-res" class="text-fluid-h3 text-[#901812] font-mono">20.00 kg·m²</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Velocidade Angular ($\omega$)</span>
+                            <span id="skater-w-res" class="text-fluid-h3 text-[#D1A705] font-mono">5.00 rad/s</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-64 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center relative overflow-hidden">
+                        <svg id="skater-canvas" viewBox="0 0 400 240" class="w-full h-full">
+                            <line x1="200" y1="20" x2="200" y2="220" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4,4" />
+                            <circle cx="200" cy="120" r="8" fill="#901812" />
+                            <g id="skater-rot-group">
+                                <line id="skater-arm-1" x1="200" y1="120" x2="280" y2="120" stroke="#333333" stroke-width="4" />
+                                <line id="skater-arm-2" x1="200" y1="120" x2="120" y2="120" stroke="#333333" stroke-width="4" />
+                                <circle id="skater-mass-1" cx="280" cy="120" r="12" fill="#901812" />
+                                <circle id="skater-mass-2" cx="120" cy="120" r="12" fill="#901812" />
+                            </g>
+                            <path id="skater-orbit-path" d="M 120 120 A 80 80 0 1 0 280 120 A 80 80 0 1 0 120 120" fill="none" stroke="#D1A705" stroke-width="1.5" stroke-dasharray="3,3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,2): LAB ÓRBITAS PLANETÁRIAS (FUNDO BRANCO) -->
+        <div id="slide-2-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">2ª Lei de Kepler & Momento Angular</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-5 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Força Central e Torque Nulo</h3>
+                    <p class="text-fluid-body text-[#444444]">Como a força da gravidade aponta rigorosamente para o centro de atração (Sol), o torque resultante é nulo ($\vec{\tau} = \vec{r} \times \vec{F} = \vec{0}$), conservando o momento angular.</p>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-fluid-meta">
+                        <p>• <strong>Periélio (menor raio $r$):</strong> Velocidade $v$ máxima.</p>
+                        <p>• <strong>Afélio (maior raio $r$):</strong> Velocidade $v$ mínima.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4 flex flex-col justify-between">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Raio Instantâneo ($r$)</span>
+                            <span id="planet-r-disp" class="text-fluid-h3 text-[#901812] font-mono">--</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Velocidade Orbital ($v$)</span>
+                            <span id="planet-v-disp" class="text-fluid-h3 text-[#D1A705] font-mono">--</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-64 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center relative overflow-hidden">
+                        <svg id="planet-canvas" viewBox="0 0 450 260" class="w-full h-full">
+                            <ellipse cx="225" cy="130" rx="170" ry="90" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4,4" />
+                            <circle cx="150" cy="130" r="16" fill="#D1A705" />
+                            <circle cx="150" cy="130" r="24" fill="#D1A705" fill-opacity="0.3" />
+                            <text x="135" y="95" fill="#333333" font-bold font-size="12">Sol</text>
+                            <g id="planet-group">
+                                <circle id="planet-body" cx="395" cy="130" r="9" fill="#901812" />
+                                <line id="planet-radius-line" x1="150" y1="130" x2="395" y2="130" stroke="#901812" stroke-width="1.5" opacity="0.6" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): CONCEITO DE MOMENTO DE INÉRCIA DE ÁREA -->
+        <div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">PROPRIEDADES GEOMÉTRICAS</span>
+                    <h2 class="text-fluid-h2">Momento de Inércia da Área</h2>
+                </div>
+                <img id="img-logo-pms-3-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-stretch">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-fluid-h3 text-[#333333]">Momento de 2ª Ordem</h3>
+                        <p class="text-fluid-body text-[#444444] mt-2">O momento de inércia da área reflete a distribuição geométrica em relação a um eixo neutro. Na flexão pura, governa a rigidez estrutural contra deformação.</p>
+                        <div class="mt-4 p-4 bg-white/75 rounded-2xl shadow-inner">
+                            <p class="text-fluid-meta text-[#333333]"><strong>Princípio de Positividade:</strong> Como as cotas $y$ e $x$ são elevadas ao quadrado, $I_x > 0$ e $I_y > 0$ sempre.</p>
+                        </div>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md">
+                        Dedução Integral do Retângulo <i class="fa-solid fa-arrow-down ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <span class="text-fluid-tag text-[#D1A705]">FORMULAÇÃO MATEMÁTICA GERAL</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white/10 p-6 rounded-2xl text-center">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Eixo X:</span>
+                            $$I_x = \int_A y^2 \, dA$$
+                            <span class="text-fluid-meta text-[#D1A705] block mt-2">Unidade: $[m^4]$ ou $[cm^4]$</span>
+                        </div>
+                        <div class="bg-white/10 p-6 rounded-2xl text-center">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Eixo Y:</span>
+                            $$I_y = \int_A x^2 \, dA$$
+                            <span class="text-fluid-meta text-[#D1A705] block mt-2">Unidade: $[m^4]$ ou $[cm^4]$</span>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-2xl text-fluid-meta text-[#DEDEDE]">
+                        Elemento diferencial infinitesimal $dA$ ponderado pela distância ao quadrado ao eixo flexotrator.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): DEDUÇÃO INTEGRAL DO RETÂNGULO -->
+        <div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">INTEGRAÇÃO PASSO A PASSO (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Cálculo Literal para Seção Retangular</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Selecione o Eixo</h3>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="setRectDerivationStep('basal')" id="btn-rect-basal" class="py-3 px-4 bg-[#901812] text-white rounded-2xl text-fluid-tag font-bold text-left shadow-md">
+                            1. Eixo Basal ($I_x = \frac{b h^3}{3}$)
+                        </button>
+                        <button onclick="setRectDerivationStep('centroidal')" id="btn-rect-centroidal" class="py-3 px-4 bg-white/60 text-[#333333] hover:bg-[#901812] hover:text-white rounded-2xl text-fluid-tag font-bold text-left transition-colors">
+                            2. Eixo Centroidal ($I_{\bar{x}} = \frac{b h^3}{12}$)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-glass-dark text-white space-y-4">
+                    <h3 id="rect-deriv-title" class="text-fluid-h3 text-[#D1A705]"></h3>
+                    <div id="rect-deriv-content" class="p-4 bg-white/10 rounded-2xl text-fluid-body text-[#DEDEDE] space-y-2"></div>
+                    <div class="w-full h-40 bg-white/5 rounded-2xl flex items-center justify-center p-2">
+                        <svg id="rect-deriv-svg" viewBox="0 0 360 160" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): GALERIA DE FORMAS GEOMÉTRICAS -->
+        <div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">TABELA DE PROPRIEDADES</span>
+                    <h2 class="text-fluid-h2">Galeria de Formas Geométricas</h2>
+                </div>
+                <img id="img-logo-pms-4-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass space-y-4">
+                    <span class="text-fluid-tag text-[#901812] block">SELEÇÃO DA FIGURA</span>
+                    <div class="flex flex-col gap-2" id="controls-shapes-gallery"></div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-glass-dark text-white space-y-4">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <h3 id="shape-title" class="text-fluid-h2 text-white"></h3>
+                        <span id="shape-tag" class="text-fluid-tag text-[#D1A705]"></span>
+                    </div>
+                    <p id="shape-desc" class="text-fluid-body text-[#DEDEDE]"></p>
+
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-white/10 p-3 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Área ($A$)</span>
+                            <div id="shape-formula-a" class="text-fluid-h3 text-white mt-1"></div>
+                        </div>
+                        <div class="bg-white/10 p-3 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Inércia $I_{\bar{x}}$</span>
+                            <div id="shape-formula-ix" class="text-fluid-h3 text-white mt-1"></div>
+                        </div>
+                        <div class="bg-white/10 p-3 rounded-2xl">
+                            <span class="text-fluid-tag text-[#D1A705] block">Inércia $I_{\bar{y}}$</span>
+                            <div id="shape-formula-iy" class="text-fluid-h3 text-white mt-1"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-44 bg-white/5 rounded-2xl flex items-center justify-center p-2">
+                        <svg id="shape-svg-display" viewBox="0 0 360 190" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): LAB RETÂNGULO INTERATIVO (FUNDO BRANCO) -->
+        <div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Seção Retangular Paramétrica</h2>
+                </div>
+                <button onclick="moveInGrid(0, 1)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    Comparativo Caixão (Press ↓) <i class="fa-solid fa-arrow-down ml-1"></i>
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-5 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Dimensões</h3>
+                    
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Base ($b$):</span>
+                            <span id="act1-b-val" class="text-[#901812] font-bold">15 cm</span>
+                        </label>
+                        <input type="range" id="slider-act1-b" min="5" max="40" value="15" oninput="updateAct1Rect()" class="w-full accent-[#901812] h-4">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Altura ($h$):</span>
+                            <span id="act1-h-val" class="text-[#901812] font-bold">30 cm</span>
+                        </label>
+                        <input type="range" id="slider-act1-h" min="5" max="40" value="30" oninput="updateAct1Rect()" class="w-full accent-[#901812] h-4">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4 flex flex-col justify-between">
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Área ($A$)</span>
+                            <span id="act1-res-a" class="text-fluid-h3 text-[#333333] font-mono">450.00 cm²</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Inércia $I_{\bar{x}}$</span>
+                            <span id="act1-res-ix" class="text-fluid-h3 text-[#901812] font-mono">33750.00 cm⁴</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Inércia $I_{\bar{y}}$</span>
+                            <span id="act1-res-iy" class="text-fluid-h3 text-[#D1A705] font-mono">8437.50 cm⁴</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-56 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 relative">
+                        <svg id="act1-svg" viewBox="0 0 380 220" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): LAB COMPARATIVO CAIXÃO (FUNDO BRANCO) -->
+        <div id="slide-5-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Retângulo Maciço vs. Seção Caixão</h2>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="moveInGrid(0, 1)" class="px-4 py-2 bg-slate-100 text-[#901812] font-bold rounded-2xl text-fluid-tag">
+                        Perfil I <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                    <button onclick="moveInGrid(0, -1)" class="px-4 py-2 bg-slate-100 text-[#333333] font-bold rounded-2xl text-fluid-tag">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> Retornar
+                    </button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-3">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Geometria do Caixão</h3>
+                    
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Base ($b$):</span> <span id="box-b-val" class="text-[#901812] font-bold">20 cm</span>
+                        </label>
+                        <input type="range" id="slider-box-b" min="10" max="40" value="20" oninput="updateBoxSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Altura ($h$):</span> <span id="box-h-val" class="text-[#901812] font-bold">30 cm</span>
+                        </label>
+                        <input type="range" id="slider-box-h" min="10" max="40" value="30" oninput="updateBoxSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Mesa ($t_f$):</span> <span id="box-tf-val" class="text-[#901812] font-bold">3 cm</span>
+                        </label>
+                        <input type="range" id="slider-box-tf" min="1" max="8" value="3" oninput="updateBoxSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Alma ($t_w$):</span> <span id="box-tw-val" class="text-[#901812] font-bold">2 cm</span>
+                        </label>
+                        <input type="range" id="slider-box-tw" min="1" max="8" value="2" oninput="updateBoxSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-[#333333]">
+                                    <th class="p-2.5 rounded-l-xl">Propriedade</th>
+                                    <th class="p-2.5">Maciça</th>
+                                    <th class="p-2.5">Caixão</th>
+                                    <th class="p-2.5 rounded-r-xl">% Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="p-2.5 font-bold">Área ($A$)</td>
+                                    <td id="box-a-solid" class="p-2.5">600.0 cm²</td>
+                                    <td id="box-a-box" class="p-2.5">216.0 cm²</td>
+                                    <td id="box-a-diff" class="p-2.5 font-bold text-emerald-600">-64.0% (Massa)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold">Inércia $I_{\bar{x}}$</td>
+                                    <td id="box-ix-solid" class="p-2.5">45000.0 cm⁴</td>
+                                    <td id="box-ix-box" class="p-2.5">31232.0 cm⁴</td>
+                                    <td id="box-ix-diff" class="p-2.5 font-bold text-amber-600">-30.6% (Inércia)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="h-40 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2">
+                            <svg id="box-svg-solid" viewBox="0 0 200 150" class="w-full h-full"></svg>
+                        </div>
+                        <div class="h-40 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2">
+                            <svg id="box-svg-box" viewBox="0 0 200 150" class="w-full h-full"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,2): LAB COMPARATIVO PERFIL I (FUNDO BRANCO) -->
+        <div id="slide-5-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Retângulo Maciço vs. Perfil I</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-3">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Geometria Perfil I</h3>
+                    
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Mesa ($b$):</span> <span id="ibeam-b-val" class="text-[#901812] font-bold">20 cm</span>
+                        </label>
+                        <input type="range" id="slider-ibeam-b" min="10" max="40" value="20" oninput="updateIBeamSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Altura ($h$):</span> <span id="ibeam-h-val" class="text-[#901812] font-bold">30 cm</span>
+                        </label>
+                        <input type="range" id="slider-ibeam-h" min="10" max="40" value="30" oninput="updateIBeamSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Espessura Mesa ($t_f$):</span> <span id="ibeam-tf-val" class="text-[#901812] font-bold">3 cm</span>
+                        </label>
+                        <input type="range" id="slider-ibeam-tf" min="1" max="8" value="3" oninput="updateIBeamSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Espessura Alma ($t_w$):</span> <span id="ibeam-tw-val" class="text-[#901812] font-bold">2 cm</span>
+                        </label>
+                        <input type="range" id="slider-ibeam-tw" min="1" max="8" value="2" oninput="updateIBeamSim()" class="w-full accent-[#901812] h-3">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-[#333333]">
+                                    <th class="p-2.5 rounded-l-xl">Propriedade</th>
+                                    <th class="p-2.5">Maciça</th>
+                                    <th class="p-2.5">Perfil I</th>
+                                    <th class="p-2.5 rounded-r-xl">% Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="p-2.5 font-bold">Área ($A$)</td>
+                                    <td id="ibeam-a-solid" class="p-2.5">600.0 cm²</td>
+                                    <td id="ibeam-a-ibeam" class="p-2.5">168.0 cm²</td>
+                                    <td id="ibeam-a-diff" class="p-2.5 font-bold text-emerald-600">-72.0% (Massa)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold">Inércia $I_{\bar{x}}$</td>
+                                    <td id="ibeam-ix-solid" class="p-2.5">45000.0 cm⁴</td>
+                                    <td id="ibeam-ix-ibeam" class="p-2.5">23160.0 cm⁴</td>
+                                    <td id="ibeam-ix-diff" class="p-2.5 font-bold text-amber-600">-48.5% (Inércia)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="h-40 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2">
+                            <svg id="ibeam-svg-solid" viewBox="0 0 200 150" class="w-full h-full"></svg>
+                        </div>
+                        <div class="h-40 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2">
+                            <svg id="ibeam-svg-ibeam" viewBox="0 0 200 150" class="w-full h-full"></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): SOMA DE INÉRCIAS E TEOREMA DE STEINER -->
+        <div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">COMPOSIÇÃO DE SEÇÕES</span>
+                    <h2 class="text-fluid-h2">Soma de Momentos & Eixo Comum</h2>
+                </div>
+                <img id="img-logo-pms-6-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-stretch py-4">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block">ADITIVIDADE RESTRITA</span>
+                        <h3 class="text-fluid-h3 text-white mt-1">O Teorema dos Eixos Paralelos</h3>
+                        <p class="text-fluid-body text-[#DEDEDE] mt-2">Não é permitido somar diretamente os momentos centroidais das subpartes ($I_{\text{total}} \neq \sum I_{\bar{x}i}$). É mandatória a translação para um eixo neutro comum.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md">
+                            Dedução de Steiner <i class="fa-solid fa-arrow-down ml-2"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md">
+                            Laboratório Cantoneira L <i class="fa-solid fa-sliders ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-6 bg-red-500/10 border-l-[12px] border-[#901812] rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812]">Erro Conceitual Crítico</h3>
+                        $$I_{X,\text{total}} \neq \sum I_{\bar{x}i}$$
+                        <p class="text-fluid-meta text-[#444444]">Ignorar as distâncias relativas ao centroide global anula o efeito dos braços de alavanca de 2ª ordem.</p>
+                    </div>
+
+                    <div class="p-6 bg-white/80 rounded-2xl shadow-sm">
+                        <h3 class="text-fluid-h3 text-[#333333]">Expressão Canônica de Steiner</h3>
+                        $$I_x = I_{\bar{x}} + A \cdot d_y^2$$
+                        <p class="text-fluid-meta text-[#444444]">Onde $d_y$ é a distância perpendicular entre o eixo baricêntrico local e o eixo de referência paralelo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,1): DEDUÇÃO MATEMÁTICA DE STEINER -->
+        <div id="slide-6-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">DEDUÇÃO ANALÍTICA (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Demonstração do Teorema de Steiner</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-white/75 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar
+                </button>
+            </header>
+
+            <div class="p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 my-auto">
+                <p class="text-fluid-body text-[#DEDEDE]">Considerando a transformação de coordenadas $y = y' + d_y$ a partir do centroide local:</p>
+                
+                <div class="bg-white/10 p-6 rounded-2xl text-center">
+                    $$I_x = \int_A (y' + d_y)^2 \, dA = \int_A (y')^2 \, dA + 2 d_y \int_A y' \, dA + d_y^2 \int_A dA$$
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 text-center text-fluid-meta text-[#DEDEDE]">
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <span class="text-[#D1A705] font-bold block">1ª Parcela</span>
+                        $\int_A (y')^2 dA = I_{\bar{x}}$
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <span class="text-[#D1A705] font-bold block">2ª Parcela</span>
+                        $\int_A y' dA = Q_{\bar{x}} = 0$ (Baricentro)
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <span class="text-[#D1A705] font-bold block">3ª Parcela</span>
+                        $d_y^2 \int_A dA = A \cdot d_y^2$
+                    </div>
+                </div>
+
+                <div class="text-center text-fluid-h2 text-[#D1A705] font-bold pt-2">
+                    $$I_x = I_{\bar{x}} + A \cdot d_y^2$$
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,2): LAB STEINER CANTONEIRA L (FUNDO BRANCO) -->
+        <div id="slide-6-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Translação de Eixos em Cantoneira L</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-5 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-slate-200 pb-2">Deslocamento dos Eixos</h3>
+                    
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Deslocamento $d_y$:</span>
+                            <span id="steiner-dy-val" class="text-[#901812] font-bold">0 cm</span>
+                        </label>
+                        <input type="range" id="slider-steiner-dy" min="-15" max="15" value="0" oninput="updateSteinerLab()" class="w-full accent-[#901812] h-4">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta block flex justify-between">
+                            <span>Deslocamento $d_x$:</span>
+                            <span id="steiner-dx-val" class="text-[#901812] font-bold">0 cm</span>
+                        </label>
+                        <input type="range" id="slider-steiner-dx" min="-15" max="15" value="0" oninput="updateSteinerLab()" class="w-full accent-[#901812] h-4">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-4 flex flex-col justify-between">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Inércia Centroidal ($I_{\bar{x}}$)</span>
+                            <span id="steiner-ix-cent" class="text-fluid-h3 text-[#333333] font-mono">1250.0 cm⁴</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <span class="text-fluid-meta text-slate-500 block">Inércia Transladada ($I_x$)</span>
+                            <span id="steiner-ix-shift" class="text-fluid-h3 text-[#901812] font-mono">1250.0 cm⁴</span>
+                            <span id="steiner-ix-pct" class="text-[12px] text-emerald-600 block font-bold mt-1">+0.0% de variação</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-60 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 relative">
+                        <svg id="steiner-svg" viewBox="0 0 380 240" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): PRODUTO DE INÉRCIA -->
+        <div id="slide-7-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">INÉRCIA CRUZADA</span>
+                    <h2 class="text-fluid-h2">Produto de Inércia ($I_{xy}$)</h2>
+                </div>
+                <img id="img-logo-pms-7-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-stretch py-4">
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block">ASSIMETRIA DE ÁREA</span>
+                        <h3 class="text-fluid-h3 text-white mt-1">Conceito e Sinal Algébrico</h3>
+                        <p class="text-fluid-body text-[#DEDEDE] mt-2">Diferente dos momentos $I_x$ e $I_y$, o produto de inércia $I_{xy}$ **pode ser positivo, negativo ou rigorosamente nulo**, dependendo da distribuição espacial nos quadrantes.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md">
+                        Construtor de Seções Compostas <i class="fa-solid fa-arrow-down ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4 flex flex-col justify-between">
+                    <div class="p-4 bg-white/75 rounded-2xl text-center shadow-inner">
+                        $$I_{xy} = \int_A x \cdot y \, dA$$
+                    </div>
+
+                    <div class="p-5 bg-[#901812]/10 border-l-[12px] border-[#901812] rounded-2xl">
+                        <h3 class="text-fluid-h3 text-[#901812]">Teorema da Simetria</h3>
+                        <p class="text-fluid-meta text-[#333333]">Se a seção plana possuir **pelo menos um eixo de simetria** coincidente ou paralelo aos eixos cartesianos, $I_{\bar{x}\bar{y}} = 0$ obrigatoriamente.</p>
+                    </div>
+
+                    <div class="p-4 bg-white/75 rounded-2xl text-center">
+                        <span class="text-fluid-tag text-[#333333] block">Translação por Steiner para $I_{xy}$:</span>
+                        $$I_{xy} = I_{\bar{x}\bar{y}} + A \cdot d_x \cdot d_y$$
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,1): LAB CONSTRUTOR DE SEÇÕES COMPOSTAS (FUNDO BRANCO) -->
+        <div id="slide-7-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (BRANCH Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Construtor Interativo de Seções</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-slate-100 text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-2">
+                <div class="lg:col-span-4 p-5 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-3">
+                    <span class="text-fluid-tag text-[#901812] block font-bold">Modelos Pré-definidos</span>
+                    <div class="grid grid-cols-3 gap-1">
+                        <button onclick="loadBuilderPreset('rect')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">Retângulo</button>
+                        <button onclick="loadBuilderPreset('angle')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">Cantoneira</button>
+                        <button onclick="loadBuilderPreset('tee')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">Seção T</button>
+                        <button onclick="loadBuilderPreset('ibeam')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">Perfil I</button>
+                        <button onclick="loadBuilderPreset('box')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">Caixão</button>
+                        <button onclick="loadBuilderPreset('box-septo')" class="py-1.5 px-2 bg-slate-100 hover:bg-[#901812] hover:text-white rounded-xl text-[11px] font-bold transition-colors">C/ Septo</button>
+                    </div>
+
+                    <div class="space-y-1 max-h-[160px] overflow-y-auto pr-1" id="builder-rect-controls"></div>
+                </div>
+
+                <div class="lg:col-span-8 p-5 rounded-3xl card-borderless-glass-white border border-slate-200 space-y-3">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-[#333333]">
+                                    <th class="p-2 rounded-l-xl">Eixos</th>
+                                    <th class="p-2">Área</th>
+                                    <th class="p-2">Centroide</th>
+                                    <th class="p-2">$I_x$</th>
+                                    <th class="p-2">$I_y$</th>
+                                    <th class="p-2 rounded-r-xl">$I_{xy}$</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-mono text-[13px]">
+                                <tr>
+                                    <td class="p-2 font-bold font-sans">Centroidal</td>
+                                    <td id="bld-a-tot">--</td>
+                                    <td id="bld-c-pos" class="text-[#901812] font-bold">--</td>
+                                    <td id="bld-ix-cent">--</td>
+                                    <td id="bld-iy-cent">--</td>
+                                    <td id="bld-ixy-cent">--</td>
+                                </tr>
+                                <tr class="bg-amber-500/10">
+                                    <td class="p-2 font-bold font-sans">Interativo (Arraste)</td>
+                                    <td id="bld-a-tot2">--</td>
+                                    <td id="bld-interactive-pos">--</td>
+                                    <td id="bld-ix-inter">--</td>
+                                    <td id="bld-iy-inter">--</td>
+                                    <td id="bld-ixy-inter" class="text-[#901812] font-bold">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="w-full h-64 bg-slate-950 rounded-2xl flex items-center justify-center relative overflow-hidden cursor-crosshair" id="builder-svg-container">
+                        <svg id="builder-svg" viewBox="0 0 500 300" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (8,0): QUIZ SÍNCRONO -->
+        <div id="slide-8-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">ATIVIDADE SÍNCRONA</span>
+                    <h2 class="text-fluid-h2">Quiz de Fixação In-Class</h2>
+                </div>
+                <img id="img-logo-pms-8-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-4">
+                <div class="lg:col-span-6 p-6 sm:p-10 rounded-3xl card-borderless-glass space-y-6">
+                    <span class="text-fluid-tag text-[#D1A705]">GOOGLE FORMS AVALIAÇÃO</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Verificação de Conceitos da Aula 05</h3>
+                    <p class="text-fluid-body text-[#444444]">Valide sua presença e fixe os princípios de momentos de 2ª ordem, translação por Steiner e propriedades do produto de inércia.</p>
+                    
+                    <div class="pt-2">
+                        <a id="btn-quiz-direct-8-0" target="_blank" class="w-full py-4 px-8 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-square-poll-vertical text-2xl text-[#D1A705]"></i>
+                            <span>Abrir Quiz Google Forms</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-lg ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">ACESSO VIA SMARTPHONE</span>
+                    <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[260px] sm:max-w-[300px] mx-auto shadow-lg">
+                        <img id="qr-quiz-forms-8-0" alt="QR Code Quiz" class="w-full h-auto rounded-lg">
+                    </div>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Login obrigatório via e-mail institucional (@ufv.br).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (9,0): ENCERRAMENTO E TAREFAS OFF-CLASS -->
+        <div id="slide-9-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MÓDULO DE CONCLUSÃO</span>
+                    <h2 class="text-fluid-h2">Referências & Exercícios Extraclasse</h2>
+                </div>
+                <img id="img-logo-pms-9-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full items-center py-4">
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Bibliografia Recomendada</h3>
+                    <ul class="space-y-4 text-fluid-body text-[#444444]">
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-book text-[#901812] mt-1"></i>
+                            <span><strong>Beer, F. P. et al.</strong> (2021). <em>Mecânica dos Materiais</em> (7ª ed.). AMGH. Cap. 7: Momentos Principais de Inércia e Círculo de Mohr.</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <i class="fa-solid fa-book text-[#901812] mt-1"></i>
+                            <span><strong>Hibbeler, R. C.</strong> (2018). <em>Resistência dos Materiais</em> (10ª ed.). Pearson. Apêndice A: Momentos de Inércia de Áreas.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">ENTREGA DE EXERCÍCIOS OFF-CLASS</span>
+                    <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[240px] sm:max-w-[280px] mx-auto shadow-lg">
+                        <img id="qr-assignment-forms-9-0" alt="QR Code Exercícios" class="w-full h-auto rounded-lg">
+                    </div>
+                    <a id="btn-assignment-direct-9-0" target="_blank" class="inline-flex items-center space-x-2 text-fluid-body font-bold text-[#D1A705] hover:underline pt-2">
+                        <span>Formulário de Submissão de Exercícios</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- SEÇÃO 3: LÓGICA JAVASCRIPT, INTERATIVIDADE E LABS                        -->
+    <!-- ========================================================================= -->
+    <script>
+        const slideGrid = {
+            '0,0': 'slide-0-0',
+            '1,0': 'slide-1-0',
+            '2,0': 'slide-2-0',
+            '2,1': 'slide-2-1',
+            '2,2': 'slide-2-2',
+            '3,0': 'slide-3-0',
+            '3,1': 'slide-3-1',
+            '4,0': 'slide-4-0',
+            '5,0': 'slide-5-0',
+            '5,1': 'slide-5-1',
+            '5,2': 'slide-5-2',
+            '6,0': 'slide-6-0',
+            '6,1': 'slide-6-1',
+            '6,2': 'slide-6-2',
+            '7,0': 'slide-7-0',
+            '7,1': 'slide-7-1',
+            '8,0': 'slide-8-0',
+            '9,0': 'slide-9-0'
+        };
+
+        let currentX = 0, currentY = 0;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function initializeAssets() {
+            // Logotipos
+            ['0-0', '1-0', '2-0', '3-0', '4-0', '6-0', '7-0', '8-0', '9-0'].forEach(id => {
+                const el = document.getElementById(`img-logo-pms-${id}`);
+                if (el) el.src = COURSE_ASSETS.logos.pms;
+            });
+            const logoUfv00 = document.getElementById('img-logo-ufv-0-0');
+            if (logoUfv00) logoUfv00.src = COURSE_ASSETS.logos.ufv;
+
+            const linkPortal00 = document.getElementById('link-pms-portal-0-0');
+            if (linkPortal00) linkPortal00.href = COURSE_ASSETS.externalLinks.pmsPortal;
+
+            // Fundos por slide
+            Object.keys(slideGrid).forEach(key => {
+                const bgKey = key.replace(',', '_');
+                const slideEl = document.getElementById(slideGrid[key]);
+                const bgUrl = COURSE_ASSETS.slideBackgrounds[bgKey];
+
+                if (slideEl) {
+                    if (bgUrl && bgUrl.trim() !== "") {
+                        slideEl.style.backgroundImage = `url('${bgUrl}')`;
+                        slideEl.classList.add('bg-right-fade');
+                    } else {
+                        slideEl.style.backgroundImage = 'none';
+                        slideEl.classList.remove('bg-right-fade');
+                    }
+                }
+            });
+
+            // QR Codes e Botões
+            const qrCover00 = document.getElementById('qr-presentation-cover-0-0');
+            if (qrCover00) qrCover00.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.presentationAccess);
+
+            const qrQuiz80 = document.getElementById('qr-quiz-forms-8-0');
+            if (qrQuiz80) qrQuiz80.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.googleFormsQuiz);
+
+            const qrAssign90 = document.getElementById('qr-assignment-forms-9-0');
+            if (qrAssign90) qrAssign90.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.weeklyAssignment);
+
+            const btnQuiz80 = document.getElementById('btn-quiz-direct-8-0');
+            if (btnQuiz80) btnQuiz80.href = COURSE_ASSETS.externalLinks.googleFormsQuiz;
+
+            const btnAssign90 = document.getElementById('btn-assignment-direct-9-0');
+            if (btnAssign90) btnAssign90.href = COURSE_ASSETS.externalLinks.weeklyAssignment;
+        }
+
+        function updateUI() {
+            const keysHorizontal = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const totalH = keysHorizontal.length;
+            document.getElementById('progressBar').style.width = `${(currentX / Math.max(totalH - 1, 1)) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX}, ${currentY})`;
+            
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                cur.classList.remove('slide-active');
+                
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                currentX = nx; currentY = ny;
+                updateUI();
+
+                if (window.renderMathInElement) {
+                    renderMathInElement(nxt, {
+                        delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}],
+                        throwOnError: false
+                    });
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        // =========================================================================
+        // SIMULAÇÕES E LABORATÓRIOS
+        // =========================================================================
+        
+        // Lab Patinadora (Slide 2,1)
+        let skaterRotAngle = 0;
+        function updateSkaterSim() {
+            const m = parseFloat(document.getElementById('slider-skater-m').value);
+            const r = parseFloat(document.getElementById('slider-skater-r').value);
+            document.getElementById('skater-m-val').innerText = `${m.toFixed(1)} kg`;
+            document.getElementById('skater-r-val').innerText = `${r.toFixed(1)} m`;
+
+            const L = 100.0;
+            const I = m * Math.pow(r, 2);
+            const w = L / I;
+
+            document.getElementById('skater-i-res').innerText = `${I.toFixed(2)} kg·m²`;
+            document.getElementById('skater-w-res').innerText = `${w.toFixed(2)} rad/s`;
+
+            const armLen = 30 + r * 25;
+            document.getElementById('skater-arm-1').setAttribute('x2', (200 + armLen).toString());
+            document.getElementById('skater-arm-2').setAttribute('x2', (200 - armLen).toString());
+            document.getElementById('skater-mass-1').setAttribute('cx', (200 + armLen).toString());
+            document.getElementById('skater-mass-2').setAttribute('cx', (200 - armLen).toString());
+            
+            const rMass = 6 + m * 0.8;
+            document.getElementById('skater-mass-1').setAttribute('r', rMass.toString());
+            document.getElementById('skater-mass-2').setAttribute('r', rMass.toString());
+
+            const pathEl = document.getElementById('skater-orbit-path');
+            if (pathEl) {
+                pathEl.setAttribute('d', `M ${200-armLen} 120 A ${armLen} ${armLen} 0 1 0 ${200+armLen} 120 A ${armLen} ${armLen} 0 1 0 ${200-armLen} 120`);
+            }
+        }
+
+        function animateSkaterLoop() {
+            const wText = document.getElementById('skater-w-res');
+            if (wText) {
+                const w = parseFloat(wText.innerText);
+                skaterRotAngle += (w * 0.8);
+                const rotGroup = document.getElementById('skater-rot-group');
+                if (rotGroup) rotGroup.setAttribute('transform', `rotate(${skaterRotAngle} 200 120)`);
+            }
+            requestAnimationFrame(animateSkaterLoop);
+        }
+
+        // Lab Planetas (Slide 2,2)
+        let planetAngle = 0;
+        function animatePlanetOrbit() {
+            planetAngle += 0.015;
+            const a = 170, b = 90, cx = 225, cy = 130, sunX = 150, sunY = 130;
+            const px = cx + a * Math.cos(planetAngle);
+            const py = cy + b * Math.sin(planetAngle);
+            const dx = px - sunX, dy = py - sunY;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const v = (180 / r) * 12;
+
+            const planetBody = document.getElementById('planet-body');
+            const radiusLine = document.getElementById('planet-radius-line');
+            const rDisp = document.getElementById('planet-r-disp');
+            const vDisp = document.getElementById('planet-v-disp');
+
+            if (planetBody && radiusLine) {
+                planetBody.setAttribute('cx', px.toString());
+                planetBody.setAttribute('cy', py.toString());
+                radiusLine.setAttribute('x2', px.toString());
+                radiusLine.setAttribute('y2', py.toString());
+            }
+            if (rDisp && vDisp) {
+                rDisp.innerText = `${(r / 20).toFixed(2)} UA`;
+                vDisp.innerText = `${v.toFixed(1)} km/s`;
+            }
+            requestAnimationFrame(animatePlanetOrbit);
+        }
+
+        // Dedução Retângulo (Slide 3,1)
+        const rectDerivSteps = {
+            basal: {
+                title: "1. Cálculo em relação ao Eixo Basal ($x$)",
+                content: `
+                    <p><strong>Configuração:</strong> Origem do sistema $xy$ posicionada no canto inferior esquerdo.</p>
+                    <p><strong>Elemento Diferencial:</strong> Faixa horizontal $dA = b \cdot dy$ posicionada na cota $y$.</p>
+                    <div class="p-3 bg-white/10 rounded-xl font-mono my-1">
+                        $$I_x = \\int_0^h y^2 \\, dA = \\int_0^h y^2 (b \\, dy) = b \\left[ \\frac{y^3}{3} \\right]_0^h = \\frac{b h^3}{3}$$
+                    </div>
+                `,
+                draw: () => `
+                    <line x1="20" y1="130" x2="340" y2="130" stroke="#D1A705" stroke-width="3" />
+                    <text x="300" y="122" fill="#D1A705" font-bold font-size="12">Eixo Basal x</text>
+                    <rect x="120" y="30" width="120" height="100" fill="#901812" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+                    <rect x="120" y="70" width="120" height="12" fill="#D1A705" fill-opacity="0.8" stroke="#FFFFFF" stroke-width="1" />
+                    <text x="248" y="79" fill="#FFFFFF" font-bold font-size="11">dA = b · dy</text>
+                `
+            },
+            centroidal: {
+                title: "2. Cálculo em relação ao Eixo Centroidal ($\\bar{x}$)",
+                content: `
+                    <p><strong>Configuração:</strong> Origem posicionada no Centroide $C(0,0)$ central do retângulo.</p>
+                    <p><strong>Limites de Integração:</strong> A cota $y$ varia de $-h/2$ a $+h/2$.</p>
+                    <div class="p-3 bg-white/10 rounded-xl font-mono my-1">
+                        $$I_{\\bar{x}} = \\int_{-h/2}^{+h/2} y^2 (b \\, dy) = b \\left[ \\frac{y^3}{3} \\right]_{-h/2}^{+h/2} = \\frac{b h^3}{12}$$
+                    </div>
+                `,
+                draw: () => `
+                    <rect x="120" y="30" width="120" height="100" fill="#901812" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+                    <line x1="20" y1="80" x2="340" y2="80" stroke="#D1A705" stroke-width="3" stroke-dasharray="4,4" />
+                    <text x="280" y="72" fill="#D1A705" font-bold font-size="12">Eixo Centroidal x̄</text>
+                    <circle cx="180" cy="80" r="5" fill="#FFFFFF" />
+                    <rect x="120" y="50" width="120" height="10" fill="#D1A705" fill-opacity="0.8" stroke="#FFFFFF" stroke-width="1" />
+                    <text x="248" y="58" fill="#FFFFFF" font-bold font-size="11">dA = b · dy</text>
+                `
+            }
+        };
+
+        function setRectDerivationStep(key) {
+            ['basal', 'centroidal'].forEach(k => {
+                const btn = document.getElementById(`btn-rect-${k}`);
+                if (btn) {
+                    btn.className = (k === key)
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-2xl text-fluid-tag font-bold text-left shadow-md"
+                        : "py-3 px-4 bg-white/60 text-[#333333] hover:bg-[#901812] hover:text-white rounded-2xl text-fluid-tag font-bold text-left transition-colors";
+                }
+            });
+
+            const current = rectDerivSteps[key];
+            document.getElementById('rect-deriv-title').innerText = current.title;
+            const contentEl = document.getElementById('rect-deriv-content');
+            contentEl.innerHTML = current.content;
+            document.getElementById('rect-deriv-svg').innerHTML = current.draw();
+
+            if (window.renderMathInElement) {
+                renderMathInElement(contentEl, {
+                    delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // Galeria de Formas (Slide 4,0)
+        const shapesGalleryData = [
+            {
+                name: "Retângulo", tag: "Base b × Altura h", desc: "Inércia máxima no eixo perpendicular à maior dimensão.",
+                a: "$$A = b \\cdot h$$", ix: "$$I_{\\bar{x}} = \\frac{b h^3}{12}$$", iy: "$$I_{\\bar{y}} = \\frac{h b^3}{12}$$",
+                draw: () => `
+                    <rect x="110" y="30" width="140" height="120" fill="#901812" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+                    <line x1="40" y1="90" x2="320" y2="90" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <line x1="180" y1="10" x2="180" y2="170" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="180" cy="90" r="5" fill="#FFFFFF" />
+                `
+            },
+            {
+                name: "Triângulo", tag: "Base b × Altura h", desc: "Inércia reduzida pela menor massa no topo.",
+                a: "$$A = \\frac{b h}{2}$$", ix: "$$I_{\\bar{x}} = \\frac{b h^3}{36}$$", iy: "$$I_{\\bar{y}} = \\frac{h b^3}{36}$$",
+                draw: () => `
+                    <polygon points="100,150 260,150 100,30" fill="#901812" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+                    <line x1="40" y1="110" x2="320" y2="110" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="153.3" cy="110" r="5" fill="#FFFFFF" />
+                `
+            },
+            {
+                name: "Círculo", tag: "Raio r", desc: "Inércia idêntica em qualquer eixo devido à simetria polar.",
+                a: "$$A = \\pi r^2$$", ix: "$$I_{\\bar{x}} = \\frac{\\pi r^4}{4}$$", iy: "$$I_{\\bar{y}} = \\frac{\\pi r^4}{4}$$",
+                draw: () => `
+                    <circle cx="180" cy="90" r="65" fill="#901812" fill-opacity="0.3" stroke="#FFFFFF" stroke-width="2" />
+                    <line x1="40" y1="90" x2="320" y2="90" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <line x1="180" y1="10" x2="180" y2="170" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="180" cy="90" r="5" fill="#FFFFFF" />
+                `
+            }
+        ];
+
+        let activeShapeIndex = 0;
+        function renderShapesGallery() {
+            const controls = document.getElementById('controls-shapes-gallery');
+            if (!controls) return;
+            controls.innerHTML = '';
+            shapesGalleryData.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.innerText = `${index + 1}. ${item.name}`;
+                btn.className = (index === activeShapeIndex)
+                    ? "py-3 px-4 bg-[#901812] text-white rounded-2xl text-fluid-tag font-bold text-left shadow-md"
+                    : "py-3 px-4 bg-white/60 text-[#333333] hover:bg-[#901812] hover:text-white rounded-2xl text-fluid-tag font-bold text-left transition-colors";
+                btn.onclick = () => { activeShapeIndex = index; renderShapesGallery(); };
+                controls.appendChild(btn);
+            });
+
+            const cur = shapesGalleryData[activeShapeIndex];
+            document.getElementById('shape-title').innerText = cur.name;
+            document.getElementById('shape-tag').innerText = cur.tag;
+            document.getElementById('shape-desc').innerText = cur.desc;
+
+            const elA = document.getElementById('shape-formula-a');
+            const elIx = document.getElementById('shape-formula-ix');
+            const elIy = document.getElementById('shape-formula-iy');
+            elA.innerText = cur.a; elIx.innerText = cur.ix; elIy.innerText = cur.iy;
+
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('slide-4-0'), {
+                    delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}],
+                    throwOnError: false
+                });
+            }
+            document.getElementById('shape-svg-display').innerHTML = cur.draw();
+        }
+
+        // Lab Retângulo Paramétrico (Slide 5,0)
+        function updateAct1Rect() {
+            const b = parseFloat(document.getElementById('slider-act1-b').value);
+            const h = parseFloat(document.getElementById('slider-act1-h').value);
+            document.getElementById('act1-b-val').innerText = `${b} cm`;
+            document.getElementById('act1-h-val').innerText = `${h} cm`;
+
+            const A = b * h;
+            const Ix = (b * Math.pow(h, 3)) / 12;
+            const Iy = (h * Math.pow(b, 3)) / 12;
+
+            document.getElementById('act1-res-a').innerText = `${A.toFixed(2)} cm²`;
+            document.getElementById('act1-res-ix').innerText = `${Ix.toFixed(2)} cm⁴`;
+            document.getElementById('act1-res-iy').innerText = `${Iy.toFixed(2)} cm⁴`;
+
+            const svg = document.getElementById('act1-svg');
+            if (svg) {
+                const maxDim = Math.max(b, h);
+                const scale = 140 / maxDim;
+                const w = b * scale, ht = h * scale;
+                const cx = 190, cy = 110;
+                svg.innerHTML = `
+                    <rect x="${cx - w/2}" y="${cy - ht/2}" width="${w}" height="${ht}" fill="#901812" fill-opacity="0.2" stroke="#901812" stroke-width="2.5" />
+                    <line x1="30" y1="${cy}" x2="350" y2="${cy}" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <line x1="${cx}" y1="15" x2="${cx}" y2="205" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="${cx}" cy="${cy}" r="5" fill="#901812" />
+                `;
+            }
+        }
+
+        // Lab Comparativo Caixão (Slide 5,1)
+        function updateBoxSim() {
+            const b = parseFloat(document.getElementById('slider-box-b').value);
+            const h = parseFloat(document.getElementById('slider-box-h').value);
+            const tf = parseFloat(document.getElementById('slider-box-tf').value);
+            const tw = parseFloat(document.getElementById('slider-box-tw').value);
+
+            if (2 * tw >= b) { document.getElementById('slider-box-tw').value = (b / 2 - 0.5).toString(); return updateBoxSim(); }
+            if (2 * tf >= h) { document.getElementById('slider-box-tf').value = (h / 2 - 0.5).toString(); return updateBoxSim(); }
+
+            document.getElementById('box-b-val').innerText = `${b} cm`;
+            document.getElementById('box-h-val').innerText = `${h} cm`;
+            document.getElementById('box-tf-val').innerText = `${tf} cm`;
+            document.getElementById('box-tw-val').innerText = `${tw} cm`;
+
+            const Asolid = b * h;
+            const IxSolid = (b * Math.pow(h, 3)) / 12;
+            const bi = b - 2 * tw, hi = h - 2 * tf;
+            const Abox = Asolid - (bi * hi);
+            const IxBox = IxSolid - ((bi * Math.pow(hi, 3)) / 12);
+
+            document.getElementById('box-a-solid').innerText = `${Asolid.toFixed(1)} cm²`;
+            document.getElementById('box-a-box').innerText = `${Abox.toFixed(1)} cm²`;
+            document.getElementById('box-a-diff').innerText = `${(((Abox - Asolid) / Asolid) * 100).toFixed(1)}% (Massa)`;
+            document.getElementById('box-ix-solid').innerText = `${IxSolid.toFixed(1)} cm⁴`;
+            document.getElementById('box-ix-box').innerText = `${IxBox.toFixed(1)} cm⁴`;
+            document.getElementById('box-ix-diff').innerText = `${(((IxBox - IxSolid) / IxSolid) * 100).toFixed(1)}% (Inércia)`;
+
+            const svgS = document.getElementById('box-svg-solid');
+            const svgB = document.getElementById('box-svg-box');
+            if (svgS && svgB) {
+                const scale = 110 / Math.max(b, h);
+                const w = b * scale, ht = h * scale;
+                svgS.innerHTML = `<rect x="${100-w/2}" y="${75-ht/2}" width="${w}" height="${ht}" fill="#901812" fill-opacity="0.2" stroke="#901812" stroke-width="2" />`;
+                const wi = bi * scale, hi_s = hi * scale;
+                svgB.innerHTML = `
+                    <path d="M ${100-w/2} ${75-ht/2} L ${100+w/2} ${75-ht/2} L ${100+w/2} ${75+ht/2} L ${100-w/2} ${75+ht/2} Z M ${100-wi/2} ${75-hi_s/2} L ${100-wi/2} ${75+hi_s/2} L ${100+wi/2} ${75+hi_s/2} L ${100+wi/2} ${75-hi_s/2} Z" fill="#901812" fill-opacity="0.3" stroke="#901812" stroke-width="2" />
+                `;
+            }
+        }
+
+        // Lab Comparativo Perfil I (Slide 5,2)
+        function updateIBeamSim() {
+            const b = parseFloat(document.getElementById('slider-ibeam-b').value);
+            const h = parseFloat(document.getElementById('slider-ibeam-h').value);
+            const tf = parseFloat(document.getElementById('slider-ibeam-tf').value);
+            const tw = parseFloat(document.getElementById('slider-ibeam-tw').value);
+
+            if (tw >= b) { document.getElementById('slider-ibeam-tw').value = (b - 1).toString(); return updateIBeamSim(); }
+            if (2 * tf >= h) { document.getElementById('slider-ibeam-tf').value = (h / 2 - 0.5).toString(); return updateIBeamSim(); }
+
+            document.getElementById('ibeam-b-val').innerText = `${b} cm`;
+            document.getElementById('ibeam-h-val').innerText = `${h} cm`;
+            document.getElementById('ibeam-tf-val').innerText = `${tf} cm`;
+            document.getElementById('ibeam-tw-val').innerText = `${tw} cm`;
+
+            const Asolid = b * h;
+            const IxSolid = (b * Math.pow(h, 3)) / 12;
+            const hw = h - 2 * tf;
+            const bCut = (b - tw) / 2;
+            const Aibeam = Asolid - (2 * bCut * hw);
+            const IxIBeam = IxSolid - (2 * (bCut * Math.pow(hw, 3) / 12));
+
+            document.getElementById('ibeam-a-solid').innerText = `${Asolid.toFixed(1)} cm²`;
+            document.getElementById('ibeam-a-ibeam').innerText = `${Aibeam.toFixed(1)} cm²`;
+            document.getElementById('ibeam-a-diff').innerText = `${(((Aibeam - Asolid) / Asolid) * 100).toFixed(1)}% (Massa)`;
+            document.getElementById('ibeam-ix-solid').innerText = `${IxSolid.toFixed(1)} cm⁴`;
+            document.getElementById('ibeam-ix-ibeam').innerText = `${IxIBeam.toFixed(1)} cm⁴`;
+            document.getElementById('ibeam-ix-diff').innerText = `${(((IxIBeam - IxSolid) / IxSolid) * 100).toFixed(1)}% (Inércia)`;
+
+            const svgS = document.getElementById('ibeam-svg-solid');
+            const svgI = document.getElementById('ibeam-svg-ibeam');
+            if (svgS && svgI) {
+                const scale = 110 / Math.max(b, h);
+                const w = b * scale, ht = h * scale;
+                svgS.innerHTML = `<rect x="${100-w/2}" y="${75-ht/2}" width="${w}" height="${ht}" fill="#901812" fill-opacity="0.2" stroke="#901812" stroke-width="2" />`;
+                const wTf = tf * scale, wTw = tw * scale;
+                svgI.innerHTML = `
+                    <rect x="${100-w/2}" y="${75-ht/2}" width="${w}" height="${wTf}" fill="#901812" fill-opacity="0.3" stroke="#901812" stroke-width="1.5" />
+                    <rect x="${100-w/2}" y="${75+ht/2-wTf}" width="${w}" height="${wTf}" fill="#901812" fill-opacity="0.3" stroke="#901812" stroke-width="1.5" />
+                    <rect x="${100-wTw/2}" y="${75-ht/2+wTf}" width="${wTw}" height="${ht-2*wTf}" fill="#901812" fill-opacity="0.3" stroke="#901812" stroke-width="1.5" />
+                `;
+            }
+        }
+
+        // Lab Steiner Cantoneira (Slide 6,2)
+        function updateSteinerLab() {
+            const dy = parseFloat(document.getElementById('slider-steiner-dy').value);
+            const dx = parseFloat(document.getElementById('slider-steiner-dx').value);
+            document.getElementById('steiner-dy-val').innerText = `${dy} cm`;
+            document.getElementById('steiner-dx-val').innerText = `${dx} cm`;
+
+            const A = 50.0, IxCent = 1250.0;
+            const IxShift = IxCent + A * Math.pow(dy, 2);
+            const pct = ((IxShift - IxCent) / IxCent) * 100;
+
+            document.getElementById('steiner-ix-cent').innerText = `${IxCent.toFixed(1)} cm⁴`;
+            document.getElementById('steiner-ix-shift').innerText = `${IxShift.toFixed(1)} cm⁴`;
+            document.getElementById('steiner-ix-pct').innerText = `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}% de variação`;
+
+            const svg = document.getElementById('steiner-svg');
+            if (svg) {
+                const cx = 190, cy = 120;
+                const shiftX = cx + dx * 5, shiftY = cy - dy * 5;
+                svg.innerHTML = `
+                    <path d="M 140 50 L 170 50 L 170 160 L 250 160 L 250 190 L 140 190 Z" fill="#901812" fill-opacity="0.2" stroke="#901812" stroke-width="2.5" />
+                    <line x1="30" y1="${cy}" x2="350" y2="${cy}" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3" />
+                    <line x1="${cx}" y1="15" x2="${cx}" y2="225" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3" />
+                    <circle cx="${cx}" cy="${cy}" r="4" fill="#64748B" />
+                    <line x1="30" y1="${shiftY}" x2="350" y2="${shiftY}" stroke="#D1A705" stroke-width="2.5" />
+                    <line x1="${shiftX}" y1="15" x2="${shiftX}" y2="225" stroke="#D1A705" stroke-width="2.5" />
+                    <circle cx="${shiftX}" cy="${shiftY}" r="5" fill="#D1A705" />
+                `;
+            }
+        }
+
+        // Construtor de Seções Compostas (Slide 7,1)
+        let builderRects = [
+            { active: true, x: 0, y: 0, b: 20, h: 4 },
+            { active: true, x: 8, y: 4, b: 4, h: 20 },
+            { active: true, x: 0, y: 24, b: 20, h: 4 },
+            { active: false, x: 0, y: 0, b: 4, h: 10 },
+            { active: false, x: 16, y: 0, b: 4, h: 10 }
+        ];
+        let builderInteractiveAxis = { x: 10, y: 14 };
+        let isDraggingBuilderAxis = false;
+
+        function loadBuilderPreset(preset) {
+            builderRects.forEach(r => r.active = false);
+            if (preset === 'rect') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 20, h: 30 };
+            } else if (preset === 'angle') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 4, h: 26 };
+                builderRects[1] = { active: true, x: 4, y: 22, b: 16, h: 4 };
+            } else if (preset === 'tee') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 24, h: 4 };
+                builderRects[1] = { active: true, x: 10, y: 4, b: 4, h: 22 };
+            } else if (preset === 'ibeam') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 20, h: 4 };
+                builderRects[1] = { active: true, x: 8, y: 4, b: 4, h: 20 };
+                builderRects[2] = { active: true, x: 0, y: 24, b: 20, h: 4 };
+            } else if (preset === 'box') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 20, h: 4 };
+                builderRects[1] = { active: true, x: 0, y: 4, b: 4, h: 20 };
+                builderRects[2] = { active: true, x: 16, y: 4, b: 4, h: 20 };
+                builderRects[3] = { active: true, x: 0, y: 24, b: 20, h: 4 };
+            } else if (preset === 'box-septo') {
+                builderRects[0] = { active: true, x: 0, y: 0, b: 20, h: 4 };
+                builderRects[1] = { active: true, x: 0, y: 4, b: 4, h: 20 };
+                builderRects[2] = { active: true, x: 16, y: 4, b: 4, h: 20 };
+                builderRects[3] = { active: true, x: 0, y: 24, b: 20, h: 4 };
+                builderRects[4] = { active: true, x: 4, y: 12, b: 12, h: 4 };
+            }
+            renderBuilderControls();
+            recalcBuilder();
+        }
+
+        function renderBuilderControls() {
+            const container = document.getElementById('builder-rect-controls');
+            if (!container) return;
+            container.innerHTML = '';
+            builderRects.forEach((r, idx) => {
+                const box = document.createElement('div');
+                box.className = "p-2 bg-slate-100 rounded-xl space-y-1 text-fluid-tag";
+                box.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <label class="font-bold text-[#333333]">
+                            <input type="checkbox" ${r.active ? 'checked' : ''} onchange="toggleBuilderRect(${idx}, this.checked)" class="accent-[#901812]"> Retângulo ${idx + 1}
+                        </label>
+                    </div>
+                `;
+                container.appendChild(box);
+            });
+        }
+
+        function toggleBuilderRect(idx, val) {
+            builderRects[idx].active = val;
+            renderBuilderControls();
+            recalcBuilder();
+        }
+
+        function recalcBuilder() {
+            let Atot = 0, Qy = 0, Qx = 0;
+            const activeList = builderRects.filter(r => r.active);
+            activeList.forEach(r => {
+                const A = r.b * r.h;
+                Atot += A;
+                Qy += A * (r.x + r.b / 2);
+                Qx += A * (r.y + r.h / 2);
+            });
+
+            if (Atot === 0) return;
+            const Xbar = Qy / Atot, Ybar = Qx / Atot;
+            let IxCent = 0, IyCent = 0, IxyCent = 0;
+
+            activeList.forEach(r => {
+                const A = r.b * r.h;
+                const xc = r.x + r.b / 2, yc = r.y + r.h / 2;
+                const dx = xc - Xbar, dy = yc - Ybar;
+                IxCent += ((r.b * Math.pow(r.h, 3)) / 12 + A * dy * dy);
+                IyCent += ((r.h * Math.pow(r.b, 3)) / 12 + A * dx * dx);
+                IxyCent += (0 + A * dx * dy);
+            });
+
+            const dxInter = Xbar - builderInteractiveAxis.x;
+            const dyInter = Ybar - builderInteractiveAxis.y;
+            const IxInter = IxCent + Atot * Math.pow(dyInter, 2);
+            const IyInter = IyCent + Atot * Math.pow(dxInter, 2);
+            const IxyInter = IxyCent + Atot * dxInter * dyInter;
+
+            document.getElementById('bld-a-tot').innerText = `${Atot.toFixed(1)}`;
+            document.getElementById('bld-a-tot2').innerText = `${Atot.toFixed(1)}`;
+            document.getElementById('bld-c-pos').innerText = `(${Xbar.toFixed(1)}, ${Ybar.toFixed(1)})`;
+            document.getElementById('bld-interactive-pos').innerText = `(${builderInteractiveAxis.x.toFixed(1)}, ${builderInteractiveAxis.y.toFixed(1)})`;
+            document.getElementById('bld-ix-cent').innerText = `${IxCent.toFixed(1)}`;
+            document.getElementById('bld-iy-cent').innerText = `${IyCent.toFixed(1)}`;
+            document.getElementById('bld-ixy-cent').innerText = `${IxyCent.toFixed(1)}`;
+            document.getElementById('bld-ix-inter').innerText = `${IxInter.toFixed(1)}`;
+            document.getElementById('bld-iy-inter').innerText = `${IyInter.toFixed(1)}`;
+            document.getElementById('bld-ixy-inter').innerText = `${IxyInter.toFixed(1)}`;
+
+            drawBuilderSVG(Xbar, Ybar);
+        }
+
+        function drawBuilderSVG(Xbar, Ybar) {
+            const svg = document.getElementById('builder-svg');
+            if (!svg) return;
+            const scale = 8, offX = 140, offY = 30;
+            const interSvgX = offX + builderInteractiveAxis.x * scale;
+            const interSvgY = offY + builderInteractiveAxis.y * scale;
+            const centSvgX = offX + Xbar * scale;
+            const centSvgY = offY + Ybar * scale;
+
+            let rectsSVG = '';
+            builderRects.filter(r => r.active).forEach(r => {
+                rectsSVG += `<rect x="${offX + r.x * scale}" y="${offY + r.y * scale}" width="${r.b * scale}" height="${r.h * scale}" fill="#901812" fill-opacity="0.45" stroke="#FFFFFF" stroke-width="1.5" />`;
+            });
+
+            svg.innerHTML = `
+                <rect x="${interSvgX}" y="0" width="${500-interSvgX}" height="${interSvgY}" fill="#3B82F6" fill-opacity="0.15" />
+                <rect x="0" y="${interSvgY}" width="${interSvgX}" height="${300-interSvgY}" fill="#3B82F6" fill-opacity="0.15" />
+                <rect x="0" y="0" width="${interSvgX}" height="${interSvgY}" fill="#EF4444" fill-opacity="0.15" />
+                <rect x="${interSvgX}" y="${interSvgY}" width="${500-interSvgX}" height="${300-interSvgY}" fill="#EF4444" fill-opacity="0.15" />
+                ${rectsSVG}
+                <line x1="0" y1="${centSvgY}" x2="500" y2="${centSvgY}" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="3,3" />
+                <line x1="${centSvgX}" y1="0" x2="${centSvgX}" y2="300" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="3,3" />
+                <circle cx="${centSvgX}" cy="${centSvgY}" r="4" fill="#FFFFFF" />
+                <line x1="0" y1="${interSvgY}" x2="500" y2="${interSvgY}" stroke="#D1A705" stroke-width="2.5" />
+                <line x1="${interSvgX}" y1="0" x2="${interSvgX}" y2="300" stroke="#D1A705" stroke-width="2.5" />
+                <circle cx="${interSvgX}" cy="${interSvgY}" r="6" fill="#D1A705" />
+            `;
+        }
+
+        function initBuilderInteraction() {
+            const container = document.getElementById('builder-svg-container');
+            if (!container) return;
+            const handleMove = (e) => {
+                if (!isDraggingBuilderAxis) return;
+                const rect = container.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                builderInteractiveAxis.x = Math.round(((clientX - rect.left) / rect.width) * 35);
+                builderInteractiveAxis.y = Math.round(((clientY - rect.top) / rect.height) * 30);
+                recalcBuilder();
+            };
+            container.addEventListener('mousedown', () => { isDraggingBuilderAxis = true; });
+            window.addEventListener('mouseup', () => { isDraggingBuilderAxis = false; });
+            container.addEventListener('mousemove', handleMove);
+            container.addEventListener('touchstart', () => { isDraggingBuilderAxis = true; });
+            window.addEventListener('touchend', () => { isDraggingBuilderAxis = false; });
+            container.addEventListener('touchmove', handleMove);
+        }
+
+        // =========================================================================
+        // INICIALIZAÇÃO
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAssets();
+            updateUI();
+
+            updateSkaterSim();
+            animateSkaterLoop();
+            animatePlanetOrbit();
+
+            setRectDerivationStep('basal');
+            renderShapesGallery();
+
+            updateAct1Rect();
+            updateBoxSim();
+            updateIBeamSim();
+
+            updateSteinerLab();
+            loadBuilderPreset('ibeam');
+            initBuilderInteraction();
+        });
+    </script>
+</body>
+</html>

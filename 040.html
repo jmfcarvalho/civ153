@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 - Aula 04: Centroide e Momento Estático | PMS - UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ========================================================================= -->
+    <!-- CENTRAL RESOURCE DIRECTORY (PMS DESIGN SYSTEM)                            -->
+    <!-- ========================================================================= -->
+    <script>
+        const COURSE_ASSETS = {
+            logos: {
+                ufv: "https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png",
+                pms: "https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png"
+            },
+            slideBackgrounds: {
+                "0_0": "bg-geometric1.png",
+                "1_0": "bg-geometric2.png",
+                "2_0": "bg-concrete1.png",
+                "2_1": "", // Plain white background for interactive lab
+                "3_0": "bg-blocks1.png",
+                "3_1": "", // Plain white background for interactive lab
+                "4_0": "bg-blocks2.png",
+                "4_1": "", // Plain white background for interactive lab
+                "5_0": "bg-blocks3.png",
+                "5_1": "", // Plain white background for interactive lab
+                "6_0": "bg-geometric1.png",
+                "6_1": "", // Plain white background for interactive lab
+                "7_0": "bg-concrete1.png",
+                "7_1": "", // Plain white background for interactive lab
+                "7_2": "", // Plain white background for interactive lab
+                "8_0": "bg-geometric2.png",
+                "9_0": "bg-blocks4.png"
+            },
+            externalLinks: {
+                presentationAccess: "https://jmfcarvalho.github.io/civ153/aulas/040_centroide/",
+                googleFormsQuiz: "https://docs.google.com/forms/d/e/1FAIpQLSdvJt9S-ZALi2s8CK03x0s9DKY7Lk_f9vPc-WcA0qG4TDUNOw/viewform?usp=header",
+                weeklyAssignment: "https://docs.google.com/forms/d/e/1FAIpQLSc6u_wGY05DUqC7P4qrMyOByMj8mOwVTuO_XUrO6_0oJRfZ1Q/viewform?usp=header",
+                pmsPortal: "https://pms.ufv.br"
+            },
+            qrCodeGenerator: (url, color = "901812") => 
+                `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&color=${color}`
+        };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: STYLES & IMMUTABLE CSS VARIABLES                              -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-bg: #F4F6F5;
+            --pms-card-light: rgba(255, 255, 255, 0.65);
+            --pms-card-dark: rgba(51, 51, 51, 0.70);
+            --pms-text-muted: #444444;
+
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans Narrow', sans-serif;
+
+            --fluid-h1: clamp(2.2rem, 5.0vw, 4.2rem);
+            --fluid-h2: clamp(1.8rem, 3.8vw, 3.0rem);
+            --fluid-h3: clamp(1.4rem, 2.8vw, 2.2rem);
+            --fluid-body: clamp(1.15rem, 1.8vw, 1.55rem);
+            --fluid-meta: clamp(0.95rem, 1.4vw, 1.3rem);
+            --fluid-tag: clamp(0.85rem, 1.2vw, 1.1rem);
+        }
+
+        html, body {
+            width: 100vw; height: 100vh; overflow: hidden;
+            background-color: var(--pms-bg);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 900; color: var(--pms-red); line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.15; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.4; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); color: var(--pms-text-muted); font-weight: 600; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .katex-display {
+            font-size: clamp(1.3rem, 2.6vw, 2.2rem) !important;
+            margin: 0.75rem 0 !important;
+        }
+        .katex { font-size: 1.12em; }
+
+        .card-borderless-glass {
+            border: none !important;
+            background-color: var(--pms-card-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-glass-dark {
+            border: none !important;
+            background-color: var(--pms-card-dark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-borderless-white {
+            border: none !important;
+            background-color: #FFFFFF;
+            box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        .bg-right-fade {
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
+            position: relative;
+        }
+        .bg-right-fade::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--pms-bg) 25%, rgba(244, 246, 245, 0.75) 55%, rgba(244, 246, 245, 0.2) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+            overflow-y: auto;
+        }
+        .slide-screen > * { position: relative; z-index: 2; }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 1.25rem; right: 1.5rem; width: 130px; height: 130px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 44px; height: 44px; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50%; color: #A1A1A1; font-size: 1.3rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; opacity: 0.25; pointer-events: none;
+            transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .control-arrow.nav-up { top: 0; left: 43px; }
+        .control-arrow.nav-down { bottom: 0; left: 43px; }
+        .control-arrow.nav-left { top: 43px; left: 0; }
+        .control-arrow.nav-right { top: 43px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-red); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--pms-red); color: #FFFFFF; transform: scale(1.15); }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5]">
+
+    <!-- TOP PROGRESS BAR -->
+    <div class="fixed top-0 left-0 h-2 bg-[#D1A705] transition-all duration-500 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <!-- RESPONSIVE SLIDE INDICATOR -->
+    <div class="fixed bottom-4 left-4 sm:bottom-6 sm:left-8 text-fluid-meta font-bold text-[#333333] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-md z-[1000] flex items-center space-x-3">
+        <span class="w-3 h-3 rounded-full bg-[#901812]"></span>
+        <span id="slideIndicator">Slide (0,0)</span>
+    </div>
+
+    <!-- TOUCH CONTROLS -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Acima"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Esquerda"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Direita"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Abaixo"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: HTML BODY & SLIDE STRUCTURE                                    -->
+    <!-- ========================================================================= -->
+    <main class="w-full h-full relative">
+
+        <!-- SLIDE (0,0): CAPA -->
+        <div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center gap-4">
+                <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm">
+                    <img id="img-logo-ufv-0-0" alt="UFV Logo" class="h-10 sm:h-12 w-auto">
+                    <div class="h-10 w-[1px] bg-[#DEDEDE]"></div>
+                    <span class="text-fluid-tag text-[#333333]">CIV 153</span>
+                </div>
+                <a id="link-pms-portal-0-0" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <img id="img-logo-pms-0-0" alt="PMS Logo" class="h-12 sm:h-16 w-auto">
+                </a>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full my-auto py-6">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="p-8 sm:p-12 rounded-3xl card-borderless-glass border-l-[16px] border-[#901812]">
+                        <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2">CIV 153 — INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS</span>
+                        <h1 class="text-fluid-h1 mb-4">AULA 04: PROPRIEDADES DAS ÁREAS<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Conceitos Fundamentais, Momento Estático e Centroide</span></h1>
+                        <p class="text-fluid-body text-[#444444]">Momentos de 1ª ordem, inspeção de simetria, formulações analíticas e laboratórios interativos.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white flex flex-col justify-between space-y-6">
+                    <div class="bg-white/85 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                        <img id="qr-presentation-cover-0-0" alt="Acesso aos Slides" class="w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[300px] mx-auto rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhe pelo Smartphone</span>
+                    </div>
+                    <div class="text-center space-y-1">
+                        <span class="text-fluid-tag text-[#D1A705] block">Docente Responsável</span>
+                        <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): EMENTA DA AULA -->
+        <div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">ESTRUTURA PROGRAMÁTICA</span>
+                    <h2 class="text-fluid-h2">Visão Geral da Aula 04</h2>
+                </div>
+                <img id="img-logo-pms-1-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 my-auto w-full py-4">
+                <div class="p-5 rounded-2xl card-borderless-glass space-y-2 flex flex-col justify-between">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-lg w-fit">Módulo 01</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Conceitos Básicos</h3>
+                    <p class="text-fluid-meta text-[#444444]">13 pilares mecânicos: corpo rígido, inércia, vetor, momento e centroides.</p>
+                </div>
+                <div class="p-5 rounded-2xl card-borderless-glass space-y-2 flex flex-col justify-between">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-lg w-fit">Módulo 02</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Momento Estático</h3>
+                    <p class="text-fluid-meta text-[#444444]">Momentos de 1ª ordem ($Q_x, Q_y$) em eixos basais e nulidade centroidal.</p>
+                </div>
+                <div class="p-5 rounded-2xl card-borderless-glass space-y-2 flex flex-col justify-between">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-lg w-fit">Módulo 03</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Centroide</h3>
+                    <p class="text-fluid-meta text-[#444444]">Formulação para retângulos, triângulos e setores circulares.</p>
+                </div>
+                <div class="p-5 rounded-2xl card-borderless-glass space-y-2 flex flex-col justify-between">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-lg w-fit">Módulo 04</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Simetria</h3>
+                    <p class="text-fluid-meta text-[#444444]">Determinação rápida por inspeção: eixos duplos, simples e centro de simetria.</p>
+                </div>
+                <div class="p-5 rounded-2xl card-borderless-glass space-y-2 flex flex-col justify-between">
+                    <span class="text-fluid-tag bg-[#901812] text-white px-2.5 py-1 rounded-lg w-fit">Módulo 05</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Áreas Compostas</h3>
+                    <p class="text-fluid-meta text-[#444444]">Decomposição paramétrica e resolução tabular com furos e aberturas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): CONCEITOS FUNDAMENTAIS -->
+        <div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">FUNDAMENTOS TEÓRICOS</span>
+                    <h2 class="text-fluid-h2">Conceitos Fundamentais da Mecânica</h2>
+                </div>
+                <img id="img-logo-pms-2-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Axiomas de Espaço e Massa</h3>
+                    <p class="text-fluid-body text-[#444444]">O espaço euclidiano tridimensional define a posição geométrica das estruturas, ao passo que os modelos de <strong>Partícula</strong> e <strong>Corpo Rígido</strong> viabilizam o equilíbrio estático.</p>
+                    <div class="p-4 bg-white/75 backdrop-blur-md rounded-2xl border-l-4 border-[#901812]">
+                        <p class="text-fluid-meta text-[#333333]"><strong>Centro de Gravidade vs. Centroide:</strong> O Centro de Gravidade vincula-se ao campo de forças de atração da massa ($W = mg$), enquanto o Centroide é uma propriedade geométrica intrínseca de uma área ou volume.</p>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">LABORATÓRIO DISPONÍVEL (PRESSIONE ↓)</span>
+                        <h3 class="text-fluid-h3 text-white mb-3">Glossário Interativo dos 13 Conceitos</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Acesse o catálogo com as definições axiais, formulações vetoriais e representações matemáticas.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Explorar Glossário dos 13 Conceitos (Press ↓) <i class="fa-solid fa-layer-group ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1): LAB GLOSSÁRIO INTERATIVO (FUNDO BRANCO) -->
+        <div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Glossário Interativo dos 13 Pilares</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-5 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Selecione o Conceito</h3>
+                    <div class="flex flex-wrap gap-2 max-h-[300px] overflow-y-auto" id="glossary-tabs-2-1"></div>
+                </div>
+
+                <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4 min-h-[280px] flex flex-col justify-center">
+                    <div class="flex items-center gap-3">
+                        <span id="glossary-icon-2-1" class="text-3xl text-[#901812]"></span>
+                        <h3 id="glossary-title-2-1" class="text-fluid-h2 text-[#333333]"></h3>
+                    </div>
+                    <p id="glossary-def-2-1" class="text-fluid-body text-[#444444]"></p>
+                    <div id="glossary-formula-2-1" class="p-4 bg-white rounded-2xl border border-black/10 text-fluid-h3 text-[#901812] text-center font-mono"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): MOMENTO ESTÁTICO DE ÁREA -->
+        <div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MOMENTO DE 1ª ORDEM</span>
+                    <h2 class="text-fluid-h2">Momento Estático de Área ($Q$)</h2>
+                </div>
+                <img id="img-logo-pms-3-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Formulação Integral</h3>
+                    <p class="text-fluid-body text-[#444444]">O momento estático de uma área plana $A$ em relação a um eixo quantifica a distribuição dessa área ponderada pela distância perpendicular:</p>
+                    <div class="grid grid-cols-2 gap-4 my-2">
+                        <div class="bg-white/75 p-4 rounded-2xl text-center shadow-inner">
+                            <span class="text-fluid-tag text-[#901812] block">Em relação a X:</span>
+                            $$Q_x = \int_A y \, dA$$
+                        </div>
+                        <div class="bg-white/75 p-4 rounded-2xl text-center shadow-inner">
+                            <span class="text-fluid-tag text-[#901812] block">Em relação a Y:</span>
+                            $$Q_y = \int_A x \, dA$$
+                        </div>
+                    </div>
+                    <p class="text-fluid-meta text-[#444444]"><strong>Propriedade Axial:</strong> O momento estático calculado em relação a um eixo centroidal é identicamente <strong>nulo</strong> ($Q_{\bar{x}} = 0$).</p>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">SIMULADOR INTERATIVO (PRESSIONE ↓)</span>
+                        <h3 class="text-fluid-h3 text-white mb-3">Calculadora de Momento Estático</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Varie dimensões de retângulos e verifique o comportamento do momento estático em relação aos eixos basal e centroidal.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Lançar Simulador de Retângulo (Press ↓) <i class="fa-solid fa-flask ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1): LAB MOMENTO ESTÁTICO (FUNDO BRANCO) -->
+        <div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Retângulo: Eixo Basal vs. Centroidal</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Parâmetros da Seção</h3>
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta flex justify-between"><span>Base ($b$):</span><span id="lbl-rect-b-3-1" class="text-[#901812] font-bold">10 cm</span></label>
+                        <input type="range" id="input-rect-b-3-1" min="2" max="30" value="10" class="w-full accent-[#901812] h-4" oninput="atualizarMomentoRetangulo_3_1()">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-fluid-meta flex justify-between"><span>Altura ($h$):</span><span id="lbl-rect-h-3-1" class="text-[#901812] font-bold">20 cm</span></label>
+                        <input type="range" id="input-rect-h-3-1" min="2" max="40" value="20" class="w-full accent-[#901812] h-4" oninput="atualizarMomentoRetangulo_3_1()">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-white rounded-2xl border border-black/10">
+                            <span class="text-fluid-tag text-[#901812] block">Eixo Basal ($x$): $Q_x = \frac{b h^2}{2}$</span>
+                            <span id="res-qx-basal-3-1" class="text-fluid-h2 text-[#333333] font-mono mt-2 block">1000.0 cm³</span>
+                        </div>
+                        <div class="p-4 bg-white rounded-2xl border border-black/10">
+                            <span class="text-fluid-tag text-[#D1A705] block">Eixo Centroidal ($\bar{x}$): $Q_{\bar{x}} = 0$</span>
+                            <span class="text-fluid-h2 text-[#901812] font-mono mt-2 block">0.0 cm³ (Nulo)</span>
+                        </div>
+                    </div>
+                    <div class="w-full h-44 bg-white rounded-2xl border border-black/10 flex items-center justify-center p-2">
+                        <svg id="svg-rect-3-1" viewBox="0 0 400 160" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): CENTROIDE -->
+        <div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">CENTRO GEOMÉTRICO</span>
+                    <h2 class="text-fluid-h2">Centroide de Figuras Planas</h2>
+                </div>
+                <img id="img-logo-pms-4-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Definição Operacional</h3>
+                    <p class="text-fluid-body text-[#444444]">As coordenadas centroidais $(\bar{x}, \bar{y})$ representam o baricentro de área e são calculadas pela razão entre os momentos estáticos e a área total $A$:</p>
+                    <div class="bg-white/75 p-6 rounded-2xl text-center shadow-inner my-2">
+                        $$\bar{x} = \frac{Q_y}{A} = \frac{\int x \, dA}{A}, \quad \bar{y} = \frac{Q_x}{A} = \frac{\int y \, dA}{A}$$
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">GALERIA TÉCNICA (PRESSIONE ↓)</span>
+                        <h3 class="text-fluid-h3 text-white mb-3">Figuras Elementares</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Acesse os dados paramétricos, centroides e formulações para retângulos, triângulos e setores circulares.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Abrir Galeria de Figuras (Press ↓) <i class="fa-solid fa-shapes ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1): LAB GALERIA DE FIGURAS (FUNDO BRANCO) -->
+        <div id="slide-4-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Formulário de Figuras Elementares</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Selecione a Geometria</h3>
+                    <div class="flex flex-col gap-2" id="controls-figuras-4-1"></div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <div class="flex justify-between items-center border-b border-black/10 pb-2">
+                        <h3 id="figura-title-4-1" class="text-fluid-h2 text-[#901812]"></h3>
+                        <span id="figura-tag-4-1" class="text-fluid-tag bg-[#901812] text-white px-3 py-1 rounded-full"></span>
+                    </div>
+                    <p id="figura-desc-4-1" class="text-fluid-body text-[#444444]"></p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-white rounded-2xl border border-black/10">
+                            <span class="text-fluid-tag text-[#333333] block">Área ($A$):</span>
+                            <div id="figura-area-4-1" class="text-fluid-h3 text-[#901812] mt-1"></div>
+                        </div>
+                        <div class="p-4 bg-white rounded-2xl border border-black/10">
+                            <span class="text-fluid-tag text-[#333333] block">Coordenadas $(\bar{x}, \bar{y})$:</span>
+                            <div id="figura-coord-4-1" class="text-fluid-h3 text-[#901812] mt-1"></div>
+                        </div>
+                    </div>
+                    <div class="w-full h-44 bg-white rounded-2xl border border-black/10 flex items-center justify-center p-2">
+                        <svg id="figura-svg-4-1" viewBox="0 0 350 160" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): SIMETRIA E INSPEÇÃO -->
+        <div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">INSPEÇÃO GEOMÉTRICA</span>
+                    <h2 class="text-fluid-h2">Simetria Aplicada</h2>
+                </div>
+                <img id="img-logo-pms-5-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-3">
+                    <div class="p-4 bg-white/75 rounded-2xl border-l-4 border-[#901812]">
+                        <h3 class="text-fluid-h3 text-[#333333]">1. Dupla Simetria</h3>
+                        <p class="text-fluid-meta text-[#444444]">Seções com dois eixos ortogonais de simetria (ex.: Perfil I): centroide na interseção exata.</p>
+                    </div>
+                    <div class="p-4 bg-white/75 rounded-2xl border-l-4 border-[#D1A705]">
+                        <h3 class="text-fluid-h3 text-[#333333]">2. Eixo Simples</h3>
+                        <p class="text-fluid-meta text-[#444444]">Um eixo de simetria (ex.: Perfil T): centroide pertence compulsoriamente a esta reta.</p>
+                    </div>
+                    <div class="p-4 bg-white/75 rounded-2xl border-l-4 border-[#333333]">
+                        <h3 class="text-fluid-h3 text-[#333333]">3. Ponto de Simetria</h3>
+                        <p class="text-fluid-meta text-[#444444]">Geometrias antissimétricas (ex.: Perfil Z): centroide coincide com o ponto central.</p>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">VISUALIZADOR (PRESSIONE ↓)</span>
+                        <h3 class="text-fluid-h3 text-white mb-3">Análise Gráfica de Perfis Estruturais</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Inspecione visualmente perfis I, T e Z identificando seus eixos de simetria e baricentros.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Lançar Visualizador de Simetria (Press ↓) <i class="fa-solid fa-eye ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,1): LAB SIMETRIA (FUNDO BRANCO) -->
+        <div id="slide-5-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Inspeção de Perfis Estruturais</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-3">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Selecione o Caso</h3>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="selecionarSimetria_5_1('dupla')" id="btn-sym-dupla-5-1" class="py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold text-left shadow-sm">1. Dupla Simetria (Perfil I)</button>
+                        <button onclick="selecionarSimetria_5_1('eixo')" id="btn-sym-eixo-5-1" class="py-3 px-4 bg-white text-[#333333] rounded-xl text-fluid-tag font-bold text-left border border-black/10">2. Eixo Simples (Perfil T)</button>
+                        <button onclick="selecionarSimetria_5_1('ponto')" id="btn-sym-ponto-5-1" class="py-3 px-4 bg-white text-[#333333] rounded-xl text-fluid-tag font-bold text-left border border-black/10">3. Ponto de Simetria (Perfil Z)</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <h3 id="sym-title-5-1" class="text-fluid-h2 text-[#901812]"></h3>
+                    <p id="sym-desc-5-1" class="text-fluid-body text-[#444444]"></p>
+                    <div class="w-full h-52 bg-white rounded-2xl border border-black/10 flex items-center justify-center p-2">
+                        <svg id="sym-svg-5-1" viewBox="0 0 400 200" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): ÁREAS COMPOSTAS -->
+        <div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">MÉTODOS DISCRETOS</span>
+                    <h2 class="text-fluid-h2">Centroide de Áreas Compostas</h2>
+                </div>
+                <img id="img-logo-pms-6-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Formulação Discreta</h3>
+                    <p class="text-fluid-body text-[#444444]">A seção é discretizada em subáreas elementares $A_i$ de centroides conhecidos $(\bar{x}_i, \bar{y}_i)$:</p>
+                    <div class="bg-white/75 p-6 rounded-2xl text-center shadow-inner my-2">
+                        $$\bar{X} = \frac{\sum A_i \cdot \bar{x}_i}{\sum A_i}, \quad \bar{Y} = \frac{\sum A_i \cdot \bar{y}_i}{\sum A_i}$$
+                    </div>
+                    <p class="text-fluid-meta text-[#901812]"><strong>Aberturas e Furos:</strong> As áreas subtraídas devem ser computadas com valor negativo ($-A_i$).</p>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">CALCULADORA PARAMÉTRICA (PRESSIONE ↓)</span>
+                        <h3 class="text-fluid-h3 text-white mb-3">Montador Interativo de Perfil T</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Ajuste espessuras e larguras de mesa/alma com atualização em tempo real da tabela de centroide.</p>
+                    </div>
+                    <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[52px]">
+                        Lançar Montador de Perfil T (Press ↓) <i class="fa-solid fa-calculator ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,1): LAB PERFIL T (FUNDO BRANCO) -->
+        <div id="slide-6-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Calculadora Paramétrica: Perfil T</h2>
+                </div>
+                <button onclick="moveInGrid(0, -1)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar à Teoria
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-4 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-3">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Geometria da Seção</h3>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta flex justify-between"><span>Largura Mesa ($b_f$):</span><span id="lbl-tf-bf-6-1" class="text-[#901812] font-bold">20 cm</span></label>
+                        <input type="range" id="input-tf-bf-6-1" min="10" max="40" value="20" class="w-full accent-[#901812] h-3" oninput="calcularPerfilT_6_1()">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta flex justify-between"><span>Espessura Mesa ($t_f$):</span><span id="lbl-tf-tf-6-1" class="text-[#901812] font-bold">4 cm</span></label>
+                        <input type="range" id="input-tf-tf-6-1" min="2" max="10" value="4" class="w-full accent-[#901812] h-3" oninput="calcularPerfilT_6_1()">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta flex justify-between"><span>Altura Alma ($h_w$):</span><span id="lbl-tf-hw-6-1" class="text-[#901812] font-bold">20 cm</span></label>
+                        <input type="range" id="input-tf-hw-6-1" min="10" max="40" value="20" class="w-full accent-[#901812] h-3" oninput="calcularPerfilT_6_1()">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta flex justify-between"><span>Espessura Alma ($t_w$):</span><span id="lbl-tf-tw-6-1" class="text-[#901812] font-bold">4 cm</span></label>
+                        <input type="range" id="input-tf-tw-6-1" min="2" max="10" value="4" class="w-full accent-[#901812] h-3" oninput="calcularPerfilT_6_1()">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-3">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#901812] text-white">
+                                    <th class="p-2 rounded-tl-xl">Elemento</th>
+                                    <th class="p-2">Área $A_i$ (cm²)</th>
+                                    <th class="p-2">$\bar{y}_i$ (cm)</th>
+                                    <th class="p-2 rounded-tr-xl">$A_i \cdot \bar{y}_i$ (cm³)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-black/10 bg-white">
+                                <tr>
+                                    <td class="p-2 font-bold text-[#901812]">1. Mesa ($A_1$)</td>
+                                    <td id="t-a1-6-1" class="p-2">80.0</td>
+                                    <td id="t-y1-6-1" class="p-2">22.0</td>
+                                    <td id="t-ay1-6-1" class="p-2">1760.0</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-bold text-[#901812]">2. Alma ($A_2$)</td>
+                                    <td id="t-a2-6-1" class="p-2">80.0</td>
+                                    <td id="t-y2-6-1" class="p-2">10.0</td>
+                                    <td id="t-ay2-6-1" class="p-2">800.0</td>
+                                </tr>
+                                <tr class="bg-[#D1A705]/20 font-bold text-[#333333]">
+                                    <td class="p-2 rounded-bl-xl">Total ($\sum$)</td>
+                                    <td id="t-atotal-6-1" class="p-2">160.0</td>
+                                    <td class="p-2">-</td>
+                                    <td id="t-aytotal-6-1" class="p-2 rounded-br-xl">2560.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-3 bg-[#333333] text-white rounded-2xl flex justify-between items-center">
+                        <span class="text-fluid-tag text-[#D1A705]">Posição do Centroide ($\bar{Y}$ da base):</span>
+                        <span id="t-res-ybar-6-1" class="text-fluid-h2 font-mono text-white">16.00 cm</span>
+                    </div>
+                    <div class="w-full h-36 bg-white rounded-2xl border border-black/10 flex items-center justify-center p-2">
+                        <svg id="svg-tprofile-6-1" viewBox="0 0 350 180" class="w-full h-full"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): EXERCÍCIOS RESOLVIDOS -->
+        <div id="slide-7-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">APLICAÇÃO PRÁTICA</span>
+                    <h2 class="text-fluid-h2">Exercícios Resolvidos</h2>
+                </div>
+                <img id="img-logo-pms-7-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-4">
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333]">Roteiro Metodológico</h3>
+                    <ol class="list-decimal list-inside text-fluid-body text-[#444444] space-y-2 font-medium">
+                        <li>Definir eixos cartesianos ortogonais de referência ($x, y$).</li>
+                        <li>Identificar eixos de simetria para anular incógnitas.</li>
+                        <li>Decompor o domínio em figuras elementares conhecidas.</li>
+                        <li>Tabular $A_i$, coordenadas $(\bar{x}_i, \bar{y}_i)$ e produtos $A_i \bar{x}_i, A_i \bar{y}_i$.</li>
+                        <li>Calcular $\bar{X} = \frac{\sum A_i \bar{x}_i}{\sum A_i}$ e $\bar{Y} = \frac{\sum A_i \bar{y}_i}{\sum A_i}$.</li>
+                    </ol>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white space-y-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-fluid-tag text-[#D1A705] block mb-2">ESTUDOS DE CASO DETALHADOS</span>
+                        <h3 class="text-fluid-h3 text-white mb-2">Bifurcações de Exercícios</h3>
+                        <p class="text-fluid-body text-[#DEDEDE]">Acesse a dedução literal da cantoneira L e a decomposição com área negativa em placa com furo circular.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="moveInGrid(0, 1)" class="w-full py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md min-h-[48px]">
+                            Exercício 1: Cantoneira L Literal (Press ↓) <i class="fa-solid fa-angle-right ml-1"></i>
+                        </button>
+                        <button onclick="moveInGrid(0, 2)" class="w-full py-3 bg-white/15 hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-tag shadow-md min-h-[48px]">
+                            Exercício 2: Placa com Furo Circular (Press ↓↓) <i class="fa-solid fa-angle-down ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,1): LAB EXERCÍCIO 1 - CANTONEIRA L (FUNDO BRANCO) -->
+        <div id="slide-7-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">EXERCÍCIO RESOLVIDO 01 (RAMIFICAÇÃO Y=1)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Cantoneira L de Abas Iguais</h2>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="moveInGrid(0, 1)" class="px-4 py-2.5 bg-[#901812] text-white font-bold rounded-2xl text-fluid-tag hover:bg-[#D1A705] hover:text-[#333333] transition-colors">
+                        Próximo Ex. <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                    <button onclick="moveInGrid(0, -1)" class="px-4 py-2.5 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl text-fluid-tag hover:bg-[#901812] hover:text-white transition-colors border border-[#901812]/20">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> Retornar
+                    </button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-12 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <h3 class="text-fluid-h3 text-[#901812]">Solução Literal Parametrizada</h3>
+                    <p class="text-fluid-body text-[#444444]">Para abas de comprimento $a$ e espessura $t$, a simetria diagonal em $45^\circ$ impõe $\bar{X} = \bar{Y}$.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-white rounded-2xl border border-black/10 space-y-1">
+                            <span class="text-fluid-tag text-[#333333] font-bold block">1. Aba Horizontal:</span>
+                            <p class="text-fluid-meta text-[#444444]">$A_1 = a \cdot t, \quad \bar{y}_1 = t / 2$</p>
+                            <span class="text-fluid-tag text-[#333333] font-bold block mt-2">2. Aba Vertical:</span>
+                            <p class="text-fluid-meta text-[#444444]">$A_2 = (a - t) \cdot t, \quad \bar{y}_2 = \frac{a + t}{2}$</p>
+                        </div>
+                        <div class="p-4 bg-white rounded-2xl border border-black/10 flex flex-col justify-center text-center">
+                            <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1">Coordenada Centroidal Final:</span>
+                            $$\bar{X} = \bar{Y} = \frac{a^2}{2(2a - t)}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,2): LAB EXERCÍCIO 2 - PLACA COM FURO (FUNDO BRANCO) -->
+        <div id="slide-7-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 bg-white">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705]">EXERCÍCIO RESOLVIDO 02 (RAMIFICAÇÃO Y=2)</span>
+                    <h2 class="text-fluid-h2 text-[#333333]">Placa Retangular com Furo Circular</h2>
+                </div>
+                <button onclick="moveInGrid(0, -2)" class="px-5 py-3 bg-[#F4F6F5] text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px]">
+                    <i class="fa-solid fa-arrow-up mr-2"></i> Retornar aos Exercícios
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-12 p-6 rounded-3xl card-borderless-white bg-[#F4F6F5] space-y-4">
+                    <p class="text-fluid-body text-[#444444]">Placa cheia de $30 \times 20$ cm com furo circular de raio $r = 5$ cm posicionado em $(10, 10)$ cm:</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-fluid-meta border-collapse">
+                            <thead>
+                                <tr class="bg-[#901812] text-white">
+                                    <th class="p-2.5 rounded-tl-xl">Subdomínio</th>
+                                    <th class="p-2.5">Área $A_i$ (cm²)</th>
+                                    <th class="p-2.5">$\bar{x}_i$ (cm)</th>
+                                    <th class="p-2.5">$A_i \bar{x}_i$ (cm³)</th>
+                                    <th class="p-2.5">$\bar{y}_i$ (cm)</th>
+                                    <th class="p-2.5 rounded-tr-xl">$A_i \bar{y}_i$ (cm³)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-black/10 bg-white">
+                                <tr>
+                                    <td class="p-2 font-bold text-[#333333]">1. Placa Cheia</td>
+                                    <td class="p-2">600.00</td>
+                                    <td class="p-2">15.00</td>
+                                    <td class="p-2">9000.00</td>
+                                    <td class="p-2">10.00</td>
+                                    <td class="p-2">6000.00</td>
+                                </tr>
+                                <tr class="text-[#901812] font-semibold">
+                                    <td class="p-2 font-bold">2. Furo Circular ($-$)</td>
+                                    <td class="p-2">-78.54</td>
+                                    <td class="p-2">10.00</td>
+                                    <td class="p-2">-785.40</td>
+                                    <td class="p-2">10.00</td>
+                                    <td class="p-2">-785.40</td>
+                                </tr>
+                                <tr class="bg-[#D1A705]/20 font-bold text-[#333333]">
+                                    <td class="p-2 rounded-bl-xl">Total ($\sum$)</td>
+                                    <td class="p-2">521.46</td>
+                                    <td class="p-2">-</td>
+                                    <td class="p-2">8214.60</td>
+                                    <td class="p-2">-</td>
+                                    <td class="p-2 rounded-br-xl">5214.60</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-[#333333] text-white rounded-2xl text-center">
+                            $$\bar{X} = \frac{8214.60}{521.46} = 15.75 \text{ cm}$$
+                        </div>
+                        <div class="p-4 bg-[#333333] text-white rounded-2xl text-center">
+                            $$\bar{Y} = \frac{5214.60}{521.46} = 10.00 \text{ cm}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (8,0): QUIZ SÍNCRONO -->
+        <div id="slide-8-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">AVALIAÇÃO SÍNCRONA</span>
+                    <h2 class="text-fluid-h2">Quiz da Aula 04</h2>
+                </div>
+                <img id="img-logo-pms-8-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-6 p-6 sm:p-10 rounded-3xl card-borderless-glass space-y-6">
+                    <span class="text-fluid-tag text-[#D1A705]">GOOGLE FORMS AO VIVO</span>
+                    <h3 class="text-fluid-h3 text-[#333333]">Verificação de Conceito e Presença</h3>
+                    <p class="text-fluid-body text-[#444444]">Escaneie o QR Code diretamente pela câmera do celular ou clique no botão abaixo para abrir o formulário em uma nova aba.</p>
+                    <div class="pt-2">
+                        <a id="btn-quiz-direct-8-0" target="_blank" class="w-full py-4 px-8 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-square-poll-vertical text-2xl text-[#D1A705]"></i>
+                            <span>Abrir Quiz no Google Forms</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-lg ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">ESCANEIE PARA PARTICIPAR</span>
+                    <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[260px] sm:max-w-[300px] mx-auto shadow-lg">
+                        <img id="qr-quiz-forms-8-0" alt="Quiz QR Code" class="w-full h-auto rounded-lg">
+                    </div>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Respostas computadas em tempo real durante a aula.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (9,0): ENCERRAMENTO E EXERCÍCIOS OFF-CLASS -->
+        <div id="slide-9-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12">
+            <header class="w-full flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-fluid-tag text-[#901812]">ENCERRAMENTO</span>
+                    <h2 class="text-fluid-h2">Referências e Tarefa Semanal</h2>
+                </div>
+                <img id="img-logo-pms-9-0" alt="PMS Logo" class="h-10 sm:h-12 w-auto">
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-4 items-center">
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass space-y-4">
+                    <h3 class="text-fluid-h3 text-[#333333] border-b border-black/10 pb-2">Próximos Passos (Aula 05)</h3>
+                    <p class="text-fluid-body text-[#444444]">Na próxima aula estudaremos os <strong>Momentos de Segunda Ordem</strong>: Momento de Inércia ($I_x, I_y$), Produto de Inércia ($I_{xy}$) e o Teorema dos Eixos Paralelos (Steiner).</p>
+                    <div class="space-y-2 pt-2">
+                        <p class="text-fluid-meta text-[#333333]"><strong>Referência Bibliográfica:</strong></p>
+                        <p class="text-fluid-meta text-[#444444]">BEER, F. P. et al. <em>Mecânica dos Materiais</em>. 7ª Ed. AMGH, 2021. Cap. 7.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-borderless-glass-dark text-white text-center space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block">ENTREGA OBRIGATÓRIA</span>
+                    <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[260px] sm:max-w-[300px] mx-auto shadow-lg">
+                        <img id="qr-assignment-forms-9-0" alt="Exercícios Off-Class QR Code" class="w-full h-auto rounded-lg">
+                    </div>
+                    <h3 class="text-fluid-h3 text-white mb-1">Submissão Lista #04</h3>
+                    <a id="btn-assignment-direct-9-0" target="_blank" class="inline-flex items-center space-x-2 text-fluid-body font-bold text-[#D1A705] hover:underline pt-2">
+                        <span>Acessar Formulário de Entrega</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: JAVASCRIPT LOGIC, ANIMATIONS & INTERACTIVITY                  -->
+    <!-- ========================================================================= -->
+    <script>
+        const slideGrid = { 
+            '0,0': 'slide-0-0',
+            '1,0': 'slide-1-0',
+            '2,0': 'slide-2-0',
+            '2,1': 'slide-2-1',
+            '3,0': 'slide-3-0',
+            '3,1': 'slide-3-1',
+            '4,0': 'slide-4-0',
+            '4,1': 'slide-4-1',
+            '5,0': 'slide-5-0',
+            '5,1': 'slide-5-1',
+            '6,0': 'slide-6-0',
+            '6,1': 'slide-6-1',
+            '7,0': 'slide-7-0',
+            '7,1': 'slide-7-1',
+            '7,2': 'slide-7-2',
+            '8,0': 'slide-8-0',
+            '9,0': 'slide-9-0'
+        };
+
+        let currentX = 0, currentY = 0;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function initializeAssets() {
+            // Logos
+            ['0-0', '1-0', '2-0', '3-0', '4-0', '5-0', '6-0', '7-0', '8-0', '9-0'].forEach(id => {
+                const el = document.getElementById(`img-logo-pms-${id}`);
+                if (el) el.src = COURSE_ASSETS.logos.pms;
+            });
+            const ufvLogo = document.getElementById('img-logo-ufv-0-0');
+            if (ufvLogo) ufvLogo.src = COURSE_ASSETS.logos.ufv;
+
+            const portalLink = document.getElementById('link-pms-portal-0-0');
+            if (portalLink) portalLink.href = COURSE_ASSETS.externalLinks.pmsPortal;
+
+            // Slide Backgrounds
+            Object.keys(slideGrid).forEach(key => {
+                const bgKey = key.replace(',', '_');
+                const slideEl = document.getElementById(slideGrid[key]);
+                const bgUrl = COURSE_ASSETS.slideBackgrounds[bgKey];
+
+                if (slideEl) {
+                    if (bgUrl && bgUrl.trim() !== "") {
+                        slideEl.style.backgroundImage = `url('${bgUrl}')`;
+                        slideEl.classList.add('bg-right-fade');
+                    } else {
+                        slideEl.style.backgroundImage = 'none';
+                        slideEl.classList.remove('bg-right-fade');
+                    }
+                }
+            });
+
+            // QR Codes and Direct Links
+            const qrCover = document.getElementById('qr-presentation-cover-0-0');
+            if (qrCover) qrCover.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.presentationAccess);
+
+            const qrQuiz = document.getElementById('qr-quiz-forms-8-0');
+            if (qrQuiz) qrQuiz.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.googleFormsQuiz);
+
+            const btnQuiz = document.getElementById('btn-quiz-direct-8-0');
+            if (btnQuiz) btnQuiz.href = COURSE_ASSETS.externalLinks.googleFormsQuiz;
+
+            const qrAssign = document.getElementById('qr-assignment-forms-9-0');
+            if (qrAssign) qrAssign.src = COURSE_ASSETS.qrCodeGenerator(COURSE_ASSETS.externalLinks.weeklyAssignment);
+
+            const btnAssign = document.getElementById('btn-assignment-direct-9-0');
+            if (btnAssign) btnAssign.href = COURSE_ASSETS.externalLinks.weeklyAssignment;
+        }
+
+        function updateUI() {
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const totalH = keysH.length;
+            document.getElementById('progressBar').style.width = `${(currentX / Math.max(totalH - 1, 1)) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX}, ${currentY})`;
+            
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                cur.classList.remove('slide-active');
+                
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                currentX = nx; currentY = ny;
+                updateUI();
+
+                if (window.renderMathInElement) {
+                    renderMathInElement(nxt, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        /* =====================================================================
+           GLOSSARY LAB (SLIDE 2,1)
+           ===================================================================== */
+        const glossaryData_2_1 = [
+            { name: 'Espaço', icon: 'fa-cube', def: 'Domínio tridimensional contínuo e ilimitado onde as posições são definidas em sistema cartesiano.', form: '$$\\vec{r} = (x, y, z)$$' },
+            { name: 'Comprimento', icon: 'fa-ruler', def: 'Dimensão física de uma linha ou distância espacial linear entre dois pontos.', form: '$$L = \\Delta x \\quad [m]$$' },
+            { name: 'Posição', icon: 'fa-location-dot', def: 'Localização exata de um ponto no espaço relativa a um referencial fixo.', form: '$$\\mathbf{P} = (x_P, y_P, z_P)$$' },
+            { name: 'Matéria', icon: 'fa-atom', def: 'Substância física que ocupa lugar no espaço e possui densidade e massa.', form: '$$\\rho = \\frac{dm}{dV}$$' },
+            { name: 'Corpo Rígido', icon: 'fa-shapes', def: 'Corpo no qual a distância mútua entre quaisquer dois pontos permanece constante sob carregamento.', form: '$$d(P_1, P_2) = \\text{constante}$$' },
+            { name: 'Inércia', icon: 'fa-gauge-high', def: 'Propriedade da matéria de resistir a alterações no seu estado de repouso ou movimento retilíneo.', form: '$$\\sum \\vec{F} = 0 \\implies \\vec{v} = \\text{const.}$$' },
+            { name: 'Massa', icon: 'fa-weight-hanging', def: 'Medida quantitativa escalar da inércia e da quantidade de matéria de um corpo.', form: '$$m \\quad [kg]$$' },
+            { name: 'Força', icon: 'fa-arrow-right', def: 'Ação vetorial sobre um corpo capaz de produzir aceleração ou deformação física.', form: '$$\\vec{F} = m \\cdot \\vec{a}$$' },
+            { name: 'Peso', icon: 'fa-arrow-down', def: 'Força gravitacional exercida pela atração da Terra sobre a massa.', form: '$$\\vec{P} = m \\cdot \\vec{g}$$' },
+            { name: 'Vetor', icon: 'fa-arrow-trend-up', def: 'Entidade matemática caracterizada por módulo, direção, sentido e ponto de aplicação.', form: '$$\\vec{V} = V_x \\hat{i} + V_y \\hat{j} + V_z \\hat{k}$$' },
+            { name: 'Força Vetorial', icon: 'fa-arrows-to-dot', def: 'Grandezas de força que se combinam vetorialmente via regra do paralelogramo.', form: '$$\\vec{R} = \\sum \\vec{F}_i$$' },
+            { name: 'Momento de Força', icon: 'fa-rotate-right', def: 'Medida da tendência de rotação provocada por uma força em torno de um polo.', form: '$$\\vec{M}_O = \\vec{r} \\times \\vec{F}$$' },
+            { name: 'CG vs Centroide', icon: 'fa-crosshairs', def: 'O CG pondera o peso e massa ($W=mg$), enquanto o Centroide é uma propriedade puramente geométrica de área.', form: '$$\\bar{x} = \\frac{\\int x \\, dA}{A}$$' }
+        ];
+
+        let activeGlossary_2_1 = 0;
+
+        function renderGlossary_2_1() {
+            const tabs = document.getElementById('glossary-tabs-2-1');
+            if (!tabs) return;
+            tabs.innerHTML = '';
+            glossaryData_2_1.forEach((item, idx) => {
+                const btn = document.createElement('button');
+                btn.innerText = item.name;
+                btn.className = (idx === activeGlossary_2_1)
+                    ? "py-2 px-3 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold shadow-sm"
+                    : "py-2 px-3 bg-white text-[#333333] hover:bg-[#D1A705] hover:text-[#333333] rounded-xl text-fluid-tag font-bold border border-black/10";
+                btn.onclick = () => { activeGlossary_2_1 = idx; renderGlossary_2_1(); };
+                tabs.appendChild(btn);
+            });
+
+            const cur = glossaryData_2_1[activeGlossary_2_1];
+            document.getElementById('glossary-icon-2-1').className = `fa-solid ${cur.icon} text-3xl text-[#901812]`;
+            document.getElementById('glossary-title-2-1').innerText = cur.name;
+            document.getElementById('glossary-def-2-1').innerText = cur.def;
+            const fEl = document.getElementById('glossary-formula-2-1');
+            fEl.innerText = cur.form;
+            if (window.katex) katex.render(cur.form.replace(/\$\$/g, ''), fEl, { displayMode: true, throwOnError: false });
+        }
+
+        /* =====================================================================
+           RECTANGLE MOMENT LAB (SLIDE 3,1)
+           ===================================================================== */
+        function atualizarMomentoRetangulo_3_1() {
+            const b = parseFloat(document.getElementById('input-rect-b-3-1').value);
+            const h = parseFloat(document.getElementById('input-rect-h-3-1').value);
+            document.getElementById('lbl-rect-b-3-1').innerText = `${b} cm`;
+            document.getElementById('lbl-rect-h-3-1').innerText = `${h} cm`;
+
+            const Qx = (b * Math.pow(h, 2)) / 2;
+            document.getElementById('res-qx-basal-3-1').innerText = `${Qx.toFixed(1)} cm³`;
+
+            const svg = document.getElementById('svg-rect-3-1');
+            if (svg) {
+                const scaleX = 180 / 30, scaleY = 90 / 40;
+                const w = b * scaleX, ht = h * scaleY;
+                const x0 = 100 - w / 2, y0 = 130 - ht;
+
+                svg.innerHTML = `
+                    <line x1="20" y1="130" x2="380" y2="130" stroke="#333333" stroke-width="2" stroke-dasharray="4,4" />
+                    <text x="350" y="122" fill="#333333" font-size="11" font-weight="bold">Eixo Basal x</text>
+                    <line x1="20" y1="${130 - ht/2}" x2="380" y2="${130 - ht/2}" stroke="#D1A705" stroke-width="2" stroke-dasharray="3,3" />
+                    <text x="340" y="${122 - ht/2}" fill="#D1A705" font-size="11" font-weight="bold">Eixo Centroidal x̄</text>
+                    <rect x="${x0}" y="${y0}" width="${w}" height="${ht}" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="100" cy="${130 - ht/2}" r="5" fill="#901812" />
+                    <text x="110" y="${126 - ht/2}" fill="#901812" font-size="11" font-weight="bold">C (Centroide)</text>
+                `;
+            }
+        }
+
+        /* =====================================================================
+           FIGURES GALLERY LAB (SLIDE 4,1)
+           ===================================================================== */
+        const figurasData_4_1 = [
+            {
+                name: "Retângulo", tag: "Base b × Altura h",
+                desc: "Seção com simetria retangular ortogonal paralela às arestas.",
+                area: "$$A = b \\cdot h$$", coord: "$$\\bar{x} = \\frac{b}{2}, \\quad \\bar{y} = \\frac{h}{2}$$",
+                draw: () => `
+                    <rect x="100" y="25" width="150" height="100" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="175" cy="75" r="5" fill="#901812" />
+                    <text x="185" y="80" fill="#901812" font-weight="bold" font-size="12">C (b/2, h/2)</text>
+                `
+            },
+            {
+                name: "Triângulo Retângulo", tag: "Base b × Altura h",
+                desc: "Centroide localizado a um terço das faces que formam o ângulo reto.",
+                area: "$$A = \\frac{b \\cdot h}{2}$$", coord: "$$\\bar{x} = \\frac{b}{3}, \\quad \\bar{y} = \\frac{h}{3}$$",
+                draw: () => `
+                    <polygon points="100,125 250,125 100,25" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="150" cy="91.6" r="5" fill="#901812" />
+                    <text x="160" y="96" fill="#901812" font-weight="bold" font-size="12">C (b/3, h/3)</text>
+                `
+            },
+            {
+                name: "Semicírculo", tag: "Raio r",
+                desc: "Simetria em relação ao eixo vertical perpendicular à base.",
+                area: "$$A = \\frac{\\pi r^2}{2}$$", coord: "$$\\bar{x} = 0, \\quad \\bar{y} = \\frac{4r}{3\\pi} \\approx 0.424r$$",
+                draw: () => `
+                    <path d="M 100 125 A 70 70 0 0 1 240 125 Z" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="170" cy="95.3" r="5" fill="#901812" />
+                    <text x="180" y="100" fill="#901812" font-weight="bold" font-size="12">C (0, 4r/3π)</text>
+                `
+            },
+            {
+                name: "Setor Circular", tag: "Raio r, Ângulo 2α",
+                desc: "Formulação angular centroidal sobre o eixo bissetor de simetria.",
+                area: "$$A = \\alpha r^2$$", coord: "$$\\bar{x} = \\frac{2r\\sin\\alpha}{3\\alpha}, \\quad \\bar{y} = 0$$",
+                draw: () => `
+                    <path d="M 100 80 L 220 25 A 120 120 0 0 1 220 135 Z" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="170" cy="80" r="5" fill="#901812" />
+                    <text x="180" y="85" fill="#901812" font-weight="bold" font-size="12">C</text>
+                `
+            }
+        ];
+
+        let activeFigura_4_1 = 0;
+
+        function renderFiguras_4_1() {
+            const ctrl = document.getElementById('controls-figuras-4-1');
+            if (!ctrl) return;
+            ctrl.innerHTML = '';
+            figurasData_4_1.forEach((item, idx) => {
+                const btn = document.createElement('button');
+                btn.innerText = `${idx + 1}. ${item.name}`;
+                btn.className = (idx === activeFigura_4_1)
+                    ? "py-2.5 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold text-left shadow-sm"
+                    : "py-2.5 px-4 bg-white text-[#333333] hover:bg-[#D1A705] hover:text-[#333333] rounded-xl text-fluid-tag font-bold text-left border border-black/10";
+                btn.onclick = () => { activeFigura_4_1 = idx; renderFiguras_4_1(); };
+                ctrl.appendChild(btn);
+            });
+
+            const cur = figurasData_4_1[activeFigura_4_1];
+            document.getElementById('figura-title-4-1').innerText = cur.name;
+            document.getElementById('figura-tag-4-1').innerText = cur.tag;
+            document.getElementById('figura-desc-4-1').innerText = cur.desc;
+            const aEl = document.getElementById('figura-area-4-1');
+            const cEl = document.getElementById('figura-coord-4-1');
+            aEl.innerText = cur.area; cEl.innerText = cur.coord;
+            if (window.katex) {
+                katex.render(cur.area.replace(/\$\$/g, ''), aEl, { displayMode: true, throwOnError: false });
+                katex.render(cur.coord.replace(/\$\$/g, ''), cEl, { displayMode: true, throwOnError: false });
+            }
+            document.getElementById('figura-svg-4-1').innerHTML = cur.draw();
+        }
+
+        /* =====================================================================
+           SYMMETRY LAB (SLIDE 5,1)
+           ===================================================================== */
+        const symData_5_1 = {
+            dupla: {
+                title: "1. Dupla Simetria (Perfil I)",
+                desc: "Dois eixos ortogonais de simetria (x e y). O centroide está na interseção.",
+                draw: () => `
+                    <path d="M 120 20 L 280 20 L 280 50 L 215 50 L 215 150 L 280 150 L 280 180 L 120 180 L 120 150 L 185 150 L 185 50 L 120 50 Z" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <line x1="50" y1="100" x2="350" y2="100" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <line x1="200" y1="10" x2="200" y2="190" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="200" cy="100" r="6" fill="#901812" />
+                    <text x="210" y="105" fill="#901812" font-weight="bold" font-size="12">C (Interseção)</text>
+                `
+            },
+            eixo: {
+                title: "2. Eixo Simples (Perfil T)",
+                desc: "Apenas um eixo de simetria vertical (y). O centroide pertence a este eixo.",
+                draw: () => `
+                    <path d="M 120 20 L 280 20 L 280 50 L 215 50 L 215 180 L 185 180 L 185 50 L 120 50 Z" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <line x1="200" y1="10" x2="200" y2="190" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,4" />
+                    <circle cx="200" cy="70" r="6" fill="#901812" />
+                    <text x="210" y="75" fill="#901812" font-weight="bold" font-size="12">C (Sobre o Eixo Y)</text>
+                `
+            },
+            ponto: {
+                title: "3. Ponto de Simetria (Perfil Z)",
+                desc: "Geometria antissimétrica. O centroide coincide com o polo central de simetria.",
+                draw: () => `
+                    <path d="M 120 20 L 230 20 L 230 50 L 200 50 L 200 150 L 280 150 L 280 180 L 170 180 L 170 150 L 200 150 L 200 50 L 120 50 Z" fill="#901812" fill-opacity="0.15" stroke="#901812" stroke-width="2" />
+                    <circle cx="200" cy="100" r="6" fill="#901812" />
+                    <text x="210" y="105" fill="#901812" font-weight="bold" font-size="12">C (Centro de Simetria)</text>
+                `
+            }
+        };
+
+        function selecionarSimetria_5_1(key) {
+            ['dupla', 'eixo', 'ponto'].forEach(k => {
+                const btn = document.getElementById(`btn-sym-${k}-5-1`);
+                if (btn) {
+                    btn.className = (k === key)
+                        ? "py-3 px-4 bg-[#901812] text-white rounded-xl text-fluid-tag font-bold text-left shadow-sm"
+                        : "py-3 px-4 bg-white text-[#333333] hover:bg-[#D1A705] hover:text-[#333333] rounded-xl text-fluid-tag font-bold text-left border border-black/10";
+                }
+            });
+            const cur = symData_5_1[key];
+            document.getElementById('sym-title-5-1').innerText = cur.title;
+            document.getElementById('sym-desc-5-1').innerText = cur.desc;
+            document.getElementById('sym-svg-5-1').innerHTML = cur.draw();
+        }
+
+        /* =====================================================================
+           T-PROFILE LAB (SLIDE 6,1)
+           ===================================================================== */
+        function calcularPerfilT_6_1() {
+            const bf = parseFloat(document.getElementById('input-tf-bf-6-1').value);
+            const tf = parseFloat(document.getElementById('input-tf-tf-6-1').value);
+            const hw = parseFloat(document.getElementById('input-tf-hw-6-1').value);
+            const tw = parseFloat(document.getElementById('input-tf-tw-6-1').value);
+
+            document.getElementById('lbl-tf-bf-6-1').innerText = `${bf} cm`;
+            document.getElementById('lbl-tf-tf-6-1').innerText = `${tf} cm`;
+            document.getElementById('lbl-tf-hw-6-1').innerText = `${hw} cm`;
+            document.getElementById('lbl-tf-tw-6-1').innerText = `${tw} cm`;
+
+            const A1 = bf * tf, y1 = hw + tf / 2, Ay1 = A1 * y1;
+            const A2 = hw * tw, y2 = hw / 2, Ay2 = A2 * y2;
+            const Atot = A1 + A2, Aytot = Ay1 + Ay2;
+            const ybar = Aytot / Atot;
+
+            document.getElementById('t-a1-6-1').innerText = A1.toFixed(1);
+            document.getElementById('t-y1-6-1').innerText = y1.toFixed(1);
+            document.getElementById('t-ay1-6-1').innerText = Ay1.toFixed(1);
+
+            document.getElementById('t-a2-6-1').innerText = A2.toFixed(1);
+            document.getElementById('t-y2-6-1').innerText = y2.toFixed(1);
+            document.getElementById('t-ay2-6-1').innerText = Ay2.toFixed(1);
+
+            document.getElementById('t-atotal-6-1').innerText = Atot.toFixed(1);
+            document.getElementById('t-aytotal-6-1').innerText = Aytot.toFixed(1);
+            document.getElementById('t-res-ybar-6-1').innerText = `${ybar.toFixed(2)} cm`;
+
+            const svg = document.getElementById('svg-tprofile-6-1');
+            if (svg) {
+                const totalH = hw + tf;
+                const scale = 140 / Math.max(bf, totalH);
+                const wM = bf * scale, hM = tf * scale, hA = hw * scale, wA = tw * scale;
+                const xC = 175, yB = 160;
+                const xML = xC - wM / 2, yMT = yB - hA - hM;
+                const xAL = xC - wA / 2, yAT = yB - hA;
+                const yCent = yB - ybar * scale;
+
+                svg.innerHTML = `
+                    <line x1="20" y1="${yB}" x2="330" y2="${yB}" stroke="#333333" stroke-width="2" stroke-dasharray="4,4" />
+                    <text x="300" y="${yB - 5}" fill="#333333" font-size="10">Eixo x=0</text>
+                    <rect x="${xML}" y="${yMT}" width="${wM}" height="${hM}" fill="#901812" fill-opacity="0.2" stroke="#901812" stroke-width="2" />
+                    <rect x="${xAL}" y="${yAT}" width="${wA}" height="${hA}" fill="#901812" fill-opacity="0.1" stroke="#901812" stroke-width="2" />
+                    <line x1="30" y1="${yCent}" x2="320" y2="${yCent}" stroke="#D1A705" stroke-width="2" stroke-dasharray="3,3" />
+                    <circle cx="${xC}" cy="${yCent}" r="5" fill="#D1A705" />
+                    <text x="${xC + 10}" y="${yCent + 4}" fill="#333333" font-weight="bold" font-size="11">C (ȳ = ${ybar.toFixed(1)} cm)</text>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAssets();
+            updateUI();
+            renderGlossary_2_1();
+            atualizarMomentoRetangulo_3_1();
+            renderFiguras_4_1();
+            selecionarSimetria_5_1('dupla');
+            calcularPerfilT_6_1();
+        });
+    </script>
+</body>
+</html>

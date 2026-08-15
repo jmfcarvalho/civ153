@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full w-full overflow-hidden select-none" style="touch-action: pan-y;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 - Aula 11: Classificação Estática e Cálculo de Reações | PMS - UFV</title>
+
+    <!-- CDNs Essenciais -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap');
+
+        :root {
+            --pms-red: #901812;
+            --pms-gold: #D1A705;
+            --pms-dark: #333333;
+            --pms-gray-light: #DEDEDE;
+            --pms-bg-light: #F4F6F5;
+
+            /* Tipografia fluida exclusiva via CSS */
+            --fluid-h1: clamp(1.5rem, 3.2vw, 2.8rem);
+            --fluid-h2: clamp(1.2rem, 2.3vw, 2.0rem);
+            --fluid-h3: clamp(1.0rem, 1.7vw, 1.4rem);
+            --fluid-body: clamp(0.88rem, 1.2vw, 1.15rem);
+            --fluid-meta: clamp(0.78rem, 1.0vw, 0.95rem);
+            --fluid-tag: clamp(0.72rem, 0.9vw, 0.85rem);
+
+            --font-title: 'Montserrat', 'Arial Black', sans-serif;
+            --font-body: 'Liberation Sans Narrow', 'PT Sans Narrow', 'Arial Narrow', sans-serif;
+        }
+
+        html, body {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            overflow: hidden !important;
+            background-color: var(--pms-bg-light);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        * { max-width: 100vw; box-sizing: border-box; }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.15; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.3; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); font-weight: 400; color: #555; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0; 
+            overflow-y: auto; overflow-x: hidden !important;
+            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 0.8rem; right: 0.8rem; width: 85px; height: 85px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 26px; height: 26px; background: transparent; border: none;
+            color: #A1A1A1; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: 0.2; pointer-events: none; transition: 0.2s;
+        }
+        .control-arrow.nav-up { top: 0; left: 30px; }
+        .control-arrow.nav-down { bottom: 0; left: 30px; }
+        .control-arrow.nav-left { top: 30px; left: 0; }
+        .control-arrow.nav-right { top: 30px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-gold); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { color: var(--pms-red); transform: scale(1.2); }
+
+        .svg-grid-bg {
+            background-image: radial-gradient(#cccccc 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .qr-code-responsive {
+            width: 100%;
+            max-width: clamp(110px, 18vw, 180px);
+            height: auto;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5] overflow-hidden">
+
+    <!-- Definições Globais SVG -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803D" />
+            </marker>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#901812" />
+            </marker>
+            <pattern id="hatch-45" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="8" stroke="#000000" stroke-width="1.5" />
+            </pattern>
+        </defs>
+    </svg>
+
+    <div class="fixed top-0 left-0 h-1.5 bg-[#D1A705] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-3 left-4 text-fluid-meta font-bold text-[#333333] bg-white px-3 py-1 rounded-full border border-[#DEDEDE] shadow-sm z-[1000]" id="slideIndicator">01 / 05</div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full p-2 md:p-6 overflow-y-auto overflow-x-hidden relative">
+
+        <!-- SLIDE (0,0): CAPA -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <span class="text-fluid-h3 text-[#901812] font-bold">CIV 153 • Introdução à Mecânica das Estruturas</span>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 w-full max-w-7xl mx-auto items-stretch p-2 my-auto">
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-4">
+                    <div class="bg-white p-5 md:p-8 rounded-3xl border-l-[12px] border-[#901812] shadow-xl space-y-3">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV" class="h-8 w-auto">
+                            <div class="h-6 w-[2px] bg-[#DEDEDE]"></div>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC" class="h-8 w-auto">
+                        </div>
+                        <div>
+                            <h1 class="text-fluid-h1">CIV 153 <span class="block text-fluid-h2 text-[#333333]">Mecânica das Estruturas</span></h1>
+                            <h2 class="text-fluid-h3 text-[#901812] font-bold mt-2">Aula 11 • Classificação Estática, DCL e Reações de Apoio</h2>
+                        </div>
+                    </div>
+                    <div class="bg-[#333333] text-white p-4 rounded-3xl border border-[#D1A705]/40 flex justify-between items-center">
+                        <div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold block">Corpo Docente</span>
+                            <p class="text-fluid-body font-bold">Prof. José Maria Franco de Carvalho</p>
+                        </div>
+                        <a href="https://pms.ufv.br" target="_blank">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms_black_text.png" alt="PMS" class="h-10 md:h-12 w-auto bg-white/5 p-1 rounded-lg border border-white/20">
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-[#333333] text-white p-4 rounded-3xl border-2 border-[#D1A705]/40 flex flex-col justify-between items-center text-center">
+                    <div class="bg-white p-3 rounded-2xl w-full flex flex-col items-center">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://pms.ufv.br&color=901812" alt="QR PMS" class="qr-code-responsive mx-auto">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Acesso Institucional PMS</span>
+                    </div>
+                    <h3 class="text-fluid-h3 text-white mt-2 font-bold">PMS - UFV</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): CLASSIFICAÇÃO DA ESTATICIDADE -->
+        <div id="slide-estaticidade" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Classificação Estática Externa</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-4 my-auto">
+                <p class="text-fluid-body text-[#333333]">Comparação entre o número de incógnitas de reação ($r$) e as equações da estática universais no plano ($e = 3$):</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-[#F4F6F5] p-4 rounded-2xl border-t-4 border-red-600 space-y-1">
+                        <h3 class="text-fluid-h3 text-red-600 font-bold">Hipostática</h3>
+                        <p class="text-fluid-h2 font-bold">$$r < 3$$</p>
+                        <p class="text-fluid-meta text-[#333333]">Instável. Transforma-se em mecanismo por ausência de vínculos suficientes.</p>
+                    </div>
+                    <div class="bg-[#F4F6F5] p-4 rounded-2xl border-t-4 border-green-600 space-y-1">
+                        <h3 class="text-fluid-h3 text-green-600 font-bold">Isostática</h3>
+                        <p class="text-fluid-h2 font-bold">$$r = 3$$</p>
+                        <p class="text-fluid-meta text-[#333333]">Estável e estaticamente determinada através das equações da estática.</p>
+                    </div>
+                    <div class="bg-[#F4F6F5] p-4 rounded-2xl border-t-4 border-[#D1A705] space-y-1">
+                        <h3 class="text-fluid-h3 text-[#D1A705] font-bold">Hiperestática</h3>
+                        <p class="text-fluid-h2 font-bold">$$r > 3$$</p>
+                        <p class="text-fluid-meta text-[#333333]">Estável com vínculos redundantes ($g = r-3$). Exige equações de compatibilidade.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,1) [LAB 1: GERADOR E ANÁLISE DE TRELIÇA CAD] -->
+        <div id="slide-lab-trelica" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 1 • Síntese e Estabilidade de Treliças</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-2.5 py-1 rounded-xl text-fluid-meta hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-4 rounded-3xl border-2 border-[#D1A705] shadow-xl space-y-3 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <button onclick="generateRandomTruss()" class="w-full bg-[#901812] text-white font-bold py-2 px-3 rounded-xl shadow hover:bg-black transition text-fluid-body">
+                            <i class="fa-solid fa-dice mr-2"></i>Gerar Geometria Aleatória
+                        </button>
+                        <hr class="border-[#DEDEDE]">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Configuração de Vinculação</h3>
+                        <div>
+                            <label class="text-fluid-meta font-bold block">Gênero do Apoio:</label>
+                            <select id="lab1-type" class="w-full p-1.5 border rounded-xl bg-white font-bold text-fluid-meta">
+                                <option value="1">1º Gênero (Móvel)</option>
+                                <option value="2">2º Gênero (Fixo)</option>
+                                <option value="3">3º Gênero (Engaste)</option>
+                                <option value="0">Remover Apoio</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold block">Orientação ($\theta$):</label>
+                            <select id="lab1-angle" class="w-full p-1.5 border rounded-xl bg-white font-bold text-fluid-meta">
+                                <option value="0">0° (Horizontal Inferior)</option>
+                                <option value="90">90° (Parede Direita)</option>
+                                <option value="180">180° (Teto Invertido)</option>
+                                <option value="270">270° (Parede Esquerda)</option>
+                            </select>
+                        </div>
+                        <p class="text-fluid-tag text-[#666]">Clique em qualquer nó da estrutura para aplicar o apoio.</p>
+                        <div class="p-2.5 bg-white rounded-xl border text-fluid-meta space-y-1">
+                            <div>Reações Externas ($r$): <strong id="lab1-r-count" class="text-[#901812]">0</strong></div>
+                            <div>Diagnóstico Estrutural:</div>
+                            <div id="lab1-status" class="text-fluid-h3 font-bold text-red-600">Sem Apoios</div>
+                        </div>
+                    </div>
+
+                    <div id="view-truss" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[300px] md:h-[360px] border border-[#DEDEDE]">
+                        <svg id="svg-truss" width="100%" height="100%" viewBox="-80 -220 700 400" class="w-full h-full svg-grid-bg">
+                            <g id="zoom-group-truss">
+                                <g id="content-truss"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): DCL E CÁLCULO PASSO A PASSO -->
+        <div id="slide-dcl" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Roteiro Metodológico para Cálculo de Reações</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-4 my-auto">
+                <ol class="list-decimal pl-5 text-fluid-body text-[#333333] space-y-2">
+                    <li><strong>Diagrama de Corpo Livre (DCL):</strong> Isolar a estrutura e substituir apoios físicos pelas reações incógnitas ($R_{Ax}, R_{Ay}, M_A$).</li>
+                    <li><strong>Simplificação de Carregamentos:</strong> Concentrar cargas distribuídas em suas resultantes equivalentes temporárias posicionadas nos centroides.</li>
+                    <li><strong>Equações Universais de Equilíbrio:</strong>
+                        $$\sum F_x = 0 \quad \implies \quad R_{Ax} + \sum P_x = 0$$
+                        $$\sum F_y = 0 \quad \implies \quad R_{Ay} + R_{By} - \sum P_y = 0$$
+                        $$\sum M_A = 0 \quad \implies \quad (R_{By} \cdot L) - \sum (P_i \cdot d_i) = 0$$
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1) [LAB 2: VIGA COM BALANÇO] -->
+        <div id="slide-lab-beam" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 2 • Viga Biapoiada com Balanço</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-2.5 py-1 rounded-xl text-fluid-meta hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-4 rounded-3xl border-2 border-[#D1A705] shadow-xl space-y-3 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Parâmetros Operacionais</h3>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Vão $q_1$: <span id="lbl-beam-q1" class="text-[#901812]">10</span> kN/m</label>
+                            <input type="range" id="slider-beam-q1" min="-20" max="30" value="10" class="w-full accent-[#901812]" oninput="updateBeam()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Balanço $q_2$: <span id="lbl-beam-q2" class="text-[#901812]">5</span> kN/m</label>
+                            <input type="range" id="slider-beam-q2" min="-20" max="30" value="5" class="w-full accent-[#901812]" oninput="updateBeam()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Força Pontual $P$: <span id="lbl-beam-p" class="text-[#901812]">15</span> kN</label>
+                            <input type="range" id="slider-beam-p" min="-40" max="40" value="15" class="w-full accent-[#901812]" oninput="updateBeam()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Posição de $P$ ($x$): <span id="lbl-beam-xp" class="text-[#901812]">3.0</span> m</label>
+                            <input type="range" id="slider-beam-xp" min="0" max="8" step="0.5" value="3.0" class="w-full accent-[#901812]" oninput="updateBeam()">
+                        </div>
+
+                        <div class="p-2.5 bg-white rounded-xl border text-fluid-meta space-y-1">
+                            <div>Reação $R_{Ay}$: <strong id="val-ray" class="text-green-700">0.0 kN</strong></div>
+                            <div>Reação $R_{By}$: <strong id="val-rby" class="text-green-700">0.0 kN</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-beam" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[300px] md:h-[360px] border border-[#DEDEDE]">
+                        <svg id="svg-beam" width="100%" height="100%" viewBox="-60 -200 700 380" class="w-full h-full svg-grid-bg">
+                            <g id="zoom-group-beam">
+                                <g id="content-beam"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,2) [LAB 3: TRELIÇA DE COBERTURA HOWE] -->
+        <div id="slide-lab-roof" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 3 • Cobertura Howe Assegurada (Duas Águas)</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-2.5 py-1 rounded-xl text-fluid-meta hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-4 rounded-3xl border-2 border-[#901812] shadow-xl space-y-3 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Geometria e Cargas</h3>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Vão Esquerda ($L_1$): <span id="lbl-l-left" class="text-[#901812]">4.0</span> m</label>
+                            <input type="range" id="slider-l-left" min="3" max="8" step="0.5" value="4.0" class="w-full accent-[#901812]" oninput="updateRoof()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Vão Direita ($L_2$): <span id="lbl-l-right" class="text-[#901812]">6.0</span> m</label>
+                            <input type="range" id="slider-l-right" min="3" max="8" step="0.5" value="6.0" class="w-full accent-[#901812]" oninput="updateRoof()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Altura Cumeeira ($H$): <span id="lbl-roof-h" class="text-[#901812]">2.0</span> m</label>
+                            <input type="range" id="slider-roof-h" min="1" max="4" step="0.25" value="2.0" class="w-full accent-[#901812]" oninput="updateRoof()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Nó Superior ($P$): <span id="lbl-roof-p" class="text-[#901812]">10</span> kN</label>
+                            <input type="range" id="slider-roof-p" min="-20" max="30" value="10" class="w-full accent-[#901812]" oninput="updateRoof()">
+                        </div>
+
+                        <div class="p-2.5 bg-white rounded-xl border text-fluid-meta space-y-1">
+                            <div>Reação $R_{Ay}$: <strong id="val-roof-ray" class="text-green-700">0.0 kN</strong></div>
+                            <div>Reação $R_{By}$: <strong id="val-roof-rby" class="text-green-700">0.0 kN</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-roof" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[300px] md:h-[360px] border border-[#DEDEDE]">
+                        <svg id="svg-roof" width="100%" height="100%" viewBox="-80 -220 700 400" class="w-full h-full svg-grid-bg">
+                            <g id="zoom-group-roof">
+                                <g id="content-roof"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,3) [LAB 4: GUINDASTE INDUSTRIAL] -->
+        <div id="slide-lab-crane" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 4 • Guindaste Industrial Isostático</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-2.5 py-1 rounded-xl text-fluid-meta hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-4 rounded-3xl border-2 border-[#D1A705] shadow-xl space-y-3 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Proporções Estruturais</h3>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Distância H. Apoios ($D_h$): <span id="lbl-crane-dh" class="text-[#901812]">1.0</span> m</label>
+                            <input type="range" id="slider-crane-dh" min="0.5" max="3" step="0.25" value="1.0" class="w-full accent-[#901812]" oninput="updateCrane()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Distância V. Apoios ($D_v$): <span id="lbl-crane-dv" class="text-[#901812]">1.0</span> m</label>
+                            <input type="range" id="slider-crane-dv" min="0.5" max="3" step="0.25" value="1.0" class="w-full accent-[#901812]" oninput="updateCrane()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Comprimento ($L_{tot}$): <span id="lbl-crane-ltot" class="text-[#901812]">5.0</span> m</label>
+                            <input type="range" id="slider-crane-ltot" min="3" max="8" step="0.5" value="5.0" class="w-full accent-[#901812]" oninput="updateCrane()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Altura Total ($H_{tot}$): <span id="lbl-crane-htot" class="text-[#901812]">5.0</span> m</label>
+                            <input type="range" id="slider-crane-htot" min="3" max="8" step="0.5" value="5.0" class="w-full accent-[#901812]" oninput="updateCrane()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Içada ($P$): <span id="lbl-crane-p" class="text-[#901812]">25</span> kN</label>
+                            <input type="range" id="slider-crane-p" min="-50" max="50" value="25" class="w-full accent-[#901812]" oninput="updateCrane()">
+                        </div>
+
+                        <div class="p-2.5 bg-white rounded-xl border text-fluid-meta space-y-1">
+                            <div>Reação $R_{A1}$ (H): <strong id="val-ra1" class="text-green-700">0.0 kN</strong></div>
+                            <div>Reação $R_{A2}$ (V): <strong id="val-ra2" class="text-green-700">0.0 kN</strong></div>
+                            <div>Reação $R_{A3}$ (H): <strong id="val-ra3" class="text-green-700">0.0 kN</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-crane" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[300px] md:h-[360px] border border-[#DEDEDE]">
+                        <svg id="svg-crane" width="100%" height="100%" viewBox="-120 -280 650 420" class="w-full h-full svg-grid-bg">
+                            <g id="zoom-group-crane">
+                                <g id="content-crane"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,4) [LAB 5: PÓRTICO DE ARQUIBANCADA] -->
+        <div id="slide-lab-stadium" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 5 • Pórtico de Arquibancada Engastado com Vento</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-2.5 py-1 rounded-xl text-fluid-meta hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-4 rounded-3xl border-2 border-[#901812] shadow-xl space-y-3 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Dimensões e Cargas</h3>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Altura Pilar ($H_p$): <span id="lbl-stadium-hp" class="text-[#901812]">5.0</span> m</label>
+                            <input type="range" id="slider-stadium-hp" min="3" max="8" step="0.5" value="5.0" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Comprimento Cobertura ($L_c$): <span id="lbl-stadium-lc" class="text-[#901812]">8.0</span> m</label>
+                            <input type="range" id="slider-stadium-lc" min="4" max="12" step="0.5" value="8.0" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Comprimento Arquibancada ($L_a$): <span id="lbl-stadium-la" class="text-[#901812]">6.0</span> m</label>
+                            <input type="range" id="slider-stadium-la" min="3" max="10" step="0.5" value="6.0" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Cobertura ($q_1$): <span id="lbl-stadium-q1" class="text-[#901812]">8</span> kN/m</label>
+                            <input type="range" id="slider-stadium-q1" min="-10" max="25" value="8" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Arquibancada ($q_2$): <span id="lbl-stadium-q2" class="text-[#901812]">15</span> kN/m</label>
+                            <input type="range" id="slider-stadium-q2" min="-10" max="35" value="15" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-meta font-bold">Carga Vento Pilar ($q_3$): <span id="lbl-stadium-q3" class="text-[#901812]">4</span> kN/m</label>
+                            <input type="range" id="slider-stadium-q3" min="-10" max="20" value="4" class="w-full accent-[#901812]" oninput="updateStadium()">
+                        </div>
+
+                        <div class="p-2.5 bg-white rounded-xl border text-fluid-meta space-y-1">
+                            <div>Reação $R_{Ax}$: <strong id="val-stadium-rax" class="text-green-700">0.0 kN</strong></div>
+                            <div>Reação $R_{Ay}$: <strong id="val-stadium-ray" class="text-green-700">0.0 kN</strong></div>
+                            <div>Momento $M_A$: <strong id="val-stadium-ma" class="text-green-700">0.0 kNm</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-stadium" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[300px] md:h-[360px] border border-[#DEDEDE]">
+                        <svg id="svg-stadium" width="100%" height="100%" viewBox="-180 -300 700 450" class="w-full h-full svg-grid-bg">
+                            <g id="zoom-group-stadium">
+                                <g id="content-stadium"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): IN-CLASS -->
+        <div id="slide-inclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Síncronas • In Class</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-4 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-7 space-y-3">
+                        <div class="bg-[#F4F6F5] p-4 rounded-2xl border-l-4 border-[#901812] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Quiz de Fixação Síncrono</h3>
+                            <p class="text-fluid-body text-[#555]">Validação de conceitos em tempo real durante a sessão expositiva.</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform" target="_blank" class="inline-block bg-[#901812] text-white font-bold px-5 py-2.5 rounded-xl hover:bg-black transition text-fluid-body shadow-md">
+                                <i class="fa-solid fa-square-poll-vertical mr-2"></i>Acessar Quiz In-Class
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5 bg-[#333333] text-white p-4 rounded-3xl border-2 border-[#D1A705]/40 flex flex-col items-center justify-center space-y-2">
+                        <div class="bg-white p-3 rounded-2xl w-full flex flex-col items-center">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform&color=901812" alt="QR In Class" class="qr-code-responsive mx-auto">
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold">Acesso via Smartphone</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): OFF-CLASS -->
+        <div id="slide-offclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Autônomas • Off Class</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-8 md:h-10 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-4 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-7 space-y-3">
+                        <div class="bg-[#F4F6F5] p-4 rounded-2xl border-l-4 border-[#D1A705] space-y-2">
+                            <span class="text-fluid-meta text-gray-500 font-bold block">LISTA DE EXERCÍCIOS COMPLEMENTAR</span>
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Estudo Dirigido • Cálculo de Reações</h3>
+                            <p class="text-fluid-body text-[#555]">Envio de resoluções completas e verificação de resultados.</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform" target="_blank" class="inline-block bg-[#333333] text-white font-bold px-5 py-2.5 rounded-xl hover:bg-[#901812] transition text-fluid-body shadow-md">
+                                <i class="fa-solid fa-book-open mr-2"></i>Abrir Lista Off Class
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:col-span-5 bg-[#333333] text-white p-4 rounded-3xl border-2 border-[#D1A705]/40 flex flex-col items-center justify-center space-y-2">
+                        <div class="bg-white p-3 rounded-2xl w-full flex flex-col items-center">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform&color=333333" alt="QR Off Class" class="qr-code-responsive mx-auto">
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold">Submissão Off Class</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /* NAVEGAÇÃO NA MATRIZ ORTOGONAL */
+        const slideGrid = {
+            '0,0': 'slide-capa',
+            '1,0': 'slide-estaticidade',
+            '1,1': 'slide-lab-trelica',
+            '2,0': 'slide-dcl',
+            '2,1': 'slide-lab-beam',
+            '2,2': 'slide-lab-roof',
+            '2,3': 'slide-lab-crane',
+            '2,4': 'slide-lab-stadium',
+            '3,0': 'slide-inclass',
+            '4,0': 'slide-offclass'
+        };
+
+        let currentX = 0, currentY = 0, totalHorizontal = 5;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            document.getElementById('progressBar').style.width = `${(currentX / (totalHorizontal - 1)) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `${(currentX + 1).toString().padStart(2, '0')} / ${totalHorizontal.toString().padStart(2, '0')}`;
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                cur.classList.remove('slide-active');
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-up');
+                else if (dy < 0) cur.classList.add('slide-hidden-down');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                currentX = nx; currentY = ny;
+                updateUI();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); moveInGrid(1, 0); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); moveInGrid(-1, 0); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); moveInGrid(0, -1); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); moveInGrid(0, 1); }
+        });
+
+        /* SINTETIZADOR DE ÁUDIO DIDÁTICO */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playFeedbackSound(isSuccess) {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (isSuccess) {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (err) { }
+        }
+
+        /* GERADOR DE VETORES SVG DE APOIO PMS */
+        function drawPMSSupport(type, x, y, thetaDeg = 0) {
+            const h = 24;
+            const L = (2 * h) / Math.sqrt(3);
+            let svg = `<g transform="translate(${x},${y}) rotate(${thetaDeg})">`;
+
+            if (type === 1) { // 1º Gênero (Móvel)
+                svg += `
+                    <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#808080" stroke="#000000" stroke-width="1.5"/>
+                    <line x1="${-0.6 * L}" y1="${1.2 * h}" x2="${0.6 * L}" y2="${1.2 * h}" stroke="#000000" stroke-width="1.5"/>
+                `;
+            } else if (type === 2) { // 2º Gênero (Fixo)
+                svg += `
+                    <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#808080" stroke="#000000" stroke-width="1.5"/>
+                    <line x1="${-0.6 * L}" y1="${h}" x2="${0.6 * L}" y2="${h}" stroke="#000000" stroke-width="1.5"/>
+                    <rect x="${-0.6 * L}" y="${h}" width="${1.2 * L}" height="8" fill="url(#hatch-45)"/>
+                `;
+            } else if (type === 3) { // 3º Gênero (Engaste)
+                svg += `
+                    <line x1="${-0.6 * L}" y1="0" x2="${0.6 * L}" y2="0" stroke="#000000" stroke-width="3.0"/>
+                    <rect x="${-0.6 * L}" y="0" width="${1.2 * L}" height="10" fill="url(#hatch-45)"/>
+                `;
+            }
+            svg += `</g>`;
+            return svg;
+        }
+
+        /* DESENHO DE COTAS DIMENSIONAIS */
+        function drawDimensionLine(x1, y1, x2, y2, text, offset = 20) {
+            const dx = x2 - x1, dy = y2 - y1;
+            const len = Math.hypot(dx, dy);
+            if (len === 0) return '';
+            const ux = dx / len, uy = dy / len;
+            const nx = -uy, ny = ux;
+
+            const px1 = x1 + nx * offset, py1 = y1 + ny * offset;
+            const px2 = x2 + nx * offset, py2 = y2 + ny * offset;
+
+            return `
+                <g class="dimension-group">
+                    <line x1="${x1}" y1="${y1}" x2="${px1 + nx*4}" y2="${py1 + ny*4}" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <line x1="${x2}" y1="${y2}" x2="${px2 + nx*4}" y2="${py2 + ny*4}" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <line x1="${px1}" y1="${py1}" x2="${px2}" y2="${py2}" stroke="#333" stroke-width="1.2"/>
+                    <line x1="${px1 - ux*4 - nx*4}" y1="${py1 - uy*4 - ny*4}" x2="${px1 + ux*4 + nx*4}" y2="${py1 + uy*4 + ny*4}" stroke="#333" stroke-width="1.5"/>
+                    <line x1="${px2 - ux*4 - nx*4}" y1="${py2 - uy*4 - ny*4}" x2="${px2 + ux*4 + nx*4}" y2="${py2 + uy*4 + ny*4}" stroke="#333" stroke-width="1.5"/>
+                    <text x="${(px1 + px2)/2 + nx*10}" y="${(py1 + py2)/2 + ny*10}" fill="#333" font-size="12" font-weight="bold" text-anchor="middle" dominant-baseline="central">${text}</text>
+                </g>
+            `;
+        }
+
+        /* LABORATÓRIO 1: GERADOR ALEATÓRIO E ANÁLISE MATRICIAL */
+        let trussNodes = [], trussBars = [], trussSupports = {};
+
+        function generateRandomTruss() {
+            trussNodes = []; trussBars = []; trussSupports = {};
+            const nx = 4 + Math.floor(Math.random() * 2);
+            const dx = 110;
+            
+            for(let i = 0; i < nx; i++) trussNodes.push({ x: i * dx, y: 100 });
+            for(let i = 0; i < nx - 1; i++) trussNodes.push({ x: i * dx + dx/2, y: 100 - (70 + Math.random()*30) });
+
+            const topOffset = nx;
+            for(let i = 0; i < nx - 1; i++) trussBars.push([i, i + 1]);
+            for(let i = 0; i < nx - 2; i++) trussBars.push([topOffset + i, topOffset + i + 1]);
+            for(let i = 0; i < nx - 1; i++) {
+                trussBars.push([i, topOffset + i]);
+                trussBars.push([i + 1, topOffset + i]);
+                if (i < nx - 2) trussBars.push([i + 1, topOffset + i + 1]);
+            }
+            renderTrussLab();
+        }
+
+        function toggleTrussSupport(nodeIdx) {
+            const stype = parseInt(document.getElementById('lab1-type').value);
+            const sangle = parseInt(document.getElementById('lab1-angle').value);
+
+            if (stype === 0) delete trussSupports[nodeIdx];
+            else trussSupports[nodeIdx] = { type: stype, angle: sangle };
+
+            renderTrussLab();
+        }
+
+        function solveTrussMatrix() {
+            const numNodes = trussNodes.length;
+            const dof = numNodes * 2;
+            let K = Array(dof).fill(0).map(() => Array(dof).fill(0));
+
+            trussBars.forEach(([i, j]) => {
+                const n1 = trussNodes[i], n2 = trussNodes[j];
+                const dx = n2.x - n1.x, dy = n2.y - n1.y;
+                const L = Math.hypot(dx, dy);
+                if (L === 0) return;
+                const c = dx / L, s = dy / L;
+                const E = 1000;
+                
+                const kElem = [
+                    [ c*c,  c*s, -c*c, -c*s],
+                    [ c*s,  s*s, -c*s, -s*s],
+                    [-c*c, -c*s,  c*c,  c*s],
+                    [-c*s, -s*s,  c*s,  s*s]
+                ];
+
+                const map = [2*i, 2*i+1, 2*j, 2*j+1];
+                for(let r=0; r<4; r++) {
+                    for(let cl=0; cl<4; cl++) K[map[r]][map[cl]] += E * kElem[r][cl];
+                }
+            });
+
+            let activeDOFs = Array(dof).fill(true);
+            let rxCount = 0;
+
+            for(let nIdx in trussSupports) {
+                const sup = trussSupports[nIdx];
+                const idx = parseInt(nIdx);
+
+                if (sup.type === 1) {
+                    rxCount += 1;
+                    if (sup.angle === 0 || sup.angle === 180) activeDOFs[2*idx + 1] = false;
+                    else activeDOFs[2*idx] = false;
+                } else if (sup.type === 2) {
+                    rxCount += 2;
+                    activeDOFs[2*idx] = false;
+                    activeDOFs[2*idx + 1] = false;
+                } else if (sup.type === 3) {
+                    rxCount += 3;
+                    activeDOFs[2*idx] = false;
+                    activeDOFs[2*idx + 1] = false;
+                }
+            }
+
+            let freeIndices = [];
+            for(let i=0; i<dof; i++) if(activeDOFs[i]) freeIndices.push(i);
+
+            let Kred = freeIndices.map(r => freeIndices.map(c => K[r][c]));
+            let det = matrixDeterminantLU(Kred);
+            let b = trussBars.length;
+            let status = "";
+            let isStable = false;
+
+            if (freeIndices.length === 0) {
+                status = "Totalmente Restrita";
+            } else if (Math.abs(det) < 1e-3) {
+                status = "Hipostática (Instável)";
+                isStable = false;
+            } else {
+                let statIndex = rxCount + b - 2 * numNodes;
+                if (statIndex === 0) {
+                    status = "Isostática (Estável)";
+                    isStable = true;
+                } else if (statIndex > 0) {
+                    status = `Hiperestática (Estável g=${statIndex})`;
+                    isStable = true;
+                } else {
+                    status = "Hipostática Interna";
+                    isStable = false;
+                }
+            }
+
+            return { rxCount, status, isStable };
+        }
+
+        function matrixDeterminantLU(matrix) {
+            const n = matrix.length;
+            if (n === 0) return 1;
+            let A = matrix.map(row => [...row]);
+            let det = 1;
+
+            for (let i = 0; i < n; i++) {
+                let pivot = i;
+                for (let j = i + 1; j < n; j++) {
+                    if (Math.abs(A[j][i]) > Math.abs(A[pivot][i])) pivot = j;
+                }
+
+                if (Math.abs(A[pivot][i]) < 1e-9) return 0;
+
+                if (i !== pivot) {
+                    let temp = A[i]; A[i] = A[pivot]; A[pivot] = temp;
+                    det = -det;
+                }
+
+                det *= A[i][i];
+
+                for (let j = i + 1; j < n; j++) {
+                    let factor = A[j][i] / A[i][i];
+                    for (let k = i + 1; k < n; k++) {
+                        A[j][k] -= factor * A[i][k];
+                    }
+                }
+            }
+            return det;
+        }
+
+        let previousStableState = null;
+
+        function renderTrussLab() {
+            const c = document.getElementById('content-truss');
+            let html = "";
+
+            trussBars.forEach(([i, j]) => {
+                const n1 = trussNodes[i], n2 = trussNodes[j];
+                html += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="#1E40AF" stroke-width="4" stroke-linecap="round"/>`;
+            });
+
+            for(let nIdx in trussSupports) {
+                const sup = trussSupports[nIdx];
+                const node = trussNodes[nIdx];
+                html += drawPMSSupport(sup.type, node.x, node.y, sup.angle);
+            }
+
+            trussNodes.forEach((node, idx) => {
+                const hasSup = !!trussSupports[idx];
+                html += `
+                    <circle cx="${node.x}" cy="${node.y}" r="8" fill="${hasSup ? '#D1A705' : '#FFFFFF'}" stroke="#901812" stroke-width="2.5" 
+                            style="cursor:pointer;" onclick="toggleTrussSupport(${idx})"/>
+                `;
+            });
+
+            c.innerHTML = html;
+
+            const res = solveTrussMatrix();
+            document.getElementById('lab1-r-count').innerText = res.rxCount;
+            const lbl = document.getElementById('lab1-status');
+            lbl.innerText = res.status;
+
+            if (res.isStable) {
+                lbl.className = "text-fluid-h3 font-bold text-green-700";
+                if (previousStableState === false) playFeedbackSound(true);
+            } else {
+                lbl.className = "text-fluid-h3 font-bold text-red-600";
+                if (previousStableState === true) playFeedbackSound(false);
+            }
+            previousStableState = res.isStable;
+        }
+
+        /* LABORATÓRIO 2: VIGA BIAPOIADA COM BALANÇO */
+        function updateBeam() {
+            const q1 = parseFloat(document.getElementById('slider-beam-q1').value);
+            const q2 = parseFloat(document.getElementById('slider-beam-q2').value);
+            const P = parseFloat(document.getElementById('slider-beam-p').value);
+            const xp = parseFloat(document.getElementById('slider-beam-xp').value);
+
+            document.getElementById('lbl-beam-q1').innerText = q1;
+            document.getElementById('lbl-beam-q2').innerText = q2;
+            document.getElementById('lbl-beam-p').innerText = P;
+            document.getElementById('lbl-beam-xp').innerText = xp.toFixed(1);
+
+            const L = 6.0, a = 2.0;
+            const Rby = ((q1 * L * L/2) + (q2 * a * (L + a/2)) + (P * xp)) / L;
+            const Ray = (q1 * L) + (q2 * a) + P - Rby;
+
+            document.getElementById('val-ray').innerText = `${Ray.toFixed(1)} kN`;
+            document.getElementById('val-rby').innerText = `${Rby.toFixed(1)} kN`;
+
+            const scaleX = 55, startX = 40, origY = 60;
+            const c = document.getElementById('content-beam');
+            let html = "";
+
+            html += `<line x1="${startX}" y1="${origY}" x2="${startX + (L+a)*scaleX}" y2="${origY}" stroke="#333333" stroke-width="8" stroke-linecap="square"/>`;
+
+            html += drawPMSSupport(2, startX, origY);
+            html += drawPMSSupport(1, startX + L*scaleX, origY);
+
+            if (q1 !== 0) {
+                const h1 = q1 * 2.0;
+                const rectY = h1 > 0 ? origY - h1 : origY;
+                html += `<rect x="${startX}" y="${rectY}" width="${L*scaleX}" height="${Math.abs(h1)}" fill="#D1A705" opacity="0.35" stroke="#D1A705"/>`;
+            }
+
+            if (q2 !== 0) {
+                const h2 = q2 * 2.0;
+                const rectY = h2 > 0 ? origY - h2 : origY;
+                html += `<rect x="${startX + L*scaleX}" y="${rectY}" width="${a*scaleX}" height="${Math.abs(h2)}" fill="#D1A705" opacity="0.35" stroke="#D1A705"/>`;
+            }
+
+            if (P !== 0) {
+                const pLen = Math.min(Math.abs(P) * 1.8, 60);
+                const px = startX + xp * scaleX;
+                if (P > 0) {
+                    html += `<line x1="${px}" y1="${origY - pLen - 8}" x2="${px}" y2="${origY - 4}" stroke="#901812" stroke-width="3.5" marker-end="url(#arrow-red)"/>`;
+                } else {
+                    html += `<line x1="${px}" y1="${origY + 4}" x2="${px}" y2="${origY + pLen + 8}" stroke="#901812" stroke-width="3.5" marker-end="url(#arrow-red)"/>`;
+                }
+                html += `<text x="${px}" y="${P > 0 ? origY - pLen - 14 : origY + pLen + 20}" fill="#901812" font-size="12" font-weight="bold" text-anchor="middle">P = ${P} kN</text>`;
+            }
+
+            const rAyLen = Math.min(Math.abs(Ray) * 1.5, 60);
+            if (Ray > 0) {
+                html += `<line x1="${startX}" y1="${origY + rAyLen + 30}" x2="${startX}" y2="${origY + 26}" stroke="#15803D" stroke-width="3.5" marker-end="url(#arrow-green)"/>`;
+            } else if (Ray < 0) {
+                html += `<line x1="${startX}" y1="${origY + 26}" x2="${startX}" y2="${origY + rAyLen + 30}" stroke="#15803D" stroke-width="3.5" marker-end="url(#arrow-green)"/>`;
+            }
+            html += `<text x="${startX}" y="${origY + 75}" fill="#15803D" font-size="12" font-weight="bold" text-anchor="middle">R_Ay = ${Ray.toFixed(1)} kN</text>`;
+
+            const rByLen = Math.min(Math.abs(Rby) * 1.5, 60);
+            const bx = startX + L*scaleX;
+            if (Rby > 0) {
+                html += `<line x1="${bx}" y1="${origY + rByLen + 30}" x2="${bx}" y2="${origY + 26}" stroke="#15803D" stroke-width="3.5" marker-end="url(#arrow-green)"/>`;
+            } else if (Rby < 0) {
+                html += `<line x1="${bx}" y1="${origY + 26}" x2="${bx}" y2="${origY + rByLen + 30}" stroke="#15803D" stroke-width="3.5" marker-end="url(#arrow-green)"/>`;
+            }
+            html += `<text x="${bx}" y="${origY + 75}" fill="#15803D" font-size="12" font-weight="bold" text-anchor="middle">R_By = ${Rby.toFixed(1)} kN</text>`;
+
+            html += drawDimensionLine(startX, origY, startX + L*scaleX, origY, `L = ${L.toFixed(1)} m`, 80);
+            html += drawDimensionLine(startX + L*scaleX, origY, startX + (L+a)*scaleX, origY, `a = ${a.toFixed(1)} m`, 80);
+
+            c.innerHTML = html;
+        }
+
+        /* LABORATÓRIO 3: COBERTURA HOWE ASSEGURADA */
+        function updateRoof() {
+            const L1 = parseFloat(document.getElementById('slider-l-left').value);
+            const L2 = parseFloat(document.getElementById('slider-l-right').value);
+            const H = parseFloat(document.getElementById('slider-roof-h').value);
+            const P = parseFloat(document.getElementById('slider-roof-p').value);
+
+            document.getElementById('lbl-l-left').innerText = L1.toFixed(1);
+            document.getElementById('lbl-l-right').innerText = L2.toFixed(1);
+            document.getElementById('lbl-roof-h').innerText = H.toFixed(2);
+            document.getElementById('lbl-roof-p').innerText = P;
+
+            const Ltot = L1 + L2;
+            const scale = 45, startX = 40, origY = 90;
+
+            let nodesBot = [], nodesTop = [];
+            for(let i=0; i<=4; i++) nodesBot.push({ x: startX + (i * (L1/4))*scale, y: origY });
+            for(let i=1; i<=4; i++) nodesBot.push({ x: startX + (L1 * scale) + (i * (L2/4))*scale, y: origY });
+
+            nodesBot.forEach((nb, i) => {
+                let nodeH = 0;
+                if (i <= 4) nodeH = (i / 4) * H * scale;
+                else nodeH = ((8 - i) / 4) * H * scale;
+                nodesTop.push({ x: nb.x, y: origY - nodeH });
+            });
+
+            let sumMomentA = 0, sumLoads = 0;
+            nodesTop.forEach((nt, i) => {
+                if (i > 0 && i < nodesTop.length - 1) {
+                    const distFromA = (nt.x - startX) / scale;
+                    sumMomentA += P * distFromA;
+                    sumLoads += P;
+                }
+            });
+
+            const Rby = sumMomentA / Ltot;
+            const Ray = sumLoads - Rby;
+
+            document.getElementById('val-roof-ray').innerText = `${Ray.toFixed(1)} kN`;
+            document.getElementById('val-roof-rby').innerText = `${Rby.toFixed(1)} kN`;
+
+            let html = "";
+
+            for(let i=0; i<nodesBot.length; i++) {
+                if (i < nodesBot.length - 1) html += `<line x1="${nodesBot[i].x}" y1="${nodesBot[i].y}" x2="${nodesBot[i+1].x}" y2="${nodesBot[i+1].y}" stroke="#1E40AF" stroke-width="3"/>`;
+                if (i < nodesTop.length - 1) html += `<line x1="${nodesTop[i].x}" y1="${nodesTop[i].y}" x2="${nodesTop[i+1].x}" y2="${nodesTop[i+1].y}" stroke="#1E40AF" stroke-width="3"/>`;
+                html += `<line x1="${nodesBot[i].x}" y1="${nodesBot[i].y}" x2="${nodesTop[i].x}" y2="${nodesTop[i].y}" stroke="#1E40AF" stroke-width="2"/>`;
+            }
+
+            for(let i=0; i<4; i++) html += `<line x1="${nodesBot[i].x}" y1="${nodesBot[i].y}" x2="${nodesTop[i+1].x}" y2="${nodesTop[i+1].y}" stroke="#1E40AF" stroke-width="2"/>`;
+            for(let i=4; i<8; i++) html += `<line x1="${nodesBot[i+1].x}" y1="${nodesBot[i+1].y}" x2="${nodesTop[i].x}" y2="${nodesTop[i].y}" stroke="#1E40AF" stroke-width="2"/>`;
+
+            nodesTop.forEach((nt, i) => {
+                if (i > 0 && i < nodesTop.length - 1 && P !== 0) {
+                    const pLen = Math.min(Math.abs(P)*1.8, 40);
+                    if (P > 0) {
+                        html += `<line x1="${nt.x}" y1="${nt.y - pLen - 4}" x2="${nt.x}" y2="${nt.y - 2}" stroke="#901812" stroke-width="2.5" marker-end="url(#arrow-red)"/>`;
+                    } else {
+                        html += `<line x1="${nt.x}" y1="${nt.y + 2}" x2="${nt.x}" y2="${nt.y + pLen + 4}" stroke="#901812" stroke-width="2.5" marker-end="url(#arrow-red)"/>`;
+                    }
+                    html += `<text x="${nt.x}" y="${P > 0 ? nt.y - pLen - 8 : nt.y + pLen + 14}" fill="#901812" font-size="10" font-weight="bold" text-anchor="middle">${P}kN</text>`;
+                }
+            });
+
+            nodesBot.concat(nodesTop).forEach(n => {
+                html += `<circle cx="${n.x}" cy="${n.y}" r="4" fill="#D1A705" stroke="#000" stroke-width="1"/>`;
+            });
+
+            html += drawPMSSupport(2, startX, origY);
+            html += drawPMSSupport(1, startX + Ltot*scale, origY);
+
+            const rAyLen = Math.min(Math.abs(Ray) * 1.5, 50);
+            if (Ray > 0) html += `<line x1="${startX}" y1="${origY + rAyLen + 25}" x2="${startX}" y2="${origY + 22}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            else if (Ray < 0) html += `<line x1="${startX}" y1="${origY + 22}" x2="${startX}" y2="${origY + rAyLen + 25}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            html += `<text x="${startX}" y="${origY + 65}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_Ay=${Ray.toFixed(1)}kN</text>`;
+
+            const rByLen = Math.min(Math.abs(Rby) * 1.5, 50);
+            const bx = startX + Ltot*scale;
+            if (Rby > 0) html += `<line x1="${bx}" y1="${origY + rByLen + 25}" x2="${bx}" y2="${origY + 22}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            else if (Rby < 0) html += `<line x1="${bx}" y1="${origY + 22}" x2="${bx}" y2="${origY + rByLen + 25}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            html += `<text x="${bx}" y="${origY + 65}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_By=${Rby.toFixed(1)}kN</text>`;
+
+            html += drawDimensionLine(startX, origY, startX + L1*scale, origY, `L1 = ${L1.toFixed(1)} m`, 45);
+            html += drawDimensionLine(startX + L1*scale, origY, startX + Ltot*scale, origY, `L2 = ${L2.toFixed(1)} m`, 45);
+
+            document.getElementById('content-roof').innerHTML = html;
+        }
+
+        /* LABORATÓRIO 4: GUINDASTE INDUSTRIAL COM APOIO VERTICAL REVERSO */
+        function updateCrane() {
+            const Dh = parseFloat(document.getElementById('slider-crane-dh').value);
+            const Dv = parseFloat(document.getElementById('slider-crane-dv').value);
+            const Ltot = parseFloat(document.getElementById('slider-crane-ltot').value);
+            const Htot = parseFloat(document.getElementById('slider-crane-htot').value);
+            const P = parseFloat(document.getElementById('slider-crane-p').value);
+
+            document.getElementById('lbl-crane-dh').innerText = Dh.toFixed(2);
+            document.getElementById('lbl-crane-dv').innerText = Dv.toFixed(2);
+            document.getElementById('lbl-crane-ltot').innerText = Ltot.toFixed(1);
+            document.getElementById('lbl-crane-htot').innerText = Htot.toFixed(1);
+            document.getElementById('lbl-crane-p').innerText = P;
+
+            // Reações Analíticas
+            const Ra1 = (P * Ltot) / Dv; // Horizontal Superior no nó (0,1)
+            const Ra3 = -Ra1;           // Horizontal Inferior no nó (0,0)
+            const Ra2 = P;              // Vertical Inferior no nó (1,0)
+
+            document.getElementById('val-ra1').innerText = `${Ra1.toFixed(1)} kN`;
+            document.getElementById('val-ra2').innerText = `${Ra2.toFixed(1)} kN`;
+            document.getElementById('val-ra3').innerText = `${Ra3.toFixed(1)} kN`;
+
+            const scale = 45, startX = 60, origY = 90;
+            let html = "";
+
+            const p00 = { x: startX, y: origY };
+            const p01 = { x: startX, y: origY - Dv*scale };
+            const p10 = { x: startX + Dh*scale, y: origY };
+            const pTip = { x: startX + Ltot*scale, y: origY - Htot*scale };
+
+            // Banzos Principais
+            html += `<line x1="${p00.x}" y1="${p00.y}" x2="${p01.x}" y2="${p01.y}" stroke="#1E40AF" stroke-width="3.5"/>`;
+            html += `<line x1="${p00.x}" y1="${p00.y}" x2="${p10.x}" y2="${p10.y}" stroke="#1E40AF" stroke-width="3.5"/>`;
+            html += `<line x1="${p10.x}" y1="${p10.y}" x2="${pTip.x}" y2="${pTip.y}" stroke="#1E40AF" stroke-width="3.5"/>`;
+            html += `<line x1="${p01.x}" y1="${p01.y}" x2="${pTip.x}" y2="${pTip.y}" stroke="#1E40AF" stroke-width="3.5"/>`;
+
+            // Diagonal Solicitada: Conexão Direta entre (0,1) e (1,0)
+            html += `<line x1="${p01.x}" y1="${p01.y}" x2="${p10.x}" y2="${p10.y}" stroke="#1E40AF" stroke-width="3"/>`;
+
+            // Treliçamento Interno Adicional
+            const segments = 5;
+            let prevTop = p01, prevBot = p10;
+            for(let i=1; i<=segments; i++) {
+                let t = i / segments;
+                let curBot = { x: p10.x + t*(pTip.x - p10.x), y: p10.y + t*(pTip.y - p10.y) };
+                let curTop = { x: p01.x + t*(pTip.x - p01.x), y: p01.y + t*(pTip.y - p01.y) };
+
+                html += `<line x1="${curBot.x}" y1="${curBot.y}" x2="${curTop.x}" y2="${curTop.y}" stroke="#1E40AF" stroke-width="2"/>`;
+                html += `<line x1="${prevTop.x}" y1="${prevTop.y}" x2="${curBot.x}" y2="${curBot.y}" stroke="#1E40AF" stroke-width="2"/>`;
+
+                html += `<circle cx="${curBot.x}" cy="${curBot.y}" r="3.5" fill="#D1A705"/>`;
+                html += `<circle cx="${curTop.x}" cy="${curTop.y}" r="3.5" fill="#D1A705"/>`;
+                prevTop = curTop; prevBot = curBot;
+            }
+
+            // Apoio de Parede em (0,1) Girado a 90° (Posicionado à Esquerda)
+            html += drawPMSSupport(1, p01.x, p01.y, 90);
+            // Apoios Horizontais Inferiores
+            html += drawPMSSupport(1, p00.x, p00.y, 0);
+            html += drawPMSSupport(1, p10.x, p10.y, 0);
+
+            // Vetor Força P com Escala Sensível
+            if (P !== 0) {
+                const pLen = Math.min(Math.abs(P) * 1.2, 55);
+                if (P > 0) html += `<line x1="${pTip.x}" y1="${pTip.y + 10}" x2="${pTip.x}" y2="${pTip.y + pLen + 10}" stroke="#901812" stroke-width="3" marker-end="url(#arrow-red)"/>`;
+                else html += `<line x1="${pTip.x}" y1="${pTip.y - 10}" x2="${pTip.x}" y2="${pTip.y - pLen - 10}" stroke="#901812" stroke-width="3" marker-end="url(#arrow-red)"/>`;
+                html += `<text x="${pTip.x + 12}" y="${pTip.y + 25}" fill="#901812" font-size="11" font-weight="bold">P = ${P} kN</text>`;
+            }
+
+            // Vetores de Reação Proporcionais
+            const ra1Len = Math.min(Math.abs(Ra1) * 1.0, 50);
+            if (Ra1 > 0) html += `<line x1="${p01.x - ra1Len - 25}" y1="${p01.y}" x2="${p01.x - 20}" y2="${p01.y}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            else html += `<line x1="${p01.x - 20}" y1="${p01.y}" x2="${p01.x - ra1Len - 25}" y2="${p01.y}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            html += `<text x="${p01.x - 30}" y="${p01.y - 12}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_A1 = ${Ra1.toFixed(1)} kN</text>`;
+
+            const ra2Len = Math.min(Math.abs(Ra2) * 1.0, 50);
+            if (Ra2 > 0) html += `<line x1="${p10.x}" y1="${p10.y + ra2Len + 25}" x2="${p10.x}" y2="${p10.y + 20}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            else html += `<line x1="${p10.x}" y1="${p10.y + 20}" x2="${p10.x}" y2="${p10.y + ra2Len + 25}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+            html += `<text x="${p10.x}" y="${p10.y + 65}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_A2 = ${Ra2.toFixed(1)} kN</text>`;
+
+            // Cotas
+            html += drawDimensionLine(p00.x, p00.y, p10.x, p00.y, `Dh = ${Dh.toFixed(1)} m`, 35);
+            html += drawDimensionLine(p00.x, p00.y, pTip.x, p00.y, `Ltot = ${Ltot.toFixed(1)} m`, 60);
+            html += drawDimensionLine(p00.x, p00.y, p00.x, p01.y, `Dv = ${Dv.toFixed(1)} m`, -45);
+            html += drawDimensionLine(p00.x, p00.y, p00.x, pTip.y, `Htot = ${Htot.toFixed(1)} m`, -70);
+
+            document.getElementById('content-crane').innerHTML = html;
+        }
+
+        /* LABORATÓRIO 5: ARQUIBANCADA COM VETORES REATORES DINÂMICOS */
+        function updateStadium() {
+            const Hp = parseFloat(document.getElementById('slider-stadium-hp').value);
+            const Lc = parseFloat(document.getElementById('slider-stadium-lc').value);
+            const La = parseFloat(document.getElementById('slider-stadium-la').value);
+            const q1 = parseFloat(document.getElementById('slider-stadium-q1').value);
+            const q2 = parseFloat(document.getElementById('slider-stadium-q2').value);
+            const q3 = parseFloat(document.getElementById('slider-stadium-q3').value);
+
+            document.getElementById('lbl-stadium-hp').innerText = Hp.toFixed(1);
+            document.getElementById('lbl-stadium-lc').innerText = Lc.toFixed(1);
+            document.getElementById('lbl-stadium-la').innerText = La.toFixed(1);
+            document.getElementById('lbl-stadium-q1').innerText = q1;
+            document.getElementById('lbl-stadium-q2').innerText = q2;
+            document.getElementById('lbl-stadium-q3').innerText = q3;
+
+            // Resultantes
+            const F1 = q1 * Lc;
+            const F2 = q2 * La;
+            const Fw = q3 * Hp;
+
+            const Ray = F1 + F2;
+            const Rax = -Fw;
+            const Ma = (F1 * (Lc/2)) + (F2 * (La/2)) - (Fw * (Hp/2));
+
+            document.getElementById('val-stadium-rax').innerText = `${Rax.toFixed(1)} kN`;
+            document.getElementById('val-stadium-ray').innerText = `${Ray.toFixed(1)} kN`;
+            document.getElementById('val-stadium-ma').innerText = `${Ma.toFixed(1)} kNm`;
+
+            const scale = 30, startX = 80, origY = 100;
+            let html = "";
+
+            const pBase = { x: startX, y: origY };
+            const pTop = { x: startX - 15, y: origY - Hp*scale };
+            const pRoofEnd = { x: pTop.x + Lc*scale, y: pTop.y - 10 };
+            const pMidPilar = { x: startX - 8, y: origY - (Hp/2)*scale };
+            const pArqEnd = { x: pMidPilar.x + La*scale, y: pMidPilar.y + 25 };
+
+            // Barras Estruturais
+            html += `<line x1="${pBase.x}" y1="${pBase.y}" x2="${pTop.x}" y2="${pTop.y}" stroke="#1E40AF" stroke-width="8"/>`;
+            html += `<line x1="${pTop.x}" y1="${pTop.y}" x2="${pRoofEnd.x}" y2="${pRoofEnd.y}" stroke="#1E40AF" stroke-width="6"/>`;
+            html += `<line x1="${pMidPilar.x}" y1="${pMidPilar.y}" x2="${pArqEnd.x}" y2="${pArqEnd.y}" stroke="#1E40AF" stroke-width="6"/>`;
+
+            // Carregamentos
+            if (q1 !== 0) {
+                const h1 = q1 * 1.2;
+                html += `<polygon points="${pTop.x},${pTop.y} ${pRoofEnd.x},${pRoofEnd.y} ${pRoofEnd.x},${pRoofEnd.y - h1} ${pTop.x},${pTop.y - h1}" fill="#D1A705" opacity="0.35"/>`;
+            }
+            if (q2 !== 0) {
+                const h2 = q2 * 1.2;
+                html += `<polygon points="${pMidPilar.x},${pMidPilar.y} ${pArqEnd.x},${pArqEnd.y} ${pArqEnd.x},${pArqEnd.y - h2} ${pMidPilar.x},${pMidPilar.y - h2}" fill="#D1A705" opacity="0.35"/>`;
+            }
+            if (q3 !== 0) {
+                const wLen = q3 * 1.2;
+                html += `<polygon points="${pBase.x},${pBase.y} ${pTop.x},${pTop.y} ${pTop.x - wLen},${pTop.y} ${pBase.x - wLen},${pBase.y}" fill="#D1A705" opacity="0.35"/>`;
+            }
+
+            // Engaste de 3º Gênero
+            html += drawPMSSupport(3, pBase.x, pBase.y, 0);
+
+            // Vetores de Reação Vertical R_Ay Proporcional
+            if (Ray !== 0) {
+                const rAyLen = Math.min(Math.abs(Ray) * 0.4, 55);
+                if (Ray > 0) html += `<line x1="${pBase.x}" y1="${pBase.y + rAyLen + 20}" x2="${pBase.x}" y2="${pBase.y + 12}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+                else html += `<line x1="${pBase.x}" y1="${pBase.y + 12}" x2="${pBase.x}" y2="${pBase.y + rAyLen + 20}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+                html += `<text x="${pBase.x}" y="${pBase.y + 65}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_Ay = ${Ray.toFixed(1)} kN</text>`;
+            }
+
+            // Vetores de Reação Horizontal R_Ax Proporcional
+            if (Rax !== 0) {
+                const rAxLen = Math.min(Math.abs(Rax) * 0.6, 55);
+                if (Rax > 0) html += `<line x1="${pBase.x - rAxLen - 15}" y1="${pBase.y}" x2="${pBase.x - 10}" y2="${pBase.y}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+                else html += `<line x1="${pBase.x + 10}" y1="${pBase.y}" x2="${pBase.x + rAxLen + 15}" y2="${pBase.y}" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-green)"/>`;
+                html += `<text x="${pBase.x - 20}" y="${pBase.y - 12}" fill="#15803D" font-size="11" font-weight="bold" text-anchor="middle">R_Ax = ${Rax.toFixed(1)} kN</text>`;
+            }
+
+            // Arco Vetorial de Momento de Reação M_A Invertido e Proporcional
+            if (Ma !== 0) {
+                const sweep = Ma > 0 ? "0" : "1";
+                html += `
+                    <path d="M ${pBase.x - 22} ${pBase.y - 10} A 22 22 0 0 ${sweep} ${pBase.x + 22} ${pBase.y - 10}" fill="none" stroke="#15803D" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+                    <text x="${pBase.x + 30}" y="${pBase.y - 14}" fill="#15803D" font-size="11" font-weight="bold">M_A = ${Ma.toFixed(0)} kNm</text>
+                `;
+            }
+
+            // Cotas em Projeção Ortogonal
+            html += drawDimensionLine(pTop.x, pTop.y, pRoofEnd.x, pTop.y, `Lc = ${Lc.toFixed(1)} m`, -25);
+            html += drawDimensionLine(pMidPilar.x, pMidPilar.y, pArqEnd.x, pMidPilar.y, `La = ${La.toFixed(1)} m`, 35);
+            html += drawDimensionLine(pBase.x, pBase.y, pBase.x, pTop.y, `Hp = ${Hp.toFixed(1)} m`, -35);
+
+            document.getElementById('content-stadium').innerHTML = html;
+        }
+
+        /* CONTROLE DE ZOOM E PAN DINÂMICO */
+        function attachCenteredZoom(containerId, groupName) {
+            const container = document.getElementById(containerId);
+            const group = document.getElementById(groupName);
+            if (!container || !group) return;
+
+            let scale = 1, panX = 0, panY = 0;
+            function applyTransform() {
+                group.setAttribute('transform', `translate(${panX}, ${panY}) scale(${scale})`);
+            }
+
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+
+                const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+                const newScale = Math.min(Math.max(0.4, scale * zoomFactor), 4.0);
+
+                panX = mouseX - (mouseX - panX) * (newScale / scale);
+                panY = mouseY - (mouseY - panY) * (newScale / scale);
+                scale = newScale;
+                applyTransform();
+            }, { passive: false });
+        }
+
+        /* INICIALIZAÇÃO DA APLICAÇÃO */
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            generateRandomTruss();
+            updateBeam();
+            updateRoof();
+            updateCrane();
+            updateStadium();
+
+            attachCenteredZoom('view-truss', 'zoom-group-truss');
+            attachCenteredZoom('view-beam', 'zoom-group-beam');
+            attachCenteredZoom('view-roof', 'zoom-group-roof');
+            attachCenteredZoom('view-crane', 'zoom-group-crane');
+            attachCenteredZoom('view-stadium', 'zoom-group-stadium');
+        });
+    </script>
+</body>
+</html>
