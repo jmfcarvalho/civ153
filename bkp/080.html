@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none; -webkit-touch-callout: none;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>CIV 153 - Aula 08: Momento de uma Força e Redução de Sistemas | PMS - UFV</title>
+    
+    <!-- CDNs Essenciais -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap');
+        
+        :root {
+            --pms-red: #901812;          /* Vermelho Vinho / Crimson */
+            --pms-gold: #D1A705;         /* Amarelo Ouro */
+            --pms-dark: #333333;         /* Grafite Escuro */
+            --pms-gray-light: #DEDEDE;   /* Bordas e divisórias */
+            --pms-bg-light: #F4F6F5;     /* Fundo de tela principal */
+
+            /* Escala das fontes fluida com fator 0.9 */
+            --fluid-h1: clamp(1.80rem, 3.50vw, 3.00rem);
+            --fluid-h2: clamp(1.30rem, 2.50vw, 2.00rem);
+            --fluid-h3: clamp(1.10rem, 1.80vw, 1.50rem);
+            --fluid-body: clamp(1.00rem, 1.45vw, 1.25rem);
+            --fluid-meta: clamp(0.90rem, 1.20vw, 1.05rem);
+            --fluid-tag: clamp(0.80rem, 1.00vw, 0.95rem);
+
+            --font-title: 'Montserrat', 'Arial Black', sans-serif;
+            --font-body: 'Liberation Sans Narrow', 'PT Sans Narrow', 'Arial Narrow', sans-serif;
+        }
+
+        html, body {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            overflow: hidden; background-color: var(--pms-bg-light);
+            font-family: var(--font-body); color: var(--pms-dark);
+        }
+
+        * { max-width: 100%; box-sizing: border-box; }
+
+        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
+        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.15; }
+        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
+        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.35; }
+        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); font-weight: 500; color: #333; }
+        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+
+        .slide-screen {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; pointer-events: none; z-index: 0; overflow-y: auto; overflow-x: hidden;
+            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .reveal-controls { position: fixed; bottom: 1.2rem; right: 1.2rem; width: 100px; height: 100px; z-index: 1000; }
+        .control-arrow {
+            position: absolute; width: 30px; height: 30px; background: transparent; border: none;
+            color: #A1A1A1; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: 0.2; pointer-events: none; transition: 0.2s;
+        }
+        .control-arrow.nav-up { top: 0; left: 35px; }
+        .control-arrow.nav-down { bottom: 0; left: 35px; }
+        .control-arrow.nav-left { top: 35px; left: 0; }
+        .control-arrow.nav-right { top: 35px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--pms-gold); opacity: 1; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { color: var(--pms-red); transform: scale(1.2); }
+
+        .svg-grid-bg {
+            background-image: radial-gradient(#555555 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative bg-[#F4F6F5] overflow-hidden">
+
+    <!-- Definição de Marcadores Globais SVG para Vetores -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#901812" />
+            </marker>
+            <marker id="arrow-dark" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#333333" />
+            </marker>
+            <marker id="arrow-gold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#D1A705" />
+            </marker>
+            <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#16A34A" />
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Barra de Progresso e Indicador -->
+    <div class="fixed top-0 left-0 h-1.5 bg-[#D1A705] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+    <div class="fixed bottom-4 left-6 text-fluid-meta font-bold text-[#333333] bg-white/90 px-3 py-1 rounded-full border border-[#DEDEDE] shadow-sm z-[1000]" id="slideIndicator">01 / 08</div>
+
+    <!-- Controles de Navegação Grid 2D -->
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full p-2 md:p-6 overflow-y-auto overflow-x-hidden relative">
+
+        <!-- SLIDE (0,0): CAPA DA AULA -->
+        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <span class="text-fluid-h3 text-[#901812] font-bold">CIV 153 • Introdução à Mecânica das Estruturas</span>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2 my-auto">
+                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl border-l-[14px] border-[#901812] shadow-xl space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV" class="h-10 w-auto">
+                            <div class="h-8 w-[2px] bg-[#DEDEDE]"></div>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC" class="h-10 w-auto">
+                        </div>
+                        <div>
+                            <h1 class="text-fluid-h1">CIV 153 <span class="block text-fluid-h2 text-[#333333]">Introdução à Mecânica das Estruturas</span></h1>
+                            <h2 class="text-fluid-h3 text-[#901812] font-bold mt-2">Aula 08 • Estática dos Corpos Rígidos: Momento de uma Força e Redução de Sistemas</h2>
+                        </div>
+                    </div>
+                    <div class="bg-[#333333] text-white p-5 rounded-3xl border border-[#D1A705]/40 flex justify-between items-center">
+                        <div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold block">Corpo Docente</span>
+                            <p class="text-fluid-body font-bold">Prof. José Maria Franco de Carvalho</p>
+                            <p class="text-fluid-meta text-gray-200">Colaboradores: M. C. Petrauski | A. C. P. Martins | C. F. R. Santos</p>
+                        </div>
+                        <a href="https://pms.ufv.br" target="_blank">
+                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms_black_text.png" alt="PMS" class="h-16 w-auto bg-white/5 p-1.5 rounded-lg border border-white/20">
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 flex flex-col justify-between text-center">
+                    <div class="bg-white p-4 rounded-2xl">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jmfcarvalho.github.io/civ153/aulas/080_momentoereducao/&color=901812" alt="QR Code PMS" class="w-full max-w-[160px] mx-auto">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Acesso Interativo Didático</span>
+                    </div>
+                    <h3 class="text-fluid-h3 text-white mt-2 font-bold">Laboratório e Interatividade</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (1,0): FORÇAS EXTERNAS, INTERNAS E TRANSMISSIBILIDADE -->
+        <div id="slide-forcas-transmissibilidade" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Forças Externas, Internas e Princípio da Transmissibilidade</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-[#333333] text-white p-5 rounded-2xl border-l-4 border-[#901812] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#D1A705] font-bold"><i class="fa-solid fa-arrow-trend-up mr-2 text-[#901812]"></i>1. Forças Externas</h3>
+                        <p class="text-fluid-body text-white font-medium">Representam a ação de outros corpos sobre o corpo rígido. Causam a aceleração/movimento do corpo ou garantem o seu repouso estático.</p>
+                    </div>
+                    <div class="bg-[#333333] text-white p-5 rounded-2xl border-l-4 border-[#D1A705] space-y-2">
+                        <h3 class="text-fluid-h3 text-[#D1A705] font-bold"><i class="fa-solid fa-cubes mr-2 text-[#D1A705]"></i>2. Forças Internas</h3>
+                        <p class="text-fluid-body text-white font-medium">São as forças de coesão intermoleculares que mantêm unidas as partículas que formam o corpo rígido indeformável.</p>
+                    </div>
+                    <div class="bg-[#333333] text-white p-5 rounded-2xl border-l-4 border-white space-y-2">
+                        <h3 class="text-fluid-h3 text-[#D1A705] font-bold"><i class="fa-solid fa-arrows-left-right mr-2 text-white"></i>3. Transmissibilidade</h3>
+                        <p class="text-fluid-body text-white font-medium">As condições de equilíbrio de um corpo rígido permanecem inalteradas se uma força $\mathbf{F}$ for substituída por $\mathbf{F}'$ de mesmo módulo, direção e sentido, atuando na mesma linha de ação.</p>
+                    </div>
+                </div>
+
+                <!-- Ilustração do Princípio da Transmissibilidade com Alto Contraste -->
+                <div class="bg-[#333333] text-white p-6 rounded-2xl border border-[#D1A705]/40 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-5 space-y-3">
+                        <h3 class="text-fluid-h3 text-[#D1A705]">Linha de Ação e Forças Equivalentes</h3>
+                        <p class="text-fluid-body text-white font-medium">A força $\mathbf{F}$ empurrando o corpo na extremidade $A$ produz exatamente a mesma tendência de movimento que a força $\mathbf{F}'$ puxando o mesmo corpo ao longo de sua linha de ação suporte:</p>
+                        <div class="bg-black/40 p-3 rounded-xl border border-[#D1A705]/60 text-fluid-body font-bold text-[#D1A705] text-center">
+                            $\mathbf{F} \sim \mathbf{F}' \iff \text{Mesmo Módulo, Direção, Sentido e Reta Suporte}$
+                        </div>
+                    </div>
+                    <div class="md:col-span-7 bg-white rounded-xl p-4 flex justify-center items-center">
+                        <svg width="480" height="130" viewBox="-200 -65 480 130" class="w-full h-auto">
+                            <!-- Reta Suporte de Ação -->
+                            <line x1="-180" y1="0" x2="260" y2="0" stroke="#333333" stroke-width="2" stroke-dasharray="5"/>
+                            
+                            <!-- Corpo Rígido -->
+                            <rect x="-60" y="-35" width="120" height="70" fill="#E2E8F0" stroke="#333333" stroke-width="3" rx="8"/>
+                            <text x="0" y="5" text-anchor="middle" font-weight="bold" fill="#333333" font-size="15">Corpo Rígido</text>
+
+                            <!-- Força F (Empurrando em A) -->
+                            <line x1="-160" y1="0" x2="-60" y2="0" stroke="#901812" stroke-width="4.5" marker-end="url(#arrow-red)"/>
+                            <circle cx="-60" cy="0" r="5" fill="#901812"/>
+                            <text x="-110" y="-12" text-anchor="middle" fill="#901812" font-size="14" font-weight="bold">F (Empurrar em A)</text>
+
+                            <!-- Força F' (Puxando em B) -->
+                            <line x1="60" y1="0" x2="160" y2="0" stroke="#D1A705" stroke-width="4.5" marker-end="url(#arrow-gold)"/>
+                            <circle cx="60" cy="0" r="5" fill="#D1A705"/>
+                            <text x="110" y="-12" text-anchor="middle" fill="#D1A705" font-size="14" font-weight="bold">F' (Puxar em B)</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,0): PRODUTO VETORIAL E MOMENTO DE UMA FORÇA COM ÓRBITA 3D NO PLANO XZ -->
+        <div id="slide-produto-vetorial" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Produto Vetorial e Momento de uma Força em Relação a um Ponto</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-5 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div class="lg:col-span-6 space-y-4">
+                        <div class="bg-[#F4F6F5] p-4 rounded-2xl border-l-4 border-[#901812] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">1. Definição do Produto Vetorial ($\mathbf{V} = \mathbf{P} \times \mathbf{Q}$)</h3>
+                            <p class="text-fluid-body text-[#333333]">O produto vetorial resulta em um vetor $\mathbf{V}$ perpendicular ao plano dos vetores $\mathbf{P}$ e $\mathbf{Q}$, com módulo $V = P \cdot Q \cdot \operatorname{sen}\theta$ e sentido determinado pela regra da mão direita.</p>
+                        </div>
+
+                        <div class="bg-[#F4F6F5] p-4 rounded-2xl border-l-4 border-[#D1A705] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">2. Vetor Momento de uma Força ($\mathbf{M}_O$)</h3>
+                            <p class="text-fluid-body text-[#333333]">Dado o vetor posição $\mathbf{r}$ do ponto de aplicação $A$ em relação ao polo $O$, o momento da força $\mathbf{F}$ é definido como:</p>
+                            <div class="p-2 bg-white rounded-xl border text-center font-bold text-[#901812] text-fluid-h3">
+                                $$\mathbf{M}_O = \mathbf{r} \times \mathbf{F}$$
+                            </div>
+                            <p class="text-fluid-body text-[#333333]">Se $\mathbf{r}$ e $\mathbf{F}$ estão contidos no plano horizontal $XZ$, o vetor momento $\mathbf{M}_O$ é estritamente perpendicular ao plano, apontando no eixo vertical $Y$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Visualizador Tridimensional Interativo 3D com Controle de Órbita -->
+                    <div class="lg:col-span-6 bg-[#333333] text-white p-4 rounded-3xl border-2 border-[#D1A705]/40 space-y-3">
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <h3 class="text-fluid-h3 text-[#D1A705] font-bold">Cena 3D • Plano $XZ$ e Momento Perpendicular em $Y$</h3>
+                            <span class="text-fluid-tag text-gray-300"><i class="fa-solid fa-arrows-spin mr-1"></i>Órbita 3D</span>
+                        </div>
+
+                        <!-- Sliders de Ângulo de Visão Tridimensional -->
+                        <div class="grid grid-cols-2 gap-3 text-fluid-meta">
+                            <div>
+                                <label class="font-bold text-[#D1A705]">Azimute ($\phi$): <span id="txt-azimuth">45°</span></label>
+                                <input type="range" id="slider-azimuth" min="0" max="360" value="45" class="w-full accent-[#D1A705]" oninput="render3DMomentScene()">
+                            </div>
+                            <div>
+                                <label class="font-bold text-[#D1A705]">Elevação ($\psi$): <span id="txt-elevation">25°</span></label>
+                                <input type="range" id="slider-elevation" min="5" max="85" value="25" class="w-full accent-[#D1A705]" oninput="render3DMomentScene()">
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-1 h-[250px] relative overflow-hidden flex items-center justify-center">
+                            <svg id="svg-moment-3d" width="100%" height="100%" viewBox="-180 -140 360 280" class="w-full h-full">
+                                <g id="group-3d-scene"></g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (2,1) [LAB 1]: SIMULADOR DE MOMENTO EM 2D COM SETA DE GIRO NO POLO (CORRIGIDO) -->
+        <div id="slide-lab1" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 1 • Cálculo do Momento Plano ($2D$)</h2>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-3 py-1.5 rounded-xl text-fluid-tag hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 rounded-3xl border-2 border-[#D1A705] shadow-2xl space-y-4 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                    <div class="lg:col-span-4 bg-[#F4F6F5] p-4 rounded-2xl border border-[#DEDEDE] space-y-3">
+                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Ajustes dos Vetores $\mathbf{r}$ e $\mathbf{F}$</h3>
+                        <div>
+                            <label class="text-fluid-body font-bold text-[#333333]">Braço Posição $r$: <span id="txt-lab1-r" class="text-[#901812]">150</span> mm</label>
+                            <input type="range" id="slider-lab1-r" min="50" max="250" value="150" class="w-full accent-[#901812]" oninput="updateLab1Moment()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-body font-bold text-[#333333]">Força Aplicada $F$: <span id="txt-lab1-f" class="text-[#901812]">100</span> N</label>
+                            <input type="range" id="slider-lab1-f" min="20" max="200" value="100" class="w-full accent-[#901812]" oninput="updateLab1Moment()">
+                        </div>
+                        <div>
+                            <label class="text-fluid-body font-bold text-[#333333]">Direção da Força ($\theta$): <span id="txt-lab1-ang" class="text-[#901812]">60°</span></label>
+                            <input type="range" id="slider-lab1-ang" min="0" max="360" value="60" class="w-full accent-[#901812]" oninput="updateLab1Moment()">
+                        </div>
+
+                        <div class="bg-[#333333] text-white p-4 rounded-xl space-y-1.5 text-fluid-body">
+                            <div>Braço Perpendicular $d$: <strong id="val-lab1-d" class="text-[#D1A705]">0.0 mm</strong></div>
+                            <div>Momento Escalar $M_O$: <strong id="val-lab1-m" class="text-green-400">0.0 N·m</strong></div>
+                            <div>Sentido Físico de Rotação: <strong id="val-lab1-sense" class="text-[#D1A705]">Anti-Horário (+z)</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-lab1" class="lg:col-span-8 bg-[#333333] rounded-2xl relative overflow-hidden h-[380px] border border-[#D1A705]/40">
+                        <svg id="svg-lab1" width="100%" height="100%" viewBox="-250 -180 500 360" class="w-full h-full svg-grid-bg">
+                            <g id="viewport-group-lab1">
+                                <circle cx="0" cy="0" r="6" fill="#D1A705" />
+                                <text x="-20" y="22" fill="#D1A705" font-weight="bold" font-size="14">O (Polo)</text>
+                                <g id="lab1-elements"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,0): TEOREMA DE VARIGNON COM FOTO DE PIERRE VARIGNON -->
+        <div id="slide-varignon" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Teorema de Varignon (Princípio dos Momentos)</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <!-- Retrato Histórico de Pierre Varignon com Link Corrigido -->
+                    <div class="md:col-span-5 flex flex-col items-center">
+                        <div class="relative bg-[#F4F6F5] p-4 rounded-3xl border-2 border-[#D1A705] text-center w-full max-w-sm">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Pierre_Varignon.jpg" 
+                                 alt="Pierre Varignon" class="w-36 h-44 object-cover rounded-2xl mx-auto shadow-md border-2 border-[#333333]">
+                            <span class="text-fluid-h3 text-[#901812] font-bold block mt-2">Pierre Varignon</span>
+                            <span class="text-fluid-body font-bold text-[#333333] block">1654 – 1722</span>
+
+                            <div class="mt-3 bg-[#901812] text-white p-3 rounded-2xl text-fluid-body font-medium shadow-lg">
+                                "O momento em relação a um dado ponto $O$ da resultante de diversas forças concorrentes é igual à soma dos momentos de cada uma das forças componentes em relação ao mesmo ponto $O$."
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enunciado e Formulação Matemática -->
+                    <div class="md:col-span-7 space-y-4">
+                        <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-4 border-[#901812] space-y-3">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Demostração Vetorial pela Distributividade</h3>
+                            <p class="text-fluid-body text-[#333333]">O teorema deriva diretamente da propriedade distributiva do produto vetorial em relação à adição de forças concorrentes:</p>
+
+                            <div class="bg-white p-4 rounded-xl border-2 border-[#901812] font-bold text-fluid-body text-center space-y-2">
+                                $$\mathbf{M}_R = \mathbf{r} \times \mathbf{R} = \mathbf{r} \times (\mathbf{F}_1 + \mathbf{F}_2 + \dots + \mathbf{F}_n)$$
+                                $$\mathbf{M}_R = (\mathbf{r} \times \mathbf{F}_1) + (\mathbf{r} \times \mathbf{F}_2) + \dots + (\mathbf{r} \times \mathbf{F}_n) = \sum \mathbf{M}_O$$
+                            </div>
+                        </div>
+
+                        <div class="bg-[#333333] text-white p-5 rounded-2xl border border-[#D1A705]/40 space-y-2">
+                            <h3 class="text-fluid-h3 text-[#D1A705] font-bold"><i class="fa-solid fa-lightbulb mr-2"></i>Aplicação Prática em $2D$</h3>
+                            <p class="text-fluid-body text-gray-200">Facilita o cálculo ao decompor forças inclinadas em componentes ortogonais $F_x$ e $F_y$, multiplicando cada uma pelo seu braço perpendicular correspondente:</p>
+                            <p class="text-fluid-h3 font-bold text-[#D1A705] text-center">$M_O = F_y \cdot x - F_x \cdot y$</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (3,1) [LAB 2]: SIMULADOR DE VARIGNON COM CANTONEIRA RECONFIGURÁVEL -->
+        <div id="slide-lab2" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 2 • Decomposição de Varignon e Geometria da Cantoneira</h2>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-3 py-1.5 rounded-xl text-fluid-tag hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 rounded-3xl border-2 border-[#901812] shadow-2xl space-y-4 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-5 space-y-3">
+                        <!-- Ajustes Geométricos da Cantoneira -->
+                        <div class="bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">1. Dimensões do Suporte em L</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-fluid-body font-bold text-[#333333]">Aba Vert. $y_A$: <span id="txt-var-ya" class="text-[#901812]">160</span> mm</label>
+                                    <input type="range" id="slider-var-ya" min="80" max="300" value="160" class="w-full accent-[#901812]" oninput="updateVarignonLab()">
+                                </div>
+                                <div>
+                                    <label class="text-fluid-body font-bold text-[#333333]">Aba Horiz. $x_B$: <span id="txt-var-xb" class="text-[#901812]">200</span> mm</label>
+                                    <input type="range" id="slider-var-xb" min="100" max="350" value="200" class="w-full accent-[#901812]" oninput="updateVarignonLab()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ajustes de Carga -->
+                        <div class="bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">2. Força Aplicada no Ponto $A$</h3>
+                            <div>
+                                <label class="text-fluid-body font-bold text-[#333333]">Módulo $F$: <span id="txt-var-f" class="text-[#901812]">800</span> N</label>
+                                <input type="range" id="slider-var-f" min="100" max="1500" value="800" class="w-full accent-[#901812]" oninput="updateVarignonLab()">
+                            </div>
+                            <div>
+                                <label class="text-fluid-body font-bold text-[#333333]">Ângulo $\theta$: <span id="txt-var-ang" class="text-[#901812]">60°</span></label>
+                                <input type="range" id="slider-var-ang" min="0" max="360" value="60" class="w-full accent-[#901812]" oninput="updateVarignonLab()">
+                            </div>
+                        </div>
+
+                        <!-- Saída Numérica em Tempo Real -->
+                        <div class="bg-[#333333] text-white p-3 rounded-2xl border border-[#D1A705]/40 space-y-1 text-fluid-body">
+                            <div>Vetor Posição $\mathbf{r}_{A/B}$: <strong id="val-var-rab" class="text-[#D1A705]">(-0.20i + 0.16j) m</strong></div>
+                            <div>Componentes da Força: <strong id="val-var-fxfy" class="text-[#D1A705]">Fx = 400N | Fy = 692.8N</strong></div>
+                            <div>Momento por $F_y$: <strong id="val-var-mfy" class="text-white">138.6 N·m</strong></div>
+                            <div>Momento por $F_x$: <strong id="val-var-mfx" class="text-white">64.0 N·m</strong></div>
+                            <div class="border-t border-white/20 pt-1">Momento Resultante em $B$: <strong id="val-var-mb" class="text-green-400">202.6 N·m</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-lab2" class="lg:col-span-7 bg-[#333333] rounded-2xl relative overflow-hidden h-[380px] border border-[#D1A705]/40">
+                        <svg id="svg-lab2" width="100%" height="100%" viewBox="-220 -190 440 380" class="w-full h-full svg-grid-bg">
+                            <g id="viewport-group-lab2">
+                                <g id="varignon-elements"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,0): BINÁRIOS E REDUÇÃO DE SISTEMAS DE FORÇAS -->
+        <div id="slide-binarios-reducao" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Binários (Conjugados) e Redução Força-Binário</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-4 border-[#901812] space-y-3">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">1. Conjugado ou Binário de Forças</h3>
+                        <p class="text-fluid-body text-[#333333]">Formado por duas forças $\mathbf{F}$ e $-\mathbf{F}$ de mesmo módulo, linhas de ação paralelas e sentidos opostos. A força resultante é nula ($\sum \mathbf{F} = \mathbf{0}$), porém o momento gerado independe do ponto escolhido:</p>
+                        <div class="bg-white p-3 rounded-xl border text-center font-bold text-[#901812] text-fluid-h3">
+                            $$\mathbf{M} = \mathbf{r} \times \mathbf{F}$$
+                        </div>
+                        <p class="text-fluid-body text-[#333333]">O momento de um binário é um **vetor livre**, provocando apenas rotação pura no corpo rígido.</p>
+                    </div>
+
+                    <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-4 border-[#D1A705] space-y-3">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">2. Redução a uma Força e um Binário em $O$</h3>
+                        <p class="text-fluid-body text-[#333333]">Ao mover uma força $\mathbf{F}$ de sua linha de ação original para um novo ponto de referência $O$, deve-se adicionar um momento binário equivalente $\mathbf{M}_O = \mathbf{r} \times \mathbf{F}$ para preservar os efeitos mecânicos externos:</p>
+                        <div class="bg-white p-3 rounded-xl border text-center font-bold text-[#333333] text-fluid-h3">
+                            $$\mathbf{R} = \sum \mathbf{F}, \quad \mathbf{M}_O^R = \sum \mathbf{M}_O$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (4,1) [LAB 3]: REDUÇÃO DE SISTEMAS COM ARCO DE MOMENTO NO POLO O (CORRIGIDO) -->
+        <div id="slide-lab3" class="slide-screen slide-hidden-down flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 3 • Redução Sistema Força-Binário</h2>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-3 py-1.5 rounded-xl text-fluid-tag hover:bg-[#901812] transition">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
+                        </button>
+                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-5 rounded-3xl border-2 border-[#901812] shadow-2xl space-y-4 my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <div class="lg:col-span-5 space-y-3">
+                        <div class="bg-[#F4F6F5] p-3 rounded-2xl border border-[#DEDEDE] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Translação de Força para a Origem $O$</h3>
+                            <div>
+                                <label class="text-fluid-body font-bold text-[#333333]">Posição $X_A$: <span id="txt-red-xa" class="text-[#901812]">150</span> mm</label>
+                                <input type="range" id="slider-red-xa" min="-200" max="200" value="150" class="w-full accent-[#901812]" oninput="updateReductionLab()">
+                            </div>
+                            <div>
+                                <label class="text-fluid-body font-bold text-[#333333]">Posição $Y_A$: <span id="txt-red-ya" class="text-[#901812]">100</span> mm</label>
+                                <input type="range" id="slider-red-ya" min="-150" max="150" value="100" class="w-full accent-[#901812]" oninput="updateReductionLab()">
+                            </div>
+                            <div>
+                                <label class="text-fluid-body font-bold text-[#333333]">Força Vertical $F_y$: <span id="txt-red-fy" class="text-[#901812]">-400</span> N</label>
+                                <input type="range" id="slider-red-fy" min="-800" max="800" value="-400" class="w-full accent-[#901812]" oninput="updateReductionLab()">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#333333] text-white p-3.5 rounded-2xl border border-[#D1A705]/40 grid grid-cols-1 gap-1 text-fluid-body">
+                            <div>Força Transladada em $O$: <strong id="val-red-fo" class="text-[#D1A705]">0.0 N</strong></div>
+                            <div>Binário Induzido em $O$ ($M_O$): <strong id="val-red-mo" class="text-green-400">0.0 N·m</strong></div>
+                            <div>Distância Equivalente do Eixo Único: <strong id="val-red-deq" class="text-[#D1A705]">0.0 mm</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="view-lab3" class="lg:col-span-7 bg-[#333333] rounded-2xl relative overflow-hidden h-[350px] border border-[#D1A705]/40">
+                        <svg id="svg-lab3" width="100%" height="100%" viewBox="-250 -180 500 360" class="w-full h-full svg-grid-bg">
+                            <g id="viewport-group-lab3">
+                                <line x1="-300" y1="0" x2="300" y2="0" stroke="#666" stroke-width="1.5" stroke-dasharray="3"/>
+                                <line x1="0" y1="-300" x2="0" y2="300" stroke="#666" stroke-width="1.5" stroke-dasharray="3"/>
+                                <circle cx="0" cy="0" r="5" fill="#D1A705"/>
+                                <text x="-20" y="20" fill="#D1A705" font-weight="bold" font-size="14">O</text>
+                                <g id="reduction-elements"></g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (5,0): RECURSOS DIDÁTICOS E EXERCÍCIOS RESOLVIDOS -->
+        <div id="slide-exercicios" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Exercícios Resolvidos e Guias Práticos</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-8 rounded-3xl border border-[#DEDEDE] shadow-xl text-center space-y-6 my-auto">
+                <div class="p-6 bg-[#F4F6F5] rounded-3xl border-2 border-[#D1A705] max-w-2xl mx-auto space-y-4">
+                    <i class="fa-solid fa-file-pdf text-6xl text-[#901812]"></i>
+                    <h3 class="text-fluid-h2 text-[#333333]">Material Didático Integrado</h3>
+                    <p class="text-fluid-body text-[#333333]">Acesse o documento completo contendo os conceitos teóricos e a lista de exemplos resolvidos da Aula 08 (Suporte em L, Alavancas e Caixote):</p>
+                    <a href="conceitoseexercicios.pdf" target="_blank" class="inline-block bg-[#901812] text-white font-bold px-8 py-4 rounded-2xl hover:bg-black transition text-fluid-body shadow-xl">
+                        <i class="fa-solid fa-download mr-2"></i>Abrir conceitoseexercicios.pdf
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (6,0): IN CLASS -->
+        <div id="slide-inclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Síncronas • In Class & Chamada</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-7 space-y-4">
+                        <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-4 border-[#901812] space-y-2">
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Instruções de Resposta</h3>
+                            <p class="text-fluid-body text-[#333333]">Acesse o formulário Google para confirmar presença e submeter o quiz In Class da Aula 08:</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdDhd42givEZE85kBKqYrePiUPeFLbnLDDFVxnfrkPWyoevNA/viewform?usp=header" target="_blank" class="inline-block bg-[#901812] text-white font-bold px-6 py-3 rounded-xl hover:bg-black transition text-fluid-body shadow-md mt-2">
+                                <i class="fa-solid fa-square-poll-vertical mr-2"></i>Formulário In-Class
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 text-center space-y-3">
+                        <div class="bg-white p-4 rounded-2xl">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://docs.google.com/forms/d/e/1FAIpQLSdDhd42givEZE85kBKqYrePiUPeFLbnLDDFVxnfrkPWyoevNA/viewform?usp=header&color=901812" alt="QR Code In Class" class="w-full max-w-[170px] mx-auto">
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">Escanear para Frequência Síncrona</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE (7,0): OFF CLASS & ENCERRAMENTO -->
+        <div id="slide-offclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
+            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
+                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
+                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Autônomas • Off Class</h2>
+                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                    <div class="md:col-span-7 bg-[#F4F6F5] p-6 rounded-3xl border border-[#DEDEDE] flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <h3 class="text-fluid-h3 text-[#901812] font-bold"><i class="fa-solid fa-book-open mr-2"></i>Lista Extraclasse</h3>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLScFrAxAnJR95wIcsJOcBrrZoOcyU0yGuOdXqt9CM98A9U3-eA/viewform?usp=header" target="_blank" class="inline-block bg-[#333333] text-[#D1A705] font-bold px-6 py-3 rounded-xl hover:bg-[#901812] hover:text-white transition text-fluid-body shadow-md">
+                                <i class="fa-solid fa-pen-to-square mr-2"></i>Acessar Lista Off-Class
+                            </a>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-2xl border-l-4 border-[#D1A705] space-y-1">
+                            <span class="text-fluid-tag text-gray-500 font-bold block">PRÓXIMA AULA</span>
+                            <span class="text-fluid-h3 text-[#333333] font-bold block">Aula 09: Equilíbrio de Corpos Rígidos e Tipos de Apoio</span>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 text-center flex flex-col justify-between items-center space-y-3">
+                        <div class="bg-white p-4 rounded-2xl w-full">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://docs.google.com/forms/d/e/1FAIpQLScFrAxAnJR95wIcsJOcBrrZoOcyU0yGuOdXqt9CM98A9U3-eA/viewform?usp=header" alt="QR Code Off Class" class="w-full max-w-[170px] mx-auto">
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block">QR Code • Lista Off-Class</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ENGINE JAVASCRIPT E CALCULADORAS INTERATIVAS DA AULA 8 -->
+    <script>
+        /* ----------------------------------------------------
+           1. SISTEMA DE NAVEGAÇÃO MATRIZ ORTOGONAL (GRID 2D)
+           ---------------------------------------------------- */
+        const slideGrid = {
+            '0,0': 'slide-capa',
+            '1,0': 'slide-forcas-transmissibilidade',
+            '2,0': 'slide-produto-vetorial',
+            '2,1': 'slide-lab1',               // Bifurcação Vertical Lab 1
+            '3,0': 'slide-varignon',
+            '3,1': 'slide-lab2',               // Bifurcação Vertical Lab 2
+            '4,0': 'slide-binarios-reducao',
+            '4,1': 'slide-lab3',               // Bifurcação Vertical Lab 3
+            '5,0': 'slide-exercicios',
+            '6,0': 'slide-inclass',
+            '7,0': 'slide-offclass'
+        };
+
+        let currentX = 0, currentY = 0;
+        const totalHorizontal = 8;
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            document.getElementById('progressBar').style.width = `${(currentX / (totalHorizontal - 1)) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `${(currentX + 1).toString().padStart(2, '0')} / ${totalHorizontal.toString().padStart(2, '0')}`;
+            
+            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in arrows) {
+                const el = document.getElementById(`btn-nav-${d}`);
+                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                
+                cur.classList.remove('slide-active');
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-up');
+                else if (dy < 0) cur.classList.add('slide-hidden-down');
+
+                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.add('slide-active');
+                
+                currentX = nx; currentY = ny;
+                updateUI();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        /* ----------------------------------------------------
+           2. MOTOR DE ZOOM CENTRADO NO CURSOR/PINÇA
+           ---------------------------------------------------- */
+        function attachCenteredZoom(containerId, groupName) {
+            const container = document.getElementById(containerId);
+            const group = document.getElementById(groupName);
+            if (!container || !group) return;
+
+            let scale = 1, panX = 0, panY = 0;
+            let initialPinchDist = null;
+
+            function applyTransform() {
+                group.setAttribute('transform', `translate(${panX}, ${panY}) scale(${scale})`);
+            }
+
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - rect.width / 2;
+                const mouseY = e.clientY - rect.top - rect.height / 2;
+
+                const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+                const newScale = Math.min(Math.max(0.5, scale * zoomFactor), 4.0);
+
+                panX = mouseX - (mouseX - panX) * (newScale / scale);
+                panY = mouseY - (mouseY - panY) * (newScale / scale);
+                scale = newScale;
+
+                applyTransform();
+            }, { passive: false });
+
+            container.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    initialPinchDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                }
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && initialPinchDist) {
+                    const currentDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const zoomFactor = currentDist / initialPinchDist;
+                    scale = Math.min(Math.max(0.5, scale * zoomFactor), 4.0);
+                    initialPinchDist = currentDist;
+                    applyTransform();
+                }
+            }, { passive: true });
+
+            container.addEventListener('touchend', () => { initialPinchDist = null; });
+            applyTransform();
+        }
+
+        /* ----------------------------------------------------
+           3. CENA 3D TRIDIMENSIONAL DE MOMENTO (PLANO XZ & EIXO Y)
+           ---------------------------------------------------- */
+        function render3DMomentScene() {
+            const azimDeg = parseFloat(document.getElementById('slider-azimuth').value);
+            const elevDeg = parseFloat(document.getElementById('slider-elevation').value);
+
+            document.getElementById('txt-azimuth').innerText = `${azimDeg}°`;
+            document.getElementById('txt-elevation').innerText = `${elevDeg}°`;
+
+            const g = document.getElementById('group-3d-scene');
+            if (!g) return;
+
+            const azim = azimDeg * Math.PI / 180;
+            const elev = elevDeg * Math.PI / 180;
+
+            function project3D(x, y, z) {
+                const x1 = x * Math.cos(azim) - z * Math.sin(azim);
+                const z1 = x * Math.sin(azim) + z * Math.cos(azim);
+                const y1 = y * Math.cos(elev) - z1 * Math.sin(elev);
+                return { x: x1, y: -y1 };
+            }
+
+            const o = project3D(0, 0, 0);
+            const xAxis = project3D(110, 0, 0);
+            const yAxis = project3D(0, 110, 0);
+            const zAxis = project3D(0, 0, 110);
+
+            const p1 = project3D(100, 0, 0);
+            const p2 = project3D(100, 0, 100);
+            const p3 = project3D(0, 0, 100);
+
+            const rEnd = project3D(80, 0, 50);
+            const fEnd = project3D(120, 0, 110);
+            const mEnd = project3D(0, 100, 0);
+
+            g.innerHTML = `
+                <!-- Plano XZ Transparente -->
+                <polygon points="${o.x},${o.y} ${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="rgba(209, 167, 5, 0.15)" stroke="#D1A705" stroke-dasharray="3"/>
+
+                <!-- Eixo X (Cinza) -->
+                <line x1="${o.x}" y1="${o.y}" x2="${xAxis.x}" y2="${xAxis.y}" stroke="#888" stroke-width="1.5"/>
+                <text x="${xAxis.x+5}" y="${xAxis.y}" fill="#333" font-weight="bold" font-size="12">X</text>
+
+                <!-- Eixo Z (Cinza) -->
+                <line x1="${o.x}" y1="${o.y}" x2="${zAxis.x}" y2="${zAxis.y}" stroke="#888" stroke-width="1.5"/>
+                <text x="${zAxis.x+5}" y="${zAxis.y}" fill="#333" font-weight="bold" font-size="12">Z</text>
+
+                <!-- Eixo Y Vertical (Verde) -->
+                <line x1="${o.x}" y1="${o.y}" x2="${yAxis.x}" y2="${yAxis.y}" stroke="#16A34A" stroke-width="2" stroke-dasharray="2"/>
+                <text x="${yAxis.x+5}" y="${yAxis.y-5}" fill="#16A34A" font-weight="bold" font-size="12">Y (Eixo Perpendicular)</text>
+
+                <!-- Vetor Posição r no Plano XZ (Amarelo) -->
+                <line x1="${o.x}" y1="${o.y}" x2="${rEnd.x}" y2="${rEnd.y}" stroke="#D1A705" stroke-width="3.5" marker-end="url(#arrow-gold)"/>
+                <text x="${rEnd.x/2}" y="${rEnd.y/2 + 15}" fill="#D1A705" font-weight="bold" font-size="13">r (Plano XZ)</text>
+
+                <!-- Vetor Força F no Plano XZ (Vermelho) -->
+                <line x1="${rEnd.x}" y1="${rEnd.y}" x2="${fEnd.x}" y2="${fEnd.y}" stroke="#901812" stroke-width="3.5" marker-end="url(#arrow-red)"/>
+                <text x="${fEnd.x + 8}" y="${fEnd.y}" fill="#901812" font-weight="bold" font-size="13">F (Plano XZ)</text>
+
+                <!-- Vetor Momento M = r x F no Eixo Y (Verde/Escuro) -->
+                <line x1="${o.x}" y1="${o.y}" x2="${mEnd.x}" y2="${mEnd.y}" stroke="#16A34A" stroke-width="4.5" marker-end="url(#arrow-green)"/>
+                <text x="${mEnd.x - 45}" y="${mEnd.y - 5}" fill="#16A34A" font-weight="bold" font-size="14">M = r × F</text>
+            `;
+        }
+
+        /* ----------------------------------------------------
+           4. LAB 1: SIMULADOR DE MOMENTO EM 2D (CENTRO DO ARCO NO POLO O)
+           ---------------------------------------------------- */
+        function updateLab1Moment() {
+            const r = parseFloat(document.getElementById('slider-lab1-r').value);
+            const f = parseFloat(document.getElementById('slider-lab1-f').value);
+            const ang = parseFloat(document.getElementById('slider-lab1-ang').value);
+
+            document.getElementById('txt-lab1-r').innerText = r;
+            document.getElementById('txt-lab1-f').innerText = f;
+            document.getElementById('txt-lab1-ang').innerText = `${ang}°`;
+
+            const rad = ang * Math.PI / 180;
+            const rx = r, ry = 0;
+            const fx = f * Math.cos(rad);
+            const fy = f * Math.sin(rad);
+
+            const momentVal = (rx * fy) / 1000.0;
+            const perpDist = r * Math.sin(rad);
+
+            document.getElementById('val-lab1-d').innerText = `${Math.abs(perpDist).toFixed(1)} mm`;
+            document.getElementById('val-lab1-m').innerText = `${Math.abs(momentVal).toFixed(2)} N·m`;
+            document.getElementById('val-lab1-sense').innerText = momentVal >= 0 ? 'Anti-Horário (+z)' : 'Horário (-z)';
+
+            const container = document.getElementById('lab1-elements');
+            if (!container) return;
+
+            const rx_s = rx * 0.8;
+            const fx_s = fx * 0.6;
+            const fy_s = -fy * 0.6;
+
+            const isAntiClockwise = momentVal >= 0;
+            const R_arc = 35; // Raio do arco de momento em torno do polo (0,0)
+
+            // Arco centrado rigorosamente na Origem O (0,0)
+            const arcPath = isAntiClockwise
+                ? `M ${R_arc} 0 A ${R_arc} ${R_arc} 0 0 0 0 -${R_arc}` // Sentido Anti-Horário
+                : `M 0 -${R_arc} A ${R_arc} ${R_arc} 0 0 0 ${R_arc} 0`; // Sentido Horário
+
+            container.innerHTML = `
+                <!-- Vetor Posição r -->
+                <line x1="0" y1="0" x2="${rx_s}" y2="0" stroke="#D1A705" stroke-width="3.5" marker-end="url(#arrow-gold)"/>
+                <text x="${rx_s/2}" y="22" fill="#D1A705" font-weight="bold" text-anchor="middle" font-size="13">r = ${r}mm</text>
+
+                <!-- Vetor Força F -->
+                <line x1="${rx_s}" y1="0" x2="${rx_s + fx_s}" y2="${fy_s}" stroke="#901812" stroke-width="4" marker-end="url(#arrow-red)"/>
+                <text x="${rx_s + fx_s + 10}" y="${fy_s}" fill="#901812" font-weight="bold" font-size="13">F = ${f}N</text>
+
+                <!-- Projeção / Braço d -->
+                <line x1="${rx_s}" y1="0" x2="${rx_s}" y2="${fy_s}" stroke="#888" stroke-dasharray="3"/>
+
+                <!-- Seta do Momento com Centro Rigorosamente no Polo O (0,0) -->
+                <path d="${arcPath}" fill="none" stroke="${isAntiClockwise ? '#16A34A' : '#901812'}" stroke-width="3.5" marker-end="${isAntiClockwise ? 'url(#arrow-green)' : 'url(#arrow-red)'}"/>
+            `;
+        }
+
+        /* ----------------------------------------------------
+           5. LAB 2: TEOREMA DE VARIGNON (CANTONEIRA RECONFIGURÁVEL)
+           ---------------------------------------------------- */
+        function updateVarignonLab() {
+            const ya_mm = parseFloat(document.getElementById('slider-var-ya').value);
+            const xb_mm = parseFloat(document.getElementById('slider-var-xb').value);
+            const F = parseFloat(document.getElementById('slider-var-f').value);
+            const ang = parseFloat(document.getElementById('slider-var-ang').value);
+
+            document.getElementById('txt-var-ya').innerText = ya_mm;
+            document.getElementById('txt-var-xb').innerText = xb_mm;
+            document.getElementById('txt-var-f').innerText = F;
+            document.getElementById('txt-var-ang').innerText = `${ang}°`;
+
+            const rad = ang * Math.PI / 180;
+            const Fx = F * Math.cos(rad);
+            const Fy = F * Math.sin(rad);
+
+            const rx_m = xb_mm / 1000.0;
+            const ry_m = ya_mm / 1000.0;
+
+            const MB_Fy = Fy * rx_m;
+            const MB_Fx = Fx * ry_m;
+            const MB_total = MB_Fy + MB_Fx;
+
+            document.getElementById('val-var-rab').innerText = `(-${rx_m.toFixed(2)}i + ${ry_m.toFixed(2)}j) m`;
+            document.getElementById('val-var-fxfy').innerText = `Fx = ${Fx.toFixed(1)}N | Fy = ${Fy.toFixed(1)}N`;
+            document.getElementById('val-var-mfy').innerText = `${MB_Fy.toFixed(1)} N·m`;
+            document.getElementById('val-var-mfx').innerText = `${MB_Fx.toFixed(1)} N·m`;
+            document.getElementById('val-var-mb').innerText = `${MB_total.toFixed(1)} N·m`;
+
+            const g = document.getElementById('varignon-elements');
+            if (!g) return;
+
+            const bx = (xb_mm / 350.0) * 140;
+            const by = (ya_mm / 300.0) * 100;
+            const ax = -bx, ay = -by;
+
+            const fx_draw = (Fx / F) * 60;
+            const fy_draw = -(Fy / F) * 60;
+
+            g.innerHTML = `
+                <!-- Cantoneira / Suporte L -->
+                <path d="M ${ax} ${ay} L ${ax} ${by} L ${bx} ${by}" fill="none" stroke="#DEDEDE" stroke-width="14" stroke-linejoin="round"/>
+                <path d="M ${ax} ${ay} L ${ax} ${by} L ${bx} ${by}" fill="none" stroke="#333333" stroke-width="2.5" stroke-linejoin="round"/>
+                
+                <!-- Vetor Posição r_A/B (Do Polo B até A) -->
+                <line x1="${bx}" y1="${by}" x2="${ax}" y2="${ay}" stroke="#D1A705" stroke-width="3" stroke-dasharray="4" marker-end="url(#arrow-gold)"/>
+                <text x="${(ax+bx)/2 - 10}" y="${(ay+by)/2 - 10}" fill="#D1A705" font-weight="bold" font-size="13">r_A/B</text>
+
+                <!-- Cotas de Dimensões Exibidas -->
+                <text x="${ax - 45}" y="${(ay+by)/2}" fill="#333" font-weight="bold" font-size="12">${ya_mm} mm</text>
+                <text x="${(ax+bx)/2}" y="${by + 25}" fill="#333" font-weight="bold" font-size="12">${xb_mm} mm</text>
+
+                <!-- Pontos A e B -->
+                <circle cx="${ax}" cy="${ay}" r="6" fill="#901812"/>
+                <text x="${ax-20}" y="${ay-10}" fill="#901812" font-weight="bold" font-size="14">A</text>
+
+                <circle cx="${bx}" cy="${by}" r="6" fill="#D1A705"/>
+                <text x="${bx+12}" y="${by+5}" fill="#D1A705" font-weight="bold" font-size="14">B (Polo)</text>
+
+                <!-- Vetor Força Aplicada F -->
+                <line x1="${ax}" y1="${ay}" x2="${ax + fx_draw}" y2="${ay + fy_draw}" stroke="#901812" stroke-width="4.5" marker-end="url(#arrow-red)"/>
+
+                <!-- Componentes de Varignon Fx e Fy -->
+                <line x1="${ax}" y1="${ay}" x2="${ax + fx_draw}" y2="${ay}" stroke="#D1A705" stroke-width="2.5" stroke-dasharray="3" marker-end="url(#arrow-gold)"/>
+                <line x1="${ax}" y1="${ay}" x2="${ax}" y2="${ay + fy_draw}" stroke="#D1A705" stroke-width="2.5" stroke-dasharray="3" marker-end="url(#arrow-gold)"/>
+            `;
+        }
+
+        /* ----------------------------------------------------
+           6. LAB 3: REDUÇÃO DE SISTEMA (ARCO NO POLO O COM SENTIDO CORRETO)
+           ---------------------------------------------------- */
+        function updateReductionLab() {
+            const xa = parseFloat(document.getElementById('slider-red-xa').value);
+            const ya = parseFloat(document.getElementById('slider-red-ya').value);
+            const fy = parseFloat(document.getElementById('slider-red-fy').value);
+
+            document.getElementById('txt-red-xa').innerText = xa;
+            document.getElementById('txt-red-ya').innerText = ya;
+            document.getElementById('txt-red-fy').innerText = fy;
+
+            const MO = (xa / 1000.0) * fy;
+            const deq = fy !== 0 ? Math.abs(MO / (fy / 1000.0)) : 0;
+
+            document.getElementById('val-red-fo').innerText = `${fy.toFixed(1)} N`;
+            document.getElementById('val-red-mo').innerText = `${MO.toFixed(2)} N·m`;
+            document.getElementById('val-red-deq').innerText = `${deq.toFixed(1)} mm`;
+
+            const g = document.getElementById('reduction-elements');
+            if (!g) return;
+
+            const fy_draw = -(fy / 800.0) * 80;
+            const isAntiClockwise = MO >= 0;
+            const R_arc = 30; // Raio do arco do binário concentrado no polo (0,0)
+
+            const arcPath = isAntiClockwise
+                ? `M ${R_arc} 0 A ${R_arc} ${R_arc} 0 0 0 0 -${R_arc}`
+                : `M 0 -${R_arc} A ${R_arc} ${R_arc} 0 0 0 ${R_arc} 0`;
+
+            g.innerHTML = `
+                <!-- Força Original em A -->
+                <line x1="${xa}" y1="${-ya}" x2="${xa}" y2="${-ya + fy_draw}" stroke="#901812" stroke-width="3.5" marker-end="url(#arrow-red)"/>
+                <circle cx="${xa}" cy="${-ya}" r="5" fill="#901812"/>
+                <text x="${xa + 10}" y="${-ya}" fill="#901812" font-weight="bold" font-size="13">A</text>
+
+                <!-- Força Transladada na Origem O -->
+                <line x1="0" y1="0" x2="0" y2="${fy_draw}" stroke="#D1A705" stroke-width="3.5" marker-end="url(#arrow-gold)"/>
+
+                <!-- Indicador do Binário Induzido Mo com Centro Rigorosamente no Polo O (0,0) -->
+                <path d="${arcPath}" fill="none" stroke="${isAntiClockwise ? '#16A34A' : '#901812'}" stroke-width="3.5" marker-end="${isAntiClockwise ? 'url(#arrow-green)' : 'url(#arrow-red)'}"/>
+            `;
+        }
+
+        /* ----------------------------------------------------
+           INICIALIZAÇÃO GLOBAL DE SIMULADORES E EVENTOS
+           ---------------------------------------------------- */
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            render3DMomentScene();
+            updateLab1Moment();
+            updateVarignonLab();
+            updateReductionLab();
+
+            attachCenteredZoom('view-lab1', 'viewport-group-lab1');
+            attachCenteredZoom('view-lab2', 'viewport-group-lab2');
+            attachCenteredZoom('view-lab3', 'viewport-group-lab3');
+        });
+    </script>
+</body>
+</html>

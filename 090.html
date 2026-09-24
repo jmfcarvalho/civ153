@@ -1,59 +1,74 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full overflow-hidden select-none" style="touch-action: none;">
+<html lang="en" class="h-full overflow-hidden select-none">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CIV 153 - Aula 09: Equilíbrio e Carregamentos Distribuídos | PMS - UFV</title>
-
-    <!-- CDNs Essenciais -->
+    <title>CIV 665 | Eco-Efficient Construction and Building Materials - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
             onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap');
-
         :root {
-            --pms-red: #901812;
-            --pms-gold: #D1A705;
-            --pms-dark: #333333;
-            --pms-gray-light: #DEDEDE;
-            --pms-bg-light: #F4F6F5;
+            /* Preset PMS */
+            --color-primary: #901812;
+            --color-secondary: #D1A705;
+            --color-dark: #333333;
+            --color-bg: #F4F6F5;
+            --bg-shade-left: rgba(244,246,245,0.96);
+            --bg-shade-mid: rgba(244,246,245,0.70);
+            --bg-shade-right: rgba(244,246,245,0.15);
+            --card-light: rgba(255, 255, 255, 0.58);
+            --card-dark: rgba(51, 51, 51, 0.65);
 
-            --fluid-h1: clamp(2.3rem, 4.5vw, 3.6rem);
-            --fluid-h2: clamp(1.75rem, 3.4vw, 2.6rem);
-            --fluid-h3: clamp(1.4rem, 2.5vw, 1.95rem);
-            --fluid-body: clamp(1.15rem, 1.8vw, 1.45rem);
-            --fluid-meta: clamp(1.0rem, 1.4vw, 1.2rem);
-            --fluid-tag: clamp(0.9rem, 1.2vw, 1.05rem);
-
-            --font-title: 'Montserrat', 'Arial Black', sans-serif;
-            --font-body: 'Liberation Sans Narrow', 'PT Sans Narrow', 'Arial Narrow', sans-serif;
+            /* Tipografia Super-Ampliada (Calibração Nativa Full HD / 4k) */
+            --fluid-h1: clamp(2.8rem, 6.2vw, 5.5rem);
+            --fluid-h2: clamp(2.2rem, 4.6vw, 4.0rem);
+            --fluid-h3: clamp(1.75rem, 3.2vw, 2.8rem);
+            --fluid-body: clamp(1.35rem, 2.2vw, 1.95rem);
+            --fluid-meta: clamp(1.15rem, 1.6vw, 1.55rem);
+            --fluid-tag: clamp(1.05rem, 1.4vw, 1.35rem);
         }
 
-        html, body {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            overflow: hidden !important; background-color: var(--pms-bg-light);
-            font-family: var(--font-body); color: var(--pms-dark);
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: var(--color-bg); 
+            font-family: 'PT Sans Narrow', sans-serif; 
+            color: var(--color-dark); 
         }
 
-        * { max-width: 100%; box-sizing: border-box; }
+        .text-fluid-h1 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h1); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h2); font-weight: 800; line-height: 1.15; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-size: var(--fluid-body); font-weight: 500; line-height: 1.45; }
+        .text-fluid-meta { font-size: var(--fluid-meta); font-weight: 600; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 700; letter-spacing: 0.04em; }
 
-        .text-fluid-h1 { font-family: var(--font-title); font-size: var(--fluid-h1); font-weight: 800; color: var(--pms-red); line-height: 1.1; }
-        .text-fluid-h2 { font-family: var(--font-title); font-size: var(--fluid-h2); font-weight: 800; color: var(--pms-red); line-height: 1.15; }
-        .text-fluid-h3 { font-family: var(--font-body); font-size: var(--fluid-h3); font-weight: 700; line-height: 1.2; }
-        .text-fluid-body { font-family: var(--font-body); font-size: var(--fluid-body); font-weight: 500; line-height: 1.35; }
-        .text-fluid-meta { font-family: var(--font-body); font-size: var(--fluid-meta); font-weight: 500; color: #444; }
-        .text-fluid-tag { font-family: var(--font-body); font-size: var(--fluid-tag); font-weight: 700; }
+        .katex-display { font-size: clamp(1.45rem, 2.7vw, 2.45rem) !important; margin: 0.85rem 0 !important; line-height: 1.25 !important; }
+        .katex { font-size: 1.08em; }
 
         .slide-screen {
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-            opacity: 0; pointer-events: none; z-index: 0; 
-            overflow-y: auto; overflow-x: hidden !important;
-            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
         .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
         .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
@@ -61,681 +76,1623 @@
         .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
         .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
 
-        .reveal-controls { position: fixed; bottom: 1.2rem; right: 1.2rem; width: 100px; height: 100px; z-index: 1000; }
-        .control-arrow {
-            position: absolute; width: 32px; height: 30px; background: transparent; border: none;
-            color: #A1A1A1; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            opacity: 0.25; pointer-events: none; transition: 0.2s;
+        .slide-screen::-webkit-scrollbar {
+            width: 6px;
         }
-        .control-arrow.nav-up { top: 0; left: 34px; }
-        .control-arrow.nav-down { bottom: 0; left: 34px; }
-        .control-arrow.nav-left { top: 35px; left: 0; }
-        .control-arrow.nav-right { top: 35px; right: 0; }
-        .control-arrow.nav-enabled { color: var(--pms-gold); opacity: 1; pointer-events: auto; }
-        .control-arrow.nav-enabled:hover { color: var(--pms-red); transform: scale(1.2); }
+        .slide-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide-screen::-webkit-scrollbar-thumb {
+            background: rgba(144, 24, 18, 0.25);
+            border-radius: 9999px;
+        }
+        .slide-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(144, 24, 18, 0.65);
+        }
 
-        .svg-grid-bg {
-            background-image: radial-gradient(#b0b0b0 1.2px, transparent 1.2px);
-            background-size: 20px 20px;
+        .card-glass { 
+            border: none !important; 
+            background-color: var(--card-light); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
         }
+        .card-glass-dark { 
+            border: none !important; 
+            background-color: var(--card-dark); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            color: white; 
+            box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+
+        .card-glass:hover {
+            transform: translateY(-4px);
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-glass-dark:hover {
+            transform: translateY(-4px);
+            background-color: rgba(51, 51, 51, 0.78);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        .reveal-controls { 
+            position: fixed; 
+            bottom: 1.25rem; 
+            right: 1.25rem; 
+            width: 110px; 
+            height: 110px; 
+            z-index: 1000; 
+            pointer-events: none; 
+        }
+        .control-arrow {
+            position: absolute; 
+            width: 38px; 
+            height: 38px; 
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(6px); 
+            border-radius: 50%; 
+            color: #888888; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0.15; 
+            pointer-events: none;
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            font-size: 0.95rem;
+        }
+        .control-arrow.nav-up { top: 0; left: 36px; }
+        .control-arrow.nav-down { bottom: 0; left: 36px; }
+        .control-arrow.nav-left { top: 36px; left: 0; }
+        .control-arrow.nav-right { top: 36px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--color-primary); opacity: 0.65; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--color-primary); color: #FFF; opacity: 1; transform: scale(1.1); }
     </style>
 </head>
-<body class="w-screen h-screen relative bg-[#F4F6F5] overflow-x-hidden overflow-y-hidden">
+<body class="w-screen h-screen relative">
 
-    <!-- Definição de Marcadores Globais e Padrões SVG -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-        <defs>
-            <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#901812" />
-            </marker>
-            <marker id="arrow-gold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#D1A705" />
-            </marker>
-            <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803D" />
-            </marker>
+    <div class="fixed top-0 left-0 h-2 bg-[var(--color-secondary)] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
 
-            <pattern id="hatch45" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="8" stroke="#000000" stroke-width="1.2" />
-            </pattern>
-        </defs>
-    </svg>
-
-    <!-- Barra de Progresso e Indicador -->
-    <div class="fixed top-0 left-0 h-1.5 bg-[#D1A705] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
-    <div class="fixed bottom-4 left-6 text-fluid-meta font-bold text-[#333333] bg-white px-4 py-1.5 rounded-full border border-[#DEDEDE] shadow-md z-[1000]" id="slideIndicator">01 / 06</div>
-
-    <!-- Controles de Navegação 2D -->
-    <div class="reveal-controls">
-        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up"><i class="fa-solid fa-chevron-up"></i></button>
-        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left"><i class="fa-solid fa-chevron-left"></i></button>
-        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right"><i class="fa-solid fa-chevron-right"></i></button>
-        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down"><i class="fa-solid fa-chevron-down"></i></button>
+    <div class="fixed bottom-3 left-3 text-[0.80rem] sm:text-[0.90rem] font-bold text-[var(--color-dark)] bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm z-[1000] flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)]"></span>
+        <span id="slideIndicator">Slide (0,0) | 1 of 5</span>
     </div>
 
-    <main class="w-full h-full p-2 md:p-6 overflow-y-auto overflow-x-hidden relative">
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
 
-        <!-- SLIDE (0,0): CAPA -->
-        <div id="slide-capa" class="slide-screen slide-active flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <span class="text-fluid-h3 text-[#901812] font-bold">CIV 153 • Introdução à Mecânica das Estruturas</span>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
-                </div>
-            </div>
+    <main class="w-full h-full relative" id="slideDeck">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-7xl mx-auto items-stretch p-2 my-auto">
-                <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
-                    <div class="bg-white p-6 md:p-8 rounded-3xl border-l-[14px] border-[#901812] shadow-xl space-y-4">
-                        <div class="flex items-center space-x-4">
-                            <img src="https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png" alt="UFV" class="h-10 w-auto">
-                            <div class="h-8 w-[2px] bg-[#DEDEDE]"></div>
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIvKOzrrkJ9OyDMOmfwuIrSqw7UHvekr72EYP798jjmQ&s" alt="DEC" class="h-10 w-auto">
-                        </div>
-                        <div>
-                            <h1 class="text-fluid-h1">CIV 153 <span class="block text-fluid-h2 text-[#333333]">Mecânica das Estruturas</span></h1>
-                            <h2 class="text-fluid-h3 text-[#901812] font-bold mt-2">Aula 09 • Equilíbrio do Corpo Rígido e Resultante de Carregamentos</h2>
-                        </div>
-                    </div>
-                    <div class="bg-[#333333] text-white p-5 rounded-3xl border border-[#D1A705]/40 flex justify-between items-center">
-                        <div>
-                            <span class="text-fluid-tag text-[#D1A705] block">Corpo Docente</span>
-                            <p class="text-fluid-body font-bold">Prof. José Maria Franco de Carvalho</p>
-                        </div>
-                        <a href="https://pms.ufv.br" target="_blank">
-                            <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms_black_text.png" alt="PMS" class="h-14 w-auto bg-white/5 p-1.5 rounded-lg border border-white/20">
-                        </a>
-                    </div>
-                </div>
-                <div class="lg:col-span-4 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 flex flex-col justify-between text-center">
-                    <div class="bg-white p-4 rounded-2xl">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://jmfcarvalho.github.io/civ153/aulas/090_equilibrio/&color=901812" alt="QR Code PMS" class="w-full max-w-[170px] mx-auto">
-                        <span class="text-fluid-meta text-[#333333] font-bold mt-2 block">Acesso Interativo Didático</span>
-                    </div>
-                    <h3 class="text-fluid-h3 text-white mt-2 font-bold">PMS - UFV</h3>
-                </div>
+         
+        
+
+<!-- SLIDE (0,0): CAPA PRINCIPAL - AULA 090 -->
+<div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center gap-4 flex-shrink-0">
+        <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm">
+            <img src="Logo UFV oficial horizontal.png" alt="UFV Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <span class="text-fluid-tag text-[#333333]">CIV 153 • PMS / UFV</span>
+        </div>
+        <a href="https://pms.ufv.br" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+            <img src="pms.png" alt="PMS Logo" class="h-12 sm:h-16 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+        </a>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full my-auto py-2">
+        <div class="lg:col-span-7 space-y-4">
+            <div class="p-8 sm:p-12 rounded-3xl card-glass border-l-[16px] border-[#901812]">
+                <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">CIV 153 — INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS</span>
+                <h1 class="text-fluid-h1 mb-3 text-[#901812]">EQUILÍBRIO E CARREGAMENTOS DISTRIBUÍDOS<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Aula 09: Equações de Equilíbrio no Plano e Centroides de Carga</span></h1>
+                <p class="text-fluid-body text-[#444444]">Condições Universais de Repouso em 2D, Tipologias de Forças em Edificações, Teorema da Resultante de Cargas Distribuídas e Determinação de Reações de Apoio.</p>
             </div>
         </div>
 
-        <!-- SLIDE (1,0): CONCEITOS DE EQUILÍBRIO ESTÁTICO -->
-        <div id="slide-equilibrio" class="slide-screen slide-hidden-right flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Equilíbrio Estático no Plano</h2>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+        <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white flex flex-col justify-between space-y-6">
+            <div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2Faulas%2F090_equilibrio%2F&color=901812" alt="QR Code Acesso Aula" class="w-full max-w-[200px] sm:max-w-[240px] mx-auto rounded-lg">
+                <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhe pelo Smartphone</span>
+            </div>
+            <div class="text-center space-y-1">
+                <span class="text-fluid-tag text-[#D1A705] block font-bold">Docente Responsável</span>
+                <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                <p class="text-fluid-meta text-[#DEDEDE]">DEC / CCE — Universidade Federal de Viçosa</p>
+                <div class="pt-2 border-t border-white/10 mt-2">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold">Área Acadêmica</span>
+                    <p class="text-fluid-meta text-white font-semibold">Mecânica Estrutural &amp; Estática dos Corpos Rígidos</p>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
-                <p class="text-fluid-body text-[#333333]">Um corpo rígido submetido a um sistema de forças coplanares no plano $xy$ está em <strong>equilíbrio estático</strong> quando a força resultante e o momento resultante em relação a qualquer ponto do plano são estritamente nulos:</p>
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Equilíbrio do Corpo Rígido e Ações Distribuídas</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Roteiro Metodológico | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Equilíbrio no Plano</span>
+    </footer>
+</div>
+
+<!-- SLIDE (0,1): ROTEIRO DIDÁTICO E PILARES METODOLÓGICOS (BRANCH Y=1) -->
+<div id="slide-0-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">ROTEIRO DIDÁTICO &amp; PILARES METODOLÓGICOS (RAMIFICAÇÃO Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Aula 09: Equilíbrio Estático e Ações Lineares</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Capa</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+        <!-- Card 1: Equilíbrio Estático no Plano -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-3 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div>
+                <div class="flex items-center space-x-3 text-[#901812] mb-2">
+                    <i class="fa-solid fa-scale-balanced text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Equilíbrio em 2D</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">Condições estritas de repouso para corpos rígidos submetidos a carregamentos coplanares.</p>
+            </div>
+            <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <li class="flex items-start"><i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>Translação horizontal nula: $\sum F_x = 0$</li>
+                <li class="flex items-start"><i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>Translação vertical nula: $\sum F_y = 0$</li>
+                <li class="flex items-start"><i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>Rotação coplanar nula: $\sum M_O = 0$</li>
+                <li class="flex items-start"><i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>Isolamento estrutural e Diagrama de Corpo Livre (DCL)</li>
+            </ul>
+        </div>
+
+        <!-- Card 2: Ações Estruturais e Cargas Distribuídas -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-3 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div>
+                <div class="flex items-center space-x-3 text-[#D1A705] mb-2">
+                    <i class="fa-solid fa-align-justify text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Ações e Resultantes</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">Idealização mecânica de forças concentradas pontuais e carregamentos lineares distribuídos.</p>
+            </div>
+            <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <li class="flex items-start"><i class="fa-solid fa-circle-nodes text-[#D1A705] mt-1 mr-2 text-xs"></i>Cargas pontuais $P$ [kN] vs. distribuídas $w(x)$ [kN/m]</li>
+                <li class="flex items-start"><i class="fa-solid fa-circle-nodes text-[#D1A705] mt-1 mr-2 text-xs"></i>Módulo da resultante como área da função: $R = \int w(x)\,dx$</li>
+                <li class="flex items-start"><i class="fa-solid fa-circle-nodes text-[#D1A705] mt-1 mr-2 text-xs"></i>Linha de ação pelo centroide (CG): $x_{cg} = \frac{\int x \cdot w(x)\,dx}{R}$</li>
+                <li class="flex items-start"><i class="fa-solid fa-circle-nodes text-[#D1A705] mt-1 mr-2 text-xs"></i>Equivalência estática para cálculo de reações externas</li>
+            </ul>
+        </div>
+
+        <!-- Card 3: Laboratórios Virtuais e Ação de Avanço -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-3 flex flex-col justify-between border-l-[12px] border-white">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">SIMULAÇÃO COMPUTACIONAL</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-2">Laboratórios Integrados</h3>
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE]">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                        <span><strong>Lab 1:</strong> Simulação paramétrica de carga trapezoidal e reações.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                        <span><strong>Lab 2:</strong> Carregamento curvilíneo polinomial de grau 0 a 3.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                        <span><strong>Tabela:</strong> Fórmulas diretas para retângulos, triângulos e trapézios.</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="moveInGrid(1, 0)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[50px] flex items-center justify-center space-x-2">
+                <span>Iniciar Módulo 01: Equilíbrio (Pressione →)</span>
+                <i class="fa-solid fa-arrow-right text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Equilíbrio do Corpo Rígido e Ações Distribuídas</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Retornar à Capa | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Avançar ao Módulo 01 (Slide 1,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,0): EQUILÍBRIO ESTÁTICO NO PLANO -->
+<div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 01 — EQUILÍBRIO DO CORPO RÍGIDO</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Equações Fundamentais no Plano (2D)</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+        <!-- Coluna 1: Princípios e Condições de Repouso (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[14px] border-[#901812]">
+            <div class="space-y-3">
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block">Estática Clássica</span>
+                <h3 class="text-fluid-h3 text-[#333333] font-bold">Condições Universais de Repouso</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="bg-[#F4F6F5] p-6 rounded-2xl border-l-6 border-[#901812] space-y-2 shadow-sm">
-                        <span class="text-fluid-meta text-[#901812] font-bold block">Translação Horizontal</span>
-                        <p class="text-fluid-h2 font-bold">$$\sum F_x = 0$$</p>
+                <p class="text-fluid-body text-[#444444]">
+                    Um corpo rígido submetido a ações coplanares no plano $xy$ permanece em repouso estático absoluto se, e somente se, as resultantes de translação linear e rotação angular forem simultaneamente nulas em qualquer polo:
+                </p>
+
+                <div class="p-4 bg-white/80 rounded-2xl shadow-sm border border-black/5 text-fluid-meta text-[#444444] space-y-2">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrows-left-right text-[#901812] mt-1 mr-2.5"></i>
+                        <span><strong>Invariância Translacional:</strong> Ausência de deslocamentos em eixos ortogonais.</span>
                     </div>
-                    <div class="bg-[#F4F6F5] p-6 rounded-2xl border-l-6 border-[#901812] space-y-2 shadow-sm">
-                        <span class="text-fluid-meta text-[#901812] font-bold block">Translação Vertical</span>
-                        <p class="text-fluid-h2 font-bold">$$\sum F_y = 0$$</p>
-                    </div>
-                    <div class="bg-[#F4F6F5] p-6 rounded-2xl border-l-6 border-[#D1A705] space-y-2 shadow-sm">
-                        <span class="text-fluid-meta text-[#D1A705] font-bold block">Rotação no Plano</span>
-                        <p class="text-fluid-h2 font-bold">$$\sum M_O = 0$$</p>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrows-spin text-[#D1A705] mt-1 mr-2.5"></i>
+                        <span><strong>Invariância Rotacional:</strong> Equilíbrio de momentos em relação a qualquer ponto de referência $O$ do espaço.</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="p-3.5 bg-white/70 rounded-2xl text-fluid-tag text-[#555555] font-semibold border-t border-black/10 flex items-center justify-between">
+                <span>Graus de Liberdade Planos: 3 (GL = 3)</span>
+                <span class="text-[#901812] font-bold">Beer &amp; Johnston (Cap. 4)</span>
             </div>
         </div>
 
-        <!-- SLIDE (2,0): FORÇAS CONCENTRADAS E DISTRIBUÍDAS -->
-        <div id="slide-forcas" class="slide-screen slide-hidden-right flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Ações Estruturais em Edificações</h2>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+        <!-- Coluna 2: Tríade de Equações Escalares de Equilíbrio (7 cols) -->
+        <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[14px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">SISTEMA ESCALAR COMPLETO</span>
+                    <button onclick="document.getElementById('modal-equilibrio-1-0').showModal()" class="text-fluid-tag text-white hover:text-[#D1A705] font-bold underline flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-circle-info"></i> Sistemas Alternativos
+                    </button>
+                </div>
+
+                <h3 class="text-fluid-h3 text-white font-bold">Equações de Equilíbrio no Plano Cartesiano</h3>
+
+                <!-- Tríade de Cards com as Equações KaTeX em Destaque -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                    <!-- Equação Fx -->
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center space-y-1">
+                        <span class="text-fluid-tag text-[#DEDEDE] font-bold uppercase block">Translação Horizontal</span>
+                        <div class="overflow-x-auto overflow-y-hidden text-[#FFFFFF] py-1" style="font-size: clamp(1.15rem, 1.8vw, 1.6rem);">
+                            $$\sum F_x = 0$$
+                        </div>
+                        <span class="text-fluid-meta text-gray-300 text-xs block">Equilíbrio em $X$</span>
+                    </div>
+
+                    <!-- Equação Fy -->
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center space-y-1">
+                        <span class="text-fluid-tag text-[#DEDEDE] font-bold uppercase block">Translação Vertical</span>
+                        <div class="overflow-x-auto overflow-y-hidden text-[#FFFFFF] py-1" style="font-size: clamp(1.15rem, 1.8vw, 1.6rem);">
+                            $$\sum F_y = 0$$
+                        </div>
+                        <span class="text-fluid-meta text-gray-300 text-xs block">Equilíbrio em $Y$</span>
+                    </div>
+
+                    <!-- Equação Mo -->
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-center space-y-1">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase block">Rotação Coplanar</span>
+                        <div class="overflow-x-auto overflow-y-hidden text-[#D1A705] font-bold py-1" style="font-size: clamp(1.15rem, 1.8vw, 1.6rem);">
+                            $$\sum M_O = 0$$
+                        </div>
+                        <span class="text-fluid-meta text-gray-300 text-xs block">Momento em $O$</span>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-white/5 rounded-2xl text-fluid-body text-[#DEDEDE] border border-white/10">
+                    <p>
+                        A validade simultânea das três condições impede movimentos de corpo rígido, servindo de base para o cálculo analítico das reações vinculares de apoios isostáticos.
+                    </p>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-[#F4F6F5] p-6 rounded-2xl border-t-6 border-[#901812] space-y-3 shadow-sm">
-                        <h3 class="text-fluid-h3 text-[#901812] font-bold"><i class="fa-solid fa-arrow-down mr-2"></i>Força Concentrada $P$ $[\text{kN}]$</h3>
-                        <p class="text-fluid-body text-[#333333]">Atua em uma área tão pequena em relação às dimensões da viga que pode ser idealizada como um ponto de aplicação único.</p>
-                        <ul class="list-disc pl-6 text-fluid-meta text-[#333333] space-y-2">
-                            <li>Reação pontual transmitida por uma viga secundária apoiada transversalmente.</li>
-                            <li>Carga de um pilar descarregando sobre uma viga de transição.</li>
-                        </ul>
-                    </div>
+            <button onclick="moveInGrid(1, 0)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-3">
+                <span>Avançar para Módulo 02: Ações Estruturais (Pressione →)</span>
+                <i class="fa-solid fa-arrow-right text-lg"></i>
+            </button>
+        </div>
+    </div>
 
-                    <div class="bg-[#F4F6F5] p-6 rounded-2xl border-t-6 border-[#D1A705] space-y-3 shadow-sm">
-                        <h3 class="text-fluid-h3 text-[#333333] font-bold"><i class="fa-solid fa-align-justify mr-2 text-[#D1A705]"></i>Força Distribuída $w(x)$ $[\text{kN/m}]$</h3>
-                        <p class="text-fluid-body text-[#333333]">Atua continuamente ao longo do comprimento ou extensão da viga.</p>
-                        <ul class="list-disc pl-6 text-fluid-meta text-[#333333] space-y-2">
-                            <li>Peso próprio do elemento estrutural de seção constante.</li>
-                            <li>Ação contínua de paredes de alvenaria sobre a viga.</li>
-                            <li>Reação de apoio de lajes maciças transmitida para a viga.</li>
-                        </ul>
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Equilíbrio do Corpo Rígido no Plano</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Capa (Slide 0,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Ações em Edificações (Slide 2,0)</span>
+    </footer>
+
+    <!-- MODAL NATIVO: FORMAS ALTERNATIVAS DAS EQUAÇÕES DE EQUILÍBRIO EM 2D -->
+    <dialog id="modal-equilibrio-1-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase tracking-wider">FORMULAÇÕES EQUIVALENTES</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Sistemas Alternativos de Equilíbrio</h3>
+            </div>
+            <button onclick="document.getElementById('modal-equilibrio-1-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Além da formulação padrão ($\sum F_x = 0$, $\sum F_y = 0$, $\sum M_A = 0$), o equilíbrio estático planar pode ser expresso por conjuntos equivalentes de equações independentes:</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-1 font-mono text-fluid-meta">
+                <div><strong>Conjunto 2:</strong> $\sum F_x = 0, \quad \sum M_A = 0, \quad \sum M_B = 0$</div>
+                <div class="text-xs text-gray-300 font-sans mt-0.5 mb-2">A linha que une os pontos $A$ e $B$ não pode ser perpendicular ao eixo $X$.</div>
+                <div><strong>Conjunto 3:</strong> $\sum M_A = 0, \quad \sum M_B = 0, \quad \sum M_C = 0$</div>
+                <div class="text-xs text-gray-300 font-sans mt-0.5">Os pontos $A$, $B$ e $C$ não podem ser colineares.</div>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button onclick="document.getElementById('modal-equilibrio-1-0').close()" class="px-6 py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-colors text-fluid-tag">
+                Fechar Janela
+            </button>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,0): FORÇAS CONCENTRADAS E DISTRIBUÍDAS EM EDIFICAÇÕES -->
+<div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 02 — MODELAGEM DE AÇÕES MECÂNICAS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Ações Estruturais em Edificações</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+        <!-- Card 1: Força Concentrada / Pontual (P) -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[14px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#901812] mb-1">
+                    <i class="fa-solid fa-arrow-down text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Força Concentrada $P$ $[\text{kN}]$</h3>
+                </div>
+                
+                <p class="text-fluid-body text-[#444444]">
+                    Atua em uma área tão reduzida em comparação às dimensões globais da estrutura que sua aplicação é matematicamente idealizada em um único ponto geométrico.
+                </p>
+
+                <div class="bg-white/85 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.10rem, 1.8vw, 1.55rem);">
+                    $$\mathbf{P} = P_y\,\mathbf{j} \quad [\text{kN}]$$
+                </div>
+
+                <div class="space-y-2 text-fluid-meta text-[#444444] font-semibold pt-1">
+                    <div class="p-3 bg-white/80 rounded-xl border border-black/5 flex items-start space-x-2.5">
+                        <i class="fa-solid fa-circle-dot text-[#901812] mt-1 text-xs"></i>
+                        <span>Reação pontual transmitida por vigas secundárias descarregando sobre a viga mestra.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-xl border border-black/5 flex items-start space-x-2.5">
+                        <i class="fa-solid fa-circle-dot text-[#901812] mt-1 text-xs"></i>
+                        <span>Carga concentrada transferida por pilares nascidos diretamente sobre vigas de transição.</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-black/10 text-fluid-tag text-[#666666] font-semibold">
+                <span>Idealização Pontual</span>
+                <span class="text-[#901812] font-bold">Carga Concentrada</span>
             </div>
         </div>
 
-        <!-- SLIDE (3,0): TEOREMA DA RESULTANTE DE CARGA DISTRIBUÍDA -->
-        <div id="slide-teorema" class="slide-screen slide-hidden-right flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Teorema da Resultante de Carregamento Distribuído</h2>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+        <!-- Card 2: Força Distribuída Contínua (w) -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[14px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3 text-[#D1A705] mb-1">
+                        <i class="fa-solid fa-align-justify text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-white font-bold">Carga Distribuída $w(x)$ $[\text{kN/m}]$</h3>
+                    </div>
+                    <button onclick="document.getElementById('modal-acoes-2-0').showModal()" class="text-fluid-tag text-white hover:text-[#D1A705] font-bold underline flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-circle-info"></i> Origem das Ações
+                    </button>
+                </div>
+                
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Ação contínua distribuída linearmente ao longo do comprimento ou extensão longitudinal do elemento estrutural.
+                </p>
+
+                <div class="bg-white/10 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden border border-white/10" style="font-size: clamp(1.10rem, 1.8vw, 1.55rem);">
+                    $$w = w(x) \quad \left[\frac{\text{kN}}{\text{m}}\right]$$
+                </div>
+
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE] font-semibold pt-1">
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/10 flex items-start space-x-2.5">
+                        <i class="fa-solid fa-arrows-down-to-line text-[#D1A705] mt-1 text-xs"></i>
+                        <span>Peso próprio estrutural do elemento de concreto/aço com seção transversal uniforme.</span>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-xl border border-white/10 flex items-start space-x-2.5">
+                        <i class="fa-solid fa-arrows-down-to-line text-[#D1A705] mt-1 text-xs"></i>
+                        <span>Carga contínua exercida por paredes de alvenaria e reações de lajes maciças ou nervuradas.</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
-                <blockquote class="p-6 bg-[#F4F6F5] rounded-2xl border-l-8 border-[#D1A705] text-fluid-body text-[#333333] font-bold italic shadow-inner">
+            <!-- Botão de Ação Direta para o Teorema da Resultante -->
+            <button onclick="moveInGrid(1, 0)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2">
+                <span>Avançar para Módulo 03: Teorema da Resultante (Pressione →)</span>
+                <i class="fa-solid fa-arrow-right text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Classificação de Ações em Elementos Estruturais</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Equilíbrio no Plano (Slide 1,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Teorema da Resultante (Slide 3,0)</span>
+    </footer>
+
+    <!-- MODAL NATIVO: EXEMPLOS E CÁLCULO DE PESO PRÓPRIO / LAJES -->
+    <dialog id="modal-acoes-2-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase tracking-wider">ENGENHARIA ESTRUTURAL PRÁTICA</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Origem Física das Cargas Lineares</h3>
+            </div>
+            <button onclick="document.getElementById('modal-acoes-2-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>
+                Em projetos de edifícios, a intensidade linear $w$ decorre do peso específico do material ($\gamma$) multiplicado pela geometria de influência:
+            </p>
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-2 font-mono text-fluid-meta">
+                <div><strong>Peso próprio de viga:</strong> $w_{pp} = \gamma_{\text{concreto}} \cdot b_w \cdot h \quad [\text{kN/m}]$</div>
+                <div><strong>Alvenaria sobre a viga:</strong> $w_{\text{par}} = \gamma_{\text{tijolo}} \cdot t_{\text{par}} \cdot h_{\text{par}} \quad [\text{kN/m}]$</div>
+                <div><strong>Reação de laje contínua:</strong> $w_{\text{laje}} = q_{\text{superficial}} \cdot \left(\frac{l_{\text{inf}}}{2}\right) \quad [\text{kN/m}]$</div>
+            </div>
+            <p class="text-fluid-meta text-gray-300">
+                A substituição desse carregamento por uma força pontual equivalente única é mandatória para a resolução global do equilíbrio estático.
+            </p>
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button onclick="document.getElementById('modal-acoes-2-0').close()" class="px-6 py-3 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-colors text-fluid-tag">
+                Fechar Janela
+            </button>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,0): TEOREMA DA RESULTANTE DE CARREGAMENTO DISTRIBUÍDO -->
+<div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-nature1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 03 — CARREGAMENTOS CONTÍNUOS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Teorema da Resultante de Carga Distribuída</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-stretch">
+        <!-- Coluna 1: Enunciado Canônico e Formulação Integral (7 cols) -->
+        <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[14px] border-[#901812]">
+            <div class="space-y-3">
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block">Princípio Fundamental da Equivalência</span>
+                
+                <blockquote class="p-4 bg-white/80 rounded-2xl border-l-8 border-[#D1A705] text-fluid-body text-[#333333] font-bold italic shadow-sm">
                     "A resultante de um carregamento distribuído constituído por forças paralelas entre si é igual à área da superfície limitada pelo eixo do corpo e pela função $w(x)$ que define esse carregamento. Esta resultante sempre passa pelo centro de gravidade (CG) desta área."
                 </blockquote>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
-                    <div class="bg-[#F4F6F5] p-5 rounded-2xl border border-[#DEDEDE]">
+                <!-- Bloco de Formulações Integrais KaTeX -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div class="bg-white/90 backdrop-blur-md p-3.5 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden border border-black/5">
                         <span class="text-fluid-meta font-bold text-[#901812] block">Módulo da Resultante ($R$)</span>
-                        <p class="text-fluid-h3 font-bold mt-2">$$R = \int_{0}^{L} w(x) \, dx = \text{Área da Carga}$$</p>
+                        <div class="text-[#333333] font-bold py-1" style="font-size: clamp(1.10rem, 1.7vw, 1.50rem);">
+                            $$R = \int_{0}^{L} w(x) \, dx = \text{Área}$$
+                        </div>
                     </div>
-                    <div class="bg-[#F4F6F5] p-5 rounded-2xl border border-[#DEDEDE]">
-                        <span class="text-fluid-meta font-bold text-[#901812] block">Posição do Centro de Gravidade ($x_{cg}$)</span>
-                        <p class="text-fluid-h3 font-bold mt-2">$$x_{cg} = \frac{\int_{0}^{L} x \cdot w(x) \, dx}{R}$$</p>
+                    <div class="bg-white/90 backdrop-blur-md p-3.5 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden border border-black/5">
+                        <span class="text-fluid-meta font-bold text-[#901812] block">Linha de Ação ($x_{cg}$)</span>
+                        <div class="text-[#333333] font-bold py-1" style="font-size: clamp(1.10rem, 1.7vw, 1.50rem);">
+                            $$x_{cg} = \frac{\int_{0}^{L} x \cdot w(x) \, dx}{R}$$
+                        </div>
                     </div>
+                </div>
+
+                <p class="text-fluid-meta text-[#444444] font-semibold pt-1">
+                    Essa equivalência estática substitui todo o campo contínuo de forças paralelas por uma força concentrada única $R$ aplicada no baricentro $x_{cg}$, preservando rigorosamente as reações nos vínculos externos da viga.
+                </p>
+            </div>
+
+            <div class="p-3.5 bg-white/70 rounded-2xl text-fluid-tag text-[#555555] font-semibold border-t border-black/10 flex items-center justify-between">
+                <span>Cálculo Diferencial e Integral Aplicado</span>
+                <span class="text-[#901812] font-bold">Beer &amp; Johnston • Hibbeler</span>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Acesso aos Laboratórios e Roteiro Paramétrico (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[14px] border-[#D1A705]">
+            <div class="space-y-3">
+                <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider block">EXPLORAÇÃO VIRTUAL (RAMIFICAÇÃO Y)</span>
+                <h3 class="text-fluid-h3 text-white font-bold">Simulações de Cargas Lineares</h3>
+                
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Acesse as estações de análise interativa para explorar perfis de carga lineares e curvilíneos com atualização em tempo real de reações de apoio:
+                </p>
+
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE]">
+                    <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] flex items-center justify-between">
+                        <div>
+                            <strong class="text-white block">Lab 1: Carga Trapezoidal</strong>
+                            <span class="text-xs text-gray-300">Variação linear $w_1 \to w_2$ e vão $L$</span>
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold font-mono">Y = 1</span>
+                    </div>
+
+                    <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#901812] flex items-center justify-between">
+                        <div>
+                            <strong class="text-white block">Lab 2: Carga Polinomial $w(x)$</strong>
+                            <span class="text-xs text-gray-300">Graus 0 a 3 (constante, linear, parabólico, cúbico)</span>
+                        </div>
+                        <span class="text-fluid-tag text-[#D1A705] font-bold font-mono">Y = 2</span>
+                    </div>
+
+                    <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-white flex items-center justify-between">
+                        <div>
+                            <strong class="text-white block">Tabela de Cargas Usuais</strong>
+                            <span class="text-xs text-gray-300">Fórmulas diretas para retângulos, triângulos e trapézios</span>
+                        </div>
+                        <span class="text-fluid-tag text-white font-bold font-mono">Y = 3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Ação para Ramificação Y=1 (Lab 1) -->
+            <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2">
+                <span>Abrir Laboratório 1: Carga Trapezoidal (Pressione ↓)</span>
+                <i class="fa-solid fa-shapes text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Teorema da Resultante e Centroides de Carregamento</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Lab Trapezoidal | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Atividades In-Class (Slide 4,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,1): LABORATÓRIO VIRTUAL 01 - CARGA TRAPEZOIDAL GENERALIZADA (BRANCH Y=1) -->
+<div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL 01 (RAMIFICAÇÃO Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Carga Trapezoidal Generalizada e Reações de Apoio</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar ao Teorema (Y=0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-center">
+        <!-- Coluna de Controles (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-7 rounded-3xl card-glass space-y-3.5 border-l-[14px] border-[#901812]">
+            <div class="flex justify-between items-center border-b border-black/10 pb-2">
+                <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros de Carga &amp; Vão</h3>
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase">Viga Isostática</span>
+            </div>
+
+            <!-- Slider Carga Esquerda w1 -->
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Intensidade em A ($w_1$):</span>
+                    <span id="lbl-trap-w1" class="text-[#901812] font-bold">10 kN/m</span>
+                </label>
+                <input type="range" id="input-trap-w1" min="0" max="30" step="1" value="10" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabTrap_3_1()">
+            </div>
+
+            <!-- Slider Carga Direita w2 -->
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Intensidade em B ($w_2$):</span>
+                    <span id="lbl-trap-w2" class="text-[#901812] font-bold">20 kN/m</span>
+                </label>
+                <input type="range" id="input-trap-w2" min="0" max="30" step="1" value="20" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabTrap_3_1()">
+            </div>
+
+            <!-- Slider Vão L -->
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Vão Livre da Viga ($L$):</span>
+                    <span id="lbl-trap-L" class="text-[#901812] font-bold">6.0 m</span>
+                </label>
+                <input type="range" id="input-trap-L" min="3" max="10" step="0.5" value="6.0" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabTrap_3_1()">
+            </div>
+
+            <!-- Painel Numérico em Tempo Real -->
+            <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1.5 text-fluid-meta border border-[#D1A705]/40 shadow-inner">
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Resultante da Carga ($R$):</span>
+                    <strong id="res-trap-R" class="text-[#D1A705] font-mono text-fluid-body">90.0 kN</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Posição do Baricentro ($x_{cg}$):</span>
+                    <strong id="res-trap-xcg" class="text-white font-mono">3.33 m</strong>
+                </div>
+                <div class="flex justify-between border-t border-white/20 pt-1">
+                    <span class="text-[#DEDEDE]">Reação de Apoio em A ($R_{Ay}$):</span>
+                    <strong id="res-trap-Ray" class="text-green-400 font-mono text-fluid-body">40.0 kN</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Reação de Apoio em B ($R_{By}$):</span>
+                    <strong id="res-trap-Rby" class="text-green-400 font-mono text-fluid-body">50.0 kN</strong>
                 </div>
             </div>
         </div>
 
-        <!-- SLIDE (3,1) [LAB 1]: CARGA TRAPEZOIDAL GENERALIZADA -->
-        <div id="slide-lab-trap" class="slide-screen slide-hidden-down flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 1 • Carga Trapezoidal Generalizada</h2>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-4 py-2 rounded-xl text-fluid-meta font-bold hover:bg-[#901812] transition">
-                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
-                        </button>
-                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
-                    </div>
-                </div>
+        <!-- Coluna do Canvas SVG Interativo com Fundo Branco (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-5 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden h-[380px] sm:h-[420px] flex items-center justify-center">
+            <svg id="svg-canvas-trap" width="100%" height="100%" viewBox="-70 -200 660 320" class="w-full h-full select-none">
+                <defs>
+                    <marker id="arrow-red-trap" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#901812" />
+                    </marker>
+                    <marker id="arrow-gold-trap" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
+                    </marker>
+                    <marker id="arrow-green-trap" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#15803D" />
+                    </marker>
+                    <pattern id="grid-dots-trap" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1" fill="#E2E8F0" />
+                    </pattern>
+                    <pattern id="hatch-trap" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="0" y2="8" stroke="#333333" stroke-width="1.2" />
+                    </pattern>
+                </defs>
+
+                <!-- Grid de Precisão -->
+                <rect x="-70" y="-200" width="660" height="320" fill="url(#grid-dots-trap)" />
+
+                <!-- Elementos Gerados Dinamicamente pelo Script -->
+                <g id="din-trap-group"></g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Laboratório 01 — Simulação Paramétrica de Viga com Carga Trapezoidal</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Retornar à Teoria | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Cargas Polinomiais (Slide 3,2)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,1) -->
+    <script>
+        (function() {
+            // Função para desenhar apoios padronizados (1º Gênero Móvel / 2º Gênero Fixo)
+            function renderSupportSVG(type, x, y, h = 24) {
+                const L = (2 * h) / Math.sqrt(3);
+                if (type === 1) {
+                    // 1º Gênero (Móvel em B)
+                    return `
+                        <g transform="translate(${x},${y})">
+                            <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#94A3B8" stroke="#333333" stroke-width="2"/>
+                            <line x1="${-0.6*L}" y1="${1.25*h}" x2="${0.6*L}" y2="${1.25*h}" stroke="#333333" stroke-width="2"/>
+                            <circle cx="${-0.3*L}" cy="${1.1*h}" r="2" fill="#333333"/>
+                            <circle cx="${0.3*L}" cy="${1.1*h}" r="2" fill="#333333"/>
+                        </g>
+                    `;
+                } else if (type === 2) {
+                    // 2º Gênero (Fixo em A)
+                    return `
+                        <g transform="translate(${x},${y})">
+                            <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#64748B" stroke="#333333" stroke-width="2"/>
+                            <line x1="${-0.6*L}" y1="${h}" x2="${0.6*L}" y2="${h}" stroke="#333333" stroke-width="2"/>
+                            <rect x="${-0.6*L}" y="${h}" width="${1.2*L}" height="${0.25*h}" fill="url(#hatch-trap)"/>
+                        </g>
+                    `;
+                }
+                return '';
+            }
+
+            // 1. CÁLCULO ESTÁTICO E ATUALIZAÇÃO DO CANVAS
+            window.calcularLabTrap_3_1 = function() {
+                const w1 = parseFloat(document.getElementById('input-trap-w1').value);
+                const w2 = parseFloat(document.getElementById('input-trap-w2').value);
+                const L = parseFloat(document.getElementById('input-trap-L').value);
+
+                document.getElementById('lbl-trap-w1').innerText = `${w1} kN/m`;
+                document.getElementById('lbl-trap-w2').innerText = `${w2} kN/m`;
+                document.getElementById('lbl-trap-L').innerText = `${L.toFixed(1)} m`;
+
+                const R = 0.5 * (w1 + w2) * L;
+                const xcg = (R > 0) ? (L / 3) * ((w1 + 2 * w2) / (w1 + w2)) : L / 2;
+                const Rby = (R * xcg) / L;
+                const Ray = R - Rby;
+
+                document.getElementById('res-trap-R').innerText = `${R.toFixed(1)} kN`;
+                document.getElementById('res-trap-xcg').innerText = `${xcg.toFixed(2)} m`;
+                document.getElementById('res-trap-Ray').innerText = `${Ray.toFixed(1)} kN`;
+                document.getElementById('res-trap-Rby').innerText = `${Rby.toFixed(1)} kN`;
+
+                const g = document.getElementById('din-trap-group');
+                if (!g) return;
+
+                // Fatores de escala visual no SVG
+                const scaleX = 480 / 10; // 10 metros máximos mapeados em 480px
+                const scaleY = 3.6;
+                const pxL = L * scaleX;
+                const pxXcg = xcg * scaleX;
+
+                const h1 = -w1 * scaleY;
+                const h2 = -w2 * scaleY;
+
+                // Setas intermediárias de distribuição de carga
+                let arrowsDist = '';
+                const numArrows = Math.max(3, Math.round(L * 1.8));
+                for (let i = 0; i <= numArrows; i++) {
+                    const frac = i / numArrows;
+                    const curX = frac * pxL;
+                    const curH = h1 + frac * (h2 - h1);
+                    if (Math.abs(curH) > 4) {
+                        arrowsDist += `<line x1="${curX}" y1="${curH}" x2="${curX}" y2="-4" stroke="#D1A705" stroke-width="1.8" marker-end="url(#arrow-gold-trap)"/>`;
+                    }
+                }
+
+                g.innerHTML = `
+                    <!-- Área Hachurada da Superfície da Carga Trapezoidal -->
+                    <polygon points="0,0 ${pxL},0 ${pxL},${h2} 0,${h1}" fill="rgba(209, 167, 5, 0.25)" stroke="#D1A705" stroke-width="2.5" stroke-linejoin="round"/>
+                    
+                    <!-- Setas do Campo Contínuo -->
+                    ${arrowsDist}
+
+                    <!-- Eixo Longitudinal da Viga Estrutural -->
+                    <line x1="0" y1="0" x2="${pxL}" y2="0" stroke="#1E40AF" stroke-width="8" stroke-linecap="round"/>
+
+                    <!-- Apoio Fixo em A (2º Gênero) e Móvel em B (1º Gênero) -->
+                    ${renderSupportSVG(2, 0, 0)}
+                    ${renderSupportSVG(1, pxL, 0)}
+
+                    <!-- Rótulos dos Pontos A e B -->
+                    <text x="-16" y="8" fill="#333333" font-size="16" font-weight="bold" font-family="'Montserrat', sans-serif">A</text>
+                    <text x="${pxL + 12}" y="8" fill="#333333" font-size="16" font-weight="bold" font-family="'Montserrat', sans-serif">B</text>
+
+                    <!-- Intensidades nos Extremos w1 e w2 -->
+                    <text x="0" y="${h1 - 10}" text-anchor="middle" fill="#901812" font-weight="bold" font-size="14" font-family="'Montserrat', sans-serif">w1 = ${w1} kN/m</text>
+                    <text x="${pxL}" y="${h2 - 10}" text-anchor="middle" fill="#901812" font-weight="bold" font-size="14" font-family="'Montserrat', sans-serif">w2 = ${w2} kN/m</text>
+
+                    <!-- Linha de Ação e Resultante Equivalente R no Centroide (CG) -->
+                    ${R > 0 ? `
+                        <circle cx="${pxXcg}" cy="0" r="5.5" fill="#901812" stroke="#FFFFFF" stroke-width="1.5"/>
+                        <line x1="${pxXcg}" y1="${Math.min(h1, h2) - 30}" x2="${pxXcg}" y2="-6" stroke="#901812" stroke-width="4" marker-end="url(#arrow-red-trap)"/>
+                        <text x="${pxXcg}" y="${Math.min(h1, h2) - 40}" text-anchor="middle" fill="#901812" font-weight="bold" font-size="16" font-family="'Montserrat', sans-serif">R = ${R.toFixed(1)} kN</text>
+                        <text x="${pxXcg}" y="20" text-anchor="middle" fill="#666666" font-weight="bold" font-size="12" font-family="'PT Sans Narrow', sans-serif">xcg = ${xcg.toFixed(2)}m</text>
+                    ` : ''}
+
+                    <!-- Vetores de Reação de Apoio Ray e Rby -->
+                    <line x1="0" y1="70" x2="0" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green-trap)"/>
+                    <text x="0" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="15" font-family="'Montserrat', sans-serif">Ray = ${Ray.toFixed(1)} kN</text>
+
+                    <line x1="${pxL}" y1="70" x2="${pxL}" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green-trap)"/>
+                    <text x="${pxL}" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="15" font-family="'Montserrat', sans-serif">Rby = ${Rby.toFixed(1)} kN</text>
+
+                    <!-- Cota de Comprimento Total L -->
+                    <line x1="0" y1="44" x2="${pxL}" y2="44" stroke="#64748B" stroke-width="1.5"/>
+                    <line x1="0" y1="38" x2="0" y2="50" stroke="#64748B" stroke-width="1.5"/>
+                    <line x1="${pxL}" y1="38" x2="${pxL}" y2="50" stroke="#64748B" stroke-width="1.5"/>
+                    <text x="${pxL/2}" y="40" text-anchor="middle" fill="#333333" font-weight="bold" font-size="14" font-family="'PT Sans Narrow', sans-serif">Vão L = ${L.toFixed(1)} m</text>
+                `;
+            };
+
+            // 2. MOTOR DE ZOOM PELO SCROLL DO MOUSE A PARTIR DO CURSOR (VIA VIEWBOX)
+            function initSvgPointerZoom(svgId) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                const baseW = 660;
+                const baseH = 320;
+                const baseMinX = -70;
+                const baseMinY = -200;
+
+                let vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
+                let isDragging = false;
+                let startClient = { x: 0, y: 0 };
+                let startVb = { x: baseMinX, y: baseMinY };
+
+                function applyViewBox() {
+                    svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+                }
+
+                svg.style.cursor = 'grab';
+
+                svg.addEventListener('wheel', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const rect = svg.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) return;
+
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const pX = vb.x + (mouseX / rect.width) * vb.w;
+                    const pY = vb.y + (mouseY / rect.height) * vb.h;
+
+                    const zoomFactor = e.deltaY < 0 ? 0.85 : 1.15;
+                    const newW = vb.w * zoomFactor;
+                    const newH = vb.h * zoomFactor;
+
+                    if (newW > baseW * 4.0 || newW < baseW * 0.25) return;
+
+                    vb.x = pX - (mouseX / rect.width) * newW;
+                    vb.y = pY - (mouseY / rect.height) * newH;
+                    vb.w = newW;
+                    vb.h = newH;
+
+                    applyViewBox();
+                }, { passive: false });
+
+                svg.addEventListener('mousedown', function(e) {
+                    if (e.button !== 0) return;
+                    isDragging = true;
+                    startClient.x = e.clientX;
+                    startClient.y = e.clientY;
+                    startVb.x = vb.x;
+                    startVb.y = vb.y;
+                    svg.style.cursor = 'grabbing';
+                });
+
+                window.addEventListener('mousemove', function(e) {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) return;
+
+                    const dx = ((e.clientX - startClient.x) / rect.width) * vb.w;
+                    const dy = ((e.clientY - startClient.y) / rect.height) * vb.h;
+
+                    vb.x = startVb.x - dx;
+                    vb.y = startVb.y - dy;
+                    applyViewBox();
+                });
+
+                window.addEventListener('mouseup', function() {
+                    if (isDragging) {
+                        isDragging = false;
+                        svg.style.cursor = 'grab';
+                    }
+                });
+
+                svg.addEventListener('dblclick', function() {
+                    vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
+                    applyViewBox();
+                });
+            }
+
+            // 3. INICIALIZAÇÃO CONTROLADA
+            function montarLab() {
+                calcularLabTrap_3_1();
+                initSvgPointerZoom('svg-canvas-trap');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', montarLab);
+            } else {
+                montarLab();
+            }
+        })();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,2): LABORATÓRIO VIRTUAL 02 - CARGA POLINOMIAL CURVILÍNEA (BRANCH Y=2) -->
+<div id="slide-3-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-polymer1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL 02 (RAMIFICAÇÃO Y=2)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Carregamento Polinomial Curvilíneo $w(x)$</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar ao Lab 1 (Y=1)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-center">
+        <!-- Coluna de Controles (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-7 rounded-3xl card-glass space-y-3.5 border-l-[14px] border-[#901812]">
+            <div class="flex justify-between items-center border-b border-black/10 pb-2">
+                <h3 class="text-fluid-h3 text-[#333333] font-bold">Função Polinomial $w(x)$</h3>
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase">Integração Direta</span>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-5 rounded-3xl border-2 border-[#D1A705] shadow-2xl space-y-4 my-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-                    <div class="lg:col-span-4 bg-[#F4F6F5] p-4 rounded-2xl border border-[#DEDEDE] space-y-4">
-                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Parâmetros da Carga</h3>
-                        <div>
-                            <label class="text-fluid-meta font-bold">Carga na Esquerda $w_1$: <span id="lbl-trap-w1" class="text-[#901812]">10</span> kN/m</label>
-                            <input type="range" id="slider-trap-w1" min="0" max="30" value="10" class="w-full accent-[#901812]" oninput="updateLabTrap()">
-                        </div>
-                        <div>
-                            <label class="text-fluid-meta font-bold">Carga na Direita $w_2$: <span id="lbl-trap-w2" class="text-[#901812]">20</span> kN/m</label>
-                            <input type="range" id="slider-trap-w2" min="0" max="30" value="20" class="w-full accent-[#901812]" oninput="updateLabTrap()">
-                        </div>
-                        <div>
-                            <label class="text-fluid-meta font-bold">Vão da Viga $L$: <span id="lbl-trap-L" class="text-[#901812]">6.0</span> m</label>
-                            <input type="range" id="slider-trap-L" min="3" max="10" step="0.5" value="6.0" class="w-full accent-[#901812]" oninput="updateLabTrap()">
-                        </div>
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between text-[#333333]">
+                    <span>Grau da Curva Polinomial ($n$):</span>
+                </label>
+                <select id="sel-poly-degree" class="w-full p-2.5 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#901812]" onchange="calcularLabPoly_3_2()">
+                    <option value="0">Grau 0: Constante [w(x) = a₀]</option>
+                    <option value="1">Grau 1: Linear [w(x) = a₀ + a₁·x]</option>
+                    <option value="2" selected>Grau 2: Parabólico [w(x) = a₀ + a₂·x²]</option>
+                    <option value="3">Grau 3: Cúbico [w(x) = a₀ + a₃·x³]</option>
+                </select>
+            </div>
 
-                        <div class="bg-white p-4 rounded-xl border border-[#DEDEDE] text-fluid-meta space-y-1 shadow-sm">
-                            <div>Resultante $R$: <strong id="val-trap-R" class="text-[#901812]">90.0 kN</strong></div>
-                            <div>Posição $x_{cg}$: <strong id="val-trap-xcg" class="text-[#333333]">3.33 m</strong></div>
-                            <div>Reação $R_{Ay}$: <strong id="val-trap-Ray" class="text-[#15803D]">40.0 kN</strong></div>
-                            <div>Reação $R_{By}$: <strong id="val-trap-Rby" class="text-[#15803D]">50.0 kN</strong></div>
-                        </div>
-                    </div>
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Termo Constante ($a_0$):</span>
+                    <span id="lbl-poly-a0" class="text-[#901812] font-bold">5.0 kN/m</span>
+                </label>
+                <input type="range" id="input-poly-a0" min="0" max="20" step="1" value="5" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabPoly_3_2()">
+            </div>
 
-                    <div id="view-lab-trap" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[380px] border border-[#DEDEDE]">
-                        <svg id="svg-lab-trap" width="100%" height="100%" viewBox="-80 -210 700 330" class="w-full h-full svg-grid-bg">
-                            <g id="zoom-group-trap">
-                                <g id="content-lab-trap"></g>
-                            </g>
-                        </svg>
-                    </div>
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Coeficiente Principal ($a_n$):</span>
+                    <span id="lbl-poly-an" class="text-[#901812] font-bold">0.50</span>
+                </label>
+                <input type="range" id="input-poly-an" min="0" max="2" step="0.1" value="0.5" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabPoly_3_2()">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-fluid-meta font-bold flex justify-between">
+                    <span>Vão Livre da Viga ($L$):</span>
+                    <span id="lbl-poly-L" class="text-[#901812] font-bold">6.0 m</span>
+                </label>
+                <input type="range" id="input-poly-L" min="3" max="8" step="0.5" value="6.0" class="w-full accent-[#901812] h-3 cursor-pointer" oninput="calcularLabPoly_3_2()">
+            </div>
+
+            <!-- Painel Numérico em Tempo Real -->
+            <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1.5 text-fluid-meta border border-[#D1A705]/40 shadow-inner">
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Resultante Integral ($R$):</span>
+                    <strong id="res-poly-R" class="text-[#D1A705] font-mono text-fluid-body">66.0 kN</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Posição do Baricentro ($x_{cg}$):</span>
+                    <strong id="res-poly-xcg" class="text-white font-mono">3.73 m</strong>
+                </div>
+                <div class="flex justify-between border-t border-white/20 pt-1">
+                    <span class="text-[#DEDEDE]">Reação Vertical em A ($R_{Ay}$):</span>
+                    <strong id="res-poly-Ray" class="text-green-400 font-mono text-fluid-body">25.0 kN</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-[#DEDEDE]">Reação Vertical em B ($R_{By}$):</span>
+                    <strong id="res-poly-Rby" class="text-green-400 font-mono text-fluid-body">41.0 kN</strong>
                 </div>
             </div>
         </div>
 
-        <!-- SLIDE (3,2) [LAB 2]: CARGA POLINOMIAL QUALQUER -->
-        <div id="slide-lab-poly" class="slide-screen slide-hidden-down flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Laboratório 2 • Carga Polinomial Curvilínea $w(x)$</h2>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-4 py-2 rounded-xl text-fluid-meta font-bold hover:bg-[#901812] transition">
-                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
-                        </button>
-                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+        <!-- Coluna do Canvas SVG Interativo com Fundo Branco (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-5 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden h-[380px] sm:h-[420px] flex items-center justify-center">
+            <svg id="svg-canvas-poly" width="100%" height="100%" viewBox="-70 -200 660 320" class="w-full h-full select-none">
+                <defs>
+                    <marker id="arrow-red-poly" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#901812" />
+                    </marker>
+                    <marker id="arrow-gold-poly" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
+                    </marker>
+                    <marker id="arrow-green-poly" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#15803D" />
+                    </marker>
+                    <pattern id="grid-dots-poly" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1" fill="#E2E8F0" />
+                    </pattern>
+                    <pattern id="hatch-poly" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="0" y2="8" stroke="#333333" stroke-width="1.2" />
+                    </pattern>
+                </defs>
+
+                <!-- Grid de Precisão -->
+                <rect x="-70" y="-200" width="660" height="320" fill="url(#grid-dots-poly)" />
+
+                <!-- Elementos Gerados Dinamicamente pelo Script -->
+                <g id="din-poly-group"></g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Laboratório 02 — Cargas Curvilíneas Polinomiais e Integração de Reações</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Retornar ao Lab 1 | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Tabela de Cargas (Slide 3,3)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,2) -->
+    <script>
+        (function() {
+            function renderSupportSVG(type, x, y, h = 24) {
+                const L = (2 * h) / Math.sqrt(3);
+                if (type === 1) {
+                    return `
+                        <g transform="translate(${x},${y})">
+                            <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#94A3B8" stroke="#333333" stroke-width="2"/>
+                            <line x1="${-0.6*L}" y1="${1.25*h}" x2="${0.6*L}" y2="${1.25*h}" stroke="#333333" stroke-width="2"/>
+                            <circle cx="${-0.3*L}" cy="${1.1*h}" r="2" fill="#333333"/>
+                            <circle cx="${0.3*L}" cy="${1.1*h}" r="2" fill="#333333"/>
+                        </g>
+                    `;
+                } else if (type === 2) {
+                    return `
+                        <g transform="translate(${x},${y})">
+                            <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#64748B" stroke="#333333" stroke-width="2"/>
+                            <line x1="${-0.6*L}" y1="${h}" x2="${0.6*L}" y2="${h}" stroke="#333333" stroke-width="2"/>
+                            <rect x="${-0.6*L}" y="${h}" width="${1.2*L}" height="${0.25*h}" fill="url(#hatch-poly)"/>
+                        </g>
+                    `;
+                }
+                return '';
+            }
+
+            window.calcularLabPoly_3_2 = function() {
+                const deg = parseInt(document.getElementById('sel-poly-degree').value);
+                const a0 = parseFloat(document.getElementById('input-poly-a0').value);
+                const an = parseFloat(document.getElementById('input-poly-an').value);
+                const L = parseFloat(document.getElementById('input-poly-L').value);
+
+                document.getElementById('lbl-poly-a0').innerText = `${a0.toFixed(1)} kN/m`;
+                document.getElementById('lbl-poly-an').innerText = an.toFixed(2);
+                document.getElementById('lbl-poly-L').innerText = `${L.toFixed(1)} m`;
+
+                const n = deg === 0 ? 1 : deg;
+                const coeff = deg === 0 ? 0 : an;
+
+                const R = (a0 * L) + (coeff * Math.pow(L, n + 1)) / (n + 1);
+                const M0 = (a0 * Math.pow(L, 2) / 2) + (coeff * Math.pow(L, n + 2)) / (n + 2);
+                
+                const xcg = R > 0 ? M0 / R : L / 2;
+                const Rby = R > 0 ? M0 / L : 0;
+                const Ray = R - Rby;
+
+                document.getElementById('res-poly-R').innerText = `${R.toFixed(1)} kN`;
+                document.getElementById('res-poly-xcg').innerText = `${xcg.toFixed(2)} m`;
+                document.getElementById('res-poly-Ray').innerText = `${Ray.toFixed(1)} kN`;
+                document.getElementById('res-poly-Rby').innerText = `${Rby.toFixed(1)} kN`;
+
+                const g = document.getElementById('din-poly-group');
+                if (!g) return;
+
+                const scaleX = 480 / 8;
+                const scaleY = 3.2;
+                const pxL = L * scaleX;
+                const pxXcg = xcg * scaleX;
+
+                let pathD = `M 0,0 L 0,${-a0 * scaleY}`;
+                const numSteps = 40;
+                let maxH = a0 * scaleY;
+
+                for (let i = 0; i <= numSteps; i++) {
+                    const curX = (L * i) / numSteps;
+                    const curW = a0 + coeff * Math.pow(curX, n);
+                    const curH = curW * scaleY;
+                    if (curH > maxH) maxH = curH;
+                    pathD += ` L ${curX * scaleX},${-curH}`;
+                }
+                pathD += ` L ${pxL},0 Z`;
+
+                let arrowsDist = '';
+                const numArrows = Math.max(4, Math.round(L * 1.8));
+                for (let i = 0; i <= numArrows; i++) {
+                    const frac = i / numArrows;
+                    const curX = frac * L;
+                    const curW = a0 + coeff * Math.pow(curX, n);
+                    const curH = curW * scaleY;
+                    if (curH > 4) {
+                        arrowsDist += `<line x1="${curX * scaleX}" y1="${-curH}" x2="${curX * scaleX}" y2="-4" stroke="#D1A705" stroke-width="1.8" marker-end="url(#arrow-gold-poly)"/>`;
+                    }
+                }
+
+                g.innerHTML = `
+                    <path d="${pathD}" fill="rgba(209, 167, 5, 0.25)" stroke="#D1A705" stroke-width="2.5" stroke-linejoin="round"/>
+                    ${arrowsDist}
+
+                    <line x1="0" y1="0" x2="${pxL}" y2="0" stroke="#1E40AF" stroke-width="8" stroke-linecap="round"/>
+
+                    ${renderSupportSVG(2, 0, 0)}
+                    ${renderSupportSVG(1, pxL, 0)}
+
+                    <text x="-16" y="8" fill="#333333" font-size="16" font-weight="bold" font-family="'Montserrat', sans-serif">A</text>
+                    <text x="${pxL + 12}" y="8" fill="#333333" font-size="16" font-weight="bold" font-family="'Montserrat', sans-serif">B</text>
+
+                    ${R > 0 ? `
+                        <circle cx="${pxXcg}" cy="0" r="5.5" fill="#901812" stroke="#FFFFFF" stroke-width="1.5"/>
+                        <line x1="${pxXcg}" y1="${-maxH - 25}" x2="${pxXcg}" y2="-6" stroke="#901812" stroke-width="4" marker-end="url(#arrow-red-poly)"/>
+                        <text x="${pxXcg}" y="${-maxH - 35}" text-anchor="middle" fill="#901812" font-weight="bold" font-size="16" font-family="'Montserrat', sans-serif">R = ${R.toFixed(1)} kN</text>
+                        <text x="${pxXcg}" y="20" text-anchor="middle" fill="#666666" font-weight="bold" font-size="12" font-family="'PT Sans Narrow', sans-serif">xcg = ${xcg.toFixed(2)}m</text>
+                    ` : ''}
+
+                    <line x1="0" y1="70" x2="0" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green-poly)"/>
+                    <text x="0" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="15" font-family="'Montserrat', sans-serif">Ray = ${Ray.toFixed(1)} kN</text>
+
+                    <line x1="${pxL}" y1="70" x2="${pxL}" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green-poly)"/>
+                    <text x="${pxL}" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="15" font-family="'Montserrat', sans-serif">Rby = ${Rby.toFixed(1)} kN</text>
+
+                    <line x1="0" y1="44" x2="${pxL}" y2="44" stroke="#64748B" stroke-width="1.5"/>
+                    <line x1="0" y1="38" x2="0" y2="50" stroke="#64748B" stroke-width="1.5"/>
+                    <line x1="${pxL}" y1="38" x2="${pxL}" y2="50" stroke="#64748B" stroke-width="1.5"/>
+                    <text x="${pxL/2}" y="40" text-anchor="middle" fill="#333333" font-weight="bold" font-size="14" font-family="'PT Sans Narrow', sans-serif">Vão L = ${L.toFixed(1)} m</text>
+                `;
+            };
+
+            function initSvgPointerZoom(svgId) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                const baseW = 660;
+                const baseH = 320;
+                const baseMinX = -70;
+                const baseMinY = -200;
+
+                let vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
+                let isDragging = false;
+                let startClient = { x: 0, y: 0 };
+                let startVb = { x: baseMinX, y: baseMinY };
+
+                function applyViewBox() {
+                    svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+                }
+
+                svg.style.cursor = 'grab';
+
+                svg.addEventListener('wheel', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const rect = svg.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) return;
+
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const pX = vb.x + (mouseX / rect.width) * vb.w;
+                    const pY = vb.y + (mouseY / rect.height) * vb.h;
+
+                    const zoomFactor = e.deltaY < 0 ? 0.85 : 1.15;
+                    const newW = vb.w * zoomFactor;
+                    const newH = vb.h * zoomFactor;
+
+                    if (newW > baseW * 4.0 || newW < baseW * 0.25) return;
+
+                    vb.x = pX - (mouseX / rect.width) * newW;
+                    vb.y = pY - (mouseY / rect.height) * newH;
+                    vb.w = newW;
+                    vb.h = newH;
+
+                    applyViewBox();
+                }, { passive: false });
+
+                svg.addEventListener('mousedown', function(e) {
+                    if (e.button !== 0) return;
+                    isDragging = true;
+                    startClient.x = e.clientX;
+                    startClient.y = e.clientY;
+                    startVb.x = vb.x;
+                    startVb.y = vb.y;
+                    svg.style.cursor = 'grabbing';
+                });
+
+                window.addEventListener('mousemove', function(e) {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) return;
+
+                    const dx = ((e.clientX - startClient.x) / rect.width) * vb.w;
+                    const dy = ((e.clientY - startClient.y) / rect.height) * vb.h;
+
+                    vb.x = startVb.x - dx;
+                    vb.y = startVb.y - dy;
+                    applyViewBox();
+                });
+
+                window.addEventListener('mouseup', function() {
+                    if (isDragging) {
+                        isDragging = false;
+                        svg.style.cursor = 'grab';
+                    }
+                });
+
+                svg.addEventListener('dblclick', function() {
+                    vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
+                    applyViewBox();
+                });
+            }
+
+            function montarLab() {
+                calcularLabPoly_3_2();
+                initSvgPointerZoom('svg-canvas-poly');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', montarLab);
+            } else {
+                montarLab();
+            }
+        })();
+    </script>
+</div>
+
+<!-- SLIDE (3,3): TABELA RESUMO DE CARREGAMENTOS USUAIS (BRANCH Y=3) -->
+<div id="slide-3-3" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">GUIA DE REFERÊNCIA RÁPIDA (RAMIFICAÇÃO Y=3)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Tabela de Carregamentos Usuais em Vigas</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar ao Lab 2 (Y=2)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="my-auto w-full py-2">
+        <div class="p-6 sm:p-8 rounded-3xl card-glass border-l-[14px] border-[#901812] shadow-xl overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                    <tr class="bg-[#333333] text-white text-fluid-meta">
+                        <th class="p-4 rounded-tl-2xl font-bold uppercase tracking-wider">Geometria da Ação</th>
+                        <th class="p-4 font-bold uppercase tracking-wider">Diagrama Esquemático no Vão ($A-B$)</th>
+                        <th class="p-4 font-bold uppercase tracking-wider text-center">Resultante ($R$)</th>
+                        <th class="p-4 rounded-tr-2xl font-bold uppercase tracking-wider text-center">Baricentro ($x_{cg}$ a partir de A)</th>
+                    </tr>
+                </thead>
+                <tbody class="text-fluid-body divide-y divide-black/10">
+                    <!-- Linha 1: Retangular Uniforme -->
+                    <tr class="hover:bg-white/40 transition-colors">
+                        <td class="p-4 font-bold text-[#901812]">
+                            Retangular
+                            <span class="block text-fluid-meta text-[#666666] font-normal">Carga Uniformemente Distribuída</span>
+                        </td>
+                        <td class="p-4">
+                            <svg width="220" height="50" viewBox="0 0 220 50" class="overflow-visible">
+                                <line x1="10" y1="40" x2="210" y2="40" stroke="#1E40AF" stroke-width="6" stroke-linecap="round"/>
+                                <rect x="10" y="14" width="200" height="26" fill="rgba(209, 167, 5, 0.35)" stroke="#D1A705" stroke-width="2"/>
+                                <text x="110" y="32" text-anchor="middle" fill="#901812" font-weight="bold" font-size="12">q</text>
+                            </svg>
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$R = q \cdot L$$
+
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$x_{cg} = \frac{L}{2}$$
+
+                        </td>
+                    </tr>
+
+                    <!-- Linha 2: Triangular -->
+                    <tr class="hover:bg-white/40 transition-colors">
+                        <td class="p-4 font-bold text-[#901812]">
+                            Triangular
+                            <span class="block text-fluid-meta text-[#666666] font-normal">Vértice Nulo em A, Máximo em B</span>
+                        </td>
+                        <td class="p-4">
+                            <svg width="220" height="50" viewBox="0 0 220 50" class="overflow-visible">
+                                <line x1="10" y1="40" x2="210" y2="40" stroke="#1E40AF" stroke-width="6" stroke-linecap="round"/>
+                                <polygon points="10,40 210,12 210,40" fill="rgba(209, 167, 5, 0.35)" stroke="#D1A705" stroke-width="2"/>
+                                <text x="195" y="24" text-anchor="middle" fill="#901812" font-weight="bold" font-size="12">q₀</text>
+                            </svg>
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$R = \frac{q_0 \cdot L}{2}$$
+
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$x_{cg} = \frac{2}{3} L$$
+
+                        </td>
+                    </tr>
+
+                    <!-- Linha 3: Trapezoidal Geral -->
+                    <tr class="hover:bg-white/40 transition-colors">
+                        <td class="p-4 font-bold text-[#901812]">
+                            Trapezoidal
+                            <span class="block text-fluid-meta text-[#666666] font-normal">Variação Linear Genérica ($q_1 \to q_2$)</span>
+                        </td>
+                        <td class="p-4">
+                            <svg width="220" height="50" viewBox="0 0 220 50" class="overflow-visible">
+                                <line x1="10" y1="40" x2="210" y2="40" stroke="#1E40AF" stroke-width="6" stroke-linecap="round"/>
+                                <polygon points="10,26 210,10 210,40 10,40" fill="rgba(209, 167, 5, 0.35)" stroke="#D1A705" stroke-width="2"/>
+                                <text x="25" y="22" text-anchor="middle" fill="#901812" font-weight="bold" font-size="11">q₁</text>
+                                <text x="195" y="22" text-anchor="middle" fill="#901812" font-weight="bold" font-size="11">q₂</text>
+                            </svg>
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$R = \frac{(q_1 + q_2) \cdot L}{2}$$
+
+                        </td>
+                        <td class="p-4 text-center font-bold text-[#333333]">
+                            $$x_{cg} = \frac{L}{3} \cdot \left( \frac{q_1 + 2q_2}{q_1 + q_2} \right)$$
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Fórmulas Diretas de Resultante e Posição Baricêntrica</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Retornar ao Lab 2 | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Atividades In-Class (Slide 4,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (4,0): ATIVIDADES SÍNCRONAS • IN CLASS & VERIFICAÇÃO DE FREQUÊNCIA -->
+<div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-paint1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-3 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 04 — AVALIAÇÃO FORMATIVA CONTÍNUA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Atividades Síncronas • In Class &amp; Frequência</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-center">
+        <!-- Coluna 1: Orientações do Quiz e Acesso à Apostila (7 cols) -->
+        <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[14px] border-[#901812]">
+            <div class="space-y-3">
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block">Verificação de Aprendizagem Síncrona</span>
+                <h3 class="text-fluid-h3 text-[#333333] font-bold">Quiz Formativo e Material Didático • Aula 09</h3>
+                <p class="text-fluid-body text-[#444444]">
+                    Submeta individualmente as respostas do formulário interativo durante o período da aula para validação de frequência síncrona e consolidação dos tópicos de equilíbrio e cargas distribuídas:
+                </p>
+
+                <div class="space-y-2 text-fluid-meta text-[#444444] font-semibold">
+                    <div class="p-3.5 bg-white/80 rounded-2xl border border-black/5 flex items-center space-x-3">
+                        <i class="fa-solid fa-clock text-[#901812] text-xl"></i>
+                        <span><strong>Janela de Submissão:</strong> O formulário permanece ativo exclusivamente durante a aula síncrona.</span>
+                    </div>
+                    <div class="p-3.5 bg-white/80 rounded-2xl border border-black/5 flex items-center space-x-3">
+                        <i class="fa-solid fa-calculator text-[#901812] text-xl"></i>
+                        <span><strong>Foco Temático:</strong> Equações no plano ($\sum F_x = 0$, $\sum F_y = 0$, $\sum M = 0$), cálculo de resultantes $R$ e baricentros $x_{cg}$.</span>
+                    </div>
+                    <div class="p-3.5 bg-white/80 rounded-2xl border border-black/5 flex items-center space-x-3">
+                        <i class="fa-solid fa-book-open text-[#901812] text-xl"></i>
+                        <span><strong>Apostila Integrada:</strong> Consulte o material de suporte teórico e problemas resolvidos no arquivo PDF da aula.</span>
                     </div>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-5 rounded-3xl border-2 border-[#901812] shadow-2xl space-y-4 my-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-                    <div class="lg:col-span-4 bg-[#F4F6F5] p-4 rounded-2xl border border-[#DEDEDE] space-y-3">
-                        <h3 class="text-fluid-h3 text-[#901812] font-bold">Função do Carregamento $w(x)$</h3>
-                        <div>
-                            <label class="text-fluid-meta font-bold">Grau do Polinômio:</label>
-                            <select id="sel-poly-degree" class="w-full p-2 border rounded-xl bg-white font-bold text-fluid-meta" onchange="updateLabPoly()">
-                                <option value="0">Grau 0 (Constante w = a0)</option>
-                                <option value="1">Grau 1 (Linear w = a0 + a1·x)</option>
-                                <option value="2" selected>Grau 2 (Parabólico w = a0 + a2·x²)</option>
-                                <option value="3">Grau 3 (Cúbico w = a0 + a3·x³)</option>
-                            </select>
-                        </div>
+            <!-- Botões de Ação Direta -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform" target="_blank" class="w-full py-4 px-5 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-2 min-h-[54px] text-center">
+                    <i class="fa-solid fa-square-poll-vertical text-xl"></i>
+                    <span>Abrir Quiz In-Class</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                </a>
 
-                        <div>
-                            <label class="text-fluid-meta font-bold">Termo Constante $a_0$: <span id="lbl-poly-a0" class="text-[#901812]">5</span> kN/m</label>
-                            <input type="range" id="slider-poly-a0" min="0" max="20" value="5" class="w-full accent-[#901812]" oninput="updateLabPoly()">
-                        </div>
-
-                        <div>
-                            <label class="text-fluid-meta font-bold">Coeficiente $a_n$: <span id="lbl-poly-an" class="text-[#901812]">0.5</span></label>
-                            <input type="range" id="slider-poly-an" min="0" max="2" step="0.1" value="0.5" class="w-full accent-[#901812]" oninput="updateLabPoly()">
-                        </div>
-
-                        <div>
-                            <label class="text-fluid-meta font-bold">Vão da Viga $L$: <span id="lbl-poly-L" class="text-[#901812]">6.0</span> m</label>
-                            <input type="range" id="slider-poly-L" min="3" max="8" step="0.5" value="6.0" class="w-full accent-[#901812]" oninput="updateLabPoly()">
-                        </div>
-
-                        <div class="bg-white p-3 rounded-xl border border-[#DEDEDE] text-fluid-meta space-y-1 shadow-sm">
-                            <div>Resultante $R = \int w \, dx$: <strong id="val-poly-R" class="text-[#901812]">0.0 kN</strong></div>
-                            <div>Posição $x_{cg}$: <strong id="val-poly-xcg" class="text-[#333333]">0.0 m</strong></div>
-                            <div>Reação $R_{Ay}$: <strong id="val-poly-Ray" class="text-[#15803D]">0.0 kN</strong></div>
-                            <div>Reação $R_{By}$: <strong id="val-poly-Rby" class="text-[#15803D]">0.0 kN</strong></div>
-                        </div>
-                    </div>
-
-                    <div id="view-lab-poly" class="lg:col-span-8 bg-white rounded-2xl relative overflow-hidden h-[380px] border border-[#DEDEDE]">
-                        <svg id="svg-lab-poly" width="100%" height="100%" viewBox="-80 -210 700 330" class="w-full h-full svg-grid-bg">
-                            <g id="zoom-group-poly">
-                                <g id="content-lab-poly"></g>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
+                <a href="conceitoseexercicios_aula09.pdf" target="_blank" class="w-full py-4 px-5 bg-[#333333] text-[#D1A705] font-bold rounded-2xl hover:bg-[#901812] hover:text-white transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-2 min-h-[54px] text-center border border-white/10">
+                    <i class="fa-solid fa-file-pdf text-xl"></i>
+                    <span>Apostila Aula 09 (PDF)</span>
+                    <i class="fa-solid fa-download text-xs ml-1"></i>
+                </a>
             </div>
         </div>
 
-        <!-- SLIDE (3,3): TABELA RESUMO -->
-        <div id="slide-tabela-cargas" class="slide-screen slide-hidden-down flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Tabela de Carregamentos Usuais em Vigas</h2>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="moveInGrid(0, -1)" class="bg-[#333333] text-white px-4 py-2 rounded-xl text-fluid-meta font-bold hover:bg-[#901812] transition">
-                            <i class="fa-solid fa-arrow-up mr-1"></i>Voltar
-                        </button>
-                        <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
-                    </div>
+        <!-- Coluna 2: Card Escuro com QR Code Operacional em Alta Definição (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between items-center text-center border-l-[14px] border-[#D1A705]">
+            <div class="space-y-3 w-full">
+                <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider block">ACESSO INSTANTÂNEO</span>
+                <h3 class="text-fluid-h3 text-white font-bold">Frequência e Quiz Síncrono</h3>
+
+                <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[220px] sm:max-w-[250px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw%2Fviewform&color=901812" alt="QR Code Formulário In Class" class="w-full h-auto rounded-lg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw%2Fviewform'">
                 </div>
+
+                <span class="text-fluid-tag text-[#DEDEDE] font-bold block pt-1">
+                    Aponte a câmera do celular para responder
+                </span>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 rounded-3xl border border-[#DEDEDE] shadow-xl overflow-x-auto my-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-[#333333] text-white text-fluid-body">
-                            <th class="p-3.5 rounded-tl-xl">Geometria</th>
-                            <th class="p-3.5">Esquema da Carga no Vão Total ($A-B$)</th>
-                            <th class="p-3.5">Resultante ($R$)</th>
-                            <th class="p-3.5 rounded-tr-xl">Centroide ($x_{cg}$ a partir de A)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-fluid-body divide-y divide-[#DEDEDE]">
-                        <tr>
-                            <td class="p-3.5 font-bold text-[#901812]">Retangular (Uniforme)</td>
-                            <td class="p-3.5">
-                                <svg width="200" height="45" viewBox="0 0 200 45">
-                                    <line x1="10" y1="35" x2="190" y2="35" stroke="#1E40AF" stroke-width="6"/>
-                                    <rect x="10" y="10" width="180" height="25" fill="#D1A705" opacity="0.4" stroke="#D1A705"/>
-                                </svg>
-                            </td>
-                            <td class="p-3.5 font-bold">$$R = q \cdot L$$</td>
-                            <td class="p-3.5 font-bold">$$x_{cg} = \frac{L}{2}$$</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3.5 font-bold text-[#901812]">Triangular (Vértice em A)</td>
-                            <td class="p-3.5">
-                                <svg width="200" height="45" viewBox="0 0 200 45">
-                                    <line x1="10" y1="35" x2="190" y2="35" stroke="#1E40AF" stroke-width="6"/>
-                                    <polygon points="10,35 190,10 190,35" fill="#D1A705" opacity="0.4" stroke="#D1A705"/>
-                                </svg>
-                            </td>
-                            <td class="p-3.5 font-bold">$$R = \frac{q_0 \cdot L}{2}$$</td>
-                            <td class="p-3.5 font-bold">$$x_{cg} = \frac{2}{3} L$$</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3.5 font-bold text-[#901812]">Trapezoidal (Geral)</td>
-                            <td class="p-3.5">
-                                <svg width="200" height="45" viewBox="0 0 200 45">
-                                    <line x1="10" y1="35" x2="190" y2="35" stroke="#1E40AF" stroke-width="6"/>
-                                    <polygon points="10,22 190,8 190,35 10,35" fill="#D1A705" opacity="0.4" stroke="#D1A705"/>
-                                </svg>
-                            </td>
-                            <td class="p-3.5 font-bold">$$R = \frac{(q_1 + q_2) \cdot L}{2}$$</td>
-                            <td class="p-3.5 font-bold">$$x_{cg} = \frac{L}{3} \cdot \left( \frac{q_1 + 2q_2}{q_1 + q_2} \right)$$</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="p-3.5 bg-white/10 rounded-2xl text-fluid-meta text-[#DEDEDE] w-full border border-white/10 flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-fingerprint text-[#D1A705]"></i>
+                <span>Autenticação vinculada ao login institucional UFV</span>
             </div>
         </div>
+    </div>
 
-        <!-- SLIDE (4,0): ATIVIDADES SÍNCRONAS IN-CLASS -->
-        <div id="slide-inclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Síncronas • In Class</h2>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Avaliação Síncrona e Registro de Frequência</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Teorema da Resultante (Slide 3,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Atividades Off-Class (Slide 5,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (5,0): ATIVIDADES AUTÔNOMAS • OFF CLASS & ENCERRAMENTO -->
+<div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-10 md:p-12 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks3.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-3 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 05 — ATIVIDADES AUTÔNOMAS E CONSOLIDAÇÃO</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Lista Off-Class &amp; Preparação para Próxima Aula</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto w-full py-2 items-center">
+        <!-- Coluna 1: Orientações de Estudos e Próximo Conteúdo (7 cols) -->
+        <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[14px] border-[#901812]">
+            <div class="space-y-3">
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block">Estudo Extraclasse</span>
+                <h3 class="text-fluid-h3 text-[#333333] font-bold">Consolidação e Lista Semanal de Exercícios</h3>
+                <p class="text-fluid-body text-[#444444]">
+                    Resolva a lista de exercícios extraclasse para fixação dos conceitos de equilíbrio no plano, integração de carregamentos distribuídos e determinação de reações de apoio:
+                </p>
+
+                <div class="space-y-2 text-fluid-meta text-[#444444] font-semibold">
+                    <div class="p-3.5 bg-white/80 rounded-2xl border border-black/5 flex items-center space-x-3">
+                        <i class="fa-solid fa-calendar-check text-[#901812] text-xl"></i>
+                        <span><strong>Prazo de Envio:</strong> Submissão via formulário até a data limite indicada no portal da disciplina.</span>
+                    </div>
+                    <div class="p-3.5 bg-white/80 rounded-2xl border border-black/5 flex items-center space-x-3">
+                        <i class="fa-solid fa-book-bookmark text-[#901812] text-xl"></i>
+                        <span><strong>Bibliografia Recomendada:</strong> Beer &amp; Johnston (Cap. 4: Equilíbrio de Corpos Rígidos) e Hibbeler (Cap. 5).</span>
+                    </div>
+                </div>
+
+                <!-- Card de Chamada da Próxima Aula -->
+                <div class="p-4 bg-white/90 rounded-2xl border-l-4 border-[#D1A705] shadow-sm">
+                    <span class="text-fluid-tag text-[#777777] font-bold uppercase block">Próxima Aula • CIV 153</span>
+                    <strong class="text-fluid-h3 text-[#901812] block">Aula 10: Graus de Liberdade e Vinculações Estruturais</strong>
+                    <span class="text-fluid-meta text-[#555555]">Classificação de vínculos (1º, 2º e 3º gênero), restrições cinemáticas, estabilidade e estaticidade de estruturas planas.</span>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                    <div class="md:col-span-7 space-y-4">
-                        <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-6 border-[#901812] space-y-3">
-                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Quiz In-Class & Frequência</h3>
-                            <p class="text-fluid-body text-[#333333]">Acesse o formulário interativo para submissão do Quiz de verificação da Aula 09:</p>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform" target="_blank" class="inline-block bg-[#901812] text-white font-bold px-6 py-3 rounded-xl hover:bg-black transition text-fluid-body shadow-md">
-                                <i class="fa-solid fa-square-poll-vertical mr-2"></i>Acessar Quiz In-Class
-                            </a>
-                        </div>
-                        <div class="bg-[#F4F6F5] p-5 rounded-2xl border-l-6 border-[#D1A705] space-y-3">
-                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Material Didático e Apostila</h3>
-                            <a href="conceitoseexercicios_aula09.pdf" target="_blank" class="inline-block bg-[#333333] text-[#D1A705] font-bold px-6 py-3 rounded-xl hover:bg-[#901812] hover:text-white transition text-fluid-body shadow-md">
-                                <i class="fa-solid fa-file-pdf mr-2"></i>Abrir Apostila Aula 09 (PDF)
-                            </a>
-                        </div>
-                    </div>
-                    <div class="md:col-span-5 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 text-center space-y-3">
-                        <div class="bg-white p-4 rounded-2xl">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://docs.google.com/forms/d/e/1FAIpQLSeyfO_5sJFE7wWQIFxJWgWzBARAfr2uNB6lQVIGQY-xzln0Qw/viewform&color=901812" alt="QR Code In Class" class="w-full max-w-[180px] mx-auto">
-                        </div>
-                        <span class="text-fluid-meta text-[#D1A705] font-bold block">QR Code • Presença Síncrona</span>
-                    </div>
-                </div>
-            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScMdpaY0CMLj4DTuFFs0spD-dWavG3FVNunW27WB_VAWLgLiA/viewform" target="_blank" class="w-full py-4 px-6 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 min-h-[54px] text-center">
+                <i class="fa-solid fa-pen-to-square text-xl"></i>
+                <span>Acessar Formulário da Lista Off-Class</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+            </a>
         </div>
 
-        <!-- SLIDE (5,0): ATIVIDADES AUTÔNOMAS OFF-CLASS -->
-        <div id="slide-offclass" class="slide-screen slide-hidden-right flex flex-col justify-between">
-            <div class="sticky top-0 bg-[#F4F6F5] pt-2 pb-2 z-20 border-b border-[#DEDEDE]">
-                <div class="flex justify-between items-center max-w-7xl mx-auto px-2">
-                    <h2 class="text-fluid-h2 text-[#901812]">Atividades Autônomas • Off Class</h2>
-                    <img src="https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png" alt="PMS" class="h-10 md:h-12 w-auto">
+        <!-- Coluna 2: Card Escuro com QR Code da Lista Off-Class (5 cols) -->
+        <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between items-center text-center border-l-[14px] border-[#D1A705]">
+            <div class="space-y-3 w-full">
+                <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider block">AVALIAÇÃO FORMATIVA SEMANAL</span>
+                <h3 class="text-fluid-h3 text-white font-bold">Submissão da Lista Off-Class</h3>
+
+                <div class="bg-white/90 backdrop-blur-md p-5 rounded-2xl max-w-[220px] sm:max-w-[250px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScMdpaY0CMLj4DTuFFs0spD-dWavG3FVNunW27WB_VAWLgLiA%2Fviewform&color=901812" alt="QR Code Lista Off-Class" class="w-full h-auto rounded-lg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScMdpaY0CMLj4DTuFFs0spD-dWavG3FVNunW27WB_VAWLgLiA%2Fviewform'">
                 </div>
+
+                <span class="text-fluid-tag text-[#DEDEDE] font-bold block pt-1">
+                    Escaneie para acessar o questionário semanal
+                </span>
             </div>
 
-            <div class="max-w-7xl mx-auto w-full bg-white p-6 md:p-8 rounded-3xl border border-[#DEDEDE] shadow-xl space-y-6 my-auto">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                    <div class="md:col-span-7 bg-[#F4F6F5] p-6 rounded-3xl border border-[#DEDEDE] flex flex-col justify-between space-y-4">
-                        <div class="space-y-3">
-                            <h3 class="text-fluid-h3 text-[#901812] font-bold"><i class="fa-solid fa-book-open mr-2"></i>Lista Extraclasse</h3>
-                            <a href="https://docs.google.com/forms/d/e/1FAIpQLScMdpaY0CMLj4DTuFFs0spD-dWavG3FVNunW27WB_VAWLgLiA/viewform" target="_blank" class="inline-block bg-[#333333] text-[#D1A705] font-bold px-6 py-3 rounded-xl hover:bg-[#901812] hover:text-white transition text-fluid-body shadow-md">
-                                <i class="fa-solid fa-pen-to-square mr-2"></i>Acessar Lista Off-Class
-                            </a>
-                        </div>
-                        <div class="bg-white p-4 rounded-2xl border-l-6 border-[#D1A705] space-y-1">
-                            <span class="text-fluid-meta text-gray-500 font-bold block">PRÓXIMA AULA</span>
-                            <span class="text-fluid-h3 text-[#333333] font-bold block">Aula 10: Graus de Liberdade e Vinculações Estruturais</span>
-                        </div>
-                    </div>
-                    <div class="md:col-span-5 bg-[#333333] text-white p-6 rounded-3xl border-2 border-[#D1A705]/40 text-center flex flex-col justify-between items-center space-y-3">
-                        <div class="bg-white p-4 rounded-2xl w-full">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://docs.google.com/forms/d/e/1FAIpQLScMdpaY0CMLj4DTuFFs0spD-dWavG3FVNunW27WB_VAWLgLiA/viewform&color=333333" alt="QR Code Off Class" class="w-full max-w-[180px] mx-auto">
-                        </div>
-                        <span class="text-fluid-meta text-[#D1A705] font-bold block">QR Code • Lista Off-Class</span>
-                    </div>
-                </div>
+            <div class="p-3.5 bg-white/10 rounded-2xl text-fluid-meta text-[#DEDEDE] w-full border border-white/10 flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-graduation-cap text-[#D1A705]"></i>
+                <span>Programa de Monitoria Setorial (PMS) • DEC / UFV</span>
             </div>
         </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
+        <span class="font-bold">CIV 153: Aula 09 — Encerramento e Atividades Extraclasse</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para In Class (Slide 4,0) | Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">Home</kbd> para Capa (Slide 0,0)</span>
+    </footer>
+</div>
+
+
+    
 
     </main>
 
-    <!-- MOTOR DE NAVEGAÇÃO E SIMULAÇÃO MATEMÁTICA CORRIGIDO -->
+    <!-- MOTOR DE NAVEGAÇÃO MATRICIAL 2D -->
     <script>
-        /* MATRIZ DE NAVEGAÇÃO 2D (GRID ORTOGONAL) */
-        const slideGrid = {
-            '0,0': 'slide-capa',
-            '1,0': 'slide-equilibrio',
-            '2,0': 'slide-forcas',
-            '3,0': 'slide-teorema',
-            '3,1': 'slide-lab-trap',
-            '3,2': 'slide-lab-poly',
-            '3,3': 'slide-tabela-cargas',
-            '4,0': 'slide-inclass',
-            '5,0': 'slide-offclass'
-        };
-
         let currentX = 0, currentY = 0;
-        const totalHorizontal = 6;
+        let slideGrid = {};
+
+        function updateSlideGrid() {
+            slideGrid = {};
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                const parts = slide.id.replace('slide-', '').split('-');
+                if (parts.length === 2) slideGrid[`${parts[0]},${parts[1]}`] = slide.id;
+            });
+        }
 
         function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
 
         function updateUI() {
-            document.getElementById('progressBar').style.width = `${(currentX / (totalHorizontal - 1)) * 100}%`;
-            document.getElementById('slideIndicator').innerText = `${(currentX + 1).toString().padStart(2, '0')} / ${totalHorizontal.toString().padStart(2, '0')}`;
+            updateSlideGrid();
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const maxH = Math.max(...keysH.map(k => parseInt(k.split(',')[0])), 0);
+            const totalMainSlides = keysH.length;
             
-            const arrows = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
-            for (let d in arrows) {
-                const el = document.getElementById(`btn-nav-${d}`);
-                if (el) el.classList.toggle('nav-enabled', hasSlide(currentX + arrows[d][0], currentY + arrows[d][1]));
+            document.getElementById('progressBar').style.width = `${maxH === 0 ? 100 : (currentX / maxH) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX},${currentY}) | ${currentX + 1} of ${totalMainSlides}`;
+
+            const dirs = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in dirs) {
+                const btn = document.getElementById(`btn-nav-${d}`);
+                if (btn) btn.classList.toggle('nav-enabled', hasSlide(currentX + dirs[d][0], currentY + dirs[d][1]));
             }
         }
 
         function moveInGrid(dx, dy) {
+            updateSlideGrid();
             const nx = currentX + dx, ny = currentY + dy;
             if (hasSlide(nx, ny)) {
                 const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
                 const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
                 
-                cur.classList.remove('slide-active');
+                cur.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+
                 if (dx > 0) cur.classList.add('slide-hidden-left');
                 else if (dx < 0) cur.classList.add('slide-hidden-right');
-                else if (dy > 0) cur.classList.add('slide-hidden-up');
-                else if (dy < 0) cur.classList.add('slide-hidden-down');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
 
-                nxt.classList.remove('slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
                 nxt.classList.add('slide-active');
-                
+
                 currentX = nx; currentY = ny;
                 updateUI();
+                if (window.renderMathInElement) renderMathInElement(nxt);
             }
         }
 
         document.addEventListener('keydown', (e) => {
-            if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+            if (['INPUT','TEXTAREA','DIALOG'].includes(document.activeElement.tagName)) return;
             if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
             else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
             else if (e.key === 'ArrowUp') moveInGrid(0, -1);
             else if (e.key === 'ArrowDown') moveInGrid(0, 1);
         });
 
-        /* SUPORTE A ZOOM CENTRADO DENTRO DO SVG */
-        function attachCenteredZoom(containerId, groupName) {
-            const container = document.getElementById(containerId);
-            const group = document.getElementById(groupName);
-            if (!container || !group) return;
-
-            let scale = 1, panX = 0, panY = 0;
-            function applyTransform() {
-                group.setAttribute('transform', `translate(${panX}, ${panY}) scale(${scale})`);
-            }
-
-            container.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                const rect = container.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left - rect.width / 2;
-                const mouseY = e.clientY - rect.top - rect.height / 2;
-
-                const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-                const newScale = Math.min(Math.max(0.5, scale * zoomFactor), 4.0);
-
-                panX = mouseX - (mouseX - panX) * (newScale / scale);
-                panY = mouseY - (mouseY - panY) * (newScale / scale);
-                scale = newScale;
-                applyTransform();
-            }, { passive: false });
-        }
-
-        /* DESENHO DOS APOIOS CONFORME REQUISITADO */
-        function drawSupport(type, x, y, h = 24) {
-            const L = (2 * h) / Math.sqrt(3);
-            if (type === 1) { // 1º Gênero Móvel
-                return `
-                    <g transform="translate(${x},${y})">
-                        <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#808080" stroke="#000000" stroke-width="1.5"/>
-                        <line x1="${-0.6*L}" y1="${1.2*h}" x2="${0.6*L}" y2="${1.2*h}" stroke="#000000" stroke-width="1.5"/>
-                    </g>
-                `;
-            } else if (type === 2) { // 2º Gênero Fixo
-                return `
-                    <g transform="translate(${x},${y})">
-                        <polygon points="0,0 ${-L/2},${h} ${L/2},${h}" fill="#808080" stroke="#000000" stroke-width="1.5"/>
-                        <line x1="${-0.6*L}" y1="${h}" x2="${0.6*L}" y2="${h}" stroke="#000000" stroke-width="1.5"/>
-                        <rect x="${-0.6*L}" y="${h}" width="${1.2*L}" height="${0.25*h}" fill="url(#hatch45)"/>
-                    </g>
-                `;
-            } else if (type === 3) { // 3º Gênero Engaste
-                return `
-                    <g transform="translate(${x},${y})">
-                        <line x1="${-0.6*L}" y1="0" x2="${0.6*L}" y2="0" stroke="#000000" stroke-width="3.0"/>
-                        <rect x="${-0.6*L}" y="0" width="${1.2*L}" height="${0.3*h}" fill="url(#hatch45)"/>
-                    </g>
-                `;
-            }
-            return '';
-        }
-
-        /* LABORATÓRIO 1: CARGA TRAPEZOIDAL GENERALIZADA */
-        function updateLabTrap() {
-            const w1 = parseFloat(document.getElementById('slider-trap-w1').value);
-            const w2 = parseFloat(document.getElementById('slider-trap-w2').value);
-            const L = parseFloat(document.getElementById('slider-trap-L').value);
-
-            document.getElementById('lbl-trap-w1').innerText = w1;
-            document.getElementById('lbl-trap-w2').innerText = w2;
-            document.getElementById('lbl-trap-L').innerText = L.toFixed(1);
-
-            const R = 0.5 * (w1 + w2) * L;
-            const xcg = (R > 0) ? (L / 3) * ((w1 + 2 * w2) / (w1 + w2)) : L / 2;
-            const Rby = (R * xcg) / L;
-            const Ray = R - Rby;
-
-            document.getElementById('val-trap-R').innerText = `${R.toFixed(1)} kN`;
-            document.getElementById('val-trap-xcg').innerText = `${xcg.toFixed(2)} m`;
-            document.getElementById('val-trap-Ray').innerText = `${Ray.toFixed(1)} kN`;
-            document.getElementById('val-trap-Rby').innerText = `${Rby.toFixed(1)} kN`;
-
-            const scaleX = 50;
-            const scaleY = 3.5;
-            const pxL = L * scaleX;
-            const pxXcg = xcg * scaleX;
-
-            const content = document.getElementById('content-lab-trap');
-            if(!content) return;
-
-            content.innerHTML = `
-                <polygon points="0,0 ${pxL},0 ${pxL},${-w2*scaleY} 0,${-w1*scaleY}" fill="#D1A705" opacity="0.35" stroke="#D1A705" stroke-width="2"/>
-                <line x1="0" y1="0" x2="${pxL}" y2="0" stroke="#1E40AF" stroke-width="8"/>
-
-                ${drawSupport(2, 0, 0)}
-                ${drawSupport(1, pxL, 0)}
-
-                <line x1="0" y1="${-w1*scaleY}" x2="0" y2="-5" stroke="#D1A705" stroke-width="2.5" marker-end="url(#arrow-gold)"/>
-                <text x="0" y="${-w1*scaleY - 10}" text-anchor="middle" fill="#D1A705" font-weight="bold" font-size="16">w1 = ${w1} kN/m</text>
-                
-                <line x1="${pxL}" y1="${-w2*scaleY}" x2="${pxL}" y2="-5" stroke="#D1A705" stroke-width="2.5" marker-end="url(#arrow-gold)"/>
-                <text x="${pxL}" y="${-w2*scaleY - 10}" text-anchor="middle" fill="#D1A705" font-weight="bold" font-size="16">w2 = ${w2} kN/m</text>
-
-                <circle cx="${pxXcg}" cy="0" r="5" fill="#901812"/>
-                <line x1="${pxXcg}" y1="-140" x2="${pxXcg}" y2="-6" stroke="#901812" stroke-width="4" marker-end="url(#arrow-red)"/>
-                <text x="${pxXcg}" y="-150" text-anchor="middle" fill="#901812" font-weight="bold" font-size="18">R = ${R.toFixed(1)} kN</text>
-
-                <line x1="0" y1="70" x2="0" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green)"/>
-                <text x="0" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="16">Ray = ${Ray.toFixed(1)} kN</text>
-
-                <line x1="${pxL}" y1="70" x2="${pxL}" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green)"/>
-                <text x="${pxL}" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="16">Rby = ${Rby.toFixed(1)} kN</text>
-
-                <line x1="0" y1="45" x2="${pxL}" y2="45" stroke="#666" stroke-width="1.5"/>
-                <text x="${pxL/2}" y="40" text-anchor="middle" fill="#333" font-weight="bold" font-size="16">L = ${L.toFixed(1)} m</text>
-            `;
-        }
-
-        /* LABORATÓRIO 2: CARGA POLINOMIAL CURVILÍNEA w(x) (SINTAXE CORRIGIDA) */
-        function updateLabPoly() {
-            const deg = parseInt(document.getElementById('sel-poly-degree').value);
-            const a0 = parseFloat(document.getElementById('slider-poly-a0').value);
-            const an = parseFloat(document.getElementById('slider-poly-an').value);
-            const L = parseFloat(document.getElementById('slider-poly-L').value);
-
-            document.getElementById('lbl-poly-a0').innerText = a0;
-            document.getElementById('lbl-poly-an').innerText = an.toFixed(1);
-            document.getElementById('lbl-poly-L').innerText = L.toFixed(1);
-
-            const n = deg === 0 ? 1 : deg;
-            const coeff = deg === 0 ? 0 : an;
-
-            const R = (a0 * L) + (coeff * Math.pow(L, n + 1)) / (n + 1);
-            const M0 = (a0 * Math.pow(L, 2) / 2) + (coeff * Math.pow(L, n + 2)) / (n + 2);
-            
-            const xcg = R > 0 ? M0 / R : L / 2;
-            const Rby = R > 0 ? M0 / L : 0;
-            const Ray = R - Rby;
-
-            document.getElementById('val-poly-R').innerText = `${R.toFixed(1)} kN`;
-            document.getElementById('val-poly-xcg').innerText = `${xcg.toFixed(2)} m`;
-            document.getElementById('val-poly-Ray').innerText = `${Ray.toFixed(1)} kN`;
-            document.getElementById('val-poly-Rby').innerText = `${Rby.toFixed(1)} kN`;
-
-            const scaleX = 50;
-            const scaleY = 3.0;
-            const pxL = L * scaleX;
-            const pxXcg = xcg * scaleX;
-
-            let pathD = `M 0,0 L 0,${-a0*scaleY}`;
-
-            const numSteps = 40;
-            for (let i = 0; i <= numSteps; i++) {
-                const x = (L * i) / numSteps;
-                const wx = a0 + coeff * Math.pow(x, n);
-                pathD += ` L ${x * scaleX},${-wx * scaleY}`;
-            }
-            pathD += ` L ${pxL},0 Z`;
-
-            const content = document.getElementById('content-lab-poly');
-            if(!content) return;
-
-            content.innerHTML = `
-                <path d="${pathD}" fill="#D1A705" opacity="0.35" stroke="#D1A705" stroke-width="2.5"/>
-                <line x1="0" y1="0" x2="${pxL}" y2="0" stroke="#1E40AF" stroke-width="8"/>
-
-                ${drawSupport(2, 0, 0)}
-                ${drawSupport(1, pxL, 0)}
-
-                <circle cx="${pxXcg}" cy="0" r="5" fill="#901812"/>
-                <line x1="${pxXcg}" y1="-140" x2="${pxXcg}" y2="-6" stroke="#901812" stroke-width="4" marker-end="url(#arrow-red)"/>
-                <text x="${pxXcg}" y="-150" text-anchor="middle" fill="#901812" font-weight="bold" font-size="18">R = ${R.toFixed(1)} kN</text>
-
-                <line x1="0" y1="70" x2="0" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green)"/>
-                <text x="0" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="16">Ray = ${Ray.toFixed(1)} kN</text>
-
-                <line x1="${pxL}" y1="70" x2="${pxL}" y2="30" stroke="#15803D" stroke-width="4" marker-end="url(#arrow-green)"/>
-                <text x="${pxL}" y="90" text-anchor="middle" fill="#15803D" font-weight="bold" font-size="16">Rby = ${Rby.toFixed(1)} kN</text>
-
-                <text x="${pxL/2}" y="45" text-anchor="middle" fill="#333" font-weight="bold" font-size="16">L = ${L.toFixed(1)} m</text>
-            `;
-        }
-
-        /* INICIALIZAÇÃO GLOBAL SEGURA */
-        document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
-            updateLabTrap();
-            updateLabPoly();
-
-            attachCenteredZoom('view-lab-trap', 'zoom-group-trap');
-            attachCenteredZoom('view-lab-poly', 'zoom-group-poly');
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateUI(); 
         });
     </script>
 </body>
