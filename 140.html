@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 | Introdução à mecânica das estruturas - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Preset PMS */
+            --color-primary: #901812;
+            --color-secondary: #D1A705;
+            --color-dark: #333333;
+            --color-bg: #F4F6F5;
+            --bg-shade-left: rgba(244,246,245,0.96);
+            --bg-shade-mid: rgba(244,246,245,0.70);
+            --bg-shade-right: rgba(244,246,245,0.15);
+            --card-light: rgba(255, 255, 255, 0.58);
+            --card-dark: rgba(51, 51, 51, 0.65);
+
+            /* Tipografia Super-Ampliada (Calibração Nativa Full HD / 4k) */
+            --fluid-h1: clamp(2.8rem, 6.2vw, 5.5rem);
+            --fluid-h2: clamp(2.2rem, 4.6vw, 4.0rem);
+            --fluid-h3: clamp(1.75rem, 3.2vw, 2.8rem);
+            --fluid-body: clamp(1.35rem, 2.2vw, 1.95rem);
+            --fluid-meta: clamp(1.15rem, 1.6vw, 1.55rem);
+            --fluid-tag: clamp(1.05rem, 1.4vw, 1.35rem);
+        }
+
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: var(--color-bg); 
+            font-family: 'PT Sans Narrow', sans-serif; 
+            color: var(--color-dark); 
+        }
+
+        .text-fluid-h1 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h1); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h2); font-weight: 800; line-height: 1.15; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-size: var(--fluid-body); font-weight: 500; line-height: 1.45; }
+        .text-fluid-meta { font-size: var(--fluid-meta); font-weight: 600; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 700; letter-spacing: 0.04em; }
+
+        .katex-display { font-size: clamp(1.45rem, 2.7vw, 2.45rem) !important; margin: 0.85rem 0 !important; line-height: 1.25 !important; }
+        .katex { font-size: 1.08em; }
+
+        .slide-screen {
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .slide-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide-screen::-webkit-scrollbar-thumb {
+            background: rgba(144, 24, 18, 0.25);
+            border-radius: 9999px;
+        }
+        .slide-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(144, 24, 18, 0.65);
+        }
+
+        .card-glass { 
+            border: none !important; 
+            background-color: var(--card-light); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+        .card-glass-dark { 
+            border: none !important; 
+            background-color: var(--card-dark); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            color: white; 
+            box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+
+        .card-glass:hover {
+            transform: translateY(-4px);
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-glass-dark:hover {
+            transform: translateY(-4px);
+            background-color: rgba(51, 51, 51, 0.78);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        .reveal-controls { 
+            position: fixed; 
+            bottom: 1.25rem; 
+            right: 1.25rem; 
+            width: 110px; 
+            height: 110px; 
+            z-index: 1000; 
+            pointer-events: none; 
+        }
+        .control-arrow {
+            position: absolute; 
+            width: 38px; 
+            height: 38px; 
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(6px); 
+            border-radius: 50%; 
+            color: #888888; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0.15; 
+            pointer-events: none;
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            font-size: 0.95rem;
+        }
+        .control-arrow.nav-up { top: 0; left: 36px; }
+        .control-arrow.nav-down { bottom: 0; left: 36px; }
+        .control-arrow.nav-left { top: 36px; left: 0; }
+        .control-arrow.nav-right { top: 36px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--color-primary); opacity: 0.65; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--color-primary); color: #FFF; opacity: 1; transform: scale(1.1); }
+    </style>
+</head>
+<body class="w-screen h-screen relative">
+
+    <div class="fixed top-0 left-0 h-2 bg-[var(--color-secondary)] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-3 left-3 text-[0.80rem] sm:text-[0.90rem] font-bold text-[var(--color-dark)] bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm z-[1000] flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)]"></span>
+        <span id="slideIndicator">Slide (0,0) | 1 of 5</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full relative" id="slideDeck">
+
+         
+        
+
+
+<!-- SLIDE (0,0): CAPA DA AULA 140 (CIV 153 - PRESET PMS) -->
+<div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center gap-4 flex-shrink-0 mb-2">
+        <div class="flex items-center space-x-4 sm:space-x-6 bg-white/80 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm border border-black/5">
+            <img src="Logo UFV oficial horizontal.png" alt="UFV Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <img src="Logo DEC oficial.png" alt="DEC Logo" class="h-9 sm:h-11 w-auto" onerror="this.style.display='none'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <span class="text-fluid-tag text-[#333333] font-bold">CIV 153 • PMS / UFV</span>
+        </div>
+        <a href="https://pms.ufv.br" target="_blank" class="block bg-[#333333]/80 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform border border-white/10">
+            <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+        </a>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
+            
+            <div class="lg:col-span-7 space-y-4">
+                <div class="p-8 sm:p-12 rounded-3xl card-glass border-l-[16px] border-[#901812] transition-all hover:shadow-2xl">
+                    <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">AULA 140 — INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS</span>
+                    <h1 class="text-fluid-h1 mb-3 text-[#901812] leading-tight font-black">
+                        TENSÃO ADMISSÍVEL
+                        <span class="block text-fluid-h2 text-[#333333] font-extrabold mt-1">Conceitos de Segurança e Dimensionamento de Elementos Tracionados</span>
+                    </h1>
+                    <p class="text-fluid-body text-[#444444] font-medium leading-relaxed">
+                        Fundamentos de segurança estrutural ($S_d \le R_d$): Método das Tensões Admissíveis (MTA), Método dos Estados Limites (MEL), formulação do Fator de Segurança ($FS$) e dimensionamento de cabos, tirantes e treliças.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-black/10 flex flex-wrap items-center gap-3">
+                        <button onclick="moveInGrid(0, 1)" class="px-5 py-3 bg-[#901812] text-white rounded-xl font-bold text-fluid-meta hover:bg-[#D1A705] hover:text-[#333333] transition-all flex items-center space-x-2 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Ver Plano de Ensino (Pressione &darr;)</span>
+                        </button>
+                        <button onclick="moveInGrid(3, 1)" class="px-5 py-3 bg-[#D1A705] text-[#333333] rounded-xl font-bold text-fluid-meta hover:bg-[#901812] hover:text-white transition-all flex items-center space-x-2 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-network-wired"></i>
+                            <span>Ir para Lab de Treliças (3,1)</span>
+                        </button>
+                        <button onclick="moveInGrid(1, 0)" class="px-5 py-3 bg-white/90 text-[#901812] border border-[#901812]/30 rounded-xl font-bold text-fluid-meta hover:bg-[#901812] hover:text-white transition-all flex items-center space-x-2 cursor-pointer">
+                            <span>Avançar para Fundamentos (1,0)</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 p-6 sm:p-10 rounded-3xl card-glass-dark text-white flex flex-col justify-between space-y-6">
+                <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F140.html&color=901812" alt="Acompanhamento Mobile QR" class="w-full max-w-[210px] sm:max-w-[240px] mx-auto rounded-xl">
+                    <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhamento em Tempo Real</span>
+                </div>
+                <div class="text-center space-y-1">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold">Docência e Coordenação</span>
+                    <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                    <p class="text-fluid-meta text-[#DEDEDE]">SICon / DEC — Universidade Federal de Viçosa</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex-shrink-0 mt-2">
+        <div class="bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-2xl flex justify-between items-center text-fluid-meta text-[#444444] border border-black/5">
+            <span><strong>Pré-requisito:</strong> Esforço Normal, Ensaio Uniaxial e Diagrama $\sigma \times \epsilon$ (Aula 130)</span>
+            <span>UFV / CCE / DEC • Viçosa - MG</span>
+        </div>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (0,1): INTRODUÇÃO, ESCOPO E OBJETIVOS DE APRENDIZAGEM (BRANCH Y=1 DA CAPA) -->
+<div id="slide-0-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric2.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase tracking-wide">PLANO DE ENSINO • AULA 140</span>
+            <h2 class="text-fluid-h2 text-[#901812] font-black">Escopo Normativo, Filosofias de Projeto e Objetivos</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-6 py-3.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[50px] flex items-center space-x-2 cursor-pointer">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Capa (0,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Card 1: Fundamentação e Transição Metodológica (MTA vs. MEL) -->
+            <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div>
+                    <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Fundamentação Estrutural</span>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Segurança Estrutural e Dimensionamento</h3>
+                    <p class="text-fluid-body text-[#444444] leading-relaxed">
+                        A integridade de sistemas mecânicos demanda que as ações atuantes não excedam a capacidade resistente do material. Esta sessão examina a transição histórica entre o Método das Tensões Admissíveis (MTA — determinístico com fator global de segurança $FS$) e o Método dos Estados Limites (MEL — semi-probabilístico com coeficientes parciais de ponderação $\gamma_F$ e $\gamma_M$), culminando no projeto analítico de barras tracionadas.
+                    </p>
+                </div>
+                
+                <div class="bg-white/85 backdrop-blur-sm p-4 rounded-2xl border border-black/5 space-y-2">
+                    <span class="text-fluid-meta font-bold text-[#333333] block">Tópicos Estruturados da Sessão:</span>
+                    <ul class="text-fluid-meta text-[#555555] space-y-1.5 font-medium">
+                        <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Condição fundamental de segurança analítica: $S_d \le R_d$ e fronteiras de ruína.</li>
+                        <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Formulação de Tensão Admissível ($\sigma_{\text{adm}} = \sigma_{\text{lim}} / FS$) para materiais dúcteis e frágeis.</li>
+                        <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Dimensionamento de barras e cabos ($A_{\text{nec}} \ge N / \sigma_{\text{adm}}$) com seleção em catálogos comerciais.</li>
+                        <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Laboratórios integrados: Confiabilidade Gaussiana (1,1) e Treliças Articuladas (3,1).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: Competências Operacionais e Metas de Aprendizagem -->
+            <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider block mb-2">Metas Pedagógicas</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-3">Objetivos de Aprendizagem</h3>
+                    
+                    <div class="space-y-3 mt-4">
+                        <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-shield-halved text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-fluid-meta">1. Critérios de Resistência e Coeficientes de Segurança</strong>
+                                <span class="text-[#DEDEDE] text-fluid-meta">Diferenciar valores característicos de valores de cálculo e definir a tensão admissível para estados limites de escoamento e ruptura.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-calculator text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-fluid-meta">2. Dimensionamento Seccional de Elementos Axiais</strong>
+                                <span class="text-[#DEDEDE] text-fluid-meta">Calcular áreas transversais mínimas necessárias para cabos, tirantes e perfis estruturais laminados sob esforço normal centrado.</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-network-wired text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block text-fluid-meta">3. Verificação de Treliças e Escolha Comercial</strong>
+                                <span class="text-[#DEDEDE] text-fluid-meta">Identificar barras críticas sob tração em treliças isostáticas e especificar bitolas padronizadas atendendo às normas técnicas.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-white/15">
+                    <span class="text-fluid-tag text-[#DEDEDE] font-medium">Progressão pedagógica:</span>
+                    <button onclick="moveInGrid(1, 0)" class="px-5 py-2.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-xl text-fluid-meta transition-all flex items-center space-x-2 cursor-pointer shadow-md">
+                        <span>Iniciar Módulo 01 (Slide 1,0)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex-shrink-0 mt-2">
+        <div class="bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-2xl flex justify-between items-center text-fluid-meta text-[#444444] border border-black/5">
+            <span><strong>Disciplina:</strong> CIV 153 — Introdução à Mecânica das Estruturas</span>
+            <span>SICon / DEC / CCE • Universidade Federal de Viçosa</span>
+        </div>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,0): PRINCÍPIOS DE SEGURANÇA ESTRUTURAL E MÉTODOS DE PROJETO -->
+<div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+     <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 01 — SEGURANÇA ESTRUTURAL</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Princípios de Dimensionamento &amp; Filosofias de Projeto</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Card 1: Condição Fundamental de Segurança -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-shield-halved text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Condição Analítica</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A integridade mecânica de qualquer elemento exige que a solicitação de cálculo ($S_d$) não exceda a resistência de cálculo ($R_d$):
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                        $$S_d \le R_d$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Solicitação ($S_d$):</strong> Efeitos de ações permanentes, sobrecargas de uso e vento.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Resistência ($R_d$):</strong> Capacidade portante baseada nos limites do material.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Valores Característicos vs. Valores de Cálculo -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#D1A705]">
+                        <i class="fa-solid fa-scale-balanced text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">MTA vs. MEL</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A transição epistemológica entre abordagens determinísticas e modelos semi-probabilísticos de ponderação:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.1rem, 1.8vw, 1.55rem);">
+                        $$S_d = \gamma_F \cdot S_k \quad ; \quad R_d = \frac{R_k}{\gamma_M}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>MTA (Determinístico):</strong> Fator de Segurança global ($FS$) aplicado diretamente sobre o limite do material.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>MEL (Semi-probabilístico):</strong> Ponderação separada via majoração ($\gamma_F$) e minoração ($\gamma_M$).</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Transição para o Laboratório de Probabilidade e Ruína -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">LABORATÓRIO COMPUTACIONAL INTERATIVO</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-2">Segurança &amp; Probabilidade</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Explore a distribuição de densidade de probabilidade $S \times R$, avalie a superposição causadora de ruína ($S > R$) e calcule o índice de confiabilidade $\beta$.
+                    </p>
+                    <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Área de Ruína:</strong> Visualização direta da probabilidade de falha estrutural ($P_f$).</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Sensibilidade de Incerteza:</strong> Impacto da dispersão estatística de cargas e resistências.</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab Probabilístico (Pressione ↓)</span>
+                    <i class="fa-solid fa-chart-area text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Segurança Estrutural, Estados Limites e Coeficientes de Ponderação</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Capa (0,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Lab Confiabilidade (1,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Tensão Admissível (2,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,1): LABORATÓRIO VIRTUAL I - CONFIABILIDADE ESTATÍSTICA E ÁREA DE RUÍNA (BRANCH Y=1) -->
+<div id="slide-1-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL I (RAMIFICAÇÃO Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Segurança Estrutural: Distribuições de $S$ e $R$ &amp; Probabilidade de Ruína ($P_f$)</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar a Fundamentos (1,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+            
+            <!-- Coluna de Controles e Formulação Semi-Probabilística (5 cols) -->
+            <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros Probabilísticos</h3>
+                        <span id="lab11-status-tag" class="text-fluid-tag text-green-700 font-mono font-bold uppercase">Projeto Seguro</span>
+                    </div>
+
+                    <!-- Configuração do Coeficiente de Variação (Dispersão) -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Dispersão das Ações ($CV_S$):</label>
+                            <select id="lab11-cv-s" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#1D4ED8] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab1_1()">
+                                <option value="0.10">Baixa (10% - Carga Própria)</option>
+                                <option value="0.20" selected>Média (20% - Uso Comercial)</option>
+                                <option value="0.30">Alta (30% - Vento Extremo)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Dispersão do Material ($CV_R$):</label>
+                            <select id="lab11-cv-r" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#901812] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab1_1()">
+                                <option value="0.08" selected>Aço Estrutural (8%)</option>
+                                <option value="0.15">Concreto Usinado (15%)</option>
+                                <option value="0.25">Madeira Estrutural (25%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Slider 1: Média da Solicitação (mu_S) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Solicitação Média ($\mu_S$):</span>
+                            <span id="lab11-val-mus" class="font-mono text-[#1D4ED8] text-fluid-body">120.0 MPa</span>
+                        </div>
+                        <input type="range" id="lab11-slider-mus" min="60" max="220" step="5" value="120" class="w-full accent-[#1D4ED8] h-2 cursor-pointer" oninput="atualizarLab1_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>60 MPa</span>
+                            <span>120 MPa (Típica)</span>
+                            <span>220 MPa</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Média da Resistência do Material (mu_R) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Resistência Média ($\mu_R$):</span>
+                            <span id="lab11-val-mur" class="font-mono text-[#901812] text-fluid-body">280.0 MPa</span>
+                        </div>
+                        <input type="range" id="lab11-slider-mur" min="150" max="450" step="10" value="280" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarLab1_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>150 MPa (A36 min)</span>
+                            <span>280 MPa</span>
+                            <span>450 MPa (Alta Res.)</span>
+                        </div>
+                    </div>
+
+                    <!-- Presets Operacionais -->
+                    <div class="flex space-x-2 pt-0.5">
+                        <button onclick="aplicarPresetLab1_1(1.4, 1.15)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#333333] font-bold rounded-xl transition-all text-fluid-tag border border-black/15 shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer">
+                            <i class="fa-solid fa-building-shield text-xs text-[#901812]"></i>
+                            <span>Norma NBR ($\gamma_F=1.4, \gamma_M=1.15$)</span>
+                        </button>
+                        <button onclick="aplicarPresetLab1_1(1.0, 1.0)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#901812] font-bold rounded-xl transition-all text-fluid-tag border border-[#901812]/30 shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer">
+                            <i class="fa-solid fa-triangle-exclamation text-xs text-[#901812]"></i>
+                            <span>Sem Ponderação (FS=1.0)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel de Métricas e Diagnóstico de Confiabilidade Estrutural -->
+                <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Fator de Segurança Médio ($FS_0 = \mu_R / \mu_S$):</span>
+                        <strong id="lab11-res-fs" class="text-white font-mono text-fluid-body">2.33</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Índice de Confiabilidade de Cornell ($\beta$):</span>
+                        <strong id="lab11-res-beta" class="text-[#38BDF8] font-mono text-fluid-body">4.87</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Probabilidade Teórica de Ruína ($P_f \approx \Phi(-\beta)$):</span>
+                        <strong id="lab11-res-pf" class="text-green-400 font-mono text-fluid-body">5.6 × 10⁻⁷</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Fronteira Característica ($S_k \le R_k$):</span>
+                        <strong id="lab11-res-skrk" class="text-[#D1A705] font-mono text-fluid-meta">159.5 MPa &lt; 243.2 MPa</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-[#DEDEDE]">Critério de Aceitação Social:</span>
+                        <strong id="lab11-res-veredicto" class="text-green-400 font-mono text-xs uppercase font-bold">Conforme (Classe de Consequência CC2)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Visualização Gráfica em SVG (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+                <svg id="svg-lab1-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                    <defs>
+                        <pattern id="grid-dots-lab1-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                        </pattern>
+                        <marker id="arrow-axis-lab11" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#111827" />
+                        </marker>
+                        <linearGradient id="grad-ruina-lab11" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#DC2626" stop-opacity="0.9" />
+                            <stop offset="100%" stop-color="#991B1B" stop-opacity="0.5" />
+                        </linearGradient>
+                        <linearGradient id="grad-solic-lab11" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#2563EB" stop-opacity="0.35" />
+                            <stop offset="100%" stop-color="#1D4ED8" stop-opacity="0.05" />
+                        </linearGradient>
+                        <linearGradient id="grad-resist-lab11" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#D97706" stop-opacity="0.35" />
+                            <stop offset="100%" stop-color="#B45309" stop-opacity="0.05" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab1-1)" pointer-events="all" />
+                    
+                    <g id="group-zoom-lab1-1">
+                        <!-- Área de Interseção / Superposição Crítica (Ruína: S >= R) -->
+                        <path id="svg-lab11-area-ruina" d="" fill="url(#grad-ruina-lab11)" stroke="#B91C1C" stroke-width="1.5" />
+
+                        <!-- Áreas sob as Curvas de Densidade -->
+                        <path id="svg-lab11-area-s" d="" fill="url(#grad-solic-lab11)" />
+                        <path id="svg-lab11-area-r" d="" fill="url(#grad-resist-lab11)" />
+
+                        <!-- Traçados das Gaussianas -->
+                        <path id="svg-lab11-curve-s" d="" fill="none" stroke="#1D4ED8" stroke-width="3" />
+                        <path id="svg-lab11-curve-r" d="" fill="none" stroke="#901812" stroke-width="3" />
+
+                        <!-- Linhas Verticais de Referência (Médias e Valores Característicos) -->
+                        <g id="svg-lab11-markers"></g>
+
+                        <!-- Eixos Cartesianos Primários -->
+                        <line x1="-250" y1="120" x2="360" y2="120" stroke="#111827" stroke-width="2.5" marker-end="url(#arrow-axis-lab11)" />
+                        <line x1="-250" y1="120" x2="-250" y2="-150" stroke="#111827" stroke-width="2.5" marker-end="url(#arrow-axis-lab11)" />
+                        
+                        <text x="355" y="140" fill="#111827" font-size="14" font-weight="bold" font-family="'Montserrat', sans-serif">Tensões [MPa]</text>
+                        <text x="-260" y="-145" fill="#111827" font-size="14" font-weight="bold" text-anchor="end" font-family="'Montserrat', sans-serif">Densidade de Frequência $f(x)$</text>
+
+                        <!-- Legendas Diretas Integradas -->
+                        <g transform="translate(140, -145)">
+                            <rect x="0" y="0" width="185" height="90" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="12" opacity="0.95" />
+                            <line x1="12" y1="20" x2="35" y2="20" stroke="#1D4ED8" stroke-width="3" />
+                            <text x="42" y="24" fill="#1D4ED8" font-size="11" font-weight="bold">Solicitação $S$ (Ações)</text>
+                            
+                            <line x1="12" y1="42" x2="35" y2="42" stroke="#901812" stroke-width="3" />
+                            <text x="42" y="46" fill="#901812" font-size="11" font-weight="bold">Resistência $R$ (Capacidade)</text>
+
+                            <rect x="12" y="58" width="23" height="14" fill="url(#grad-ruina-lab11)" stroke="#B91C1C" rx="2" />
+                            <text x="42" y="69" fill="#B91C1C" font-size="11" font-weight="bold">Área de Ruína ($S \ge R$)</text>
+                        </g>
+                    </g>
+                </svg>
+                
+                <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                    <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Laboratório 01 — Confiabilidade Estrutural e Interseção Probabilística de Solicitação vs. Resistência</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (1,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Tensão Admissível (Slide 2,0)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (1,1) -->
+    <script>
+        (function() {
+            // Função de aproximação da Normal Padrão Acumulada Phi(-beta)
+            function phiAproximada(z) {
+                if (z > 8) return 1.0;
+                if (z < -8) return 0.0;
+                // Aproximação polinomial de Hastings
+                const p = 0.2316419;
+                const b1 = 0.319381530, b2 = -0.356563782, b3 = 1.781477937, b4 = -1.821255978, b5 = 1.330274429;
+                const x = Math.abs(z);
+                const t = 1.0 / (1.0 + p * x);
+                const pdf = (1.0 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x * x);
+                let cdf = 1.0 - pdf * (b1 * t + b2 * Math.pow(t, 2) + b3 * Math.pow(t, 3) + b4 * Math.pow(t, 4) + b5 * Math.pow(t, 5));
+                return z < 0 ? 1.0 - cdf : cdf;
+            }
+
+            function gaussPdf(x, mu, sigma) {
+                if (sigma <= 0) return 0;
+                const coef = 1.0 / (sigma * Math.sqrt(2 * Math.PI));
+                const expo = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
+                return coef * Math.exp(expo);
+            }
+
+            window.aplicarPresetLab1_1 = function(gamaF, gamaM) {
+                const sSlider = document.getElementById('lab11-slider-mus');
+                const rSlider = document.getElementById('lab11-slider-mur');
+                if (!sSlider || !rSlider) return;
+
+                if (gamaF === 1.0 && gamaM === 1.0) {
+                    sSlider.value = 160;
+                    rSlider.value = 200;
+                } else {
+                    sSlider.value = 120;
+                    rSlider.value = 280;
+                }
+                atualizarLab1_1();
+            };
+
+            window.atualizarLab1_1 = function() {
+                const sliderMuS = document.getElementById('lab11-slider-mus');
+                const sliderMuR = document.getElementById('lab11-slider-mur');
+                const selCvS = document.getElementById('lab11-cv-s');
+                const selCvR = document.getElementById('lab11-cv-r');
+                if (!sliderMuS || !sliderMuR || !selCvS || !selCvR) return;
+
+                const mu_S = parseFloat(sliderMuS.value);
+                const mu_R = parseFloat(sliderMuR.value);
+                const cv_S = parseFloat(selCvS.value);
+                const cv_R = parseFloat(selCvR.value);
+
+                const sigma_S = mu_S * cv_S;
+                const sigma_R = mu_R * cv_R;
+
+                // Valores característicos conforme preceitos normativos (quantis 95% e 5%)
+                const S_k = mu_S + 1.645 * sigma_S;
+                const R_k = mu_R - 1.645 * sigma_R;
+
+                // Margem de segurança Z = R - S
+                const mu_Z = mu_R - mu_S;
+                const sigma_Z = Math.sqrt(Math.pow(sigma_R, 2) + Math.pow(sigma_S, 2));
+                const beta = sigma_Z > 0 ? (mu_Z / sigma_Z) : 0;
+                const Pf = phiAproximada(-beta);
+                const FS_0 = mu_S > 0 ? (mu_R / mu_S) : 0;
+
+                // Atualização dos Rótulos nos Sliders
+                document.getElementById('lab11-val-mus').innerText = `${mu_S.toFixed(1)} MPa`;
+                document.getElementById('lab11-val-mur').innerText = `${mu_R.toFixed(1)} MPa`;
+
+                // Atualização do Painel de Métricas
+                document.getElementById('lab11-res-fs').innerText = FS_0.toFixed(2);
+                document.getElementById('lab11-res-beta').innerText = beta.toFixed(2);
+                
+                const pfEl = document.getElementById('lab11-res-pf');
+                if (Pf < 1e-6) {
+                    pfEl.innerText = Pf.toExponential(2);
+                    pfEl.className = "text-green-400 font-mono text-fluid-body";
+                } else if (Pf < 1e-3) {
+                    pfEl.innerText = Pf.toExponential(2);
+                    pfEl.className = "text-[#D1A705] font-mono text-fluid-body";
+                } else {
+                    pfEl.innerText = `${(Pf * 100).toFixed(2)}% (${Pf.toExponential(2)})`;
+                    pfEl.className = "text-[#B91C1C] font-mono text-fluid-body";
+                }
+
+                document.getElementById('lab11-res-skrk').innerText = `${S_k.toFixed(1)} MPa ${S_k <= R_k ? '≤' : '>'} ${R_k.toFixed(1)} MPa`;
+
+                const veredEl = document.getElementById('lab11-res-veredicto');
+                const tagEl = document.getElementById('lab11-status-tag');
+                if (beta >= 3.8 && S_k <= R_k) {
+                    veredEl.innerText = "Conforme (Classe CC2: β ≥ 3.8)";
+                    veredEl.className = "text-green-400 font-mono text-xs uppercase font-bold";
+                    tagEl.innerText = "Projeto Seguro (Conforme)";
+                    tagEl.className = "text-fluid-tag text-green-700 font-mono font-bold uppercase";
+                } else if (beta >= 3.0 && S_k <= R_k) {
+                    veredEl.innerText = "Atenção: Margem Reduzida (3.0 ≤ β < 3.8)";
+                    veredEl.className = "text-[#D1A705] font-mono text-xs uppercase font-bold";
+                    tagEl.innerText = "Margem Limítrofe";
+                    tagEl.className = "text-fluid-tag text-amber-600 font-mono font-bold uppercase";
+                } else {
+                    veredEl.innerText = "Ruína Excessiva / Não Conforme (β < 3.0)";
+                    veredEl.className = "text-[#B91C1C] font-mono text-xs uppercase font-bold";
+                    tagEl.innerText = "Risco de Colapso";
+                    tagEl.className = "text-fluid-tag text-red-600 font-mono font-bold uppercase";
+                }
+
+                // -------------------------------------------------------------
+                // RENDERIZAÇÃO GEOMÉTRICA DAS CURVAS SVG
+                // -------------------------------------------------------------
+                const pathS = document.getElementById('svg-lab11-curve-s');
+                const pathR = document.getElementById('svg-lab11-curve-r');
+                const areaS = document.getElementById('svg-lab11-area-s');
+                const areaR = document.getElementById('svg-lab11-area-r');
+                const areaRuina = document.getElementById('svg-lab11-area-ruina');
+                const gMarkers = document.getElementById('svg-lab11-markers');
+                if (!pathS || !pathR || !areaS || !areaR || !areaRuina || !gMarkers) return;
+
+                // Calibração dos Eixos:
+                // Tensão de 0 a 500 MPa -> X de -250 a 350 px (escala = 600 / 500 = 1.2 px/MPa)
+                // Origem: x = -250 em 0 MPa; y = 120 (linha zero de densidade)
+                const ox = -250.0;
+                const oy = 120.0;
+                const pxPerMPa = 1.2;
+
+                // Escala Vertical para Densidade de Probabilidade
+                const peakS = gaussPdf(mu_S, mu_S, sigma_S);
+                const peakR = gaussPdf(mu_R, mu_R, sigma_R);
+                const maxDensity = Math.max(peakS, peakR, 0.02);
+                const hMaxPx = 230.0;
+                const scaleY = hMaxPx / maxDensity;
+
+                let dS = `M ${ox} ${oy} `;
+                let dR = `M ${ox} ${oy} `;
+                let dAreaS = `M ${ox} ${oy} `;
+                let dAreaR = `M ${ox} ${oy} `;
+
+                const numPoints = 140;
+                const xMaxMPa = 500.0;
+                const stepMPa = xMaxMPa / numPoints;
+
+                let overlapPoints = [];
+
+                for (let i = 0; i <= numPoints; i++) {
+                    const mpa = i * stepMPa;
+                    const svgX = ox + mpa * pxPerMPa;
+
+                    const yValS = gaussPdf(mpa, mu_S, sigma_S);
+                    const yValR = gaussPdf(mpa, mu_R, sigma_R);
+
+                    const svgYS = oy - yValS * scaleY;
+                    const svgYR = oy - yValR * scaleY;
+
+                    if (i === 0) {
+                        dS = `M ${svgX.toFixed(1)} ${svgYS.toFixed(1)} `;
+                        dR = `M ${svgX.toFixed(1)} ${svgYR.toFixed(1)} `;
+                        dAreaS = `M ${svgX.toFixed(1)} ${oy} L ${svgX.toFixed(1)} ${svgYS.toFixed(1)} `;
+                        dAreaR = `M ${svgX.toFixed(1)} ${oy} L ${svgX.toFixed(1)} ${svgYR.toFixed(1)} `;
+                    } else {
+                        dS += `L ${svgX.toFixed(1)} ${svgYS.toFixed(1)} `;
+                        dR += `L ${svgX.toFixed(1)} ${svgYR.toFixed(1)} `;
+                        dAreaS += `L ${svgX.toFixed(1)} ${svgYS.toFixed(1)} `;
+                        dAreaR += `L ${svgX.toFixed(1)} ${svgYR.toFixed(1)} `;
+                    }
+
+                    // A área de ruína visual corresponde à superposição: min(f_S(x), f_R(x))
+                    const yOverlap = Math.min(yValS, yValR);
+                    if (yOverlap * scaleY > 0.8) {
+                        overlapPoints.push({ x: svgX, y: oy - yOverlap * scaleY });
+                    }
+                }
+
+                dAreaS += `L ${(ox + xMaxMPa * pxPerMPa).toFixed(1)} ${oy} Z`;
+                dAreaR += `L ${(ox + xMaxMPa * pxPerMPa).toFixed(1)} ${oy} Z`;
+
+                pathS.setAttribute('d', dS);
+                pathR.setAttribute('d', dR);
+                areaS.setAttribute('d', dAreaS);
+                areaR.setAttribute('d', dAreaR);
+
+                // Polígono da Área de Ruína
+                if (overlapPoints.length > 2) {
+                    let dRuina = `M ${overlapPoints[0].x.toFixed(1)} ${oy} `;
+                    overlapPoints.forEach(pt => {
+                        dRuina += `L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)} `;
+                    });
+                    dRuina += `L ${overlapPoints[overlapPoints.length - 1].x.toFixed(1)} ${oy} Z`;
+                    areaRuina.setAttribute('d', dRuina);
+                    areaRuina.style.display = 'inline';
+                } else {
+                    areaRuina.style.display = 'none';
+                }
+
+                // Marcadores Verticais das Médias e Quantis Característicos
+                const xMuS = ox + mu_S * pxPerMPa;
+                const xMuR = ox + mu_R * pxPerMPa;
+                const xSk = ox + S_k * pxPerMPa;
+                const xRk = ox + R_k * pxPerMPa;
+
+                let htmlMarkers = `
+                    <!-- Linha Média mu_S -->
+                    <line x1="${xMuS}" y1="${oy}" x2="${xMuS}" y2="${oy - peakS * scaleY}" stroke="#1D4ED8" stroke-width="2" stroke-dasharray="4,3" />
+                    <circle cx="${xMuS}" cy="${oy - peakS * scaleY}" r="4" fill="#1D4ED8" />
+                    <text x="${xMuS}" y="${oy + 18}" fill="#1D4ED8" font-size="11" font-weight="bold" text-anchor="middle">μ_S</text>
+
+                    <!-- Linha Média mu_R -->
+                    <line x1="${xMuR}" y1="${oy}" x2="${xMuR}" y2="${oy - peakR * scaleY}" stroke="#901812" stroke-width="2" stroke-dasharray="4,3" />
+                    <circle cx="${xMuR}" cy="${oy - peakR * scaleY}" r="4" fill="#901812" />
+                    <text x="${xMuR}" y="${oy + 18}" fill="#901812" font-size="11" font-weight="bold" text-anchor="middle">μ_R</text>
+
+                    <!-- Marcador Característico S_k -->
+                    <line x1="${xSk}" y1="${oy}" x2="${xSk}" y2="${oy - gaussPdf(S_k, mu_S, sigma_S) * scaleY}" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="2,2" />
+                    <text x="${xSk}" y="${oy - 6}" fill="#2563EB" font-size="10" font-weight="bold" text-anchor="end">S_k (95%)</text>
+
+                    <!-- Marcador Característico R_k -->
+                    <line x1="${xRk}" y1="${oy}" x2="${xRk}" y2="${oy - gaussPdf(R_k, mu_R, sigma_R) * scaleY}" stroke="#B45309" stroke-width="1.8" stroke-dasharray="2,2" />
+                    <text x="${xRk}" y="${oy - 6}" fill="#B45309" font-size="10" font-weight="bold" text-anchor="start">R_k (5%)</text>
+                `;
+                gMarkers.innerHTML = htmlMarkers;
+            };
+
+            // Sistema Pan e Zoom do SVG
+            function initPanZoomSvg(svgId) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+                const initialVb = { ...viewBox };
+                let isDragging = false;
+                let startPoint = { x: 0, y: 0 };
+
+                function updateVb() {
+                    svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+                }
+
+                svg.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const rect = svg.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                    const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                    const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                    const newW = viewBox.w * zoomFactor;
+                    const newH = viewBox.h * zoomFactor;
+
+                    if (newW < 220 || newW > 2600) return;
+
+                    viewBox.x = pX - (mouseX / rect.width) * newW;
+                    viewBox.y = pY - (mouseY / rect.height) * newH;
+                    viewBox.w = newW;
+                    viewBox.h = newH;
+                    updateVb();
+                }, { passive: false });
+
+                svg.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                    const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                    viewBox.x -= dx;
+                    viewBox.y -= dy;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                    updateVb();
+                });
+
+                window.addEventListener('mouseup', () => { isDragging = false; });
+
+                svg.addEventListener('dblclick', () => {
+                    viewBox = { ...initialVb };
+                    updateVb();
+                });
+            }
+
+            function montarLab() {
+                atualizarLab1_1();
+                initPanZoomSvg('svg-lab1-1');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', montarLab);
+            } else {
+                montarLab();
+            }
+        })();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,0): TENSÃO ADMISSÍVEL & FATOR DE SEGURANÇA (FS) -->
+<div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 02 — FORMULAÇÃO CLÁSSICA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Tensão Admissível &amp; Fator de Segurança ($FS$)</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Card 1: Conceito e Formulação Geral de FS -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-calculator text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Definição Analítica</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        O dimensionamento restringe a tensão atuante a um patamar seguro, definindo o Fator de Segurança ($FS$) como a razão entre capacidade e solicitação admissível:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                        $$FS = \frac{\sigma_{\text{rup}}}{\sigma_{\text{adm}}} \implies \sigma_{\text{adm}} = \frac{\sigma_{\text{rup}}}{FS}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Carga Admissível ($P_{\text{adm}}$):</strong> Carga máxima tolerada sem comprometer a integridade da peça.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Condição Operacional:</strong> A tensão de trabalho jamais deve ultrapassar $\sigma_{\text{adm}}$.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Critérios por Material: Dúctil vs. Frágil -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#D1A705]">
+                        <i class="fa-solid fa-layer-group text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Critério Constitutivo</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A tensão de referência depende do modo de falha característico exibido no diagrama tensão-deformação do material:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.1rem, 1.8vw, 1.55rem);">
+                        $$\sigma_{\text{adm}} = \frac{\sigma_y}{FS_y} \quad \text{(Dúcteis)} \quad ; \quad \sigma_{\text{adm}} = \frac{\sigma_r}{FS_r} \quad \text{(Frágeis)}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Materiais Dúcteis (Aço):</strong> Falha por plastificação excessiva; referenciados na tensão de escoamento $\sigma_y$.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Materiais Frágeis (Concreto):</strong> Falha catastrófica sem aviso; referenciados na ruptura última $\sigma_r$.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Fontes de Incerteza & Avanço para Dimensionamento -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">JUSTIFICATIVA FÍSICA DO FS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-2">Incertezas de Projeto</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        O fator de segurança quantifica e compensa desvios inevitáveis entre o modelo analítico e a estrutura real construída:
+                    </p>
+                    <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Variabilidade de Cargas:</strong> Sobrecargas imprevistas e impactos dinâmicos.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Imperfeições Seccionais:</strong> Variações de laminação, furos e corrosão.</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Avançar para Dimensionamento (3,0)</span>
+                    <i class="fa-solid fa-arrow-right text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Método das Tensões Admissíveis, Fator de Segurança e Modos de Falha</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Fundamentos (1,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Dimensionamento (3,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,0): DIMENSIONAMENTO DE BARRAS TRACIONADAS, CABOS E PERFIS -->
+<div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 03 — METODOLOGIA DE PROJETO</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Dimensionamento de Elementos Tracionados</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Card 1: Equação Fundamental de Dimensionamento -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-ruler-combined text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Área Necessária ($A_{\text{nec}}$)</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Garantir a restrição $\sigma \le \sigma_{\text{adm}}$ conduz à determinação da área de seção transversal mínima capaz de suportar a força axial $N$:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                        $$\sigma = \frac{N}{A} \le \sigma_{\text{adm}} \implies A_{\text{nec}} \ge \frac{N}{\sigma_{\text{adm}}} = \frac{N \cdot FS}{\sigma_{\text{rup}}}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Esforço Solicitante ($N$):</strong> Resultante axial de tração obtida via estática ($N > 0$).</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Critério de Verificação:</strong> Adotar sempre seção comercial $A_{\text{com}} \ge A_{\text{nec}}$.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Seções Circulares e Catálogos Comerciais -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#D1A705]">
+                        <i class="fa-solid fa-circle-notch text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Bitolas Padronizadas</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Para tirantes maciços e cabos de seção circular de diâmetro $d$, a dimensão mínima teórica é calculada diretamente por:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.1rem, 1.8vw, 1.55rem);">
+                        $$A = \frac{\pi d^2}{4} \implies d_{\text{nec}} \ge \sqrt{\frac{4 \cdot N}{\pi \cdot \sigma_{\text{adm}}}}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Série Comercial Padronizada (mm):</strong> 6,3 • 8,0 • 10,0 • 12,5 • 16,0 • 20,0 • 25,0.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Arredondamento Superior:</strong> A bitola especificada é o primeiro valor comercial imediatamente superior a $d_{\text{nec}}$.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Chamada ao Laboratório Virtual de Treliças -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">LABORATÓRIO COMPUTACIONAL INTERATIVO</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-2">Simulador de Treliças</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Analise o equilíbrio de nós e seções de uma treliça plana, identifique as barras tracionadas mais solicitadas e dimensione as seções comerciais em tempo real.
+                    </p>
+                    <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Cálculo Estático Instantâneo:</strong> Esforços axiais em função do carregamento externo.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-circle-check text-[#D1A705] mt-1 mr-2.5"></i>
+                            <span><strong>Dimensionamento Paramétrico:</strong> Seleção interativa de material, $FS$ e bitola comercial.</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab de Treliças (Pressione ↓)</span>
+                    <i class="fa-solid fa-network-wired text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Dimensionamento de Barras Tracionadas, Cabos e Seleção de Bitolas Padronizadas</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Tensão Admissível (2,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Lab de Treliças (3,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Casos Práticos (Slide 4,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,1): LABORATÓRIO VIRTUAL II - TRELIÇA ISOSTÁTICA E DIMENSIONAMENTO DE BARRAS TRACIONADAS (RAMIFICAÇÃO Y=1) -->
+<div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL II (RAMIFICAÇÃO Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Dimensionamento de Barras Tracionadas em Treliça Isostática</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar a Metodologia (3,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+            
+            <!-- Coluna de Controles e Especificação Comercial (5 cols) -->
+            <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros Estruturais</h3>
+                        <span id="lab31-status-tag" class="text-fluid-tag text-green-700 font-mono font-bold uppercase">Bitola Adequada</span>
+                    </div>
+
+                    <!-- Seleção de Barra em Estudo e Material Constitutivo -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Barra da Treliça:</label>
+                            <select id="lab31-member-select" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#1D4ED8] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab3_1()">
+                                <option value="L1" selected>Tirante Inferior L1 (A-C)</option>
+                                <option value="L2">Tirante Inferior L2 (C-E)</option>
+                                <option value="D1">Diagonal D1 (B-C)</option>
+                                <option value="D2">Diagonal D2 (C-D)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Aço Estrutural:</label>
+                            <select id="lab31-mat-select" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#901812] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab3_1()">
+                                <option value="250" selected>ASTM A36 (fy = 250 MPa)</option>
+                                <option value="345">ASTM A572 Gr50 (fy = 345 MPa)</option>
+                                <option value="500">Aço Armadura CA-50 (fy = 500 MPa)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Slider 1: Carga Vertical no Nó C (P) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Carga Nodular em C ($P$):</span>
+                            <span id="lab31-val-p" class="font-mono text-[#901812] text-fluid-body">60.0 kN</span>
+                        </div>
+                        <input type="range" id="lab31-slider-p" min="10" max="160" step="5" value="60" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarLab3_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>10 kN (Leve)</span>
+                            <span>60 kN (Serviço)</span>
+                            <span>160 kN (Severa)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Fator de Segurança (FS) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Fator de Segurança ($FS$):</span>
+                            <span id="lab31-val-fs" class="font-mono text-[#D1A705] text-fluid-body">1.65</span>
+                        </div>
+                        <input type="range" id="lab31-slider-fs" min="1.0" max="3.0" step="0.05" value="1.65" class="w-full accent-[#D1A705] h-2 cursor-pointer" oninput="atualizarLab3_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>1.00 (Sem margem)</span>
+                            <span>1.65 (Norma NBR 8800)</span>
+                            <span>3.00 (Conservador)</span>
+                        </div>
+                    </div>
+
+                    <!-- Seletor de Bitola Comercial Disponível no Mercado -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-1 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Bitola Adotada ($d_{\text{com}}$):</span>
+                            <span id="lab31-val-dcom" class="font-mono text-[#1D4ED8] text-fluid-body">20.0 mm</span>
+                        </div>
+                        <select id="lab31-bitola-select" class="w-full p-2 bg-white/95 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#1D4ED8] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab3_1()">
+                            <option value="6.3">6.3 mm (Área = 0.31 cm²)</option>
+                            <option value="8.0">8.0 mm (Área = 0.50 cm²)</option>
+                            <option value="10.0">10.0 mm (Área = 0.79 cm²)</option>
+                            <option value="12.5">12.5 mm (Área = 1.23 cm²)</option>
+                            <option value="16.0">16.0 mm (Área = 2.01 cm²)</option>
+                            <option value="20.0" selected>20.0 mm (Área = 3.14 cm²)</option>
+                            <option value="25.0">25.0 mm (Área = 4.91 cm²)</option>
+                            <option value="32.0">32.0 mm (Área = 8.04 cm²)</option>
+                        </select>
+                    </div>
+
+                    <!-- Botão de Dimensionamento Automático Ótimo -->
+                    <button onclick="adotarBitolaOtimaLab3_1()" class="w-full py-2 px-3 bg-white hover:bg-black/5 text-[#901812] font-bold rounded-xl transition-all text-fluid-tag border border-[#901812]/30 shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                        <span>Selecionar Menor Bitola Comercial Segura</span>
+                    </button>
+                </div>
+
+                <!-- Painel de Diagnóstico Analítico em Tempo Real -->
+                <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Esforço Normal na Barra ($N$):</span>
+                        <strong id="lab31-res-n" class="text-[#38BDF8] font-mono text-fluid-body">+45.00 kN</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Tensão Admissível ($\sigma_{\text{adm}} = f_y / FS$):</span>
+                        <strong id="lab31-res-sigadm" class="text-white font-mono text-fluid-meta">151.5 MPa</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Área Mínima Necessária ($A_{\text{nec}} = N / \sigma_{\text{adm}}$):</span>
+                        <strong id="lab31-res-anec" class="text-[#D1A705] font-mono text-fluid-body">2.97 cm²</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Tensão Atuante ($\sigma = N / A_{\text{com}}$):</span>
+                        <strong id="lab31-res-sigatu" class="text-green-400 font-mono text-fluid-body">143.3 MPa</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-[#DEDEDE]">Eficiência da Seção ($\sigma / \sigma_{\text{adm}}$):</span>
+                        <strong id="lab31-res-taxa" class="text-green-400 font-mono text-xs uppercase font-bold">94.6% (Seguro e Econômico)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Visualização Gráfica em SVG (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+                <svg id="svg-lab3-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                    <defs>
+                        <pattern id="grid-dots-lab3-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                        </pattern>
+                        <marker id="arrow-force-red-lab31" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#B91C1C" />
+                        </marker>
+                        <marker id="arrow-reaction-blue-lab31" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#1D4ED8" />
+                        </marker>
+                    </defs>
+                    
+                    <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab3-1)" pointer-events="all" />
+                    
+                    <g id="group-zoom-lab3-1">
+                        <!-- Camada de Barras da Treliça Warren Isostática (Vão = 4.0m, Altura = 1.5m) -->
+                        <g id="layer-truss-members"></g>
+
+                        <!-- Camada de Apoios: Fixo A (2º Gênero) e Móvel E (1º Gênero) -->
+                        <g id="layer-truss-supports">
+                            <!-- Apoio A (x = -200, y = 50) -->
+                            <polygon points="-200,50 -214,74 -186,74" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                            <line x1="-222" y1="74" x2="-178" y2="74" stroke="#1F2937" stroke-width="3" />
+                            <line x1="-216" y1="80" x2="-208" y2="74" stroke="#64748B" stroke-width="1.8" />
+                            <line x1="-204" y1="80" x2="-196" y2="74" stroke="#64748B" stroke-width="1.8" />
+                            <line x1="-192" y1="80" x2="-184" y2="74" stroke="#64748B" stroke-width="1.8" />
+                            
+                            <!-- Apoio E (x = 200, y = 50) -->
+                            <polygon points="200,50 186,70 214,70" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                            <circle cx="192" cy="75" r="4.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.8" />
+                            <circle cx="208" cy="75" r="4.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.8" />
+                            <line x1="178" y1="81" x2="222" y2="81" stroke="#1F2937" stroke-width="3" />
+                        </g>
+
+                        <!-- Camada de Nós Articulados (Pinos sem Momento) -->
+                        <g id="layer-truss-nodes"></g>
+
+                        <!-- Camada de Cargas Externas e Reações de Apoio -->
+                        <g id="layer-truss-forces"></g>
+
+                        <!-- Painel Flutuante Integrado: Detalhe Seccional da Barra em Estudo -->
+                        <g id="layer-truss-section-detail" transform="translate(145, -165)">
+                            <rect x="0" y="0" width="180" height="135" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="14" opacity="0.95" />
+                            <text x="90" y="20" fill="#333333" font-size="11" font-weight="bold" text-anchor="middle">Seção Transversal Circular</text>
+                            
+                            <!-- Círculo da Bitola Comercial Adotada -->
+                            <circle id="svg-detail-circle" cx="90" cy="62" r="24" fill="#FEF08A" stroke="#CA8A04" stroke-width="3" />
+                            <circle cx="90" cy="62" r="2" fill="#901812" />
+                            <line id="svg-detail-diam-line" x1="66" y1="62" x2="114" y2="62" stroke="#901812" stroke-width="1.4" stroke-dasharray="2,2" />
+                            
+                            <text id="svg-detail-d-text" x="90" y="102" fill="#1D4ED8" font-size="11" font-weight="bold" text-anchor="middle">d = 20.0 mm</text>
+                            <text id="svg-detail-a-text" x="90" y="117" fill="#64748B" font-size="10" font-weight="bold" text-anchor="middle">A = 3.14 cm²</text>
+                            <text id="svg-detail-ver-text" x="90" y="130" fill="#16A34A" font-size="9" font-weight="bold" text-anchor="middle">σ ≤ σadm (CONFORME)</text>
+                        </g>
+                    </g>
+                </svg>
+                
+                <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                    <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Laboratório 02 — Resolução Estática de Treliças e Dimensionamento de Seções sob Tração Pura</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (3,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Casos Práticos (Slide 4,0)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,1) -->
+    <script>
+        (function() {
+            // Geometria nodal da Treliça Warren (Coordenadas SVG):
+            // Vão total = 400 px (4.0 m -> 100 px/m) | Altura = 120 px (1.2 m)
+            const nos = {
+                A: { x: -200, y: 50, label: "A" },
+                B: { x: -100, y: -70, label: "B" },
+                C: { x: 0,    y: 50, label: "C" },
+                D: { x: 100,  y: -70, label: "D" },
+                E: { x: 200,  y: 50, label: "E" }
+            };
+
+            const bitolasPadrao = [6.3, 8.0, 10.0, 12.5, 16.0, 20.0, 25.0, 32.0];
+
+            function areaDeBitola(d_mm) {
+                return (Math.PI * Math.pow(d_mm, 2)) / 4.0; // mm²
+            }
+
+            // Resolução analítica da treliça para carga concentrada simétrica vertical P no nó C:
+            // Reações: R_A = R_E = P / 2 (para cima)
+            // Barra L1 (A-C): Tração pura -> N_L1 = + (P / 2) * (L_banzo / (2 * h)) = + (P/2) * (1.0 / 1.2) = + 0.4167 P (simplificada a 0.50 P * cotg(theta) = +0.75 P)
+            // Geometria precisa: tg(theta) = 1.2 / 1.0 = 1.2 -> sen(theta) = 1.2 / sqrt(1.2^2 + 1^2) = 0.7682; cos(theta) = 0.6402
+            // No Nó A: N_AB * sen(theta) + R_A = 0 -> N_AB = - (P/2) / sen(theta) = - 0.651 P (Compressão)
+            // N_AC (L1) = - N_AB * cos(theta) = + (P/2) * cotg(theta) = + (P/2) * (1.0 / 1.2) = + 0.4167 P
+            // No Nó C: Carga P vertical para baixo.
+            // Diagonal BC (D1): N_BC * sen(theta) = P/2 -> N_BC = + (P/2) / sen(theta) = + 0.651 P (Tração)
+            // Diagonal CD (D2): simetria -> N_CD = + 0.651 P (Tração)
+            // Barra L2 (C-E): simetria -> N_L2 = + 0.4167 P (Tração)
+            function calcularEsforcosNormais(P_kN) {
+                const senTheta = 1.2 / Math.sqrt(1.2 * 1.2 + 1.0 * 1.0); // ~0.7682
+                const cotgTheta = 1.0 / 1.2;                            // ~0.8333
+                
+                const N_D1 = (P_kN / 2.0) / senTheta;                   // Tração (+)
+                const N_D2 = N_D1;                                      // Tração (+)
+                const N_L1 = (P_kN / 2.0) * cotgTheta;                  // Tração (+)
+                const N_L2 = N_L1;                                      // Tração (+)
+                const N_TOP = - P_kN * cotgTheta;                       // Barra superior B-D (Compressão -)
+                const N_AB = - (P_kN / 2.0) / senTheta;                 // Compressão (-)
+                const N_DE = N_AB;                                      // Compressão (-)
+
+                return {
+                    L1: N_L1,
+                    L2: N_L2,
+                    D1: N_D1,
+                    D2: N_D2,
+                    BD: N_TOP,
+                    AB: N_AB,
+                    DE: N_DE
+                };
+            }
+
+            window.adotarBitolaOtimaLab3_1 = function() {
+                const P_kN = parseFloat(document.getElementById('lab31-slider-p').value);
+                const FS = parseFloat(document.getElementById('lab31-slider-fs').value);
+                const fy_MPa = parseFloat(document.getElementById('lab31-mat-select').value);
+                const member = document.getElementById('lab31-member-select').value;
+                const bitolaSelect = document.getElementById('lab31-bitola-select');
+                if (!bitolaSelect) return;
+
+                const esforcos = calcularEsforcosNormais(P_kN);
+                const N_kN = esforcos[member];
+                const sigma_adm_MPa = fy_MPa / FS;
+                const A_nec_mm2 = (N_kN * 1000.0) / sigma_adm_MPa;
+
+                // Encontra a menor bitola cujo A >= A_nec
+                let bitolaEscolhida = bitolasPadrao[bitolasPadrao.length - 1];
+                for (let i = 0; i < bitolasPadrao.length; i++) {
+                    if (areaDeBitola(bitolasPadrao[i]) >= A_nec_mm2) {
+                        bitolaEscolhida = bitolasPadrao[i];
+                        break;
+                    }
+                }
+
+                bitolaSelect.value = bitolaEscolhida.toFixed(1);
+                atualizarLab3_1();
+            };
+
+            window.atualizarLab3_1 = function() {
+                const sliderP = document.getElementById('lab31-slider-p');
+                const sliderFS = document.getElementById('lab31-slider-fs');
+                const matSelect = document.getElementById('lab31-mat-select');
+                const memberSelect = document.getElementById('lab31-member-select');
+                const bitolaSelect = document.getElementById('lab31-bitola-select');
+                if (!sliderP || !sliderFS || !matSelect || !memberSelect || !bitolaSelect) return;
+
+                const P_kN = parseFloat(sliderP.value);
+                const FS = parseFloat(sliderFS.value);
+                const fy_MPa = parseFloat(matSelect.value);
+                const memberKey = memberSelect.value;
+                const d_com_mm = parseFloat(bitolaSelect.value);
+
+                document.getElementById('lab31-val-p').innerText = `${P_kN.toFixed(1)} kN`;
+                document.getElementById('lab31-val-fs').innerText = `${FS.toFixed(2)}`;
+                document.getElementById('lab31-val-dcom').innerText = `${d_com_mm.toFixed(1)} mm`;
+
+                // Cálculo dos Esforços
+                const esforcos = calcularEsforcosNormais(P_kN);
+                const N_kN = esforcos[memberKey];
+                const N_N = N_kN * 1000.0;
+
+                // Capacidade Admissível
+                const sigma_adm_MPa = fy_MPa / FS;
+                const A_nec_mm2 = sigma_adm_MPa > 0 ? (N_N / sigma_adm_MPa) : 0;
+                const A_nec_cm2 = A_nec_mm2 / 100.0;
+
+                // Propriedades da Bitola Adotada
+                const A_com_mm2 = areaDeBitola(d_com_mm);
+                const A_com_cm2 = A_com_mm2 / 100.0;
+                const sigma_atu_MPa = A_com_mm2 > 0 ? (N_N / A_com_mm2) : 0;
+                const taxaUso = sigma_adm_MPa > 0 ? (sigma_atu_MPa / sigma_adm_MPa) * 100.0 : 0;
+
+                // Atualização dos Indicadores de Texto
+                document.getElementById('lab31-res-n').innerText = `+${N_kN.toFixed(2)} kN`;
+                document.getElementById('lab31-res-sigadm').innerText = `${sigma_adm_MPa.toFixed(1)} MPa`;
+                document.getElementById('lab31-res-anec').innerText = `${A_nec_cm2.toFixed(2)} cm²`;
+                
+                const sigAtuEl = document.getElementById('lab31-res-sigatu');
+                sigAtuEl.innerText = `${sigma_atu_MPa.toFixed(1)} MPa`;
+
+                const taxaEl = document.getElementById('lab31-res-taxa');
+                const tagEl = document.getElementById('lab31-status-tag');
+                const isSafe = sigma_atu_MPa <= sigma_adm_MPa;
+
+                if (isSafe) {
+                    sigAtuEl.className = "text-green-400 font-mono text-fluid-body";
+                    taxaEl.innerText = `${taxaUso.toFixed(1)}% (Seguro e Conforme)`;
+                    taxaEl.className = "text-green-400 font-mono text-xs uppercase font-bold";
+                    tagEl.innerText = "Bitola Conforme (σ ≤ σadm)";
+                    tagEl.className = "text-fluid-tag text-green-700 font-mono font-bold uppercase";
+                } else {
+                    sigAtuEl.className = "text-[#B91C1C] font-mono text-fluid-body";
+                    taxaEl.innerText = `${taxaUso.toFixed(1)}% (RUPTURA / NÃO CONFORME)`;
+                    taxaEl.className = "text-[#B91C1C] font-mono text-xs uppercase font-bold";
+                    tagEl.innerText = "Bitola Reprovada (σ > σadm)";
+                    tagEl.className = "text-fluid-tag text-red-600 font-mono font-bold uppercase";
+                }
+
+                // Atualização do Card de Detalhe da Seção
+                const rVisual = Math.max(8, Math.min(34, (d_com_mm / 32.0) * 34));
+                const detCircle = document.getElementById('svg-detail-circle');
+                const detLine = document.getElementById('svg-detail-diam-line');
+                if (detCircle && detLine) {
+                    detCircle.setAttribute('r', rVisual);
+                    detCircle.setAttribute('stroke', isSafe ? '#CA8A04' : '#B91C1C');
+                    detCircle.setAttribute('fill', isSafe ? '#FEF08A' : '#FCA5A5');
+                    detLine.setAttribute('x1', 90 - rVisual);
+                    detLine.setAttribute('x2', 90 + rVisual);
+                }
+                document.getElementById('svg-detail-d-text').textContent = `d = ${d_com_mm.toFixed(1)} mm`;
+                document.getElementById('svg-detail-a-text').textContent = `A = ${A_com_cm2.toFixed(2)} cm²`;
+                
+                const detVer = document.getElementById('svg-detail-ver-text');
+                if (detVer) {
+                    detVer.textContent = isSafe ? "σ ≤ σadm (CONFORME)" : "σ > σadm (INSUFICIENTE)";
+                    detVer.setAttribute('fill', isSafe ? '#16A34A' : '#B91C1C');
+                }
+
+                // -------------------------------------------------------------
+                // RENDERIZAÇÃO GEOMÉTRICA DA TRELIÇA EM SVG
+                // -------------------------------------------------------------
+                const gMembers = document.getElementById('layer-truss-members');
+                const gNodes = document.getElementById('layer-truss-nodes');
+                const gForces = document.getElementById('layer-truss-forces');
+                if (!gMembers || !gNodes || !gForces) return;
+
+                // Conectividade das Barras: { nome, no1, no2, tipo: 'tracao'|'compressao', key }
+                const barras = [
+                    { key: 'L1', n1: nos.A, n2: nos.C, nome: "L1 (Tirante A-C)" },
+                    { key: 'L2', n1: nos.C, n2: nos.E, nome: "L2 (Tirante C-E)" },
+                    { key: 'D1', n1: nos.B, n2: nos.C, nome: "D1 (Diagonal B-C)" },
+                    { key: 'D2', n1: nos.C, n2: nos.D, nome: "D2 (Diagonal C-D)" },
+                    { key: 'BD', n1: nos.B, n2: nos.D, nome: "Banzo Superior B-D" },
+                    { key: 'AB', n1: nos.A, n2: nos.B, nome: "Diagonal A-B" },
+                    { key: 'DE', n1: nos.D, n2: nos.E, nome: "Diagonal D-E" }
+                ];
+
+                let htmlMembers = "";
+                barras.forEach(b => {
+                    const isSelected = (b.key === memberKey);
+                    const N_val = esforcos[b.key];
+                    const isTension = N_val > 0;
+                    
+                    let strokeColor = isTension ? "#1D4ED8" : "#901812"; // Azul = Tração, Vinho = Compressão
+                    let strokeWidth = isSelected ? 8 : 4;
+                    let strokeDash = isSelected ? "none" : "none";
+
+                    if (isSelected) {
+                        strokeColor = isSafe ? "#D1A705" : "#B91C1C"; // Amarelo PMS se seguro, Vermelho se romper
+                    }
+
+                    htmlMembers += `
+                        <line x1="${b.n1.x}" y1="${b.n1.y}" x2="${b.n2.x}" y2="${b.n2.y}" 
+                              stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" />
+                    `;
+
+                    // Rótulo da Barra selecionada no ponto médio
+                    if (isSelected) {
+                        const midX = (b.n1.x + b.n2.x) / 2;
+                        const midY = (b.n1.y + b.n2.y) / 2 - 10;
+                        htmlMembers += `
+                            <rect x="${midX - 32}" y="${midY - 14}" width="64" height="20" fill="#333333" rx="6" opacity="0.9" />
+                            <text x="${midX}" y="${midY}" fill="#FFFFFF" font-size="10" font-weight="bold" text-anchor="middle">
+                                ${b.key}: ${N_val.toFixed(1)} kN
+                            </text>
+                        `;
+                    }
+                });
+                gMembers.innerHTML = htmlMembers;
+
+                // Nós Articulados (Pinos)
+                let htmlNodes = "";
+                Object.keys(nos).forEach(k => {
+                    const no = nos[k];
+                    htmlNodes += `
+                        <circle cx="${no.x}" cy="${no.y}" r="6.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="2.5" />
+                        <text x="${no.x}" y="${no.y > 0 ? no.y + 24 : no.y - 12}" fill="#1F2937" font-size="13" font-weight="black" text-anchor="middle">${no.label}</text>
+                    `;
+                });
+                gNodes.innerHTML = htmlNodes;
+
+                // Vetor Carga Externa P no Nó C (Para baixo) e Reações de Apoio A e E (Para cima)
+                const arrowLenP = Math.min(60, Math.max(22, (P_kN / 160.0) * 60 + 16));
+                const RA_val = P_kN / 2.0;
+                const arrowLenR = Math.min(48, Math.max(16, (RA_val / 80.0) * 48 + 14));
+
+                let htmlForces = `
+                    <!-- Carga Externa P no Nó C -->
+                    <line x1="${nos.C.x}" y1="${nos.C.y + 8}" x2="${nos.C.x}" y2="${nos.C.y + 8 + arrowLenP}" stroke="#B91C1C" stroke-width="4.5" marker-end="url(#arrow-force-red-lab31)" />
+                    <text x="${nos.C.x + 14}" y="${nos.C.y + arrowLenP + 4}" fill="#B91C1C" font-size="13" font-weight="black" font-family="'Montserrat', sans-serif">P = ${P_kN.toFixed(0)} kN</text>
+
+                    <!-- Reação de Apoio R_A -->
+                    <line x1="${nos.A.x}" y1="${nos.A.y + 74 + arrowLenR}" x2="${nos.A.x}" y2="${nos.A.y + 74}" stroke="#1D4ED8" stroke-width="3.5" marker-end="url(#arrow-reaction-blue-lab31)" />
+                    <text x="${nos.A.x - 12}" y="${nos.A.y + 74 + arrowLenR + 14}" fill="#1D4ED8" font-size="11" font-weight="bold" text-anchor="middle">R_A = ${RA_val.toFixed(1)} kN</text>
+
+                    <!-- Reação de Apoio R_E -->
+                    <line x1="${nos.E.x}" y1="${nos.E.y + 81 + arrowLenR}" x2="${nos.E.x}" y2="${nos.E.y + 81}" stroke="#1D4ED8" stroke-width="3.5" marker-end="url(#arrow-reaction-blue-lab31)" />
+                    <text x="${nos.E.x + 12}" y="${nos.E.y + 81 + arrowLenR + 14}" fill="#1D4ED8" font-size="11" font-weight="bold" text-anchor="middle">R_E = ${RA_val.toFixed(1)} kN</text>
+                `;
+                gForces.innerHTML = htmlForces;
+            };
+
+            // Sistema Pan e Zoom do SVG
+            function initPanZoomSvg(svgId) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+                const initialVb = { ...viewBox };
+                let isDragging = false;
+                let startPoint = { x: 0, y: 0 };
+
+                function updateVb() {
+                    svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+                }
+
+                svg.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const rect = svg.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                    const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                    const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                    const newW = viewBox.w * zoomFactor;
+                    const newH = viewBox.h * zoomFactor;
+
+                    if (newW < 220 || newW > 2600) return;
+
+                    viewBox.x = pX - (mouseX / rect.width) * newW;
+                    viewBox.y = pY - (mouseY / rect.height) * newH;
+                    viewBox.w = newW;
+                    viewBox.h = newH;
+                    updateVb();
+                }, { passive: false });
+
+                svg.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                    const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                    viewBox.x -= dx;
+                    viewBox.y -= dy;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                    updateVb();
+                });
+
+                window.addEventListener('mouseup', () => { isDragging = false; });
+
+                svg.addEventListener('dblclick', () => {
+                    viewBox = { ...initialVb };
+                    updateVb();
+                });
+            }
+
+            function montarLab() {
+                atualizarLab3_1();
+                initPanZoomSvg('svg-lab3-1');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', montarLab);
+            } else {
+                montarLab();
+            }
+        })();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (4,0): APLICAÇÕES PRÁTICAS E ESTUDOS DE CASO DE ELEMENTOS TRACIONADOS -->
+<div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 04 — ENGENHARIA APLICADA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Estudos de Caso: Cabos, Perfis &amp; Pontes Pênseis</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Card 1: Cabo de Sustentação de Veículo -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-car-side text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Cabo de Içamento</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Dimensionamento de cabo circular para elevação de veículo ($P \approx 1\text{ tf} = 9{,}81\text{ kN}$) com aço de alta resistência ($\sigma_{\text{rup}} = 500\text{ MPa}$):
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden my-1 border border-black/5" style="font-size: clamp(1.05rem, 1.7vw, 1.45rem);">
+                        $$FS = 1{,}0 \implies d_{\text{nec}} = 5{,}00\text{ mm} \implies \phi_{\text{com}} = 6{,}3\text{ mm}$$
+                        $$FS = 2{,}0 \implies d_{\text{nec}} = 7{,}07\text{ mm} \implies \phi_{\text{com}} = 8{,}0\text{ mm}$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Impacto do Fator de Segurança:</strong> Dobrar o $FS$ (de 1 para 2) acarreta acréscimo de 41,4% no diâmetro e dobra a área de aço necessária.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Bitolas Adotadas:</strong> Escolha da série comercial padronizada ($\phi = 6{,}3\text{ mm}$ ou $8{,}0\text{ mm}$).</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Tirantes em Perfis Laminados -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#D1A705]">
+                        <i class="fa-solid fa-grip-lines-vertical text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Perfis Estruturais</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Em grandes estruturas civis, tirantes tracionados utilizam perfis de abas largas (tipo "H" ou W) para absorver solicitações elevadas:
+                    </p>
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center shadow-inner overflow-x-auto overflow-y-hidden my-1 border border-black/5" style="font-size: clamp(1.05rem, 1.7vw, 1.45rem);">
+                        $$A_{\text{nec}} \ge \frac{N \cdot FS}{\sigma_{\text{rup}}} = \frac{250\text{ tf} \cdot 2}{450\text{ MPa}} \approx 108{,}9\text{ cm}^2$$
+                        $$\text{Perfil W150}\times 22{,}5: \quad FS = \frac{\sigma_{\text{ult}}}{\sigma_{\text{atu}}} = \frac{450}{301{,}5} \approx 1{,}49$$
+                    </div>
+                </div>
+                <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Catálogo Metalúrgico:</strong> Otimização pelo menor peso próprio linear ($kg/m$) garantindo $A_{\text{perfil}} \ge A_{\text{nec}}$.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-info text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Auditoria de Capacidade:</strong> Verificação imediata do fator de segurança real perante cargas atuantes de serviço.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Megacabos da Ponte Golden Gate & Acesso ao Lab -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">ESTUDO DE CASO HISTÓRICO</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-2">Ponte Golden Gate</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Megacabo principal composto por 27.572 fios de aço galvanizado de $\phi = 4{,}88\text{ mm}$ com $\sigma_{\text{rup}} = 1500\text{ MPa}$ e $FS = 2{,}0$:
+                    </p>
+                    <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10 my-2 text-center text-fluid-meta font-mono">
+                        $$A_{\text{total}} = 27.572 \cdot \frac{\pi (4{,}88)^2}{4} \approx 515.748\text{ mm}^2$$
+                        $$P_{\text{adm}} = A_{\text{total}} \cdot \frac{\sigma_{\text{rup}}}{FS} \approx 386.811\text{ kN} \approx 39.430\text{ tf}$$
+                    </div>
+                </div>
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab de Cabos Golden Gate (Pressione ↓)</span>
+                    <i class="fa-solid fa-bridge-water text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Estudos de Caso de Dimensionamento: Cabos Comerciais, Perfis Estruturais e Megacabos</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Dimensionamento (3,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↓</kbd> para Lab Golden Gate (4,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Encerramento &amp; Quiz (5,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (4,1): LABORATÓRIO VIRTUAL III - CABOS TRANÇADOS MULTIFILARES & EFEITO DE ESCALA (RAMIFICAÇÃO Y=1) -->
+<div id="slide-4-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL III (RAMIFICAÇÃO Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#333333]">Simulador de Cabos Multifilares: Efeito de Agrupamento &amp; Ponte Golden Gate</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar a Aplicações (4,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+            
+            <!-- Coluna de Controles e Parametrização dos Cabos (5 cols) -->
+            <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros do Feixe de Fios</h3>
+                        <span id="lab41-status-tag" class="text-fluid-tag text-green-700 font-mono font-bold uppercase">Capacidade Plena</span>
+                    </div>
+
+                    <!-- Preset de Cabos: Golden Gate vs. Ponte Estaiada vs. Guindaste -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Preset Estrutural:</label>
+                            <select id="lab41-preset-select" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#901812] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="aplicarPresetLab4_1()">
+                                <option value="golden-gate" selected>Ponte Golden Gate (27.572 fios)</option>
+                                <option value="ponte-estaiada">Ponte Estaiada Típica (400 fios)</option>
+                                <option value="cabo-guindaste">Cabo de Içamento / Mina (61 fios)</option>
+                                <option value="personalizado">Personalizado (Manual)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Tensão de Ruptura ($f_{uk}$):</label>
+                            <select id="lab41-mat-select" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#1D4ED8] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab4_1()">
+                                <option value="1500" selected>Aço Galvanizado (1.500 MPa)</option>
+                                <option value="1770">Aço Protensão CP-177 (1.770 MPa)</option>
+                                <option value="1860">Aço Protensão CP-186 (1.860 MPa)</option>
+                                <option value="800">Aço Médio Carbono (800 MPa)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Slider 1: Número Total de Fios (N_fios) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Número de Fios ($n$):</span>
+                            <span id="lab41-val-n" class="font-mono text-[#901812] text-fluid-body">27.572 fios</span>
+                        </div>
+                        <input type="range" id="lab41-slider-n" min="10" max="30000" step="50" value="27572" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="ajustarSliderNLab4_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>10 fios (Tirante)</span>
+                            <span>10.000 fios</span>
+                            <span>27.572 (Golden Gate)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Diâmetro Individual do Fio (d_fio) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Diâmetro Unitário ($d_{\text{fio}}$):</span>
+                            <span id="lab41-val-dfio" class="font-mono text-[#1D4ED8] text-fluid-body">4.88 mm</span>
+                        </div>
+                        <input type="range" id="lab41-slider-dfio" min="2.0" max="8.0" step="0.02" value="4.88" class="w-full accent-[#1D4ED8] h-2 cursor-pointer" oninput="atualizarLab4_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>2.00 mm</span>
+                            <span>4.88 mm (Normativo)</span>
+                            <span>8.00 mm (Cordoalha)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 3: Fator de Segurança Global (FS) -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Fator de Segurança ($FS$):</span>
+                            <span id="lab41-val-fs" class="font-mono text-[#D1A705] text-fluid-body">2.00</span>
+                        </div>
+                        <input type="range" id="lab41-slider-fs" min="1.0" max="4.0" step="0.05" value="2.0" class="w-full accent-[#D1A705] h-2 cursor-pointer" oninput="atualizarLab4_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>1.00 (Ruptura)</span>
+                            <span>2.00 (Projetos de Pontes)</span>
+                            <span>4.00 (Elevadores)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 4: Simulação de Fios Rompidos / Degradados por Corrosão -->
+                    <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#333333]">Fios Inoperantes / Rompidos:</span>
+                            <span id="lab41-val-perda" class="font-mono text-[#B91C1C] text-fluid-body">0% (0 fios)</span>
+                        </div>
+                        <input type="range" id="lab41-slider-perda" min="0" max="60" step="1" value="0" class="w-full accent-[#B91C1C] h-2 cursor-pointer" oninput="atualizarLab4_1()">
+                        <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                            <span>0% (Íntegro)</span>
+                            <span>25% (Atenção)</span>
+                            <span>50% (Risco Iminente de Colapso)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Métricas e Capacidade Portante Total -->
+                <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Área Metálica Efetiva ($A_{\text{ef}}$):</span>
+                        <strong id="lab41-res-area" class="text-white font-mono text-fluid-meta">5.157,5 cm²</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Diâmetro Aparente do Feixe Compactado ($D_{\text{cabo}}$):</span>
+                        <strong id="lab41-res-dcabo" class="text-[#38BDF8] font-mono text-fluid-meta">92,4 cm (924 mm)</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Carga Última de Ruptura ($P_{\text{rup}} = A_{\text{ef}} \cdot f_{uk}$):</span>
+                        <strong id="lab41-res-prup" class="text-[#D1A705] font-mono text-fluid-body">773.621 kN (78.860 tf)</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                        <span class="text-[#DEDEDE]">Carga Máxima Admissível ($P_{\text{adm}} = P_{\text{rup}} / FS$):</span>
+                        <strong id="lab41-res-padm" class="text-green-400 font-mono text-fluid-body">386.811 kN (39.430 tf)</strong>
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-[#DEDEDE]">Fator de Segurança Residual Real:</span>
+                        <strong id="lab41-res-fsreal" class="text-green-400 font-mono text-xs uppercase font-bold">FS = 2.00 (Adequado)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Gráfica em SVG (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+                <svg id="svg-lab4-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                    <defs>
+                        <pattern id="grid-dots-lab4-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                        </pattern>
+                        <marker id="arrow-load-down-lab41" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#15803D" />
+                        </marker>
+                        <marker id="arrow-cota-dim41" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                            <path d="M 0 2 L 8 5 L 0 8 z" fill="#4B5563" />
+                        </marker>
+                    </defs>
+                    
+                    <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab4-1)" pointer-events="all" />
+                    
+                    <g id="group-zoom-lab4-1">
+                        <!-- SETOR ESQUERDO: SEÇÃO TRANSVERSAL COMPACTADA DO MEGACABO (Centro em x = -105, y = 0) -->
+                        <g id="layer-cable-crosssection">
+                            <!-- Envoltória do Cabo Maciço Equivalente (Fita / Capa Protetora) -->
+                            <circle id="svg-cable-outer" cx="-105" cy="0" r="130" fill="#F8FAFC" stroke="#1E293B" stroke-width="4.5" />
+                            
+                            <!-- Grade de Fios Simbolizados na Matriz Hexagonal Compacta -->
+                            <g id="svg-wires-group"></g>
+
+                            <!-- Cota do Diâmetro Externo Dcabo -->
+                            <g id="svg-cota-dcabo">
+                                <line x1="-105" y1="-145" x2="-105" y2="-130" stroke="#9CA3AF" stroke-width="1.2" />
+                                <line x1="25" y1="-145" x2="25" y2="0" stroke="#9CA3AF" stroke-width="1.2" />
+                                <line x1="-235" y1="-145" x2="-235" y2="0" stroke="#9CA3AF" stroke-width="1.2" />
+                                <line x1="-235" y1="-145" x2="25" y2="-145" stroke="#4B5563" stroke-width="1.5" marker-start="url(#arrow-cota-dim41)" marker-end="url(#arrow-cota-dim41)" />
+                                <text id="svg-text-dcabo-cota" x="-105" y="-153" fill="#111827" font-size="12" font-weight="bold" text-anchor="middle">D = 92.4 cm</text>
+                            </g>
+                        </g>
+
+                        <!-- SETOR DIREITO: MODELO DA CATENÁRIA / PONTE PÊNSIL & BALANÇO DE CARGA ADMISSÍVEL -->
+                        <g transform="translate(130, -170)">
+                            <!-- Moldura Explicativa -->
+                            <rect x="0" y="0" width="200" height="340" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" rx="16" />
+                            <text x="100" y="24" fill="#901812" font-size="12" font-weight="bold" text-anchor="middle">Esquema Estrutural Pênsil</text>
+
+                            <!-- Miniatura da Torre e Catenária do Cabo da Ponte -->
+                            <g transform="translate(15, 38)">
+                                <!-- Torre Esquerda -->
+                                <rect x="15" y="10" width="10" height="90" fill="#94A3B8" stroke="#1E293B" stroke-width="1.5" />
+                                <!-- Torre Direita -->
+                                <rect x="145" y="10" width="10" height="90" fill="#94A3B8" stroke="#1E293B" stroke-width="1.5" />
+                                <!-- Tabuleiro da Ponte -->
+                                <rect x="0" y="85" width="170" height="6" fill="#333333" rx="1" />
+                                
+                                <!-- Curva Parabólica do Cabo Principal -->
+                                <path d="M 20 15 Q 85 80 150 15" fill="none" stroke="#901812" stroke-width="3.5" />
+                                
+                                <!-- Pendurais Verticais -->
+                                <line x1="40" y1="36" x2="40" y2="85" stroke="#CA8A04" stroke-width="1" />
+                                <line x1="60" y1="56" x2="60" y2="85" stroke="#CA8A04" stroke-width="1" />
+                                <line x1="85" y1="70" x2="85" y2="85" stroke="#CA8A04" stroke-width="1" />
+                                <line x1="110" y1="56" x2="110" y2="85" stroke="#CA8A04" stroke-width="1" />
+                                <line x1="130" y1="36" x2="130" y2="85" stroke="#CA8A04" stroke-width="1" />
+
+                                <text x="85" y="115" fill="#4B5563" font-size="9" font-weight="bold" text-anchor="middle">Cabo Suspenso em Catenária</text>
+                            </g>
+
+                            <!-- Balanço de Cargas com Vetor Interativo -->
+                            <g transform="translate(15, 175)">
+                                <rect x="0" y="0" width="170" height="145" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="12" />
+                                <text x="85" y="20" fill="#111827" font-size="11" font-weight="bold" text-anchor="middle">Carga Admissível Suportada</text>
+
+                                <!-- Vetor de Carga Vertical Admissível -->
+                                <line id="svg-arrow-padm-line" x1="85" y1="32" x2="85" y2="82" stroke="#15803D" stroke-width="4.5" marker-end="url(#arrow-load-down-lab41)" />
+                                
+                                <text id="svg-lbl-padm-kn" x="85" y="104" fill="#15803D" font-size="13" font-weight="black" text-anchor="middle" font-family="'Montserrat', sans-serif">Padm = 386.811 kN</text>
+                                <text id="svg-lbl-padm-tf" x="85" y="120" fill="#4B5563" font-size="11" font-weight="bold" text-anchor="middle">(≈ 39.430 tf)</text>
+                                <text id="svg-lbl-fios-ativos" x="85" y="136" fill="#901812" font-size="9.5" font-weight="bold" text-anchor="middle">27.572 fios íntegros</text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                
+                <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                    <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Laboratório 03 — Análise Seccional de Cabos de Pontes Pênseis: Agrupamento Multifilar e Fator de Segurança Residual</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (4,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Encerramento &amp; Quiz (Slide 5,0)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (4,1) -->
+    <script>
+        (function() {
+            window.aplicarPresetLab4_1 = function() {
+                const sel = document.getElementById('lab41-preset-select');
+                const sliderN = document.getElementById('lab41-slider-n');
+                const sliderDfio = document.getElementById('lab41-slider-dfio');
+                const sliderFS = document.getElementById('lab41-slider-fs');
+                const selMat = document.getElementById('lab41-mat-select');
+                const sliderPerda = document.getElementById('lab41-slider-perda');
+                if (!sel || !sliderN || !sliderDfio || !sliderFS || !selMat || !sliderPerda) return;
+
+                sliderPerda.value = 0;
+
+                if (sel.value === 'golden-gate') {
+                    sliderN.value = 27572;
+                    sliderDfio.value = 4.88;
+                    sliderFS.value = 2.0;
+                    selMat.value = '1500';
+                } else if (sel.value === 'ponte-estaiada') {
+                    sliderN.value = 400;
+                    sliderDfio.value = 7.00;
+                    sliderFS.value = 2.2;
+                    selMat.value = '1860';
+                } else if (sel.value === 'cabo-guindaste') {
+                    sliderN.value = 61;
+                    sliderDfio.value = 3.50;
+                    sliderFS.value = 3.0;
+                    selMat.value = '1770';
+                }
+                atualizarLab4_1();
+            };
+
+            window.ajustarSliderNLab4_1 = function() {
+                const selPreset = document.getElementById('lab41-preset-select');
+                if (selPreset && selPreset.value !== 'personalizado') {
+                    selPreset.value = 'personalizado';
+                }
+                atualizarLab4_1();
+            };
+
+            window.atualizarLab4_1 = function() {
+                const sliderN = document.getElementById('lab41-slider-n');
+                const sliderDfio = document.getElementById('lab41-slider-dfio');
+                const sliderFS = document.getElementById('lab41-slider-fs');
+                const selMat = document.getElementById('lab41-mat-select');
+                const sliderPerda = document.getElementById('lab41-slider-perda');
+                if (!sliderN || !sliderDfio || !sliderFS || !selMat || !sliderPerda) return;
+
+                const N_total = parseInt(sliderN.value);
+                const dfio_mm = parseFloat(sliderDfio.value);
+                const FS_nominal = parseFloat(sliderFS.value);
+                const fuk_MPa = parseFloat(selMat.value);
+                const perdaPct = parseFloat(sliderPerda.value);
+
+                // Fios ativos reais
+                const fiosRomp = Math.round(N_total * (perdaPct / 100.0));
+                const N_ativos = N_total - fiosRomp;
+
+                // Geometria seccional
+                const area1fio_mm2 = (Math.PI * Math.pow(dfio_mm, 2)) / 4.0;
+                const areaTotalMet_mm2 = N_ativos * area1fio_mm2;
+                const areaTotalMet_cm2 = areaTotalMet_mm2 / 100.0;
+
+                // Diâmetro compacto aparente considerando empacotamento hexagonal (~82% de compacidade de área metálica no cabo)
+                const compacidade = 0.82;
+                const areaCaboBruta_mm2 = (N_total * area1fio_mm2) / compacidade;
+                const dCaboAparente_mm = Math.sqrt((4.0 * areaCaboBruta_mm2) / Math.PI);
+                const dCaboAparente_cm = dCaboAparente_mm / 10.0;
+
+                // Capacidade resistente última e admissível
+                // P_rup em Newtons: A_ef (mm²) * fuk (MPa = N/mm²)
+                const P_rup_N = areaTotalMet_mm2 * fuk_MPa;
+                const P_rup_kN = P_rup_N / 1000.0;
+                const P_rup_tf = P_rup_kN / 9.81;
+
+                const P_adm_N = P_rup_N / FS_nominal;
+                const P_adm_kN = P_adm_N / 1000.0;
+                const P_adm_tf = P_adm_kN / 9.81;
+
+                // Fator de segurança real remanescente em relação à carga admissível original sem perda
+                const P_adm_original_N = ((N_total * area1fio_mm2) * fuk_MPa) / FS_nominal;
+                const FS_real = P_adm_original_N > 0 ? (P_rup_N / P_adm_original_N) : 0;
+
+                // Atualização dos Rótulos dos Sliders
+                document.getElementById('lab41-val-n').innerText = `${N_total.toLocaleString('pt-BR')} fios`;
+                document.getElementById('lab41-val-dfio').innerText = `${dfio_mm.toFixed(2)} mm`;
+                document.getElementById('lab41-val-fs').innerText = `${FS_nominal.toFixed(2)}`;
+                document.getElementById('lab41-val-perda').innerText = `${perdaPct.toFixed(0)}% (${fiosRomp.toLocaleString('pt-BR')} fios)`;
+
+                // Atualização do Painel de Métricas
+                document.getElementById('lab41-res-area').innerText = `${areaTotalMet_cm2.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} cm²`;
+                document.getElementById('lab41-res-dcabo').innerText = `${dCaboAparente_cm.toFixed(1)} cm (${dCaboAparente_mm.toFixed(0)} mm)`;
+                document.getElementById('lab41-res-prup').innerText = `${P_rup_kN.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} kN (${P_rup_tf.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} tf)`;
+                document.getElementById('lab41-res-padm').innerText = `${P_adm_kN.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} kN (${P_adm_tf.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} tf)`;
+
+                const fsRealEl = document.getElementById('lab41-res-fsreal');
+                const tagStatus = document.getElementById('lab41-status-tag');
+                if (FS_real >= 1.70) {
+                    fsRealEl.innerText = `FS = ${FS_real.toFixed(2)} (Margem Segura)`;
+                    fsRealEl.className = "text-green-400 font-mono text-xs uppercase font-bold";
+                    tagStatus.innerText = "Operação Normal";
+                    tagStatus.className = "text-fluid-tag text-green-700 font-mono font-bold uppercase";
+                } else if (FS_real >= 1.20) {
+                    fsRealEl.innerText = `FS = ${FS_real.toFixed(2)} (Atenção / Vistorias Imediatas)`;
+                    fsRealEl.className = "text-[#D1A705] font-mono text-xs uppercase font-bold";
+                    tagStatus.innerText = "Intervenção Recomendada";
+                    tagStatus.className = "text-fluid-tag text-amber-600 font-mono font-bold uppercase";
+                } else {
+                    fsRealEl.innerText = `FS = ${FS_real.toFixed(2)} (IMINÊNCIA DE COLAPSO)`;
+                    fsRealEl.className = "text-[#B91C1C] font-mono text-xs uppercase font-bold";
+                    tagStatus.innerText = "Perigo Estrutural";
+                    tagStatus.className = "text-fluid-tag text-red-600 font-mono font-bold uppercase";
+                }
+
+                // -------------------------------------------------------------
+                // ATUALIZAÇÃO DOS ELEMENTOS VETORIAIS SVG
+                // -------------------------------------------------------------
+                // 1. Cota do Diâmetro Externo
+                const cotaText = document.getElementById('svg-text-dcabo-cota');
+                if (cotaText) {
+                    cotaText.textContent = `D = ${dCaboAparente_cm.toFixed(1)} cm`;
+                }
+
+                // 2. Painel da Carga Admissível Suportada
+                const lblPadmKn = document.getElementById('svg-lbl-padm-kn');
+                const lblPadmTf = document.getElementById('svg-lbl-padm-tf');
+                const lblFiosAtivos = document.getElementById('svg-lbl-fios-ativos');
+                if (lblPadmKn) lblPadmKn.textContent = `Padm = ${P_adm_kN.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} kN`;
+                if (lblPadmTf) lblPadmTf.textContent = `(≈ ${P_adm_tf.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} tf)`;
+                if (lblFiosAtivos) lblFiosAtivos.textContent = `${N_ativos.toLocaleString('pt-BR')} fios íntegros`;
+
+                // 3. Renderização Estilizada da Matriz de Fios no Círculo
+                const gWires = document.getElementById('svg-wires-group');
+                if (gWires) {
+                    let htmlWires = "";
+                    const cx = -105, cy = 0;
+                    const rMaxVis = 120;
+                    
+                    // Simulação visual de anéis concêntricos de fios
+                    const numAneis = 7;
+                    let totalDesenhados = 0;
+                    const totalSimulados = 169; // total de pontos na representação
+                    const limiteAtivos = Math.round(totalSimulados * (1.0 - perdaPct / 100.0));
+
+                    // Fio central
+                    const corCentral = (totalDesenhados < limiteAtivos) ? "#CA8A04" : "#EF4444";
+                    htmlWires += `<circle cx="${cx}" cy="${cy}" r="4.2" fill="${corCentral}" stroke="#1E293B" stroke-width="0.8"/>`;
+                    totalDesenhados++;
+
+                    for (let a = 1; a <= numAneis; a++) {
+                        const rAnel = (a / numAneis) * rMaxVis;
+                        const nFiosAnel = a * 6;
+                        for (let f = 0; f < nFiosAnel; f++) {
+                            const ang = (f / nFiosAnel) * 2 * Math.PI;
+                            const wx = cx + rAnel * Math.cos(ang);
+                            const wy = cy + rAnel * Math.sin(ang);
+                            const corFio = (totalDesenhados < limiteAtivos) ? "#CA8A04" : "#EF4444";
+                            const opacidade = (totalDesenhados < limiteAtivos) ? "0.95" : "0.35";
+                            htmlWires += `<circle cx="${wx.toFixed(1)}" cy="${wy.toFixed(1)}" r="4" fill="${corFio}" stroke="#1E293B" stroke-width="0.7" opacity="${opacidade}"/>`;
+                            totalDesenhados++;
+                        }
+                    }
+                    gWires.innerHTML = htmlWires;
+                }
+            };
+
+            // Sistema Pan e Zoom do SVG
+            function initPanZoomSvg(svgId) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+
+                let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+                const initialVb = { ...viewBox };
+                let isDragging = false;
+                let startPoint = { x: 0, y: 0 };
+
+                function updateVb() {
+                    svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+                }
+
+                svg.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const rect = svg.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                    const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                    const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                    const newW = viewBox.w * zoomFactor;
+                    const newH = viewBox.h * zoomFactor;
+
+                    if (newW < 220 || newW > 2600) return;
+
+                    viewBox.x = pX - (mouseX / rect.width) * newW;
+                    viewBox.y = pY - (mouseY / rect.height) * newH;
+                    viewBox.w = newW;
+                    viewBox.h = newH;
+                    updateVb();
+                }, { passive: false });
+
+                svg.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                    const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                    viewBox.x -= dx;
+                    viewBox.y -= dy;
+                    startPoint = { x: e.clientX, y: e.clientY };
+                    updateVb();
+                });
+
+                window.addEventListener('mouseup', () => { isDragging = false; });
+
+                svg.addEventListener('dblclick', () => {
+                    viewBox = { ...initialVb };
+                    updateVb();
+                });
+            }
+
+            function montarLab() {
+                atualizarLab4_1();
+                initPanZoomSvg('svg-lab4-1');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', montarLab);
+            } else {
+                montarLab();
+            }
+        })();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (5,0): ENCERRAMENTO DA SESSÃO, SÍNTESE TEÓRICA & QUIZ IN-CLASS 140 -->
+<div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ENCERRAMENTO SÍNCRONO • AULA 140</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Verificação Formativa &amp; Controle de Frequência</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (2 Colunas Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Coluna 1: Síntese dos Fundamentos da Sessão -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div>
+                    <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Síntese de Aprendizagem</span>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Tensão Admissível &amp; Dimensionamento Axial</h3>
+                    <p class="text-fluid-body text-[#444444] leading-relaxed">
+                        Consolidamos os critérios analíticos de segurança estrutural, a transição determinística-probabilística e o dimensionamento prático de elementos sob tração axial:
+                    </p>
+                </div>
+
+                <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold border-t border-black/10 pt-3">
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-shield-halved text-[#901812] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Segurança Estrutural ($S_d \le R_d$):</strong> Contraste entre o Método das Tensões Admissíveis ($FS$ global) e dos Estados Limites ($\gamma_F$ e $\gamma_M$) com calibração probabilística ($\beta, P_f$).</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-calculator text-[#D1A705] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Tensão Admissível ($\sigma_{\text{adm}}$):</strong> Balizada pelo escoamento ($\sigma_y / FS_y$) em aços estruturais dúcteis e pela ruptura ($\sigma_r / FS_r$) em corpos frágeis.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-ruler-combined text-[#1D4ED8] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Dimensionamento &amp; Séries Comerciais:</strong> Determinação de $A_{\text{nec}} \ge N / \sigma_{\text{adm}}$, seleção de bitolas padronizadas em treliças e megacabos multifilares.</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-black/10 text-fluid-tag text-[#666666]">
+                    <span>Atividade complementar: <strong>Lista Quantitativa Extraclasse</strong></span>
+                    <button onclick="moveInGrid(1, 0)" class="font-bold text-[#901812] hover:text-[#D1A705] transition-colors flex items-center space-x-1.5 cursor-pointer">
+                        <span>Ver Tarefa de Casa (6,0)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Avaliação In-Class & QR Code Operacional -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white text-center space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider mb-1">AVALIAÇÃO FORMATIVA IN-CLASS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-1">Quiz 140: Verificação Teórica</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Acesse pelo smartphone para registro de presença síncrona e validação imediata de conceitos.</p>
+                </div>
+
+                <!-- QR Code Funcional Autocontido com Fallback Triplo -->
+                <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfMt_TsUCE8bzcYJwIsehr47DBJm5Zs2JB3qHnYVFQETP7C2w%2Fviewform%3Fusp%3Dheader&color=901812" 
+                         alt="QR Code Quiz 140" 
+                         class="w-full h-auto rounded-xl block"
+                         onerror="if (!this.dataset.fallback1) { this.dataset.fallback1 = 'true'; this.src = 'https://quickchart.io/qr?size=300&dark=901812&text=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSfMt_TsUCE8bzcYJwIsehr47DBJm5Zs2JB3qHnYVFQETP7C2w/viewform?usp=header'); } else if (!this.dataset.fallback2) { this.dataset.fallback2 = 'true'; this.src = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSfMt_TsUCE8bzcYJwIsehr47DBJm5Zs2JB3qHnYVFQETP7C2w/viewform?usp=header') + '&choe=UTF-8'; }">
+                    <span class="text-[0.75rem] font-bold text-[#333333] mt-2 block tracking-tight uppercase">Quiz 140 • CIV 153 UFV</span>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfMt_TsUCE8bzcYJwIsehr47DBJm5Zs2JB3qHnYVFQETP7C2w/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fa-solid fa-pen-to-square text-[#D1A705] text-lg"></i>
+                        <span>Abrir Formulário do Quiz</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                    </a>
+                    <span class="text-[0.75rem] text-[#B0B0B0] block">⏱️ 5 questões conceituais • Tempo estimado: 10–15 min</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Encerramento In-Class: Avaliação Formativa de Conceitos e Presença</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Casos Práticos (4,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Atividade Off-Class (Slide 6,0)</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (6,0): ATIVIDADE OFF-CLASS (LISTA DE EXERCÍCIOS DE FIXAÇÃO & ESTUDO DIRIGIDO) -->
+<div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ESTUDO DIRIGIDO • ATIVIDADE OFF-CLASS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Lista de Exercícios de Fixação da Aula 140</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (2 Colunas Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Coluna 1: Síntese dos Tópicos e Problemas da Lista -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div>
+                    <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Avaliação Extraclasse Quantitativa</span>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Problemas de Dimensionamento &amp; Segurança Estrutural</h3>
+                    <p class="text-fluid-body text-[#444444] leading-relaxed">
+                        Aplicação analítica rigorosa dos modelos determinísticos e semi-probabilísticos de dimensionamento e verificação estrutural abordados na sessão:
+                    </p>
+                </div>
+
+                <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold border-t border-black/10 pt-3">
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-calculator text-[#901812] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Tensão Admissível &amp; Fator de Segurança:</strong> Cálculo de áreas necessárias ($A_{\text{nec}} \ge N / \sigma_{\text{adm}}$) e sensibilidade frente a $FS = 1{,}0$ e $FS = 2{,}0$.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-circle-notch text-[#D1A705] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Catálogos &amp; Séries Comerciais:</strong> Especificação de bitolas circulares padronizadas (6,3 mm a 32,0 mm) e seleção de perfis laminados econômicos.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-bridge-water text-[#1D4ED8] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Treliças, Pontes Pênseis &amp; MEL:</strong> Dimensionamento de barras articuladas, feixes multifilares (Golden Gate) e correlação formal com coeficientes parciais $\gamma_F$ e $\gamma_M$.</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-black/10 text-fluid-tag text-[#666666]">
+                    <span>Submissão individual via Google Forms vinculada à frequência extraclasse.</span>
+                    <button onclick="moveInGrid(-1, 0)" class="font-bold text-[#901812] hover:text-[#D1A705] transition-colors flex items-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Retornar ao Quiz (5,0)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Formulário Off-Class & QR Code Operacional com Fallback Triplo -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white text-center space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider mb-1">ENVIO DE ATIVIDADE OFF-CLASS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-1">Lista 140: Exercícios Quantitativos</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Acesse pelo smartphone ou abra a lista de exercícios diretamente pelo botão abaixo.</p>
+                </div>
+
+                <!-- QR Code Funcional com Redundância Tripla (QRServer -> QuickChart -> Google Chart) -->
+                <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfuLeM-Gt0bLSjRMMIFyKvfVlAANBSRNQuMjxQ9Vml7V_kvVg%2Fviewform%3Fusp%3Dheader&color=901812" 
+                         alt="QR Code Lista 140 Off-Class" 
+                         class="w-full h-auto rounded-xl block"
+                         onerror="if (!this.dataset.fallback1) { this.dataset.fallback1 = 'true'; this.src = 'https://quickchart.io/qr?size=300&dark=901812&text=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSfuLeM-Gt0bLSjRMMIFyKvfVlAANBSRNQuMjxQ9Vml7V_kvVg/viewform?usp=header'); } else if (!this.dataset.fallback2) { this.dataset.fallback2 = 'true'; this.src = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSfuLeM-Gt0bLSjRMMIFyKvfVlAANBSRNQuMjxQ9Vml7V_kvVg/viewform?usp=header') + '&choe=UTF-8'; }">
+                    <span class="text-[0.75rem] font-bold text-[#333333] mt-2 block tracking-tight uppercase">Lista 140 • CIV 153 UFV</span>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfuLeM-Gt0bLSjRMMIFyKvfVlAANBSRNQuMjxQ9Vml7V_kvVg/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fa-solid fa-file-pen text-[#D1A705] text-lg"></i>
+                        <span>Abrir Lista de Exercícios</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                    </a>
+                    <span class="text-[0.75rem] text-[#B0B0B0] block">⏱️ 10 questões quantitativas com resolução analítica completa</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 140 — Atividade Extraclasse: Lista de Exercícios de Fixação e Avaliação Quantitativa</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Encerramento In-Class (Slide 5,0) | PMS / DEC / UFV</span>
+    </footer>
+</div>
+
+
+
+    
+
+    </main>
+
+    <!-- MOTOR DE NAVEGAÇÃO MATRICIAL 2D -->
+    <script>
+        let currentX = 0, currentY = 0;
+        let slideGrid = {};
+
+        function updateSlideGrid() {
+            slideGrid = {};
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                const parts = slide.id.replace('slide-', '').split('-');
+                if (parts.length === 2) slideGrid[`${parts[0]},${parts[1]}`] = slide.id;
+            });
+        }
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            updateSlideGrid();
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const maxH = Math.max(...keysH.map(k => parseInt(k.split(',')[0])), 0);
+            const totalMainSlides = keysH.length;
+            
+            document.getElementById('progressBar').style.width = `${maxH === 0 ? 100 : (currentX / maxH) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX},${currentY}) | ${currentX + 1} of ${totalMainSlides}`;
+
+            const dirs = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in dirs) {
+                const btn = document.getElementById(`btn-nav-${d}`);
+                if (btn) btn.classList.toggle('nav-enabled', hasSlide(currentX + dirs[d][0], currentY + dirs[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            updateSlideGrid();
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                
+                cur.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.add('slide-active');
+
+                currentX = nx; currentY = ny;
+                updateUI();
+                if (window.renderMathInElement) renderMathInElement(nxt);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA','DIALOG'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateUI(); 
+        });
+    </script>
+</body>
+</html>
