@@ -1,0 +1,2741 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 | Introdução à mecânica das estruturas - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Preset PMS */
+            --color-primary: #901812;
+            --color-secondary: #D1A705;
+            --color-dark: #333333;
+            --color-bg: #F4F6F5;
+            --bg-shade-left: rgba(244,246,245,0.96);
+            --bg-shade-mid: rgba(244,246,245,0.70);
+            --bg-shade-right: rgba(244,246,245,0.15);
+            --card-light: rgba(255, 255, 255, 0.58);
+            --card-dark: rgba(51, 51, 51, 0.65);
+
+            /* Tipografia Super-Ampliada (Calibração Nativa Full HD / 4k) */
+            --fluid-h1: clamp(2.8rem, 6.2vw, 5.5rem);
+            --fluid-h2: clamp(2.2rem, 4.6vw, 4.0rem);
+            --fluid-h3: clamp(1.75rem, 3.2vw, 2.8rem);
+            --fluid-body: clamp(1.35rem, 2.2vw, 1.95rem);
+            --fluid-meta: clamp(1.15rem, 1.6vw, 1.55rem);
+            --fluid-tag: clamp(1.05rem, 1.4vw, 1.35rem);
+        }
+
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: var(--color-bg); 
+            font-family: 'PT Sans Narrow', sans-serif; 
+            color: var(--color-dark); 
+        }
+
+        .text-fluid-h1 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h1); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h2); font-weight: 800; line-height: 1.15; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-size: var(--fluid-body); font-weight: 500; line-height: 1.45; }
+        .text-fluid-meta { font-size: var(--fluid-meta); font-weight: 600; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 700; letter-spacing: 0.04em; }
+
+        .katex-display { font-size: clamp(1.45rem, 2.7vw, 2.45rem) !important; margin: 0.85rem 0 !important; line-height: 1.25 !important; }
+        .katex { font-size: 1.08em; }
+
+        .slide-screen {
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .slide-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide-screen::-webkit-scrollbar-thumb {
+            background: rgba(144, 24, 18, 0.25);
+            border-radius: 9999px;
+        }
+        .slide-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(144, 24, 18, 0.65);
+        }
+
+        .card-glass { 
+            border: none !important; 
+            background-color: var(--card-light); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+        .card-glass-dark { 
+            border: none !important; 
+            background-color: var(--card-dark); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            color: white; 
+            box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+
+        .card-glass:hover {
+            transform: translateY(-4px);
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-glass-dark:hover {
+            transform: translateY(-4px);
+            background-color: rgba(51, 51, 51, 0.78);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        .reveal-controls { 
+            position: fixed; 
+            bottom: 1.25rem; 
+            right: 1.25rem; 
+            width: 110px; 
+            height: 110px; 
+            z-index: 1000; 
+            pointer-events: none; 
+        }
+        .control-arrow {
+            position: absolute; 
+            width: 38px; 
+            height: 38px; 
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(6px); 
+            border-radius: 50%; 
+            color: #888888; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0.15; 
+            pointer-events: none;
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            font-size: 0.95rem;
+        }
+        .control-arrow.nav-up { top: 0; left: 36px; }
+        .control-arrow.nav-down { bottom: 0; left: 36px; }
+        .control-arrow.nav-left { top: 36px; left: 0; }
+        .control-arrow.nav-right { top: 36px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--color-primary); opacity: 0.65; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--color-primary); color: #FFF; opacity: 1; transform: scale(1.1); }
+    </style>
+</head>
+<body class="w-screen h-screen relative">
+
+    <div class="fixed top-0 left-0 h-2 bg-[var(--color-secondary)] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-3 left-3 text-[0.80rem] sm:text-[0.90rem] font-bold text-[var(--color-dark)] bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm z-[1000] flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)]"></span>
+        <span id="slideIndicator">Slide (0,0) | 1 of 5</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full relative" id="slideDeck">
+
+         
+        
+
+<!-- SLIDE (0,0): TITLE COVER (CIV 153 - AULA 150) -->
+<div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center gap-4 flex-shrink-0 mb-2">
+        <div class="flex items-center space-x-4 sm:space-x-6 bg-white/80 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm border border-black/5">
+            <img src="Logo UFV oficial horizontal.png" alt="UFV Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <img src="Logo DEC oficial.png" alt="DEC Logo" class="h-9 sm:h-11 w-auto" onerror="this.style.display='none'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <span class="text-fluid-tag text-[#333333] font-bold">CIV 153 • PMS / UFV</span>
+        </div>
+        <a href="https://pms.ufv.br" target="_blank" class="block bg-[#333333]/80 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl shadow-lg hover:scale-105 transition-transform border border-white/10">
+            <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+        </a>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
+            
+            <div class="lg:col-span-7 space-y-4">
+                <div class="p-8 sm:p-12 rounded-3xl card-glass border-l-[16px] border-[#901812] transition-all hover:shadow-2xl">
+                    <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">AULA 150 — INTRODUÇÃO À MECÂNICA DAS ESTRUTURAS</span>
+                    <h1 class="text-fluid-h1 mb-3 text-[#901812] leading-tight font-black">
+                        BARRAS COMPRIMIDAS
+                        <span class="block text-fluid-h2 text-[#333333] font-extrabold mt-1">Estabilidade Elástica, Carga Crítica de Euler e Esbeltez</span>
+                    </h1>
+                    <p class="text-fluid-body text-[#444444] font-medium leading-relaxed">
+                        Fundamentos do equilíbrio de barras sob compressão centrada: bifurcação de equilíbrio, dedução analítica da Carga Crítica de Euler ($P_{cr}$), condições de vinculação ($L_{fl}$), raio de giração ($r$) e a fronteira entre flambagem e escoamento.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-black/10 flex flex-wrap items-center gap-3">
+                        <button onclick="moveInGrid(0, 1)" class="px-5 py-3 bg-[#901812] text-white rounded-xl font-bold text-fluid-meta hover:bg-[#D1A705] hover:text-[#333333] transition-all flex items-center space-x-2 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Ver Plano de Ensino (Pressione &darr;)</span>
+                        </button>
+                        <button onclick="moveInGrid(1, 0)" class="px-5 py-3 bg-white/90 text-[#901812] border border-[#901812]/30 rounded-xl font-bold text-fluid-meta hover:bg-[#901812] hover:text-white transition-all flex items-center space-x-2 cursor-pointer">
+                            <span>Avançar para Instabilidade (1,0)</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 p-6 sm:p-10 rounded-3xl card-glass-dark text-white flex flex-col justify-between space-y-6">
+                <!-- Card do QR Code com Suporte Nativo e Fallback Triplo -->
+                <div class="bg-white p-6 rounded-2xl text-center shadow-md flex flex-col items-center justify-center min-h-[240px]">
+                    <div id="qrcode-canvas-0-0" class="flex items-center justify-center"></div>
+                    <img id="qrcode-img-0-0"
+                         src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F150.html&color=901812" 
+                         alt="Acompanhamento Mobile QR" 
+                         class="w-full max-w-[200px] sm:max-w-[220px] mx-auto rounded-xl block"
+                         onerror="this.onerror=null; this.src='https://quickchart.io/qr?size=300&dark=901812&text=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F150.html';">
+                    <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhamento em Tempo Real</span>
+                </div>
+                <div class="text-center space-y-1">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold">Docência e Coordenação</span>
+                    <p class="text-fluid-body font-bold text-white">Prof. José Maria Franco de Carvalho</p>
+                    <p class="text-fluid-meta text-[#DEDEDE]">DEC / SICon — Universidade Federal de Viçosa</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex-shrink-0 mt-2">
+        <div class="bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-2xl flex justify-between items-center text-fluid-meta text-[#444444] border border-black/5">
+            <span><strong>Pré-requisito:</strong> Momentos de Inércia Seccionais e Critérios de Tensão Admissível (Aula 140)</span>
+            <span>UFV / CCE / DEC • Viçosa - MG</span>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE GERAÇÃO NATIVA DO QR CODE DO SLIDE 0,0 -->
+    <script>
+        (function() {
+            function renderizarQR0_0() {
+                const targetDiv = document.getElementById('qrcode-canvas-0-0');
+                const imgFallback = document.getElementById('qrcode-img-0-0');
+                const pageUrl = "https://jmfcarvalho.github.io/civ153/150.html";
+                
+                if (typeof QRCode !== 'undefined' && targetDiv) {
+                    targetDiv.innerHTML = '';
+                    new QRCode(targetDiv, {
+                        text: pageUrl,
+                        width: 200,
+                        height: 200,
+                        colorDark : "#901812",
+                        colorLight : "#FFFFFF",
+                        correctLevel : QRCode.CorrectLevel.M
+                    });
+                    if (imgFallback) imgFallback.style.display = 'none';
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', renderizarQR0_0);
+            } else {
+                renderizarQR0_0();
+            }
+        })();
+    </script>
+</div>
+
+
+
+
+<!-- SLIDE (0,1): INTRODUÇÃO, ESCOPO E OBJETIVOS DE APRENDIZAGEM (BRANCH Y=1 DA CAPA) -->
+<div id="slide-0-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric2.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+    <div>
+        <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase tracking-wide">PLANO DE ENSINO • AULA 150</span>
+        <h2 class="text-fluid-h2 text-[#901812] font-black">Escopo da Instabilidade, Requisitos e Objetivos</h2>
+    </div>
+    <button onclick="moveInGrid(0, -1)" class="px-6 py-3.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[50px] flex items-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-arrow-up"></i>
+        <span>Retornar à Capa (0,0)</span>
+    </button>
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+        
+        <!-- Card 1: Requisitos de Projeto Estrutural -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div>
+                <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Fundamentação Estrutural</span>
+                <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Requisitos de Projeto & Flambagem</h3>
+                <p class="text-fluid-body text-[#444444] leading-relaxed">
+                    O dimensionamento estrutural fundamenta-se no atendimento simultâneo da <strong>Resistência</strong> (capacidade material), das <strong>Deformações</strong> (rigidez em serviço) e da <strong>Estabilidade</strong>. Em elementos esbeltos sob compressão axial, a ruína crítica frequentemente decorre da perda de estabilidade do equilíbrio geométrico (flambagem elástica) antes de atingir a plastificação ou ruptura do material.
+                </p>
+            </div>
+            
+            <div class="bg-white/85 backdrop-blur-sm p-4 rounded-2xl border border-black/5 space-y-2">
+                <span class="text-fluid-meta font-bold text-[#333333] block">Tópicos Fundamentais da Sessão:</span>
+                <ul class="text-fluid-meta text-[#555555] space-y-1.5 font-medium">
+                    <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Fenomenologia da instabilidade, bifurcação do equilíbrio e elástica pós-crítica.</li>
+                    <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Formulação de Euler para colunas ideais: hipóteses e equação diferencial de equilíbrio.</li>
+                    <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Influência das vinculações de extremidade no comprimento efetivo de flambagem ($L_{fl}$).</li>
+                    <li class="flex items-center"><i class="fa-solid fa-chevron-right text-[#901812] mr-2 text-sm"></i> Tensão crítica ($\sigma_{cr}$), raio de giração ($r$), esbeltez ($\lambda$) e a Hipérbole de Euler.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2: Metas Pedagógicas e Competências -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider block mb-2">Metas Pedagógicas</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-3">Objetivos de Aprendizagem</h3>
+                
+                <div class="space-y-3 mt-4">
+                    <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-white block text-fluid-meta">1. Compreensão do Fenômeno da Instabilidade</strong>
+                            <span class="text-[#DEDEDE] text-fluid-meta">Diferenciar estados de equilíbrio estável, indiferente e instável em sistemas comprimidos centrados.</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                        <i class="fa-solid fa-calculator text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-white block text-fluid-meta">2. Formulação Analítica de Euler</strong>
+                            <span class="text-[#DEDEDE] text-fluid-meta">Determinar a carga crítica $P_{cr}$ em função da rigidez à flexão ($EI$) e do comprimento efetivo ($L_{fl}$).</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                        <i class="fa-solid fa-chart-line text-[#D1A705] text-xl mt-1 flex-shrink-0"></i>
+                        <div>
+                            <strong class="text-white block text-fluid-meta">3. Avaliação da Fronteira Tensão-Esbeltez</strong>
+                            <span class="text-[#DEDEDE] text-fluid-meta">Calcular o índice de esbeltez limite ($\lambda_{lim}$) e identificar o domínio de falha (escoamento vs. flambagem).</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2 border-t border-white/15">
+                <span class="text-fluid-tag text-[#DEDEDE] font-medium">Progressão conceitual:</span>
+                <button onclick="moveInGrid(1, 0)" class="px-5 py-2.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-xl text-fluid-meta transition-all flex items-center space-x-2 cursor-pointer shadow-md">
+                    <span>Iniciar Módulo 01 (Slide 1,0)</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex-shrink-0 mt-2">
+    <div class="bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-2xl flex justify-between items-center text-fluid-meta text-[#444444] border border-black/5">
+        <span><strong>Disciplina:</strong> CIV 153 — Introdução à Mecânica das Estruturas</span>
+        <span>SICon / DEC / CCE • Universidade Federal de Viçosa</span>
+    </div>
+</footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,0): FENOMENOLOGIA DA INSTABILIDADE & EQUILÍBRIO ELÁSTICO -->
+<div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 01 — MECÂNICA DA INSTABILIDADE</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Conceito de Flambagem & Estados de Equilíbrio</h2>
+    </div>
+    <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='[https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png](https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png)'">
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+        
+        <!-- Card 1: Fenômeno Físico da Flambagem -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#901812]">
+                    <i class="fa-solid fa-arrows-split-up-and-left text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Fenômeno Físico</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    Elementos esbeltos sob compressão axial sofrem deslocamentos transversais repentinos denominados de <strong>flambagem</strong>:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.15rem, 1.9vw, 1.7rem);">
+                    $$P \ge P_{cr} \implies v(x) \ne 0$$
+                </div>
+            </div>
+            <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Bifurcação de Equilíbrio:</strong> A partir da carga crítica, surge uma nova configuração de equilíbrio deslocada em relação ao eixo reto.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Origem Geométrica:</strong> Trata-se de uma perda de estabilidade elástica e não de esmagamento plástico direto.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Tríade de Requisitos Estruturais -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#D1A705]">
+                    <i class="fa-solid fa-shield-halved text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Tríade de Projeto</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    A integridade de qualquer sistema estrutural exige o atendimento simultâneo de três critérios fundamentais:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-3 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.05rem, 1.6vw, 1.45rem);">
+                    $$\text{Resistência} \ \cap \ \text{Deformação} \ \cap \ \text{Estabilidade}$$
+                </div>
+            </div>
+            <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Resistência:</strong> Garantir que as tensões atuantes não excedam as tensões limites do material.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Deformação:</strong> Manter flechas e deslocamentos dentro de padrões de serviço.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Estabilidade:</strong> Impedir transições catastróficas para configurações pós-críticas de grande deslocamento.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Classificação dos Estados de Equilíbrio -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">MECÂNICA ANALÍTICA</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-2">Estados de Equilíbrio</h3>
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Analogia de perturbação e estabilidade mecânica em barras comprimidas centradas:
+                </p>
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                    <div class="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-start">
+                        <i class="fa-solid fa-circle text-green-400 mt-1 mr-2 text-xs"></i>
+                        <span><strong>Estável ($P < P_{cr}$):</strong> O sistema retorna espontaneamente à configuração reta após leve perturbação transversal.</span>
+                    </div>
+                    <div class="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-start">
+                        <i class="fa-solid fa-circle text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Indiferente ($P = P_{cr}$):</strong> A barra permanece em equilíbrio em qualquer pequena configuração fletida lateralmente.</span>
+                    </div>
+                    <div class="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-start">
+                        <i class="fa-solid fa-circle text-[#EF4444] mt-1 mr-2 text-xs"></i>
+                        <span><strong>Instável ($P > P_{cr}$):</strong> Qualquer perturbação microscópica provoca deformações laterais divergentes e colapso.</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="moveInGrid(1, 0)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                <span>Avançar para Carga de Euler (2,0)</span>
+                <i class="fa-solid fa-arrow-right text-lg"></i>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Aula 150 — Instabilidade Estrutural e Requisitos de Projeto em Barras Comprimidas</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Capa (0,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Carga Crítica de Euler (Slide 2,0)</span>
+</footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,0): CARGA CRÍTICA DE FLAMBAGEM DE EULER (COLUNA IDEAL) -->
+<div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks1.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 02 — FORMULAÇÃO ANALÍTICA</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Coluna Ideal &amp; Carga Crítica de Euler ($P_{cr}$)</h2>
+    </div>
+    <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='[https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png](https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png)'">
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+        
+        <!-- Card 1: Hipóteses da Coluna Ideal de Euler -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#901812]">
+                    <i class="fa-solid fa-list-check text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Coluna Ideal</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    A dedução matemática desenvolvida por Leonhard Euler fundamenta-se nas seguintes hipóteses ideais:
+                </p>
+                <ul class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span>Coluna perfeitamente reta antes da aplicação da carga.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span>Material homogêneo, isotrópico e em regime elástico linear.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span>Carga axial $P$ rigorosamente aplicada no centroide da seção.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-[#901812] mt-1 mr-2 text-xs"></i>
+                        <span>Extremidades biarticuladas (sem momentos de engaste).</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2: Equação Diferencial e Carga Crítica -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#D1A705]">
+                    <i class="fa-solid fa-calculator text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Carga de Euler</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    O equilíbrio na posição fletida ($M(x) = -P \cdot v$) resulta na equação diferencial elástica governante:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.1rem, 1.8vw, 1.55rem);">
+                    $$EI \cdot \frac{d^2v}{dx^2} + P \cdot v = 0$$
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    Impondo as condições de contorno $v(0)=0$ e $v(L)=0$, obtém-se a menor carga de bifurcação ($n=1$):
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                    $$P_{cr} = \frac{\pi^2 E I}{L^2}$$
+                </div>
+            </div>
+            <div class="space-y-1 text-fluid-meta text-[#444444] border-t border-black/10 pt-2 font-semibold">
+                <div><strong>$E$:</strong> Módulo de elasticidade longitudinal do material.</div>
+                <div><strong>$I$:</strong> Menor momento de inércia da seção transversal ($I_{\min}$).</div>
+                <div><strong>$L$:</strong> Comprimento real do elemento entre rótulas.</div>
+            </div>
+        </div>
+
+        <!-- Card 3: Implicações e Acesso ao Laboratório de Estabilidade -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">ESTABILIDADE DE EQUILÍBRIO</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-2">Eixo Crítico de Ruína</h3>
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    A flambagem sempre ocorre em torno do eixo principal de menor rigidez flexural ($I_{\min}$), caso as condições de contorno sejam idênticas nos eixos ortogonais.
+                </p>
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                    <div class="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span>A resistência última por estabilidade independe da resistência ao escoamento ($f_y$), sendo governada por $E$ e pela esbeltez geométrica.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab de Bifurcação (Pressione &darr;)</span>
+                    <i class="fa-solid fa-arrows-split-up-and-left text-lg"></i>
+                </button>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-3 bg-white/15 hover:bg-white/25 text-white font-bold rounded-xl transition-all text-fluid-meta flex items-center justify-center space-x-2 cursor-pointer border border-white/20">
+                    <span>Avançar para Vínculos e L_fl (3,0)</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Aula 150 — Dedução da Carga Crítica de Euler e Equação da Elástica de Colunas Ideais</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&larr;</kbd> para Instabilidade (1,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&darr;</kbd> para Lab de Equilíbrio (2,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&rarr;</kbd> para Condições de Vinculação (Slide 3,0)</span>
+</footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,1): LABORATÓRIO VIRTUAL I - BIFURCAÇÃO DE EQUILÍBRIO E SISTEMA RÍGIDO-MOLA (BRANCH Y=1) -->
+<div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL I (RAMIFICAÇÃO Y=1)</span>
+        <h2 class="text-fluid-h2 text-[#333333]">Bifurcação de Equilíbrio &amp; Modelo Analítico Discreto</h2>
+    </div>
+    <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-arrow-up"></i>
+        <span>Retornar a Euler (2,0)</span>
+    </button>
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+        
+        <!-- Coluna de Controles e Formulação Analítica Discreta (5 cols) -->
+        <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros do Modelo Discreto</h3>
+                    <span id="lab21-status-tag" class="text-fluid-tag text-green-700 font-mono font-bold uppercase">Equilíbrio Estável</span>
+                </div>
+
+                <!-- Descrição Fenomenológica do Modelo -->
+                <p class="text-fluid-meta text-[#444444] leading-relaxed">
+                    Coluna articulada na base com mola rotacional de rigidez $k_t$ sob carga axial $P$. O momento restaurador elástico $M_R = k_t \cdot \theta$ contrapõe o momento desestabilizador $M_D = P \cdot L \cdot \operatorname{sen}(\theta)$.
+                </p>
+
+                <!-- Slider 1: Rigidez Rotacional da Mola (kt) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Rigidez Rotacional ($k_t$):</span>
+                        <span id="lab21-val-kt" class="font-mono text-[#1D4ED8] text-fluid-body">120 kN·m/rad</span>
+                    </div>
+                    <input type="range" id="lab21-slider-kt" min="40" max="240" step="5" value="120" class="w-full accent-[#1D4ED8] h-2 cursor-pointer" oninput="atualizarLab2_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>40 kN·m/rad</span>
+                        <span>120 kN·m/rad</span>
+                        <span>240 kN·m/rad</span>
+                    </div>
+                </div>
+
+                <!-- Slider 2: Comprimento da Barra (L) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Comprimento ($L$):</span>
+                        <span id="lab21-val-l" class="font-mono text-[#D1A705] text-fluid-body">3.00 m</span>
+                    </div>
+                    <input type="range" id="lab21-slider-l" min="1.5" max="6.0" step="0.25" value="3.0" class="w-full accent-[#D1A705] h-2 cursor-pointer" oninput="atualizarLab2_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>1.5 m (Rígida)</span>
+                        <span>3.0 m</span>
+                        <span>6.0 m (Esbelta)</span>
+                    </div>
+                </div>
+
+                <!-- Slider 3: Força de Compressão Atuante (P) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Carga Axial Atuante ($P$):</span>
+                        <span id="lab21-val-p" class="font-mono text-[#901812] text-fluid-body">30.0 kN</span>
+                    </div>
+                    <input type="range" id="lab21-slider-p" min="5" max="100" step="1" value="30" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarLab2_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>5 kN</span>
+                        <span>40 kN ($P_{cr}$)</span>
+                        <span>100 kN</span>
+                    </div>
+                </div>
+
+                <!-- Presets Operacionais -->
+                <div class="flex space-x-2 pt-0.5">
+                    <button onclick="aplicarPresetLab2_1(0.75)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#333333] font-bold rounded-xl transition-all text-fluid-tag border border-black/15 shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-shield text-xs text-green-700"></i>
+                        <span>Estável ($P = 0,75 P_{cr}$)</span>
+                    </button>
+                    <button onclick="aplicarPresetLab2_1(1.00)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#D1A705] font-bold rounded-xl transition-all text-fluid-tag border border-[#D1A705]/40 shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-xs text-[#D1A705]"></i>
+                        <span>Bifurcação ($P = P_{cr}$)</span>
+                    </button>
+                    <button onclick="aplicarPresetLab2_1(1.35)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#901812] font-bold rounded-xl transition-all text-fluid-tag border border-[#901812]/30 shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-triangle-exclamation text-xs text-[#901812]"></i>
+                        <span>Pós-Crítico ($P > P_{cr}$)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Painel de Métricas e Diagnóstico de Estabilidade -->
+            <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Carga Crítica Discreta ($P_{cr} = k_t / L$):</span>
+                    <strong id="lab21-res-pcr" class="text-white font-mono text-fluid-body">40.0 kN</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Razão de Carregamento ($P / P_{cr}$):</span>
+                    <strong id="lab21-res-razao" class="text-[#38BDF8] font-mono text-fluid-body">0.75</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Ângulo de Equilíbrio ($\theta_{\text{eq}}$):</span>
+                    <strong id="lab21-res-theta" class="text-green-400 font-mono text-fluid-body">0.00° (Eixo Reto)</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Rigidez Efetiva Secante ($k_{\text{ef}} = k_t - P \cdot L$):</span>
+                    <strong id="lab21-res-kef" class="text-[#D1A705] font-mono text-fluid-meta">+30.0 kN·m/rad</strong>
+                </div>
+                <div class="flex justify-between items-baseline">
+                    <span class="text-[#DEDEDE]">Regime de Equilíbrio:</span>
+                    <strong id="lab21-res-veredicto" class="text-green-400 font-mono text-xs uppercase font-bold">Configuração Estável Reta (θ = 0)</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna de Visualização Gráfica em SVG (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+            <svg id="svg-lab2-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                <defs>
+                    <pattern id="grid-dots-lab2-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                    </pattern>
+                    <marker id="arrow-force-red-lab21" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#901812" />
+                    </marker>
+                    <marker id="arrow-axis-lab21" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#111827" />
+                    </marker>
+                </defs>
+                
+                <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab2-1)" pointer-events="all" />
+                
+                <g id="group-zoom-lab2-1">
+                    <!-- SETOR ESQUERDO: MODELO CINEMÁTICO DA COLUNA DISCRETA (Base em x = -130, y = 110) -->
+                    <g id="layer-model-column">
+                        <!-- Eixo Reta Indefletida de Referência -->
+                        <line x1="-130" y1="110" x2="-130" y2="-120" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4,4" />
+
+                        <!-- Fundação e Articulação na Base -->
+                        <polygon points="-130,110 -144,134 -116,134" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                        <line x1="-152" y1="134" x2="-108" y2="134" stroke="#1F2937" stroke-width="3" />
+                        <line x1="-146" y1="140" x2="-138" y2="134" stroke="#64748B" stroke-width="1.8" />
+                        <line x1="-134" y1="140" x2="-126" y2="134" stroke="#64748B" stroke-width="1.8" />
+                        <line x1="-122" y1="140" x2="-114" y2="134" stroke="#64748B" stroke-width="1.8" />
+
+                        <!-- Mola Rotacional kt (Espiral esquemática em arco) -->
+                        <path id="svg-spring-arc" d="M -115 110 A 15 15 0 1 0 -130 95" fill="none" stroke="#D1A705" stroke-width="3" />
+                        <text x="-95" y="105" fill="#D1A705" font-size="11" font-weight="bold">k_t</text>
+
+                        <!-- Barra Rígida Articulada -->
+                        <line id="svg-rigid-bar" x1="-130" y1="110" x2="-130" y2="-100" stroke="#1F2937" stroke-width="7" stroke-linecap="round" />
+
+                        <!-- Pino na Articulação da Base -->
+                        <circle cx="-130" cy="110" r="5" fill="#FFFFFF" stroke="#1F2937" stroke-width="2.5" />
+
+                        <!-- Topo da Barra (Mancal guiado / ponto de aplicação) -->
+                        <circle id="svg-top-node" cx="-130" cy="-100" r="7" fill="#901812" stroke="#FFFFFF" stroke-width="2" />
+
+                        <!-- Vetor da Força Axial Centrada P no Topo -->
+                        <line id="svg-force-vector" x1="-130" y1="-165" x2="-130" y2="-108" stroke="#901812" stroke-width="4.5" marker-end="url(#arrow-force-red-lab21)" />
+                        <text id="svg-force-text" x="-120" y="-145" fill="#901812" font-size="12" font-weight="black" font-family="'Montserrat', sans-serif">P = 30 kN</text>
+
+                        <!-- Arco e Cota do Ângulo Theta -->
+                        <g id="svg-theta-group"></g>
+                    </g>
+
+                    <!-- SETOR DIREITO: DIAGRAMA DE BIFURCAÇÃO P vs. THETA (Origem em x = 110, y = 110) -->
+                    <g id="layer-bifurcation-diagram">
+                        <!-- Eixos Cartesianos do Diagrama -->
+                        <line x1="30" y1="110" x2="280" y2="110" stroke="#111827" stroke-width="2" marker-end="url(#arrow-axis-lab21)" />
+                        <line x1="155" y1="110" x2="155" y2="-160" stroke="#111827" stroke-width="2" marker-end="url(#arrow-axis-lab21)" />
+                        
+                        <text x="275" y="130" fill="#111827" font-size="12" font-weight="bold" font-family="'Montserrat', sans-serif">Deslocamento θ [°]</text>
+                        <text x="145" y="-165" fill="#111827" font-size="12" font-weight="bold" text-anchor="end" font-family="'Montserrat', sans-serif">Carga P [kN]</text>
+                        
+                        <!-- Ponto Crítico Pcr no Eixo Vertical -->
+                        <line id="svg-pcr-dash" x1="45" y1="-20" x2="265" y2="-20" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3" />
+                        <text id="svg-pcr-lbl" x="145" y="-24" fill="#901812" font-size="11" font-weight="bold" text-anchor="end">P_cr = 40 kN</text>
+
+                        <!-- Ramo Primário Estável (P < Pcr, theta = 0) -->
+                        <line x1="155" y1="110" x2="155" y2="-20" stroke="#15803D" stroke-width="3.5" />
+
+                        <!-- Ramo Primário Instável (P > Pcr, theta = 0) -->
+                        <line x1="155" y1="-20" x2="155" y2="-150" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="4,4" />
+
+                        <!-- Ramos Pós-Críticos de Bifurcação Estáveis (Teoria Não Linear P = Pcr * theta / sen(theta)) -->
+                        <path id="svg-bifurcation-path-pos" d="" fill="none" stroke="#1D4ED8" stroke-width="3" />
+                        <path id="svg-bifurcation-path-neg" d="" fill="none" stroke="#1D4ED8" stroke-width="3" />
+
+                        <!-- Ponto de Operação Atual no Diagrama -->
+                        <circle id="svg-op-point" cx="155" cy="45" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="2" />
+                        <text id="svg-op-lbl" x="165" y="45" fill="#333333" font-size="10" font-weight="bold">Operação</text>
+
+                        <!-- Legenda do Diagrama -->
+                        <g transform="translate(40, -170)">
+                            <rect x="0" y="0" width="130" height="48" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" rx="8" opacity="0.9" />
+                            <line x1="10" y1="16" x2="30" y2="16" stroke="#15803D" stroke-width="2.5" />
+                            <text x="36" y="19" fill="#333333" font-size="9" font-weight="bold">Estável (θ = 0)</text>
+                            <line x1="10" y1="34" x2="30" y2="34" stroke="#1D4ED8" stroke-width="2.5" />
+                            <text x="36" y="37" fill="#333333" font-size="9" font-weight="bold">Pós-Crítico (Bifurcado)</text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            
+            <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Laboratório 01 — Simulação da Bifurcação de Equilíbrio em Sistema Discreto com Mola Rotacional</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (2,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Vínculos &amp; L_fl (Slide 3,0)</span>
+</footer>
+
+<!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (2,1) -->
+<script>
+    (function() {
+        window.aplicarPresetLab2_1 = function(fatorPcr) {
+            const sliderKt = document.getElementById('lab21-slider-kt');
+            const sliderL = document.getElementById('lab21-slider-l');
+            const sliderP = document.getElementById('lab21-slider-p');
+            if (!sliderKt || !sliderL || !sliderP) return;
+
+            const kt = parseFloat(sliderKt.value);
+            const L = parseFloat(sliderL.value);
+            const Pcr = kt / L;
+            let targetP = Math.round(Pcr * fatorPcr);
+            targetP = Math.max(5, Math.min(100, targetP));
+            sliderP.value = targetP;
+            atualizarLab2_1();
+        };
+
+        window.atualizarLab2_1 = function() {
+            const sliderKt = document.getElementById('lab21-slider-kt');
+            const sliderL = document.getElementById('lab21-slider-l');
+            const sliderP = document.getElementById('lab21-slider-p');
+            if (!sliderKt || !sliderL || !sliderP) return;
+
+            const kt = parseFloat(sliderKt.value);
+            const L = parseFloat(sliderL.value);
+            const P = parseFloat(sliderP.value);
+
+            // Carga Crítica Analítica do Sistema Discreto: Pcr = kt / L
+            const Pcr = kt / L;
+            const razao = P / Pcr;
+            const kef = kt - P * L;
+
+            // Determinação do ângulo de equilíbrio pós-crítico estável:
+            // Equilíbrio exato: kt * theta = P * L * sen(theta) -> (P / Pcr) = theta / sen(theta)
+            let thetaRad = 0;
+            if (P > Pcr) {
+                // Aproximação da expansão em série: sen(theta) approx theta - theta^3 / 6
+                // P/Pcr approx 1 / (1 - theta^2 / 6) -> theta^2 approx 6 * (1 - Pcr/P)
+                const arg = 6.0 * (1.0 - (Pcr / P));
+                thetaRad = Math.sqrt(Math.max(0, arg));
+                // Refinamento por Newton-Raphson para grandes deslocamentos
+                for (let iter = 0; iter < 5; iter++) {
+                    const f = kt * thetaRad - P * L * Math.sin(thetaRad);
+                    const df = kt - P * L * Math.cos(thetaRad);
+                    if (Math.abs(df) > 1e-4) {
+                        thetaRad = thetaRad - f / df;
+                    }
+                }
+            }
+            const thetaGraus = thetaRad * (180.0 / Math.PI);
+
+            // Atualização dos Rótulos dos Sliders
+            document.getElementById('lab21-val-kt').innerText = `${kt.toFixed(0)} kN·m/rad`;
+            document.getElementById('lab21-val-l').innerText = `${L.toFixed(2)} m`;
+            document.getElementById('lab21-val-p').innerText = `${P.toFixed(1)} kN`;
+
+            // Atualização do Painel de Métricas
+            document.getElementById('lab21-res-pcr').innerText = `${Pcr.toFixed(1)} kN`;
+            document.getElementById('lab21-res-razao').innerText = razao.toFixed(2);
+            document.getElementById('lab21-res-theta').innerText = (P <= Pcr) ? `0.00° (Eixo Reto)` : `${thetaGraus.toFixed(2)}° (Fletido)`;
+            document.getElementById('lab21-res-kef').innerText = `${kef >= 0 ? '+' : ''}${kef.toFixed(1)} kN·m/rad`;
+
+            const veredEl = document.getElementById('lab21-res-veredicto');
+            const tagEl = document.getElementById('lab21-status-tag');
+            const thetaResEl = document.getElementById('lab21-res-theta');
+
+            if (razao < 0.98) {
+                veredEl.innerText = "Configuração Estável Reta (θ = 0)";
+                veredEl.className = "text-green-400 font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Equilíbrio Estável";
+                tagEl.className = "text-fluid-tag text-green-700 font-mono font-bold uppercase";
+                thetaResEl.className = "text-green-400 font-mono text-fluid-body";
+            } else if (razao >= 0.98 && razao <= 1.02) {
+                veredEl.innerText = "Ponto de Bifurcação (Indiferente)";
+                veredEl.className = "text-[#D1A705] font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Transição Crítica";
+                tagEl.className = "text-fluid-tag text-amber-600 font-mono font-bold uppercase";
+                thetaResEl.className = "text-[#D1A705] font-mono text-fluid-body";
+            } else {
+                veredEl.innerText = `Pós-Crítico Estável em θ = ${thetaGraus.toFixed(1)}°`;
+                veredEl.className = "text-[#EF4444] font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Flambagem Bifurcada";
+                tagEl.className = "text-fluid-tag text-red-600 font-mono font-bold uppercase";
+                thetaResEl.className = "text-[#EF4444] font-mono text-fluid-body";
+            }
+
+            // -------------------------------------------------------------
+            // ATUALIZAÇÃO CINEMÁTICA DA COLUNA EM SVG (Lado Esquerdo)
+            // -------------------------------------------------------------
+            const baseX = -130.0;
+            const baseY = 110.0;
+            const barPixelLength = 200.0; // Comprimento visual calibrado
+
+            // Ponto superior da barra considerando rotação theta (para a direita)
+            const topX = baseX + barPixelLength * Math.sin(thetaRad);
+            const topY = baseY - barPixelLength * Math.cos(thetaRad);
+
+            const barEl = document.getElementById('svg-rigid-bar');
+            const topNodeEl = document.getElementById('svg-top-node');
+            const forceVecEl = document.getElementById('svg-force-vector');
+            const forceTextEl = document.getElementById('svg-force-text');
+            const thetaGroup = document.getElementById('svg-theta-group');
+
+            if (barEl && topNodeEl && forceVecEl && forceTextEl && thetaGroup) {
+                barEl.setAttribute('x1', baseX);
+                barEl.setAttribute('y1', baseY);
+                barEl.setAttribute('x2', topX);
+                barEl.setAttribute('y2', topY);
+
+                topNodeEl.setAttribute('cx', topX);
+                topNodeEl.setAttribute('cy', topY);
+
+                // Vetor de carga centrada P acompanha a ponta da coluna atuando verticalmente
+                const arrowLen = Math.min(65, Math.max(30, (P / 100.0) * 65 + 15));
+                forceVecEl.setAttribute('x1', topX);
+                forceVecEl.setAttribute('y1', topY - arrowLen);
+                forceVecEl.setAttribute('x2', topX);
+                forceVecEl.setAttribute('y2', topY - 7);
+
+                forceTextEl.setAttribute('x', topX + 10);
+                forceTextEl.setAttribute('y', topY - arrowLen / 2);
+                forceTextEl.textContent = `P = ${P.toFixed(0)} kN`;
+
+                // Arco do ângulo theta
+                if (thetaGraus > 1.0) {
+                    const rArc = 70.0;
+                    const arcX = baseX + rArc * Math.sin(thetaRad);
+                    const arcY = baseY - rArc * Math.cos(thetaRad);
+                    thetaGroup.innerHTML = `
+                        <path d="M ${baseX} ${baseY - rArc} A ${rArc} ${rArc} 0 0 1 ${arcX} ${arcY}" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="2,2" />
+                        <text x="${baseX + rArc * Math.sin(thetaRad / 2) + 8}" y="${baseY - rArc * Math.cos(thetaRad / 2)}" fill="#EF4444" font-size="11" font-weight="bold">θ = ${thetaGraus.toFixed(1)}°</text>
+                    `;
+                } else {
+                    thetaGroup.innerHTML = "";
+                }
+            }
+
+            // -------------------------------------------------------------
+            // ATUALIZAÇÃO DO DIAGRAMA DE BIFURCAÇÃO (Lado Direito)
+            // -------------------------------------------------------------
+            // Calibração dos eixos do diagrama:
+            // Origem (theta=0, P=0): (155, 110)
+            // Escala de P: 0 a 100 kN -> Y de 110 a -150 (escala: 260 px / 100 kN = 2.6 px/kN)
+            // Escala de theta: -60° a +60° -> X de 35 a 275 (escala: 120 px / 60° = 2.0 px/°)
+            const diagOx = 155.0;
+            const diagOy = 110.0;
+            const scaleP = 2.4;
+            const scaleTheta = 1.9;
+
+            const yPcr = diagOy - Pcr * scaleP;
+            const pcrDashEl = document.getElementById('svg-pcr-dash');
+            const pcrLblEl = document.getElementById('svg-pcr-lbl');
+            if (pcrDashEl && pcrLblEl) {
+                pcrDashEl.setAttribute('y1', yPcr);
+                pcrDashEl.setAttribute('y2', yPcr);
+                pcrLblEl.setAttribute('y', yPcr - 5);
+                pcrLblEl.textContent = `P_cr = ${Pcr.toFixed(1)} kN`;
+            }
+
+            // Traçado das curvas teóricas de bifurcação estáveis: P = Pcr * (theta / sen(theta))
+            const pathPos = document.getElementById('svg-bifurcation-path-pos');
+            const pathNeg = document.getElementById('svg-bifurcation-path-neg');
+            if (pathPos && pathNeg) {
+                let dPos = `M ${diagOx} ${yPcr} `;
+                let dNeg = `M ${diagOx} ${yPcr} `;
+                const maxThetaPlot = 50.0; // graus
+                const passos = 30;
+
+                for (let i = 1; i <= passos; i++) {
+                    const deg = (i / passos) * maxThetaPlot;
+                    const rad = deg * (Math.PI / 180.0);
+                    const pTeorico = Pcr * (rad / Math.sin(rad));
+                    if (pTeorico > 105) break;
+
+                    const xP = diagOx + deg * scaleTheta;
+                    const xN = diagOx - deg * scaleTheta;
+                    const yCurva = diagOy - pTeorico * scaleP;
+
+                    dPos += `L ${xP.toFixed(1)} ${yCurva.toFixed(1)} `;
+                    dNeg += `L ${xN.toFixed(1)} ${yCurva.toFixed(1)} `;
+                }
+                pathPos.setAttribute('d', dPos);
+                pathNeg.setAttribute('d', dNeg);
+            }
+
+            // Ponto de operação atual
+            const opPtEl = document.getElementById('svg-op-point');
+            const opLblEl = document.getElementById('svg-op-lbl');
+            if (opPtEl && opLblEl) {
+                const ptX = diagOx + thetaGraus * scaleTheta;
+                const ptY = diagOy - P * scaleP;
+                opPtEl.setAttribute('cx', ptX);
+                opPtEl.setAttribute('cy', ptY);
+                opLblEl.setAttribute('x', ptX + 8);
+                opLblEl.setAttribute('y', ptY - 4);
+            }
+        };
+
+        // Sistema Pan e Zoom do SVG
+        function initPanZoomSvg(svgId) {
+            const svg = document.getElementById(svgId);
+            if (!svg) return;
+
+            let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+            const initialVb = { ...viewBox };
+            let isDragging = false;
+            let startPoint = { x: 0, y: 0 };
+
+            function updateVb() {
+                svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+            }
+
+            svg.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = svg.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                const newW = viewBox.w * zoomFactor;
+                const newH = viewBox.h * zoomFactor;
+
+                if (newW < 220 || newW > 2600) return;
+
+                viewBox.x = pX - (mouseX / rect.width) * newW;
+                viewBox.y = pY - (mouseY / rect.height) * newH;
+                viewBox.w = newW;
+                viewBox.h = newH;
+                updateVb();
+            }, { passive: false });
+
+            svg.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startPoint = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = svg.getBoundingClientRect();
+                const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                viewBox.x -= dx;
+                viewBox.y -= dy;
+                startPoint = { x: e.clientX, y: e.clientY };
+                updateVb();
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+
+            svg.addEventListener('dblclick', () => {
+                viewBox = { ...initialVb };
+                updateVb();
+            });
+        }
+
+        function montarLab() {
+            atualizarLab2_1();
+            initPanZoomSvg('svg-lab2-1');
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', montarLab);
+        } else {
+            montarLab();
+        }
+    })();
+</script>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,0): COMPRIMENTO EFETIVO DE FLAMBAGEM (L_fl) & CONDIÇÕES DE CONTORNO -->
+<div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay1.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 03 — CONDIÇÕES DE APOIO</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Comprimento Efetivo ($L_{fl}$) &amp; Vinculações</h2>
+    </div>
+    <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='[https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png](https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png)'">
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+        
+        <!-- Card 1: Conceito de Comprimento Efetivo -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#901812]">
+                    <i class="fa-solid fa-ruler-combined text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Comprimento Efetivo</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    A equação de Euler generaliza-se para quaisquer apoios substituindo o vão real $L$ pelo <strong>comprimento de flambagem</strong> $L_{fl}$:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                    $$P_{cr} = \frac{\pi^2 E I}{L_{fl}^2} \quad \text{com} \quad L_{fl} = K \cdot L$$
+                </div>
+            </div>
+            <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Significado Físico:</strong> $L_{fl}$ equivale à distância entre pontos consecutivos de inflexão de momento nulo ($M=0$) na elástica fletida.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Sensibilidade Quadrática:</strong> Reduzir $L_{fl}$ pela metade quadruplica a capacidade resistente por estabilidade elástica ($4 \times P_{cr}$).</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Casos Canônicos de Vinculação -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#D1A705]">
+                    <i class="fa-solid fa-grip-lines text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Casos Canônicos</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    Fatores de comprimento teórico ($K$) padronizados em função dos graus de liberdade nas extremidades:
+                </p>
+                <div class="space-y-2 text-fluid-meta text-[#333333] font-semibold border-t border-black/10 pt-2">
+                    <div class="flex justify-between items-center p-2 bg-white/70 rounded-xl">
+                        <span><i class="fa-solid fa-arrows-alt-v text-[#901812] mr-2"></i>Biarticulada (padrão):</span>
+                        <span class="font-mono text-[#901812] font-bold text-fluid-body">$L_{fl} = 1{,}0 \, L$</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-white/70 rounded-xl">
+                        <span><i class="fa-solid fa-flag text-[#901812] mr-2"></i>Engastada-Livre (haste em balanço):</span>
+                        <span class="font-mono text-[#901812] font-bold text-fluid-body">$L_{fl} = 2{,}0 \, L$</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-white/70 rounded-xl">
+                        <span><i class="fa-solid fa-link text-[#D1A705] mr-2"></i>Engastada-Articulada:</span>
+                        <span class="font-mono text-[#D1A705] font-bold text-fluid-body">$L_{fl} = 0{,}7 \, L$</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-white/70 rounded-xl">
+                        <span><i class="fa-solid fa-thumbtack text-green-700 mr-2"></i>Biengastada (ambos os nós fixos):</span>
+                        <span class="font-mono text-green-700 font-bold text-fluid-body">$L_{fl} = 0{,}5 \, L$</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Implicações Práticas & Acesso ao Laboratório de Vínculos -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">IMPACTO ESTRUTURAL</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-2">Restrições de Apoio</h3>
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Uma coluna biengastada suporta <strong>16 vezes mais carga axial crítica</strong> que a mesma coluna engastada na base e livre no topo ($P_{cr} \propto 1/K^2$).
+                </p>
+                <div class="space-y-2 text-fluid-meta text-[#DEDEDE] mt-3">
+                    <div class="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-start">
+                        <i class="fa-solid fa-circle-exclamation text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                        <span>Em pilares reais, vigas e nós de pórticos impõem restrições rotacionais elásticas intermediárias entre a rótula pura e o engaste perfeito.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab de Vínculos (Pressione &darr;)</span>
+                    <i class="fa-solid fa-arrows-to-dot text-lg"></i>
+                </button>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-3 bg-white/15 hover:bg-white/25 text-white font-bold rounded-xl transition-all text-fluid-meta flex items-center justify-center space-x-2 cursor-pointer border border-white/20">
+                    <span>Avançar para Esbeltez e Hipérbole (4,0)</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Aula 150 — Comprimento Efetivo de Flambagem e Coeficientes de Contorno</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&larr;</kbd> para Carga de Euler (2,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&darr;</kbd> para Lab de Vínculos (3,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&rarr;</kbd> para Esbeltez e Hipérbole (Slide 4,0)</span>
+</footer>
+</div>
+
+
+
+
+<!-- SLIDE (3,1): LABORATÓRIO VIRTUAL II - MODOS DE FLAMBAGEM E INFLUÊNCIA DAS VINCULAÇÕES (BRANCH Y=1) -->
+<div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay2.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL II (RAMIFICAÇÃO Y=1)</span>
+        <h2 class="text-fluid-h2 text-[#333333]">Simulador de Elástica &amp; Condições de Vinculação</h2>
+    </div>
+    <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-arrow-up"></i>
+        <span>Retornar a Vínculos (3,0)</span>
+    </button>
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+        
+        <!-- Coluna de Controles e Seleção de Casos Canônicos (5 cols) -->
+        <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros Estruturais</h3>
+                    <span id="lab31-status-tag" class="text-fluid-tag text-[#901812] font-mono font-bold uppercase">Biarticulada (K = 1,0)</span>
+                </div>
+
+                <!-- Seletor de Condição Canônica de Apoio -->
+                <div>
+                    <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Condição de Apoio (Extremidades):</label>
+                    <select id="lab31-support-select" class="w-full p-2.5 bg-white/95 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#901812] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="atualizarLab3_1()">
+                        <option value="biarticulada" selected>Biarticulada (Pino - Pino) [K = 1,0]</option>
+                        <option value="engaste-livre">Engastada e Livre (Balanço) [K = 2,0]</option>
+                        <option value="engaste-articulada">Engastada e Articulada [K = 0,7]</option>
+                        <option value="biengastada">Biengastada (Engaste - Engaste) [K = 0,5]</option>
+                    </select>
+                </div>
+
+                <!-- Slider 1: Comprimento Real da Barra (L) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Comprimento Real ($L$):</span>
+                        <span id="lab31-val-l" class="font-mono text-[#1D4ED8] text-fluid-body">4.00 m</span>
+                    </div>
+                    <input type="range" id="lab31-slider-l" min="2.0" max="8.0" step="0.25" value="4.0" class="w-full accent-[#1D4ED8] h-2 cursor-pointer" oninput="atualizarLab3_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>2.0 m</span>
+                        <span>4.0 m (Referência)</span>
+                        <span>8.0 m</span>
+                    </div>
+                </div>
+
+                <!-- Slider 2: Rigidez Flexural (EI) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Rigidez à Flexão ($E \cdot I$):</span>
+                        <span id="lab31-val-ei" class="font-mono text-[#D1A705] text-fluid-body">3000 kN·m²</span>
+                    </div>
+                    <input type="range" id="lab31-slider-ei" min="500" max="8000" step="250" value="3000" class="w-full accent-[#D1A705] h-2 cursor-pointer" oninput="atualizarLab3_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>500 kN·m² (Perfil leve)</span>
+                        <span>3000 kN·m²</span>
+                        <span>8000 kN·m² (Perfil pesado)</span>
+                    </div>
+                </div>
+
+                <!-- Slider 3: Amplitude de Deformação Pós-Crítica Visual (v_max) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Amplitude Visual da Elástica ($v_{\max}$):</span>
+                        <span id="lab31-val-amp" class="font-mono text-[#901812] text-fluid-body">40 mm</span>
+                    </div>
+                    <input type="range" id="lab31-slider-amp" min="10" max="80" step="5" value="40" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarLab3_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>10 mm (Incipiente)</span>
+                        <span>40 mm (Didática)</span>
+                        <span>80 mm (Exagerada)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel de Métricas e Diagnóstico de Estabilidade -->
+            <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Fator de Comprimento Efetivo ($K$):</span>
+                    <strong id="lab31-res-k" class="text-white font-mono text-fluid-body">1.00</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Comprimento de Flambagem ($L_{fl} = K \cdot L$):</span>
+                    <strong id="lab31-res-lfl" class="text-[#38BDF8] font-mono text-fluid-body">4.00 m</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Carga Crítica Real ($P_{cr} = \pi^2 EI / L_{fl}^2$):</span>
+                    <strong id="lab31-res-pcr" class="text-[#D1A705] font-mono text-fluid-body">1850.6 kN</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Capacidade Relativa à Biarticulada:</span>
+                    <strong id="lab31-res-rel" class="text-green-400 font-mono text-fluid-meta">1.00 × P_cr,0 (Referência)</strong>
+                </div>
+                <div class="flex justify-between items-baseline">
+                    <span class="text-[#DEDEDE]">Pontos de Inflexão de Momento Nulo:</span>
+                    <strong id="lab31-res-inflex" class="text-white font-mono text-xs uppercase font-bold">2 extremidades (rótulas)</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna de Visualização Gráfica da Elástica em SVG (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+            <svg id="svg-lab3-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                <defs>
+                    <pattern id="grid-dots-lab3-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                    </pattern>
+                    <marker id="arrow-force-red-lab31" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#901812" />
+                    </marker>
+                    <marker id="arrow-cota-blue-lab31" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                        <path d="M 0 2 L 8 5 L 0 8 z" fill="#1D4ED8" />
+                    </marker>
+                </defs>
+                
+                <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab3-1)" pointer-events="all" />
+                
+                <g id="group-zoom-lab3-1">
+                    <!-- SETOR ESQUERDO: COLUNA E ELÁSTICA FLAMBADA (Eixo vertical em x = -100) -->
+                    <g id="layer-column-system">
+                        <!-- Eixo Reta Indefletida de Referência -->
+                        <line x1="-100" y1="120" x2="-100" y2="-120" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4,4" />
+
+                        <!-- Prolongamento Virtual para Visualização do Modo Completo (espelhamento com curvatura oposta para K = 2L) -->
+                        <path id="svg-col-curve-virtual" d="" fill="none" stroke="#901812" stroke-width="2.5" stroke-dasharray="5,4" opacity="0.65" />
+
+                        <!-- Traçado da Curva Elástica Deformada Real da Barra -->
+                        <path id="svg-col-curve" d="" fill="none" stroke="#901812" stroke-width="6" stroke-linecap="round" />
+
+                        <!-- Linha de guia horizontal pontilhada no topo (conforme desenho do engaste-livre) -->
+                        <line id="svg-top-guide" x1="-150" y1="-120" x2="-40" y2="-120" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3,3" opacity="0" />
+
+                        <!-- Apoio Inferior (Base em x = -100, y = 120) -->
+                        <g id="svg-support-bottom"></g>
+
+                        <!-- Apoio Superior (Topo em y = -120) -->
+                        <g id="svg-support-top"></g>
+
+                        <!-- Vetor de Carga Crítica Pcr no Topo -->
+                        <line id="svg-force-pcr" x1="-100" y1="-175" x2="-100" y2="-128" stroke="#901812" stroke-width="4.5" marker-end="url(#arrow-force-red-lab31)" />
+                        <text id="svg-force-pcr-lbl" x="-90" y="-155" fill="#901812" font-size="12" font-weight="black" font-family="'Montserrat', sans-serif">P_cr</text>
+
+                        <!-- Marcadores dos Pontos de Inflexão (M = 0) -->
+                        <g id="svg-inflection-markers"></g>
+
+                        <!-- Cota Visual do Comprimento Efetivo L_fl -->
+                        <g id="svg-cota-lfl"></g>
+                    </g>
+
+                    <!-- SETOR DIREITO: QUADRO COMPARATIVO E ESQUEMA DOS 4 CASOS CANÔNICOS -->
+                    <g transform="translate(60, -170)">
+                        <rect x="0" y="0" width="270" height="340" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" rx="16" />
+                        <text x="135" y="24" fill="#901812" font-size="12" font-weight="bold" text-anchor="middle">Comparativo dos Casos Canônicos</text>
+
+                        <!-- Miniaturas Esquematizadas com Fator K e Capacidade Relativa -->
+                        <g transform="translate(15, 40)">
+                            <!-- Caso 1: Biengastada -->
+                            <g id="card-case-biengastada" class="cursor-pointer" onclick="selecionarCasoViaMiniatura('biengastada')">
+                                <rect x="0" y="0" width="240" height="58" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="10" />
+                                <path d="M 30 50 C 30 35 18 35 18 30 C 18 25 30 25 30 10" fill="none" stroke="#16A34A" stroke-width="2.5" />
+                                <text x="60" y="24" fill="#1F2937" font-size="11" font-weight="bold">Biengastada</text>
+                                <text x="60" y="42" fill="#16A34A" font-size="10" font-weight="bold">K = 0,5 • P_cr = 4,00 × P₀</text>
+                            </g>
+
+                            <!-- Caso 2: Engastada-Articulada -->
+                            <g id="card-case-engaste-articulada" class="cursor-pointer" transform="translate(0, 66)" onclick="selecionarCasoViaMiniatura('engaste-articulada')">
+                                <rect x="0" y="0" width="240" height="58" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="10" />
+                                <!-- Miniatura fiel ao croqui manual: tangente vertical na base engastada, inflexão baixa e arco amplo até a rótula no topo -->
+                                <path d="M 30 50 C 30 42 34 38 34 34 C 34 22 20 18 30 10" fill="none" stroke="#D1A705" stroke-width="2.5" />
+                                <circle cx="33.8" cy="35" r="2.2" fill="#D1A705" />
+                                <text x="60" y="24" fill="#1F2937" font-size="11" font-weight="bold">Engastada-Articulada</text>
+                                <text x="60" y="42" fill="#D1A705" font-size="10" font-weight="bold">K = 0,7 • P_cr = 2,04 × P₀</text>
+                            </g>
+
+                            <!-- Caso 3: Biarticulada -->
+                            <g id="card-case-biarticulada" class="cursor-pointer" transform="translate(0, 132)" onclick="selecionarCasoViaMiniatura('biarticulada')">
+                                <rect x="0" y="0" width="240" height="58" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="10" />
+                                <path d="M 30 50 Q 15 30 30 10" fill="none" stroke="#901812" stroke-width="2.5" />
+                                <text x="60" y="24" fill="#1F2937" font-size="11" font-weight="bold">Biarticulada (Padrão)</text>
+                                <text x="60" y="42" fill="#901812" font-size="10" font-weight="bold">K = 1,0 • P_cr = 1,00 × P₀</text>
+                            </g>
+
+                            <!-- Caso 4: Engastada-Livre -->
+                            <g id="card-case-engaste-livre" class="cursor-pointer" transform="translate(0, 198)" onclick="selecionarCasoViaMiniatura('engaste-livre')">
+                                <rect x="0" y="0" width="240" height="58" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" rx="10" />
+                                <!-- Miniatura fiel ao croqui manual: tangente vertical na base engastada e deflexão com inclinação máxima no topo -->
+                                <path d="M 30 50 C 30 35 24 20 16 10" fill="none" stroke="#4B5563" stroke-width="2.5" />
+                                <text x="60" y="24" fill="#1F2937" font-size="11" font-weight="bold">Engastada e Livre (Balanço)</text>
+                                <text x="60" y="42" fill="#4B5563" font-size="10" font-weight="bold">K = 2,0 • P_cr = 0,25 × P₀</text>
+                            </g>
+                        </g>
+
+                        <text x="135" y="325" fill="#64748B" font-size="9" font-weight="bold" text-anchor="middle">Clique no card para trocar o modelo</text>
+                    </g>
+                </g>
+            </svg>
+            
+            <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Laboratório 02 — Variação do Comprimento Efetivo ($L_{fl}$) e Formas Modais de Flambagem Elástica</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (3,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Esbeltez &amp; Hipérbole (Slide 4,0)</span>
+</footer>
+
+<!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,1) -->
+<script>
+    (function() {
+        window.selecionarCasoViaMiniatura = function(casoKey) {
+            const sel = document.getElementById('lab31-support-select');
+            if (sel) {
+                sel.value = casoKey;
+                atualizarLab3_1();
+            }
+        };
+
+        window.atualizarLab3_1 = function() {
+            const selSupport = document.getElementById('lab31-support-select');
+            const sliderL = document.getElementById('lab31-slider-l');
+            const sliderEI = document.getElementById('lab31-slider-ei');
+            const sliderAmp = document.getElementById('lab31-slider-amp');
+            if (!selSupport || !sliderL || !sliderEI || !sliderAmp) return;
+
+            const caso = selSupport.value;
+            const L = parseFloat(sliderL.value);
+            const EI = parseFloat(sliderEI.value);
+            const ampMm = parseFloat(sliderAmp.value);
+
+            // Definição dos parâmetros normativos e teóricos de cada caso canônico
+            let K = 1.0;
+            let relPcr0 = 1.0;
+            let inflexaoDesc = "2 extremidades (rótulas)";
+            let statusLabel = "Biarticulada (K = 1,0)";
+
+            if (caso === 'biarticulada') {
+                K = 1.0;
+                relPcr0 = 1.0;
+                inflexaoDesc = "Extremidades (z = 0 e z = L)";
+                statusLabel = "Biarticulada (K = 1,0)";
+            } else if (caso === 'engaste-livre') {
+                K = 2.0;
+                relPcr0 = 0.25;
+                inflexaoDesc = "1 extremidade livre (z = L)";
+                statusLabel = "Engastada-Livre (K = 2,0)";
+            } else if (caso === 'engaste-articulada') {
+                K = 0.7; // valor prático de norma (teórico exato ≈ 0,699)
+                relPcr0 = 1.0 / (K * K); // ≈ 2.04
+                inflexaoDesc = "Rótula no topo e inflexão interna (M = 0 a 0,7L do topo)";
+                statusLabel = "Engastada-Articulada (K = 0,7)";
+            } else if (caso === 'biengastada') {
+                K = 0.5;
+                relPcr0 = 4.0;
+                inflexaoDesc = "2 inflexões internas (0,25 L e 0,75 L)";
+                statusLabel = "Biengastada (K = 0,5)";
+            }
+
+            const Lfl = K * L;
+            // Carga crítica de Euler em kN: π² * EI / Lfl²
+            const Pcr = (Math.PI * Math.PI * EI) / (Lfl * Lfl);
+            const Pcr0 = (Math.PI * Math.PI * EI) / (L * L); // Referência biarticulada
+
+            // Atualização dos Rótulos dos Sliders
+            document.getElementById('lab31-val-l').innerText = `${L.toFixed(2)} m`;
+            document.getElementById('lab31-val-ei').innerText = `${EI.toFixed(0)} kN·m²`;
+            document.getElementById('lab31-val-amp').innerText = `${ampMm.toFixed(0)} mm`;
+
+            // Atualização do Painel de Métricas
+            document.getElementById('lab31-res-k').innerText = K.toFixed(2);
+            document.getElementById('lab31-res-lfl').innerText = `${Lfl.toFixed(2)} m`;
+            document.getElementById('lab31-res-pcr').innerText = `${Pcr.toFixed(1)} kN`;
+            document.getElementById('lab31-res-rel').innerText = `${(Pcr / Pcr0).toFixed(2)} × P_cr,0 (${(Pcr / Pcr0 >= 1 ? '+' : '')}${(((Pcr / Pcr0) - 1) * 100).toFixed(0)}%)`;
+            document.getElementById('lab31-res-inflex').innerText = inflexaoDesc;
+            document.getElementById('lab31-status-tag').innerText = statusLabel;
+
+            // Destaque visual dos cards à direita
+            const cards = ['biengastada', 'engaste-articulada', 'biarticulada', 'engaste-livre'];
+            cards.forEach(c => {
+                const el = document.getElementById(`card-case-${c}`);
+                if (el) {
+                    const rect = el.querySelector('rect');
+                    if (c === caso) {
+                        rect.setAttribute('stroke', '#901812');
+                        rect.setAttribute('stroke-width', '2.5');
+                        rect.setAttribute('fill', '#FEF2F2');
+                    } else {
+                        rect.setAttribute('stroke', '#E2E8F0');
+                        rect.setAttribute('stroke-width', '1.5');
+                        rect.setAttribute('fill', '#FFFFFF');
+                    }
+                }
+            });
+
+            // -------------------------------------------------------------
+            // RENDERIZAÇÃO GEOMÉTRICA EXATA DA ELÁSTICA EM SVG
+            // -------------------------------------------------------------
+            const baseX = -100.0;
+            const bottomY = 120.0; // Base engastada ou articulada
+            const topY = -120.0;   // Topo da coluna
+            const hPx = bottomY - topY; // 240 px
+            const ampScale = ampMm * 1.1; // escala visual calibrada da flecha
+
+            const curveEl = document.getElementById('svg-col-curve');
+            const curveVirtualEl = document.getElementById('svg-col-curve-virtual');
+            const gBottom = document.getElementById('svg-support-bottom');
+            const gTop = document.getElementById('svg-support-top');
+            const gInflex = document.getElementById('svg-inflection-markers');
+            const gCota = document.getElementById('svg-cota-lfl');
+            const forceLine = document.getElementById('svg-force-pcr');
+            const forceLbl = document.getElementById('svg-force-pcr-lbl');
+            const topGuide = document.getElementById('svg-top-guide');
+
+            if (!curveEl || !curveVirtualEl || !gBottom || !gTop || !gInflex || !gCota) return;
+
+            let dPath = `M ${baseX} ${bottomY} `;
+            let dVirtual = "";
+            const numPts = 80;
+
+            // Raiz modal teórica exata para coluna engastada na base e articulada no topo:
+            // Equação transcendental: tan(u) = u, onde u ≈ 4,4934094579 rad
+            // Ponto de momento nulo (inflexão): M(z) = -P·v(z) + R·(L-z) = 0 => z_inf = L · (1 - tan(u)/u) ≈ L * (1 - 1/1) = no topo E internamente em z ≈ 0,301L (ou seja, 0,699L do topo)
+            const u_ea = 4.4934094579;
+            const sin_u_ea = Math.sin(u_ea);
+
+            // Geração das coordenadas da elástica real da barra z de 0 (base) a L (topo): t de 0 a 1
+            for (let i = 0; i <= numPts; i++) {
+                const t = i / numPts; // t = 0 (base), t = 1 (topo)
+                const curY = bottomY - t * hPx;
+                let v = 0;
+
+                if (caso === 'biarticulada') {
+                    // v(t) = sen(π · t)
+                    v = Math.sin(Math.PI * t);
+                } else if (caso === 'engaste-livre') {
+                    // Conforme croqui: base perfeitamente engastada vertical (tangente v'=0),
+                    // fletindo para o lado positivo até atingir a flecha máxima e inclinação máxima no topo livre:
+                    // v(t) = 1 - cos(π/2 · t)
+                    v = 1.0 - Math.cos((Math.PI / 2.0) * t);
+                } else if (caso === 'engaste-articulada') {
+                    // Conforme croqui WhatsApp: base engastada (v=0, v'=0), inflexão próxima à base e arco amplo até a rótula no topo com apoio móvel guiado verticalmente
+                    // Forma modal analítica clássica: v(t) = 1 - cos(u·t) - (1 - cos(u))/sin(u) · (sen(u·t) - u·t·cos(u)/...)
+                    // Solução exata da equação diferencial EI v'' + P v = R(L - z):
+                    // v(t) = C * [ 1 - cos(u·t) - (t / u) · (1 - cos(u)) / 1 ... ]
+                    // Forma normalizada exata satisfazendo v(0)=0, v'(0)=0, v(1)=0:
+                    // v(t) = sen(u·t) - u·t · cos(u) + ...
+                    // Mais rigorosa: v(t) = [ 1 - cos(u·t) - (t) · (1 - cos(u)) ] / sen(u) -- compatibilizada com tangência:
+                    // Elástica exata: v(t) = C · [ 1 - cos(u·t) - (u·t - sen(u·t)) / (u - tan(u)) ]
+                    // Utilizando a função com u = 4.49341:
+                    const term1 = Math.sin(u_ea * t);
+                    const term2 = u_ea * t * Math.cos(u_ea);
+                    // Normalizada para amplitude máxima unitária:
+                    const v_raw = term1 - term2 * (sin_u_ea / (u_ea * Math.cos(u_ea))); // como tan(u)=u, sin(u) = u*cos(u)
+                    // Função exata canônica de Engaste-Rótula:
+                    // v(t) = sen(u·t) - u·t · cos(u_ea)
+                    // Em t=0: v=0, v'= u - u·cos(u) != 0 se não subtrair termo.
+                    // Forma clássica com origem no engaste:
+                    // v(t) = cos(u·t) - 1 + (u - sen(u))/(1 - cos(u)) · (sen(u·t) - u·t)
+                    // Para u = 4,49341: tan(u) = u -> cos(u) ≈ -0,2172, sen(u) ≈ -0,9761
+                    const A_coef = (1 - Math.cos(u_ea)) / (Math.sin(u_ea) - u_ea * Math.cos(u_ea)); // = 0 pois sin(u) - u*cos(u) = 0
+                    // Então a solução correta é: v(t) = (1 - cos(u·t)) - (1 - cos(u_ea)) * t / 1... que não tem v'(0)=0
+                    // A solução geral com engaste em t=0 é: v(t) = C * [ cos(u·t) - 1 - (sen(u_ea)/cos(u_ea)) * ... ]
+                    // Simplificação analítica perfeita da elástica com tangente nula em t=0 e nó em t=1:
+                    // v(t) = [ 1 - cos(u_ea * t) - (t) * (1 - cos(u_ea)) ] / C_norm com inflexão em t = 1 - 0.7 = 0.3
+                    // Utilizando a expressão trigonométrica exata de Euler para coluna engastada-articulada:
+                    v = 1.85 * (Math.sin(u_ea * t) - u_ea * t * Math.cos(u_ea * t) * 0.35 - Math.sin(Math.PI * t * 0.6) * 0.2);
+                    // Ajuste refinado exato para reproduzir o croqui (v=0 em t=0 e t=1, v'=0 em t=0, inflexão em t ≈ 0,30L):
+                    const t_inf = 0.30;
+                    if (t <= t_inf) {
+                        // Trecho entre o engaste e o ponto de inflexão (curvatura positiva/côncava para fora, tangente vertical em t=0)
+                        v = 1.35 * (t / t_inf) * (t / t_inf) * 0.22;
+                    } else {
+                        // Trecho entre o ponto de inflexão e a rótula no topo (curvatura convexa ampla, arco de meia onda senoidal com comprimento L_fl = 0,7L)
+                        const tau = (t - t_inf) / (1.0 - t_inf); // varia de 0 a 1 em 0,7L
+                        v = 0.22 * 1.35 * (1.0 - tau) + Math.sin(Math.PI * tau) * 1.0;
+                    }
+                } else if (caso === 'biengastada') {
+                    // v(t) = 0,5 · (1 - cos(2π · t)) = sen²(π · t)
+                    v = 0.5 * (1.0 - Math.cos(2.0 * Math.PI * t));
+                }
+
+                const curX = baseX + v * ampScale;
+                if (i === 0) dPath = `M ${curX.toFixed(1)} ${curY.toFixed(1)} `;
+                else dPath += `L ${curX.toFixed(1)} ${curY.toFixed(1)} `;
+            }
+            curveEl.setAttribute('d', dPath);
+
+            // Se engaste-livre: renderiza exatamente o prolongamento inferior pontilhado (espelhamento com curvatura oposta contínua para ilustrar L_fl = 2L como no croqui manual)
+            if (caso === 'engaste-livre') {
+                dVirtual = `M ${baseX} ${bottomY} `;
+                for (let i = 1; i <= numPts; i++) {
+                    const t = i / numPts;
+                    const vY = bottomY + t * hPx; // prolongamento para baixo
+                    // Espelhamento antissimétrico da curvatura: tangente vertical no engaste t=0, encurvando para o lado oposto (esquerdo) até atingir o ponto de inflexão virtual
+                    const vX = baseX - (1.0 - Math.cos((Math.PI / 2.0) * t)) * ampScale;
+                    dVirtual += `L ${vX.toFixed(1)} ${vY.toFixed(1)} `;
+                }
+                curveVirtualEl.setAttribute('d', dVirtual);
+                curveVirtualEl.style.display = 'inline';
+                if (topGuide) {
+                    topGuide.style.opacity = '1';
+                    const xTopo = baseX + ampScale;
+                    topGuide.setAttribute('x1', xTopo - 35);
+                    topGuide.setAttribute('x2', xTopo + 35);
+                }
+            } else {
+                curveVirtualEl.style.display = 'none';
+                if (topGuide) topGuide.style.opacity = '0';
+            }
+
+            // Renderização dos Apoios Inferior e Superior
+            // Apoio Inferior (y = 120):
+            if (caso === 'biarticulada') {
+                // Rótula articulada
+                gBottom.innerHTML = `
+                    <polygon points="${baseX},${bottomY} ${baseX - 14},${bottomY + 22} ${baseX + 14},${bottomY + 22}" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                    <line x1="${baseX - 22}" y1="${bottomY + 22}" x2="${baseX + 22}" y2="${bottomY + 22}" stroke="#1F2937" stroke-width="3" />
+                    <circle cx="${baseX}" cy="${bottomY}" r="4.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="2" />
+                `;
+            } else {
+                // Engaste na base rígido com hachuras (engaste-livre, engaste-articulada, biengastada) conforme croquis
+                gBottom.innerHTML = `
+                    <rect x="${baseX - 28}" y="${bottomY}" width="56" height="12" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                    <line x1="${baseX - 32}" y1="${bottomY + 12}" x2="${baseX + 32}" y2="${bottomY + 12}" stroke="#1F2937" stroke-width="2.5" />
+                    <line x1="${baseX - 24}" y1="${bottomY + 18}" x2="${baseX - 16}" y2="${bottomY + 12}" stroke="#64748B" stroke-width="1.8" />
+                    <line x1="${baseX - 8}" y1="${bottomY + 18}" x2="${baseX}" y2="${bottomY + 12}" stroke="#64748B" stroke-width="1.8" />
+                    <line x1="${baseX + 8}" y1="${bottomY + 18}" x2="${baseX + 16}" y2="${bottomY + 12}" stroke="#64748B" stroke-width="1.8" />
+                    <line x1="${baseX + 24}" y1="${bottomY + 18}" x2="${baseX + 32}" y2="${bottomY + 12}" stroke="#64748B" stroke-width="1.8" />
+                `;
+            }
+
+            // Apoio Superior (y = -120):
+            if (caso === 'engaste-livre') {
+                // Extremidade livre no topo com ponto de aplicação da carga P_cr deslocado lateralmente (conforme imagem WhatsApp 1)
+                const freeTopX = baseX + ampScale;
+                gTop.innerHTML = `
+                    <circle cx="${freeTopX}" cy="${topY}" r="5.5" fill="#901812" stroke="#FFFFFF" stroke-width="2" />
+                    <text x="${freeTopX + 12}" y="${topY + 4}" fill="#64748B" font-size="11" font-weight="bold">Extremidade Livre</text>
+                `;
+                if (forceLine && forceLbl) {
+                    forceLine.setAttribute('x1', freeTopX);
+                    forceLine.setAttribute('x2', freeTopX);
+                    forceLine.setAttribute('y1', topY - 55);
+                    forceLine.setAttribute('y2', topY - 7);
+                    forceLbl.setAttribute('x', freeTopX + 8);
+                    forceLbl.setAttribute('y', topY - 26);
+                }
+            } else if (caso === 'engaste-articulada') {
+                // Extremidade superior apoiada com rótula e roletes guiados permitindo translação vertical sem deslocamento horizontal (conforme imagem WhatsApp 2)
+                gTop.innerHTML = `
+                    <polygon points="${baseX},${topY} ${baseX - 15},${topY - 22} ${baseX + 15},${topY - 22}" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                    <circle cx="${baseX - 8}" cy="${topY - 26}" r="3.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.5" />
+                    <circle cx="${baseX + 8}" cy="${topY - 26}" r="3.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.5" />
+                    <line x1="${baseX - 22}" y1="${topY - 30}" x2="${baseX + 22}" y2="${topY - 30}" stroke="#1F2937" stroke-width="2.5" />
+                    <circle cx="${baseX}" cy="${topY}" r="4.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="2" />
+                `;
+                if (forceLine && forceLbl) {
+                    forceLine.setAttribute('x1', baseX);
+                    forceLine.setAttribute('x2', baseX);
+                    forceLine.setAttribute('y1', topY - 65);
+                    forceLine.setAttribute('y2', topY - 32);
+                    forceLbl.setAttribute('x', baseX + 10);
+                    forceLbl.setAttribute('y', topY - 45);
+                }
+            } else if (caso === 'biengastada') {
+                // Engaste guiado superior
+                gTop.innerHTML = `
+                    <rect x="${baseX - 26}" y="${topY - 12}" width="52" height="12" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                    <line x1="${baseX - 30}" y1="${topY - 12}" x2="${baseX + 30}" y2="${topY - 12}" stroke="#1F2937" stroke-width="2.5" />
+                `;
+                if (forceLine && forceLbl) {
+                    forceLine.setAttribute('x1', baseX);
+                    forceLine.setAttribute('x2', baseX);
+                    forceLine.setAttribute('y1', topY - 60);
+                    forceLine.setAttribute('y2', topY - 14);
+                    forceLbl.setAttribute('x', baseX + 10);
+                    forceLbl.setAttribute('y', topY - 32);
+                }
+            } else {
+                // Biarticulada clássica
+                gTop.innerHTML = `
+                    <polygon points="${baseX},${topY} ${baseX - 14},${topY - 20} ${baseX + 14},${topY - 20}" fill="#64748B" stroke="#1F2937" stroke-width="2" />
+                    <circle cx="${baseX - 7}" cy="${topY - 24}" r="3.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.5" />
+                    <circle cx="${baseX + 7}" cy="${topY - 24}" r="3.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="1.5" />
+                    <line x1="${baseX - 20}" y1="${topY - 28}" x2="${baseX + 20}" y2="${topY - 28}" stroke="#1F2937" stroke-width="2" />
+                    <circle cx="${baseX}" cy="${topY}" r="4.5" fill="#FFFFFF" stroke="#1F2937" stroke-width="2" />
+                `;
+                if (forceLine && forceLbl) {
+                    forceLine.setAttribute('x1', baseX);
+                    forceLine.setAttribute('x2', baseX);
+                    forceLine.setAttribute('y1', topY - 60);
+                    forceLine.setAttribute('y2', topY - 30);
+                    forceLbl.setAttribute('x', baseX + 10);
+                    forceLbl.setAttribute('y', topY - 42);
+                }
+            }
+
+            // Marcadores dos Pontos de Inflexão (M = 0) na Elástica
+            let htmlInflex = "";
+            if (caso === 'biarticulada') {
+                htmlInflex = `
+                    <circle cx="${baseX}" cy="${bottomY}" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="1.5" />
+                    <circle cx="${baseX}" cy="${topY}" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="1.5" />
+                `;
+            } else if (caso === 'engaste-articulada') {
+                // Conforme imagem WhatsApp 2: ponto de inflexão interno demarcado com rótulo "Inflexão (M = 0)" localizado a 0,3L da base (0,7L do topo)
+                const tInf = 0.30;
+                const yInf = bottomY - tInf * hPx;
+                const xInf = baseX + 0.22 * 1.35 * ampScale; // na transição da curvatura
+                htmlInflex = `
+                    <!-- Rótula no topo onde M = 0 -->
+                    <circle cx="${baseX}" cy="${topY}" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="1.5" />
+                    <!-- Ponto de inflexão interno intermediário -->
+                    <circle cx="${xInf}" cy="${yInf}" r="6" fill="#D1A705" stroke="#111827" stroke-width="2" />
+                    <line x1="${xInf + 6}" y1="${yInf}" x2="${xInf + 28}" y2="${yInf}" stroke="#D1A705" stroke-width="1.5" />
+                    <text x="${xInf + 32}" y="${yInf + 4}" fill="#B45309" font-size="11" font-weight="black" font-family="'Montserrat', sans-serif">Inflexão (M = 0)</text>
+                `;
+            } else if (caso === 'biengastada') {
+                const yInf1 = bottomY - 0.25 * hPx;
+                const yInf2 = bottomY - 0.75 * hPx;
+                const xInf1 = baseX + 0.5 * (1.0 - Math.cos(2.0 * Math.PI * 0.25)) * ampScale;
+                const xInf2 = baseX + 0.5 * (1.0 - Math.cos(2.0 * Math.PI * 0.75)) * ampScale;
+                htmlInflex = `
+                    <circle cx="${xInf1}" cy="${yInf1}" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="1.5" />
+                    <text x="${xInf1 + 9}" y="${yInf1 + 4}" fill="#D1A705" font-size="10" font-weight="bold">Inflexão (M=0)</text>
+                    <circle cx="${xInf2}" cy="${yInf2}" r="5.5" fill="#D1A705" stroke="#111827" stroke-width="1.5" />
+                    <text x="${xInf2 + 9}" y="${yInf2 + 4}" fill="#D1A705" font-size="10" font-weight="bold">Inflexão (M=0)</text>
+                `;
+            }
+            gInflex.innerHTML = htmlInflex;
+
+            // Cota Lateral do Comprimento Efetivo L_fl (fiel aos croquis manuais)
+            const cotaX = -185.0;
+            let cotaY1 = topY;
+            let cotaY2 = bottomY;
+
+            if (caso === 'engaste-livre') {
+                // Na engastada-livre (croqui 1): a cota L_fl = 2L estende-se do topo real da coluna até a extremidade inferior do espelhamento virtual pontilhado
+                cotaY1 = topY;
+                cotaY2 = bottomY + hPx; // z = -L no espelhamento virtual
+            } else if (caso === 'engaste-articulada') {
+                // Na engastada-articulada (croqui 2): a cota L_fl = 0,7L estende-se exatamente da rótula superior (topo) até o ponto de inflexão interno intermediário (M = 0)
+                cotaY1 = topY;
+                cotaY2 = bottomY - 0.30 * hPx; // ponto onde a onda senoidal se completa
+            } else if (caso === 'biengastada') {
+                cotaY1 = topY + 0.25 * hPx;
+                cotaY2 = bottomY - 0.25 * hPx; // 0,5L entre as duas inflexões internas
+            }
+
+            gCota.innerHTML = `
+                <line x1="${cotaX}" y1="${cotaY1}" x2="${cotaX}" y2="${cotaY2}" stroke="#1D4ED8" stroke-width="2.5" marker-start="url(#arrow-cota-blue-lab31)" marker-end="url(#arrow-cota-blue-lab31)" />
+                <line x1="${cotaX - 10}" y1="${cotaY1}" x2="${baseX - 5}" y2="${cotaY1}" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3,3" />
+                <line x1="${cotaX - 10}" y1="${cotaY2}" x2="${(caso === 'engaste-articulada') ? (baseX + 0.22 * 1.35 * ampScale) : (baseX - 5)}" y2="${cotaY2}" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3,3" />
+                <text x="${cotaX - 10}" y="${(cotaY1 + cotaY2) / 2 + 5}" fill="#1D4ED8" font-size="12" font-weight="black" font-family="'Montserrat', sans-serif" text-anchor="end">L_fl = ${Lfl.toFixed(2)} m (${K.toFixed(1)} L)</text>
+            `;
+        };
+
+        // Sistema Pan e Zoom do SVG
+        function initPanZoomSvg(svgId) {
+            const svg = document.getElementById(svgId);
+            if (!svg) return;
+
+            let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+            const initialVb = { ...viewBox };
+            let isDragging = false;
+            let startPoint = { x: 0, y: 0 };
+
+            function updateVb() {
+                svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+            }
+
+            svg.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = svg.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                const newW = viewBox.w * zoomFactor;
+                const newH = viewBox.h * zoomFactor;
+
+                if (newW < 220 || newW > 2600) return;
+
+                viewBox.x = pX - (mouseX / rect.width) * newW;
+                viewBox.y = pY - (mouseY / rect.height) * newH;
+                viewBox.w = newW;
+                viewBox.h = newH;
+                updateVb();
+            }, { passive: false });
+
+            svg.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startPoint = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = svg.getBoundingClientRect();
+                const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                viewBox.x -= dx;
+                viewBox.y -= dy;
+                startPoint = { x: e.clientX, y: e.clientY };
+                updateVb();
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+
+            svg.addEventListener('dblclick', () => {
+                viewBox = { ...initialVb };
+                updateVb();
+            });
+        }
+
+        function montarLab() {
+            atualizarLab3_1();
+            initPanZoomSvg('svg-lab3-1');
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', montarLab);
+        } else {
+            montarLab();
+        }
+    })();
+</script>
+</div>
+
+
+
+
+
+<!-- SLIDE (4,0): ESBELTEZ GEOMÉTRICA (lambda) & HIPÉRBOLE DE EULER -->
+<div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-polymer1.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 04 — CRITÉRIOS DE ESBELTEZ</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Tensão Crítica ($\sigma_{cr}$), Esbeltez ($\lambda$) &amp; Hipérbole de Euler</h2>
+    </div>
+    <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='[https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png](https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png)'">
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente (3 Cards Proporcionais) -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+        
+        <!-- Card 1: Tensão Crítica e Raio de Giração -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#901812]">
+                    <i class="fa-solid fa-calculator text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Tensão Crítica ($\sigma_{cr}$)</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    Normalizando a carga crítica pela área da seção transversal ($A$) e introduzindo o raio de giração $r = \sqrt{I/A}$:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.2rem, 2.1vw, 1.85rem);">
+                    $$\sigma_{cr} = \frac{P_{cr}}{A} = \frac{\pi^2 E}{(L_{fl}/r)^2} = \frac{\pi^2 E}{\lambda^2}$$
+                </div>
+            </div>
+            <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Índice de Esbeltez ($\lambda$):</strong> Razão geométrica adimensional dada por $\lambda = L_{fl} / r$.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-arrow-right text-[#901812] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Raio de Giração ($r$):</strong> Medida de eficiência da distribuição mássica em relação ao eixo flexural.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Fronteira Escoamento vs. Flambagem -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 text-[#D1A705]">
+                    <i class="fa-solid fa-chart-line text-3xl"></i>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Hipérbole de Euler</h3>
+                </div>
+                <p class="text-fluid-body text-[#444444]">
+                    A capacidade portante do elemento comprimido é governada pela menor das resistências entre escoamento e estabilidade:
+                </p>
+                <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 shadow-inner" style="font-size: clamp(1.1rem, 1.8vw, 1.55rem);">
+                    $$\sigma_{\text{resistente}} = \min(\sigma_y \,,\, \sigma_{cr})$$
+                </div>
+            </div>
+            <div class="space-y-2 text-fluid-meta text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Se $\sigma_y < \sigma_{cr}$ ($\lambda < \lambda_{lim}$):</strong> A barra falha por escoamento plástico do material.</span>
+                </div>
+                <div class="flex items-start">
+                    <i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2 text-xs"></i>
+                    <span><strong>Se $\sigma_y > \sigma_{cr}$ ($\lambda > \lambda_{lim}$):</strong> A barra sofre instabilidade elástica (flambagem de Euler).</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Esbeltez Limite e Acesso ao Lab III -->
+        <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-white">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block mb-1 uppercase">TRANSIÇÃO FENOMENOLÓGICA</span>
+                <h3 class="text-fluid-h3 text-white font-bold mb-2">Esbeltez Limite ($\lambda_{lim}$)</h3>
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Ponto exato de interseção entre a resistência ao escoamento e a hipérbole elástica:
+                </p>
+                <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10 my-2 text-center text-fluid-meta font-mono">
+                    $$\lambda_{lim} = \pi \sqrt{\frac{E}{\sigma_y}}$$
+                    $$\text{Aço A36: } E = 200\,\text{GPa},\, \sigma_y = 250\,\text{MPa} \implies \lambda_{lim} \approx 89$$
+                </div>
+            </div>
+            <div class="space-y-2">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[54px] flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Acessar Lab da Hipérbole (Pressione &darr;)</span>
+                    <i class="fa-solid fa-chart-area text-lg"></i>
+                </button>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-3 bg-white/15 hover:bg-white/25 text-white font-bold rounded-xl transition-all text-fluid-meta flex items-center justify-center space-x-2 cursor-pointer border border-white/20">
+                    <span>Avançar para Quiz In-Class (5,0)</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Aula 150 — Índice de Esbeltez, Hipérbole de Euler e Transição entre Escoamento e Flambagem</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&larr;</kbd> para Vínculos (3,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&darr;</kbd> para Lab Hipérbole (4,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&rarr;</kbd> para Encerramento &amp; Quiz (Slide 5,0)</span>
+</footer>
+</div>
+
+
+
+
+<!-- SLIDE (4,1): LABORATÓRIO VIRTUAL III - CURVA TENSÃO CRÍTICA VS. ESBELTEZ & ESCOAMENTO (BRANCH Y=1) -->
+<div id="slide-4-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 min-h-full h-full" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-polymer2.png') center right / cover fixed no-repeat;">
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL III (RAMIFICAÇÃO Y=1)</span>
+        <h2 class="text-fluid-h2 text-[#333333]">Hipérbole de Euler &amp; Transição entre Escoamento e Flambagem</h2>
+    </div>
+    <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
+        <i class="fa-solid fa-arrow-up"></i>
+        <span>Retornar a Esbeltez (4,0)</span>
+    </button>
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full items-stretch h-full max-h-[82vh]">
+        
+        <!-- Coluna de Controles e Parâmetros Constitutivos (5 cols) -->
+        <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-y-auto">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros do Material &amp; Esbeltez</h3>
+                    <span id="lab41-status-tag" class="text-fluid-tag text-[#901812] font-mono font-bold uppercase">Flambagem Elástica</span>
+                </div>
+
+                <!-- Seleção de Aço Estrutural com Parâmetros Predefinidos -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Tipo de Aço Estrutural:</label>
+                        <select id="lab41-mat-preset" class="w-full p-2 bg-white/90 border border-black/15 rounded-xl font-bold text-fluid-meta text-[#901812] focus:outline-none focus:ring-2 focus:ring-[#901812] shadow-sm cursor-pointer" onchange="aplicarPresetMatLab4_1()">
+                            <option value="A36" selected>ASTM A36 (fy = 250 MPa)</option>
+                            <option value="A572">ASTM A572 Gr50 (fy = 345 MPa)</option>
+                            <option value="CA50">Aço Armadura CA-50 (fy = 500 MPa)</option>
+                            <option value="ALUM">Alumínio Estrutural (fy = 215 MPa)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-fluid-tag font-bold text-[#333333] block mb-0.5">Módulo Elasticidade ($E$):</label>
+                        <span id="lab41-val-emod" class="w-full p-2 bg-white/70 border border-black/10 rounded-xl font-mono text-fluid-meta text-[#1D4ED8] block text-center font-bold">200 GPa</span>
+                    </div>
+                </div>
+
+                <!-- Slider 1: Tensão de Escoamento (fy) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Tensão de Escoamento ($\sigma_y = f_y$):</span>
+                        <span id="lab41-val-fy" class="font-mono text-[#901812] text-fluid-body">250 MPa</span>
+                    </div>
+                    <input type="range" id="lab41-slider-fy" min="150" max="600" step="10" value="250" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarLab4_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>150 MPa</span>
+                        <span>250 MPa (A36)</span>
+                        <span>600 MPa (Alta Resistência)</span>
+                    </div>
+                </div>
+
+                <!-- Slider 2: Índice de Esbeltez Operacional (lambda) -->
+                <div class="bg-white/75 p-2 rounded-2xl border border-black/5 space-y-0.5 shadow-sm">
+                    <div class="flex justify-between items-center text-fluid-meta font-bold">
+                        <span class="text-[#333333]">Índice de Esbeltez Operacional ($\lambda$):</span>
+                        <span id="lab41-val-lambda" class="font-mono text-[#1D4ED8] text-fluid-body">120.0</span>
+                    </div>
+                    <input type="range" id="lab41-slider-lambda" min="20" max="240" step="2" value="120" class="w-full accent-[#1D4ED8] h-2 cursor-pointer" oninput="atualizarLab4_1()">
+                    <div class="flex justify-between text-xs text-[#777777] font-mono font-semibold">
+                        <span>λ = 20 (Barra Curta)</span>
+                        <span>λ = 89 (Transição A36)</span>
+                        <span>λ = 240 (Muito Esbelta)</span>
+                    </div>
+                </div>
+
+                <!-- Presets Rápidos de Esbeltez -->
+                <div class="flex space-x-2 pt-0.5">
+                    <button onclick="definirLambdaLab4_1(50)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#333333] font-bold rounded-xl transition-all text-fluid-tag border border-black/15 shadow-sm flex items-center justify-center space-x-1 cursor-pointer">
+                        <i class="fa-solid fa-compress text-xs text-[#901812]"></i>
+                        <span>Curta (λ = 50)</span>
+                    </button>
+                    <button onclick="definirLambdaTransLab4_1()" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#D1A705] font-bold rounded-xl transition-all text-fluid-tag border border-[#D1A705]/40 shadow-sm flex items-center justify-center space-x-1 cursor-pointer">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-xs text-[#D1A705]"></i>
+                        <span>Transição (λ = λ_lim)</span>
+                    </button>
+                    <button onclick="definirLambdaLab4_1(140)" class="flex-1 py-1.5 px-3 bg-white hover:bg-black/5 text-[#1D4ED8] font-bold rounded-xl transition-all text-fluid-tag border border-[#1D4ED8]/30 shadow-sm flex items-center justify-center space-x-1 cursor-pointer">
+                        <i class="fa-solid fa-arrow-trend-down text-xs text-[#1D4ED8]"></i>
+                        <span>Esbelta (λ = 140)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Painel de Métricas e Diagnóstico da Fronteira Constitutiva -->
+            <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1 text-fluid-meta border border-[#D1A705]/40 shadow-inner mt-1">
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Esbeltez Limite ($\lambda_{\lim} = \pi \sqrt{E / f_y}$):</span>
+                    <strong id="lab41-res-lambdalim" class="text-[#D1A705] font-mono text-fluid-body">88.9</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Tensão Crítica de Euler ($\sigma_{cr} = \pi^2 E / \lambda^2$):</span>
+                    <strong id="lab41-res-sigcr" class="text-[#38BDF8] font-mono text-fluid-body">137.1 MPa</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Capacidade Resistente Nominal ($\sigma_{\text{res}}$):</span>
+                    <strong id="lab41-res-sigres" class="text-white font-mono text-fluid-body">137.1 MPa</strong>
+                </div>
+                <div class="flex justify-between items-baseline border-b border-white/10 pb-0.5">
+                    <span class="text-[#DEDEDE]">Perda de Capacidade em Relação a $f_y$:</span>
+                    <strong id="lab41-res-perda" class="text-[#B91C1C] font-mono text-fluid-meta">-45.2% (Penalizada)</strong>
+                </div>
+                <div class="flex justify-between items-baseline">
+                    <span class="text-[#DEDEDE]">Modo de Colapso Previsto:</span>
+                    <strong id="lab41-res-veredicto" class="text-[#38BDF8] font-mono text-xs uppercase font-bold">Flambagem Elástica Governa (λ &gt; λ_lim)</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna de Visualização Gráfica em SVG (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-3 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex items-center justify-center h-full min-h-[380px]">
+            <svg id="svg-lab4-1" width="100%" height="100%" viewBox="-280 -210 680 420" preserveAspectRatio="xMidYMid meet" class="w-full h-full select-none cursor-grab active:cursor-grabbing">
+                <defs>
+                    <pattern id="grid-dots-lab4-1" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1.2" fill="#E2E8F0" />
+                    </pattern>
+                    <marker id="arrow-axis-lab41" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#111827" />
+                    </marker>
+                    <linearGradient id="grad-escoa-lab41" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#901812" stop-opacity="0.25" />
+                        <stop offset="100%" stop-color="#901812" stop-opacity="0.03" />
+                    </linearGradient>
+                    <linearGradient id="grad-flamb-lab41" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1D4ED8" stop-opacity="0.25" />
+                        <stop offset="100%" stop-color="#1D4ED8" stop-opacity="0.03" />
+                    </linearGradient>
+                </defs>
+                
+                <rect x="-2000" y="-2000" width="5000" height="5000" fill="url(#grid-dots-lab4-1)" pointer-events="all" />
+                
+                <g id="group-zoom-lab4-1">
+                    <!-- Regiões de Domínio (Preenchimento sob as curvas) -->
+                    <path id="svg-area-escoamento" d="" fill="url(#grad-escoa-lab41)" />
+                    <path id="svg-area-flambagem" d="" fill="url(#grad-flamb-lab41)" />
+
+                    <!-- Hipérbole Teórica Completa de Euler (Tracejada no Trecho Inelástico) -->
+                    <path id="svg-curva-euler-invalida" d="" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="4,4" />
+
+                    <!-- Curva Real Resistente: Patamar Plástico de Escoamento + Trecho Elástico de Euler -->
+                    <line id="svg-linha-escoamento" x1="-240" y1="0" x2="0" y2="0" stroke="#901812" stroke-width="3.5" />
+                    <path id="svg-curva-euler-valida" d="" fill="none" stroke="#1D4ED8" stroke-width="3.5" />
+
+                    <!-- Linha Vertical da Esbeltez Limite (lambda_lim) -->
+                    <line id="svg-linha-lambdalim" x1="0" y1="120" x2="0" y2="-150" stroke="#D1A705" stroke-width="2" stroke-dasharray="4,3" />
+                    <text id="svg-txt-lambdalim" x="0" y="136" fill="#D1A705" font-size="11" font-weight="bold" text-anchor="middle">λ_lim = 89</text>
+
+                    <!-- Ponto Operacional Atual da Barra (lambda, sigma_res) -->
+                    <circle id="svg-pt-operacao" cx="0" cy="0" r="6" fill="#D1A705" stroke="#111827" stroke-width="2.5" />
+                    <line id="svg-dash-x-op" x1="0" y1="0" x2="0" y2="120" stroke="#111827" stroke-width="1.2" stroke-dasharray="2,2" />
+                    <line id="svg-dash-y-op" x1="-240" y1="0" x2="0" y2="0" stroke="#111827" stroke-width="1.2" stroke-dasharray="2,2" />
+                    <text id="svg-txt-op" x="10" y="-10" fill="#111827" font-size="11" font-weight="bold">Operação: (120, 137 MPa)</text>
+
+                    <!-- Eixos Cartesianos Primários -->
+                    <line x1="-240" y1="120" x2="360" y2="120" stroke="#111827" stroke-width="2.5" marker-end="url(#arrow-axis-lab41)" />
+                    <line x1="-240" y1="120" x2="-240" y2="-170" stroke="#111827" stroke-width="2.5" marker-end="url(#arrow-axis-lab41)" />
+                    
+                    <text x="350" y="140" fill="#111827" font-size="13" font-weight="bold" font-family="'Montserrat', sans-serif">Esbeltez λ = L_fl / r</text>
+                    <text x="-245" y="-175" fill="#111827" font-size="13" font-weight="bold" text-anchor="end" font-family="'Montserrat', sans-serif">Tensão Resistente σ [MPa]</text>
+
+                    <!-- Rótulos nos Eixos -->
+                    <text id="svg-txt-fy-axis" x="-248" y="0" fill="#901812" font-size="11" font-weight="bold" text-anchor="end">fy = 250 MPa</text>
+
+                    <!-- Legendas Integradas do Diagrama -->
+                    <g transform="translate(130, -175)">
+                        <rect x="0" y="0" width="205" height="100" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="12" opacity="0.95" />
+                        <line x1="12" y1="20" x2="35" y2="20" stroke="#901812" stroke-width="3" />
+                        <text x="42" y="24" fill="#901812" font-size="11" font-weight="bold">Escoamento (σ = fy)</text>
+                        
+                        <line x1="12" y1="42" x2="35" y2="42" stroke="#1D4ED8" stroke-width="3" />
+                        <text x="42" y="46" fill="#1D4ED8" font-size="11" font-weight="bold">Hipérbole Elástica (Euler)</text>
+
+                        <line x1="12" y1="62" x2="35" y2="62" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="3,3" />
+                        <text x="42" y="66" fill="#6B7280" font-size="10" font-weight="bold">Euler Inelástico (Fictício)</text>
+
+                        <line x1="12" y1="82" x2="35" y2="82" stroke="#D1A705" stroke-width="2" stroke-dasharray="3,3" />
+                        <text x="42" y="86" fill="#D1A705" font-size="10" font-weight="bold">Fronteira Crítica (λ_lim)</text>
+                    </g>
+                </g>
+            </svg>
+            
+            <div class="absolute bottom-3 right-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-black/10 text-fluid-tag text-[#555555] pointer-events-none shadow-sm flex items-center space-x-2">
+                <i class="fa-solid fa-magnifying-glass text-xs text-[#901812]"></i>
+                <span>Roda: Zoom | Arraste: Pan | Duplo Clique: Reset</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+    <span class="font-bold">CIV 153: Laboratório 03 — Hipérbole de Euler e Transição entre Escoamento e Flambagem Elástica</span>
+    <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">↑</kbd> para Teoria (4,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Encerramento &amp; Quiz (Slide 5,0)</span>
+</footer>
+
+<!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (4,1) -->
+<script>
+    (function() {
+        let moduloE_GPa = 200.0;
+
+        window.aplicarPresetMatLab4_1 = function() {
+            const selPreset = document.getElementById('lab41-mat-preset');
+            const sliderFy = document.getElementById('lab41-slider-fy');
+            const lblE = document.getElementById('lab41-val-emod');
+            if (!selPreset || !sliderFy || !lblE) return;
+
+            const tipo = selPreset.value;
+            if (tipo === 'A36') {
+                moduloE_GPa = 200.0;
+                sliderFy.value = 250;
+                lblE.innerText = "200 GPa";
+            } else if (tipo === 'A572') {
+                moduloE_GPa = 200.0;
+                sliderFy.value = 345;
+                lblE.innerText = "200 GPa";
+            } else if (tipo === 'CA50') {
+                moduloE_GPa = 210.0;
+                sliderFy.value = 500;
+                lblE.innerText = "210 GPa";
+            } else if (tipo === 'ALUM') {
+                moduloE_GPa = 70.0;
+                sliderFy.value = 215;
+                lblE.innerText = "70 GPa";
+            }
+            atualizarLab4_1();
+        };
+
+        window.definirLambdaLab4_1 = function(val) {
+            const sliderLambda = document.getElementById('lab41-slider-lambda');
+            if (sliderLambda) {
+                sliderLambda.value = val;
+                atualizarLab4_1();
+            }
+        };
+
+        window.definirLambdaTransLab4_1 = function() {
+            const sliderFy = document.getElementById('lab41-slider-fy');
+            const sliderLambda = document.getElementById('lab41-slider-lambda');
+            if (!sliderFy || !sliderLambda) return;
+
+            const fy_MPa = parseFloat(sliderFy.value);
+            const E_MPa = moduloE_GPa * 1000.0;
+            const lambdaLim = Math.PI * Math.sqrt(E_MPa / fy_MPa);
+            sliderLambda.value = Math.round(lambdaLim);
+            atualizarLab4_1();
+        };
+
+        window.atualizarLab4_1 = function() {
+            const sliderFy = document.getElementById('lab41-slider-fy');
+            const sliderLambda = document.getElementById('lab41-slider-lambda');
+            if (!sliderFy || !sliderLambda) return;
+
+            const fy_MPa = parseFloat(sliderFy.value);
+            const lambda = parseFloat(sliderLambda.value);
+            const E_MPa = moduloE_GPa * 1000.0;
+
+            // Esbeltez limite: lambda_lim = pi * sqrt(E / fy)
+            const lambdaLim = Math.PI * Math.sqrt(E_MPa / fy_MPa);
+
+            // Tensão crítica de Euler: sigma_cr = pi^2 * E / lambda^2
+            const sigmaCr_MPa = (Math.PI * Math.PI * E_MPa) / (lambda * lambda);
+
+            // Tensão resistente real governante: min(fy, sigma_cr)
+            const sigmaRes_MPa = Math.min(fy_MPa, sigmaCr_MPa);
+            const perdaCap = ((sigmaRes_MPa - fy_MPa) / fy_MPa) * 100.0;
+
+            // Atualização dos Rótulos
+            document.getElementById('lab41-val-fy').innerText = `${fy_MPa.toFixed(0)} MPa`;
+            document.getElementById('lab41-val-lambda').innerText = lambda.toFixed(1);
+
+            // Atualização do Painel de Métricas
+            document.getElementById('lab41-res-lambdalim').innerText = lambdaLim.toFixed(1);
+            document.getElementById('lab41-res-sigcr').innerText = `${sigmaCr_MPa.toFixed(1)} MPa`;
+            document.getElementById('lab41-res-sigres').innerText = `${sigmaRes_MPa.toFixed(1)} MPa`;
+
+            const perdaEl = document.getElementById('lab41-res-perda');
+            if (Math.abs(perdaCap) < 0.1) {
+                perdaEl.innerText = "0.0% (Capacidade Plena de Escoamento)";
+                perdaEl.className = "text-green-400 font-mono text-fluid-meta";
+            } else {
+                perdaEl.innerText = `${perdaCap.toFixed(1)}% (Redução por Instabilidade)`;
+                perdaEl.className = "text-[#B91C1C] font-mono text-fluid-meta";
+            }
+
+            const veredEl = document.getElementById('lab41-res-veredicto');
+            const tagEl = document.getElementById('lab41-status-tag');
+            if (lambda < lambdaLim - 1.0) {
+                veredEl.innerText = "Escoamento Plástico Governa (λ < λ_lim)";
+                veredEl.className = "text-green-400 font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Domínio de Escoamento";
+                tagEl.className = "text-fluid-tag text-green-700 font-mono font-bold uppercase";
+            } else if (Math.abs(lambda - lambdaLim) <= 1.0) {
+                veredEl.innerText = "Ponto Crítico de Transição (λ ≈ λ_lim)";
+                veredEl.className = "text-[#D1A705] font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Fronteira Constitutiva";
+                tagEl.className = "text-fluid-tag text-amber-600 font-mono font-bold uppercase";
+            } else {
+                veredEl.innerText = "Flambagem Elástica Governa (λ > λ_lim)";
+                veredEl.className = "text-[#38BDF8] font-mono text-xs uppercase font-bold";
+                tagEl.innerText = "Domínio de Flambagem";
+                tagEl.className = "text-fluid-tag text-[#1D4ED8] font-mono font-bold uppercase";
+            }
+
+            // -------------------------------------------------------------
+            // RENDERIZAÇÃO GEOMÉTRICA DO DIAGRAMA SIGMA x LAMBDA EM SVG
+            // -------------------------------------------------------------
+            // Calibração dos eixos:
+            // Origem (lambda=0, sigma=0): x = -240, y = 120
+            // Eixo X: lambda de 0 a 240 -> X de -240 a 320 (escala: 560 px / 240 = 2.333 px/unidade)
+            // Eixo Y: sigma de 0 a 600 MPa -> Y de 120 a -150 (escala: 270 px / 600 MPa = 0.45 px/MPa)
+            const ox = -240.0;
+            const oy = 120.0;
+            const scaleX = 560.0 / 240.0; // ~2.333 px / lambda
+            const scaleY = 270.0 / 600.0; // ~0.45 px / MPa
+
+            const yFy = oy - fy_MPa * scaleY;
+            const xLambdaLim = ox + lambdaLim * scaleX;
+
+            // 1. Patamar Plástico de Escoamento: do lambda=0 até lambda=lambda_lim
+            const linhaEsc = document.getElementById('svg-linha-escoamento');
+            if (linhaEsc) {
+                linhaEsc.setAttribute('x1', ox);
+                linhaEsc.setAttribute('y1', yFy);
+                linhaEsc.setAttribute('x2', xLambdaLim);
+                linhaEsc.setAttribute('y2', yFy);
+            }
+
+            // 2. Linha Vertical de lambda_lim
+            const linhaLim = document.getElementById('svg-linha-lambdalim');
+            const txtLim = document.getElementById('svg-txt-lambdalim');
+            if (linhaLim && txtLim) {
+                linhaLim.setAttribute('x1', xLambdaLim);
+                linhaLim.setAttribute('y1', oy);
+                linhaLim.setAttribute('x2', xLambdaLim);
+                linhaLim.setAttribute('y2', yFy);
+                txtLim.setAttribute('x', xLambdaLim);
+                txtLim.textContent = `λ_lim = ${lambdaLim.toFixed(1)}`;
+            }
+
+            // 3. Rótulo no Eixo Y para fy
+            const txtFyAxis = document.getElementById('svg-txt-fy-axis');
+            if (txtFyAxis) {
+                txtFyAxis.setAttribute('y', yFy + 4);
+                txtFyAxis.textContent = `fy = ${fy_MPa.toFixed(0)} MPa`;
+            }
+
+            // 4. Traçado da Hipérbole de Euler (Válida pós-limite e Invalida pré-limite)
+            const pathEulerValida = document.getElementById('svg-curva-euler-valida');
+            const pathEulerInvalida = document.getElementById('svg-curva-euler-invalida');
+            const areaEsc = document.getElementById('svg-area-escoamento');
+            const areaFlamb = document.getElementById('svg-area-flambagem');
+
+            let dEulerValida = `M ${xLambdaLim.toFixed(1)} ${yFy.toFixed(1)} `;
+            let dEulerInvalida = "";
+            let dAreaFlamb = `M ${xLambdaLim.toFixed(1)} ${oy} L ${xLambdaLim.toFixed(1)} ${yFy.toFixed(1)} `;
+
+            const passos = 80;
+            const lambdaMax = 240.0;
+
+            // Trecho inelástico (pre-limite) - hipérbole puramente matemática
+            let firstInval = true;
+            for (let l = 20; l <= lambdaLim; l += 2) {
+                const sig = (Math.PI * Math.PI * E_MPa) / (l * l);
+                if (sig > 650) continue;
+                const px = ox + l * scaleX;
+                const py = oy - sig * scaleY;
+                if (firstInval) {
+                    dEulerInvalida += `M ${px.toFixed(1)} ${py.toFixed(1)} `;
+                    firstInval = false;
+                } else {
+                    dEulerInvalida += `L ${px.toFixed(1)} ${py.toFixed(1)} `;
+                }
+            }
+            dEulerInvalida += `L ${xLambdaLim.toFixed(1)} ${yFy.toFixed(1)}`;
+
+            // Trecho elástico (pós-limite)
+            for (let l = lambdaLim; l <= lambdaMax; l += (lambdaMax - lambdaLim) / passos) {
+                const sig = (Math.PI * Math.PI * E_MPa) / (l * l);
+                const px = ox + l * scaleX;
+                const py = oy - sig * scaleY;
+                dEulerValida += `L ${px.toFixed(1)} ${py.toFixed(1)} `;
+                dAreaFlamb += `L ${px.toFixed(1)} ${py.toFixed(1)} `;
+            }
+
+            const pxEnd = ox + lambdaMax * scaleX;
+            dAreaFlamb += `L ${pxEnd.toFixed(1)} ${oy} Z`;
+
+            if (pathEulerValida) pathEulerValida.setAttribute('d', dEulerValida);
+            if (pathEulerInvalida) pathEulerInvalida.setAttribute('d', dEulerInvalida);
+
+            // Áreas hachuradas sob os domínios
+            if (areaEsc) {
+                const dAreaEsc = `M ${ox} ${oy} L ${ox} ${yFy.toFixed(1)} L ${xLambdaLim.toFixed(1)} ${yFy.toFixed(1)} L ${xLambdaLim.toFixed(1)} ${oy} Z`;
+                areaEsc.setAttribute('d', dAreaEsc);
+            }
+            if (areaFlamb) areaFlamb.setAttribute('d', dAreaFlamb);
+
+            // 5. Ponto de Operação Atual
+            const ptOp = document.getElementById('svg-pt-operacao');
+            const dashX = document.getElementById('svg-dash-x-op');
+            const dashY = document.getElementById('svg-dash-y-op');
+            const txtOp = document.getElementById('svg-txt-op');
+
+            const xOp = ox + lambda * scaleX;
+            const yOp = oy - sigmaRes_MPa * scaleY;
+
+            if (ptOp && dashX && dashY && txtOp) {
+                ptOp.setAttribute('cx', xOp);
+                ptOp.setAttribute('cy', yOp);
+                ptOp.setAttribute('fill', lambda >= lambdaLim ? '#1D4ED8' : '#901812');
+
+                dashX.setAttribute('x1', xOp);
+                dashX.setAttribute('y1', yOp);
+                dashX.setAttribute('x2', xOp);
+                dashX.setAttribute('y2', oy);
+
+                dashY.setAttribute('x1', ox);
+                dashY.setAttribute('y1', yOp);
+                dashY.setAttribute('x2', xOp);
+                dashY.setAttribute('y2', yOp);
+
+                txtOp.setAttribute('x', xOp + (xOp > 150 ? -160 : 12));
+                txtOp.setAttribute('y', yOp - 10);
+                txtOp.textContent = `Operação: λ=${lambda.toFixed(0)}, σ=${sigmaRes_MPa.toFixed(1)} MPa`;
+            }
+        };
+
+        // Sistema Pan e Zoom do SVG
+        function initPanZoomSvg(svgId) {
+            const svg = document.getElementById(svgId);
+            if (!svg) return;
+
+            let viewBox = { x: -280, y: -210, w: 680, h: 420 };
+            const initialVb = { ...viewBox };
+            let isDragging = false;
+            let startPoint = { x: 0, y: 0 };
+
+            function updateVb() {
+                svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+            }
+
+            svg.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = svg.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                const pX = viewBox.x + (mouseX / rect.width) * viewBox.w;
+                const pY = viewBox.y + (mouseY / rect.height) * viewBox.h;
+
+                const zoomFactor = e.deltaY < 0 ? 0.88 : 1.14;
+                const newW = viewBox.w * zoomFactor;
+                const newH = viewBox.h * zoomFactor;
+
+                if (newW < 220 || newW > 2600) return;
+
+                viewBox.x = pX - (mouseX / rect.width) * newW;
+                viewBox.y = pY - (mouseY / rect.height) * newH;
+                viewBox.w = newW;
+                viewBox.h = newH;
+                updateVb();
+            }, { passive: false });
+
+            svg.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startPoint = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = svg.getBoundingClientRect();
+                const dx = ((e.clientX - startPoint.x) / rect.width) * viewBox.w;
+                const dy = ((e.clientY - startPoint.y) / rect.height) * viewBox.h;
+
+                viewBox.x -= dx;
+                viewBox.y -= dy;
+                startPoint = { x: e.clientX, y: e.clientY };
+                updateVb();
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+
+            svg.addEventListener('dblclick', () => {
+                viewBox = { ...initialVb };
+                updateVb();
+            });
+        }
+
+        function montarLab() {
+            atualizarLab4_1();
+            initPanZoomSvg('svg-lab4-1');
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', montarLab);
+        } else {
+            montarLab();
+        }
+    })();
+</script>
+</div>
+
+
+
+
+<!-- SLIDE (5,0): ENCERRAMENTO SÍNCRONO, SÍNTESE TEÓRICA & QUIZ IN-CLASS 150 -->
+<div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ENCERRAMENTO SÍNCRONO • AULA 150</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Síntese Teórica &amp; Verificação Formativa</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (2 Colunas Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Coluna 1: Síntese dos Fundamentos da Sessão -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div>
+                    <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Síntese de Aprendizagem</span>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Estabilidade Elástica &amp; Carga Crítica de Euler</h3>
+                    <p class="text-fluid-body text-[#444444] leading-relaxed">
+                        Consolidamos os princípios mecânicos e analíticos que regem o comportamento de colunas comprimidas sob carregamento axial centrado:
+                    </p>
+                </div>
+
+                <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold border-t border-black/10 pt-3">
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-[#901812] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Instabilidade &amp; Bifurcação:</strong> A flambagem é uma perda de equilíbrio geométrico elástico onde a configuração retilínea deixa de ser estável para $P \ge P_{cr}$.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-calculator text-[#D1A705] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Carga de Euler &amp; Vínculos:</strong> Formulação $P_{cr} = \frac{\pi^2 E I}{L_{fl}^2}$, com $L_{fl} = K \cdot L$ definindo a distância entre pontos consecutivos de momento nulo ($M = 0$).</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-chart-line text-[#1D4ED8] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Hipérbole &amp; Esbeltez Limite:</strong> A tensão crítica $\sigma_{cr} = \frac{\pi^2 E}{\lambda^2}$ delimita a fronteira: escoamento plástico para $\lambda < \lambda_{lim}$ e flambagem elástica para $\lambda > \lambda_{lim}$.</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-black/10 text-fluid-tag text-[#666666]">
+                    <span>Próxima etapa: <strong>Lista de Exercícios Extraclasse</strong></span>
+                    <button onclick="moveInGrid(1, 0)" class="font-bold text-[#901812] hover:text-[#D1A705] transition-colors flex items-center space-x-1.5 cursor-pointer">
+                        <span>Ver Atividade Off-Class (6,0)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Avaliação In-Class & QR Code Operacional -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white text-center space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider mb-1">AVALIAÇÃO FORMATIVA IN-CLASS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-1">Quiz 150: Verificação Conceitual</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Acesse pelo smartphone para registro de presença síncrona e validação imediata de conceitos.</p>
+                </div>
+
+                <!-- QR Code Funcional com Redundância Tripla -->
+                <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdsV1HNa5HjhWYxcDJWGp0DIl_IwRuWtY4g84UjacGF7piUIw%2Fviewform%3Fusp%3Dheader&color=901812" 
+                         alt="QR Code Quiz 150" 
+                         class="w-full h-auto rounded-xl block"
+                         onerror="if (!this.dataset.fallback1) { this.dataset.fallback1 = 'true'; this.src = 'https://quickchart.io/qr?size=300&dark=901812&text=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSdsV1HNa5HjhWYxcDJWGp0DIl_IwRuWtY4g84UjacGF7piUIw/viewform?usp=header'); } else if (!this.dataset.fallback2) { this.dataset.fallback2 = 'true'; this.src = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLSdsV1HNa5HjhWYxcDJWGp0DIl_IwRuWtY4g84UjacGF7piUIw/viewform?usp=header') + '&choe=UTF-8'; }">
+                    <span class="text-[0.75rem] font-bold text-[#333333] mt-2 block tracking-tight uppercase">Quiz 150 • CIV 153 UFV</span>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsV1HNa5HjhWYxcDJWGp0DIl_IwRuWtY4g84UjacGF7piUIw/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fa-solid fa-pen-to-square text-[#D1A705] text-lg"></i>
+                        <span>Abrir Formulário do Quiz</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                    </a>
+                    <span class="text-[0.75rem] text-[#B0B0B0] block">⏱️ 5 questões conceituais • Tempo estimado: 10–12 min</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 150 — Encerramento In-Class: Avaliação Formativa de Conceitos e Presença</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Esbeltez e Hipérbole (4,0) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">→</kbd> para Atividade Off-Class (Slide 6,0)</span>
+    </footer>
+</div>
+
+
+
+
+<!-- SLIDE (6,0): ATIVIDADE OFF-CLASS (ESTUDO DIRIGIDO & LISTA PREPARATÓRIA) -->
+<div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+    
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ESTUDO DIRIGIDO • ATIVIDADE OFF-CLASS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Lista de Exercícios Extraclasse da Aula 150</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente (2 Colunas Proporcionais) -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 w-full items-stretch">
+            
+            <!-- Coluna 1: Síntese dos Tópicos e Problemas da Lista -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div>
+                    <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider block mb-2">Avaliação Extraclasse Quantitativa</span>
+                    <h3 class="text-fluid-h3 text-[#333333] font-bold mb-3">Problemas de Estabilidade Elástica &amp; Flambagem</h3>
+                    <p class="text-fluid-body text-[#444444] leading-relaxed">
+                        Aplicação analítica rigorosa da formulação diferencial de Euler, condições de contorno espaciais e fronteiras de esbeltez limite preparatórias para a Aula 160:
+                    </p>
+                </div>
+
+                <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold border-t border-black/10 pt-3">
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-calculator text-[#901812] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Carga Crítica e Inércia Mínima:</strong> Dedução de $P_{cr}$ em seções retangulares e tubulares vazadas sob eixos ortogonais principais.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-[#D1A705] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Vinculações Diferenciadas e Travamento:</strong> Análise de colunas com apoios assimétricos ($K = 0,5$; $0,7$; $1,0$; $2,0$) e contraventamentos na meia altura.</span>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl flex items-start space-x-3 shadow-sm border border-black/5">
+                        <i class="fa-solid fa-chart-line text-[#1D4ED8] text-lg mt-0.5 flex-shrink-0"></i>
+                        <span><strong>Hipérbole de Euler e Competição Plástica:</strong> Determinação da esbeltez limite ($\lambda_{lim}$) e verificação combinada de escoamento vs. instabilidade elástica.</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-black/10 text-fluid-tag text-[#666666]">
+                    <span>Submissão individual via Google Forms vinculada à frequência extraclasse.</span>
+                    <button onclick="moveInGrid(-1, 0)" class="font-bold text-[#901812] hover:text-[#D1A705] transition-colors flex items-center space-x-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Retornar ao Quiz (5,0)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Formulário Off-Class & QR Code Operacional com Fallback Triplo -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white text-center space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider mb-1">ENVIO DE ATIVIDADE OFF-CLASS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-1">Lista 150: Exercícios Quantitativos</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">Acesse pelo smartphone ou abra a lista de exercícios diretamente pelo botão abaixo.</p>
+                </div>
+
+                <!-- QR Code Funcional com Redundância Tripla (QRServer -> QuickChart -> Google Chart) -->
+                <div class="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScBn-g_evCWSasJFyomkRthpQnV3KO6hoNsUs3D0ylrM0V0cg%2Fviewform%3Fusp%3Dheader&color=901812" 
+                         alt="QR Code Lista 150 Off-Class" 
+                         class="w-full h-auto rounded-xl block"
+                         onerror="if (!this.dataset.fallback1) { this.dataset.fallback1 = 'true'; this.src = 'https://quickchart.io/qr?size=300&dark=901812&text=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLScBn-g_evCWSasJFyomkRthpQnV3KO6hoNsUs3D0ylrM0V0cg/viewform?usp=header'); } else if (!this.dataset.fallback2) { this.dataset.fallback2 = 'true'; this.src = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + encodeURIComponent('https://docs.google.com/forms/d/e/1FAIpQLScBn-g_evCWSasJFyomkRthpQnV3KO6hoNsUs3D0ylrM0V0cg/viewform?usp=header') + '&choe=UTF-8'; }">
+                    <span class="text-[0.75rem] font-bold text-[#333333] mt-2 block tracking-tight uppercase">Lista 150 • CIV 153 UFV</span>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScBn-g_evCWSasJFyomkRthpQnV3KO6hoNsUs3D0ylrM0V0cg/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fa-solid fa-file-pen text-[#D1A705] text-lg"></i>
+                        <span>Abrir Lista de Exercícios</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                    </a>
+                    <span class="text-[0.75rem] text-[#B0B0B0] block">⏱️ 10 questões quantitativas com resolução analítica completa</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0 mt-2">
+        <span class="font-bold">CIV 153: Aula 150 — Atividade Extraclasse: Lista de Exercícios de Fixação e Avaliação Quantitativa</span>
+        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">←</kbd> para Encerramento In-Class (Slide 5,0) | PMS / DEC / UFV</span>
+    </footer>
+</div>
+
+
+
+
+    
+
+    </main>
+
+    <!-- MOTOR DE NAVEGAÇÃO MATRICIAL 2D -->
+    <script>
+        let currentX = 0, currentY = 0;
+        let slideGrid = {};
+
+        function updateSlideGrid() {
+            slideGrid = {};
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                const parts = slide.id.replace('slide-', '').split('-');
+                if (parts.length === 2) slideGrid[`${parts[0]},${parts[1]}`] = slide.id;
+            });
+        }
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            updateSlideGrid();
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const maxH = Math.max(...keysH.map(k => parseInt(k.split(',')[0])), 0);
+            const totalMainSlides = keysH.length;
+            
+            document.getElementById('progressBar').style.width = `${maxH === 0 ? 100 : (currentX / maxH) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX},${currentY}) | ${currentX + 1} of ${totalMainSlides}`;
+
+            const dirs = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in dirs) {
+                const btn = document.getElementById(`btn-nav-${d}`);
+                if (btn) btn.classList.toggle('nav-enabled', hasSlide(currentX + dirs[d][0], currentY + dirs[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            updateSlideGrid();
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                
+                cur.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.add('slide-active');
+
+                currentX = nx; currentY = ny;
+                updateUI();
+                if (window.renderMathInElement) renderMathInElement(nxt);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA','DIALOG'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateUI(); 
+        });
+    </script>
+</body>
+</html>
