@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 | Introdução à mecânica das estruturas - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Preset PMS */
+            --color-primary: #901812;
+            --color-secondary: #D1A705;
+            --color-dark: #333333;
+            --color-bg: #F4F6F5;
+            --bg-shade-left: rgba(244,246,245,0.96);
+            --bg-shade-mid: rgba(244,246,245,0.70);
+            --bg-shade-right: rgba(244,246,245,0.15);
+            --card-light: rgba(255, 255, 255, 0.58);
+            --card-dark: rgba(51, 51, 51, 0.65);
+
+            /* Tipografia Super-Ampliada (Calibração Nativa Full HD / 4k) */
+            --fluid-h1: clamp(2.8rem, 6.2vw, 5.5rem);
+            --fluid-h2: clamp(2.2rem, 4.6vw, 4.0rem);
+            --fluid-h3: clamp(1.75rem, 3.2vw, 2.8rem);
+            --fluid-body: clamp(1.35rem, 2.2vw, 1.95rem);
+            --fluid-meta: clamp(1.15rem, 1.6vw, 1.55rem);
+            --fluid-tag: clamp(1.05rem, 1.4vw, 1.35rem);
+        }
+
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: var(--color-bg); 
+            font-family: 'PT Sans Narrow', sans-serif; 
+            color: var(--color-dark); 
+        }
+
+        .text-fluid-h1 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h1); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h2); font-weight: 800; line-height: 1.15; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-size: var(--fluid-body); font-weight: 500; line-height: 1.45; }
+        .text-fluid-meta { font-size: var(--fluid-meta); font-weight: 600; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 700; letter-spacing: 0.04em; }
+
+        .katex-display { font-size: clamp(1.45rem, 2.7vw, 2.45rem) !important; margin: 0.85rem 0 !important; line-height: 1.25 !important; }
+        .katex { font-size: 1.08em; }
+
+        .slide-screen {
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .slide-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide-screen::-webkit-scrollbar-thumb {
+            background: rgba(144, 24, 18, 0.25);
+            border-radius: 9999px;
+        }
+        .slide-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(144, 24, 18, 0.65);
+        }
+
+        .card-glass { 
+            border: none !important; 
+            background-color: var(--card-light); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+        .card-glass-dark { 
+            border: none !important; 
+            background-color: var(--card-dark); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            color: white; 
+            box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+
+        .card-glass:hover {
+            transform: translateY(-4px);
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-glass-dark:hover {
+            transform: translateY(-4px);
+            background-color: rgba(51, 51, 51, 0.78);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        .reveal-controls { 
+            position: fixed; 
+            bottom: 1.25rem; 
+            right: 1.25rem; 
+            width: 110px; 
+            height: 110px; 
+            z-index: 1000; 
+            pointer-events: none; 
+        }
+        .control-arrow {
+            position: absolute; 
+            width: 38px; 
+            height: 38px; 
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(6px); 
+            border-radius: 50%; 
+            color: #888888; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0.15; 
+            pointer-events: none;
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            font-size: 0.95rem;
+        }
+        .control-arrow.nav-up { top: 0; left: 36px; }
+        .control-arrow.nav-down { bottom: 0; left: 36px; }
+        .control-arrow.nav-left { top: 36px; left: 0; }
+        .control-arrow.nav-right { top: 36px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--color-primary); opacity: 0.65; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--color-primary); color: #FFF; opacity: 1; transform: scale(1.1); }
+    </style>
+</head>
+<body class="w-screen h-screen relative">
+
+    <div class="fixed top-0 left-0 h-2 bg-[var(--color-secondary)] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-3 left-3 text-[0.80rem] sm:text-[0.90rem] font-bold text-[var(--color-dark)] bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm z-[1000] flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)]"></span>
+        <span id="slideIndicator">Slide (0,0) | 1 of 5</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full relative" id="slideDeck">
+
+         
+        
+
+<!-- SLIDE (0,0): TITLE COVER (CIV 153 - AULA 160) -->
+<div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center gap-4 flex-shrink-0">
+        <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm border border-black/5">
+            <img src="Logo UFV oficial horizontal.png" alt="UFV Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <span class="text-fluid-tag text-[#333333] font-bold">CIV 153 • PMS / UFV</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="https://pms.ufv.br" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-3.5 rounded-2xl shadow-lg hover:scale-105 transition-transform border border-white/10">
+                <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+            </a>
+            <img src="Logo DEC oficial.png" alt="DEC Logo" class="h-10 sm:h-12 w-auto bg-white/75 backdrop-blur-md px-3 py-2 rounded-2xl shadow-sm border border-black/5" onerror="this.style.display='none'">
+        </div>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
+            <div class="lg:col-span-7 space-y-4">
+                <div class="p-8 sm:p-12 rounded-3xl card-glass border-l-[16px] border-[#901812]">
+                    <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">AULA 160 — RESISTÊNCIA DOS MATERIAIS & INSTABILIDADE</span>
+                    <h1 class="text-fluid-h1 mb-3 text-[#901812]">CARGA CRÍTICA DE FLAMBAGEM<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Euler Teórico vs. Evidência Experimental</span></h1>
+                    <p class="text-fluid-body text-[#444444]">Limites da Teoria Elástica, Fenomenologia Inelástica e Fundamentos Comportamentais Normativos (NBR 8800, NBR 6118 e NBR 7190).</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 p-6 sm:p-10 rounded-3xl card-glass-dark text-white flex flex-col justify-between space-y-6">
+                <div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F160.html&color=901812" alt="QR Code Acesso Mobile" class="w-full max-w-[200px] sm:max-w-[240px] mx-auto rounded-lg">
+                    <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhamento no Celular</span>
+                </div>
+                <div class="text-center space-y-1">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold">Docente Responsável</span>
+                    <p class="text-fluid-body font-bold text-white">Departamento de Engenharia Civil</p>
+                    <p class="text-fluid-meta text-[#DEDEDE]">DEC / CCE — Universidade Federal de Viçosa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé com Ação de Transição -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 pt-2 border-t border-black/5">
+        <span class="text-fluid-meta text-[#555555] font-semibold"><i class="fa-solid fa-compass text-[#901812] mr-2"></i>Navegação: [→] Avançar para Teoria | [↓] Apresentação da Aula</span>
+        <button onclick="moveInGrid(0, 1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] hover:bg-[#901812] hover:text-white font-bold rounded-xl shadow-sm transition-all text-fluid-tag flex items-center space-x-2">
+            <span>Objetivos & Escopo</span>
+            <i class="fa-solid fa-arrow-down"></i>
+        </button>
+    </footer>
+</div>
+
+<!-- SLIDE (0,1): APRESENTAÇÃO E OBJETIVOS DA AULA (BRANCH VERTICAL Y=1) -->
+<div id="slide-0-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">PLANO PEDAGÓGICO & DIRETRIZES DA AULA 160</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Apresentação, Escopo e Objetivos</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-6 py-3 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Capa</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            <!-- Card 1: Contexto e Lacuna Teórica -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[10px] border-[#901812]">
+                <div>
+                    <div class="flex items-center space-x-3 text-[#901812] mb-3">
+                        <i class="fa-solid fa-chart-line-down text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">A Lacuna Teórica</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">A formulação elástica clássica de Euler superestima a capacidade de colunas em esbeltezes baixas e intermediárias devido à plastificação e imperfeições inerentes.</p>
+                </div>
+                <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <li class="flex items-start"><i class="fa-solid fa-circle-exclamation text-[#901812] mt-1 mr-2"></i>Divergência analítico-experimental crítica</li>
+                    <li class="flex items-start"><i class="fa-solid fa-circle-exclamation text-[#901812] mt-1 mr-2"></i>Tensões residuais e excentricidades reais</li>
+                    <li class="flex items-start"><i class="fa-solid fa-circle-exclamation text-[#901812] mt-1 mr-2"></i>Colapso inelástico pré-bifurcação</li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Objetivos de Aprendizagem -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[10px] border-[#D1A705]">
+                <div>
+                    <div class="flex items-center space-x-3 text-[#D1A705] mb-3">
+                        <i class="fa-solid fa-bullseye text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Objetivos da Aula</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">Construir o entendimento mecânico que unifica os ensaios laboratoriais com os modelos comportamentais das normas estruturais brasileiras.</p>
+                </div>
+                <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <li class="flex items-start"><i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2"></i>Mapear curvas empíricas (Rankine-Gordon)</li>
+                    <li class="flex items-start"><i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2"></i>Comportamento resistente: Aço, Concreto e Madeira</li>
+                    <li class="flex items-start"><i class="fa-solid fa-check text-[#D1A705] mt-1 mr-2"></i>Analisar curvas adimensionais de redução</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Delimitação e Próxima Etapa -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[10px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold mb-2 uppercase">DELIMITAÇÃO TEMÁTICA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-3">Escopo Físico-Mecânico</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">Esta aula foca estritamente nos fenômenos constitutivos, equações experimentais e respostas estruturais reais.</p>
+                </div>
+                <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-md text-fluid-meta text-[#E0E0E0] border border-white/10">
+                    <strong class="text-[#D1A705] block mb-1"><i class="fa-solid fa-forward-step mr-1"></i>Aviso Normativo (Aula 170):</strong>
+                    Coeficientes parciais de segurança ($\gamma_f$, $\gamma_m$) e rotinas completas de dimensionamento serão aprofundados na Aula 170.
+                </div>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md flex items-center justify-center space-x-2">
+                    <span>Iniciar Conteúdo Teórico</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold"><i class="fa-solid fa-book-bookmark text-[#901812] mr-2"></i>Estrutura Curricular: CIV 153 — Resistência dos Materiais | DEC-UFV</span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (0,1) • Rota de Objetivos</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,0): LIMITES DA HIPÉRBOLE DE EULER E INELASTICIDADE -->
+<div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 01 — INSTABILIDADE ELÁSTICA VS. RESISTÊNCIA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Limites Físicos da Hipérbole de Euler</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Card 1: Formulação Analítica & Esbeltez Limite -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-bezier-curve text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">A Tensão Crítica Teórica</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A bifurcação de equilíbrio elástica deduzida por Euler pressupõe linearidade física infinita e linearidade geométrica até a carga crítica:
+                    </p>
+                    
+                    <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden my-2 border border-black/5" style="font-size: clamp(1.15rem, 1.9vw, 1.75rem);">
+                        $$\sigma_{cr} = \frac{\pi^2 E}{\lambda^2} \quad \text{onde} \quad \lambda = \frac{L_{fl}}{r}$$
+                    </div>
+
+                    <p class="text-fluid-meta text-[#444444]">
+                        O limite de validade física ocorre quando a tensão crítica atinge o patamar de escoamento do material ($\sigma_{cr} = sigma_y$). A esbeltez limite teórica ($\lambda_{lim}$) separa a resposta inelástica da elástica ideal:
+                    </p>
+
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.1rem, 1.6vw, 1.45rem);">
+                        $$\lambda_{lim} = \pi \sqrt{\frac{E}{sigma_y}} \quad \xrightarrow{\text{Aço A36}} \quad \lambda_{lim} \approx 89$$
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation text-[#901812]"></i>
+                    <span>Para $\lambda < \lambda_{lim}$, a hipérbole prevê tensões fisicamente impossíveis superiores ao escoamento.</span>
+                </div>
+            </div>
+
+            <!-- Card 2: A Divergência Experimental -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">COMPORTAMENTO REAL</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Por que Euler Falha no Laboratório?</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Ensaios experimentais demonstram que colunas reais entram em colapso abaixo do menor valor entre a curva de Euler e o escoamento puro.
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3.5 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-fire-burner text-[#D1A705] mt-1 text-lg"></i>
+                            <div>
+                                <strong class="text-white block">Tensões Residuais:</strong>
+                                Resfriamento não uniforme em perfis laminados gera tensões internas de compressão de até $0{,}3 \cdot sigma_y$ a $0{,}5 \cdot sigma_y$.
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-ruler-combined text-[#D1A705] mt-1 text-lg"></i>
+                            <div>
+                                <strong class="text-white block">Imperfeições Geométricas:</strong>
+                                Desaprumo e curvatura inicial inerentes geram flexão composta secundária imediata desde o início do carregamento.
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-chart-line text-[#D1A705] mt-1 text-lg"></i>
+                            <div>
+                                <strong class="text-white block">Plastificação Progressiva:</strong>
+                                Redução do módulo de rigidez efetivo da seção transversal ($E_t < E$) antes de atingir $\sigma_{cr}$.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Próximo: Equações Empíricas de Transição (Rankine e Tetmajer)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (1,0) • Hipérbole de Euler</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,0): MODELOS EMPÍRICOS DE TRANSIÇÃO (GORDON-RANKINE E PARÁBOLAS) -->
+<div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 02 — FORMULAÇÕES EXPERIMENTAIS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Modelos Empíricos e Inelásticos Clássicos</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Card 1: Formulações Clássicas de Transição -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-square-root-variable text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Aproximações Históricas de Transição</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Para cobrir a zona inelástica intermediária onde a hipérbole de Euler superestima os ensaios de laboratório, foram consolidadas formulações empíricas contínuas e seccionadas:
+                    </p>
+
+                    <!-- Formulação Gordon-Rankine -->
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.05rem, 1.6vw, 1.45rem);">
+                        $$\sigma_{cr} = \frac{\sigma_0}{1 + k_3 \cdot \lambda^2} \quad \iff \quad \frac{1}{P_{cr}} = \frac{1}{P_{esc}} + \frac{1}{P_E}$$
+                    </div>
+
+                    <!-- Formulações Linear e Parabólica -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3 bg-white/70 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Modelo Linear (Tetmajer):</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1" style="font-size: clamp(0.95rem, 1.3vw, 1.2rem);">
+                                $$\sigma_{cr} = \sigma_1 - k_1 \cdot \lambda$$
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white/70 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Modelo Parabólico (Johnson):</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1" style="font-size: clamp(0.95rem, 1.3vw, 1.2rem);">
+                                $$\sigma_{cr} = \sigma_2 - k_2 \cdot \lambda^2$$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <strong>Conceito Chave de Gordon-Rankine:</strong> Interpolação harmônica unificada que converge assintoticamente para o escoamento puro ($\lambda \to 0$) e para a flambagem de Euler ($\lambda \to \infty$).
+                </div>
+            </div>
+
+            <!-- Card 2: Aplicação nos Materiais e Acesso ao Lab -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">MATERIAIS ESTRUTURAIS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Faixas de Aplicação Prática</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Cada material de engenharia adota funções empíricas calibradas por baterias experimentais:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-white block">Aço Estrutural:</strong>
+                            Parábola no regime inelástico até a esbeltez limite; hipérbole de Euler atenuada no regime elástico.
+                        </div>
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-white block">Alumínio Estrutural:</strong>
+                            Ajustes lineares e potenciais estritos segmentados conforme liga e tratamento térmico (ex: 6061-T6).
+                        </div>
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-white block">Madeira:</strong>
+                            Curvas empíricas com coeficientes $C_p$ dependentes do tipo de seção (serrada vs. laminada colada).
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-2">
+                    <span>Simular Curvas no Laboratório (Pressione ↓)</span>
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <div class="flex items-center space-x-4">
+            <button onclick="moveInGrid(0, 1)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1">
+                <span>Lab Virtual [↓]</span>
+            </button>
+            <span class="text-fluid-tag text-[#901812] font-bold">Slide (2,0) • Formulações Empíricas</span>
+        </div>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,1): LAB VIRTUAL — FORMULAÇÃO E RATIONALE DE GORDON-RANKINE (BRANCH Y=1) -->
+<div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks3.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO TEÓRICO & SIMULADOR (BRANCH Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Formulação e Rationale de Gordon-Rankine</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Teoria</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch w-full">
+            <!-- Painel Esquerdo: Rationale Matemático e Controles -->
+            <div class="lg:col-span-5 p-5 sm:p-7 rounded-3xl card-glass space-y-3 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-2.5">
+                    <div class="flex items-center space-x-2.5 text-[#901812]">
+                        <i class="fa-solid fa-calculator text-2xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">O Rationale Físico-Mecânico</h3>
+                    </div>
+                    <p class="text-fluid-meta text-[#444444]">
+                        Gordon e Rankine postularam que o colapso real de uma coluna decorre da superposição inversa entre duas resistências limites independentes:
+                    </p>
+
+                    <!-- Equação de Reciprocidade Harmônica -->
+                    <div class="bg-white/85 backdrop-blur-md p-2.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.05rem, 1.4vw, 1.35rem);">
+                        $$\frac{1}{P_{cr}} = \frac{1}{P_{esc}} + \frac{1}{P_E} \implies \frac{1}{\sigma_{cr}} = \frac{1}{\sigma_0} + \frac{1}{\sigma_E}$$
+                    </div>
+
+                    <p class="text-fluid-meta text-[#444444]">
+                        Substituindo $\sigma_E = \frac{\pi^2 E}{\lambda^2}$ e reorganizando algebricamente:
+                    </p>
+
+                    <!-- Equação Expandida de Gordon-Rankine -->
+                    <div class="bg-white/85 backdrop-blur-md p-2.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5 text-[#901812]" style="font-size: clamp(1.05rem, 1.4vw, 1.35rem);">
+                        $$\sigma_{cr} = \frac{\sigma_0}{1 + k_3 \cdot \lambda^2} \quad \text{sendo} \quad k_3 = \frac{\sigma_0}{\pi^2 E}$$
+                    </div>
+
+                    <!-- Sliders de Parâmetros -->
+                    <div class="space-y-2 pt-1 border-t border-black/10">
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Esbeltez ($\lambda = L_{fl}/r$):</span>
+                                <span id="lbl-lambda-2-1" class="text-[#901812] font-mono">90</span>
+                            </label>
+                            <input type="range" id="input-lambda-2-1" min="10" max="220" step="2" value="90" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularFlambagem_2_1()">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                    <span>$E$:</span>
+                                    <span id="lbl-e-2-1" class="text-[#901812] font-mono">200 GPa</span>
+                                </label>
+                                <input type="range" id="input-e-2-1" min="10" max="210" step="10" value="200" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularFlambagem_2_1()">
+                            </div>
+                            <div>
+                                <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                    <span>$\sigma_0$ ($sigma_y$):</span>
+                                    <span id="lbl-fy-2-1" class="text-[#901812] font-mono">250 MPa</span>
+                                </label>
+                                <input type="range" id="input-fy-2-1" min="150" max="450" step="10" value="250" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularFlambagem_2_1()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2.5 bg-white/70 rounded-xl border border-black/5 text-fluid-tag text-[#555555] flex justify-between items-center">
+                    <span>Constante calculada $k_3$:</span>
+                    <strong id="lbl-k3-2-1" class="text-[#901812] font-mono">1.27 × 10⁻⁴</strong>
+                </div>
+            </div>
+
+            <!-- Painel Direito: Resultados, Assíntotas e Gráfico Interativo -->
+            <div class="lg:col-span-7 p-5 sm:p-7 rounded-3xl card-glass-dark text-white space-y-3.5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">RESPOSTAS TENSIONAIS & COMPORTAMENTO ASSINTÓTICO</span>
+
+                    <div class="grid grid-cols-3 gap-2.5 text-center">
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Escoamento ($\sigma_0$)</span>
+                            <span id="res-sigma-fy-2-1" class="text-fluid-h3 text-white font-mono font-bold">250.0 MPa</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Euler ($\sigma_E$)</span>
+                            <span id="res-sigma-euler-2-1" class="text-fluid-h3 text-[#D1A705] font-mono font-bold">243.7 MPa</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Rankine ($\sigma_{cr}$)</span>
+                            <span id="res-sigma-rankine-2-1" class="text-fluid-h3 text-white font-mono font-bold">123.4 MPa</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas do Gráfico -->
+                    <div class="bg-white/95 rounded-2xl p-2.5 shadow-inner">
+                        <canvas id="canvas-flambagem-2-1" width="560" height="155" class="w-full h-auto block rounded-lg"></canvas>
+                        <div class="flex justify-around items-center pt-1.5 text-fluid-tag font-bold text-[#333333]">
+                            <span class="flex items-center"><span class="w-3 h-1 bg-gray-400 inline-block mr-1"></span>Escoamento ($\sigma_0$)</span>
+                            <span class="flex items-center"><span class="w-3 h-1 bg-[#D1A705] inline-block mr-1"></span>Euler ($\sigma_E$)</span>
+                            <span class="flex items-center"><span class="w-3 h-1 bg-[#901812] inline-block mr-1"></span>Rankine ($\sigma_{cr}$)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block mr-1"></span>$\lambda$ Atual</span>
+                        </div>
+                    </div>
+
+                    <!-- Síntese dos Limites Assintóticos -->
+                    <div class="grid grid-cols-2 gap-2 text-fluid-tag">
+                        <div class="p-2.5 bg-white/10 rounded-xl border border-white/10">
+                            <strong class="text-[#D1A705] block">Limite $\lambda \to 0$ (Coluna Curta):</strong>
+                            $\sigma_E \to \infty \implies \sigma_{cr} \to \sigma_0$ (escoamento puro sem instabilidade).
+                        </div>
+                        <div class="p-2.5 bg-white/10 rounded-xl border border-white/10">
+                            <strong class="text-[#D1A705] block">Limite $\lambda \to \infty$ (Coluna Esbelta):</strong>
+                            $k_3 \lambda^2 \gg 1 \implies \sigma_{cr} \to \sigma_E$ (assíntota exata de Euler).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-check text-[#D1A705]"></i>
+                    <span id="res-diag-2-1">Rankine conecta monotonicamente a resistência ao escoamento à flambagem elástica de Euler.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-1 pt-1.5 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-microscope text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (2,1) • Lab Interativo de Gordon-Rankine</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (2,1) -->
+    <script>
+        function calcularFlambagem_2_1() {
+            const lambda = parseFloat(document.getElementById('input-lambda-2-1').value);
+            const E_GPa = parseFloat(document.getElementById('input-e-2-1').value);
+            const E_MPa = E_GPa * 1000;
+            const fy = parseFloat(document.getElementById('input-fy-2-1').value);
+
+            document.getElementById('lbl-lambda-2-1').innerText = lambda.toFixed(0);
+            document.getElementById('lbl-e-2-1').innerText = `${E_GPa.toFixed(0)} GPa`;
+            document.getElementById('lbl-fy-2-1').innerText = `${fy.toFixed(0)} MPa`;
+
+            const k3 = fy / (Math.PI * Math.PI * E_MPa);
+            document.getElementById('lbl-k3-2-1').innerText = k3.toExponential(2);
+
+            const sigmaEuler = (Math.PI * Math.PI * E_MPa) / (lambda * lambda);
+            const sigmaRankine = fy / (1 + k3 * lambda * lambda);
+
+            document.getElementById('res-sigma-fy-2-1').innerText = `${fy.toFixed(1)} MPa`;
+            document.getElementById('res-sigma-euler-2-1').innerText = `${sigmaEuler.toFixed(1)} MPa`;
+            document.getElementById('res-sigma-rankine-2-1').innerText = `${sigmaRankine.toFixed(1)} MPa`;
+
+            const lambdaLim = Math.PI * Math.sqrt(E_MPa / fy);
+            const diagEl = document.getElementById('res-diag-2-1');
+            if (lambda < lambdaLim * 0.7) {
+                diagEl.innerHTML = `<strong>Regime Rígido:</strong> Domínio plástico. A hipótese de Euler falha por superestimar a coluna em ${(sigmaEuler/fy).toFixed(1)}x.`;
+            } else if (lambda <= lambdaLim * 1.3) {
+                diagEl.innerHTML = `<strong>Zona de Transição:</strong> O modelo harmônico de Rankine amortece a perda de rigidez entre escoamento e flexão.`;
+            } else {
+                diagEl.innerHTML = `<strong>Regime Esbelto:</strong> Prevalência da bifurcação elástica; convergência progressiva para a curva de Euler.`;
+            }
+
+            desenharGrafico_2_1(lambda, fy, E_MPa, sigmaEuler, sigmaRankine);
+        }
+
+        function desenharGrafico_2_1(curLambda, fy, E_MPa, curEuler, curRankine) {
+            const canvas = document.getElementById('canvas-flambagem-2-1');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width;
+            const H = canvas.height;
+
+            ctx.clearRect(0, 0, W, H);
+
+            const padL = 38, padR = 15, padT = 12, padB = 22;
+            const plotW = W - padL - padR;
+            const plotH = H - padT - padB;
+
+            const maxLambda = 220;
+            const maxSigma = fy * 1.3;
+
+            function toX(l) { return padL + (l / maxLambda) * plotW; }
+            function toY(s) { return padT + plotH - (Math.min(s, maxSigma) / maxSigma) * plotH; }
+
+            // Eixos cartesianos
+            ctx.strokeStyle = '#cccccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padL, padT);
+            ctx.lineTo(padL, padT + plotH);
+            ctx.lineTo(padL + plotW, padT + plotH);
+            ctx.stroke();
+
+            // Patamar Plástico (fy)
+            ctx.strokeStyle = '#9ca3af';
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(toX(0), toY(fy));
+            ctx.lineTo(toX(maxLambda), toY(fy));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Curva de Euler
+            ctx.strokeStyle = '#D1A705';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            for (let l = 15; l <= maxLambda; l += 2) {
+                const sE = (Math.PI * Math.PI * E_MPa) / (l * l);
+                const x = toX(l);
+                const y = toY(sE);
+                if (l === 15) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Curva de Rankine
+            const k3 = fy / (Math.PI * Math.PI * E_MPa);
+            ctx.strokeStyle = '#901812';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let l = 0; l <= maxLambda; l += 2) {
+                const sR = fy / (1 + k3 * l * l);
+                const x = toX(l);
+                const y = toY(sR);
+                if (l === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Ponto Atual no Rankine
+            const px = toX(curLambda);
+            const py = toY(curRankine);
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath();
+            ctx.arc(px, py, 5.5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Linha guia vertical
+            ctx.strokeStyle = '#2563eb';
+            ctx.setLineDash([2, 2]);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(px, padT + plotH);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        if (document.getElementById('input-lambda-2-1')) calcularFlambagem_2_1();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,0): FORMULAÇÃO COMPARATIVA — ABNT NBR 8800:2024 vs. ANSI/AISC 360-22 -->
+<div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 03 — MATERIAIS METÁLICOS E ESTABILIDADE</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Tensão Crítica de Flambagem: NBR 8800:2024 vs. AISC 360-22</h2>
+    </div>
+    <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='[https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png](https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png)'">
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+        
+        <!-- Coluna 1: ABNT NBR 8800:2024 -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-flag text-2xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">ABNT NBR 8800:2024</h3>
+                    </div>
+                    <button onclick="document.getElementById('modal-nbr-detalhes-3-0').showModal()" class="px-3 py-1.5 bg-[#901812]/10 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl text-fluid-tag transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Variáveis</span>
+                    </button>
+                </div>
+
+                <p class="text-fluid-body text-[#444444]">
+                    Fator de redução adimensional $\chi$ parametrizado pela esbeltez reduzida $\lambda_0$:
+                </p>
+
+                <!-- Equação Principal NBR 8800 -->
+                <div class="bg-white/85 backdrop-blur-md p-3 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.1rem, 1.6vw, 1.5rem);">
+                    $$\sigma_{cr} = \chi \cdot Q \cdot \sigma_y \quad \text{onde} \quad \lambda_0 = \sqrt{\frac{Q \cdot \sigma_y}{\sigma_e}} = \frac{K L}{\pi r} \sqrt{\frac{Q \cdot \sigma_y}{E}}$$
+                </div>
+
+                <!-- Ramos Inelástico e Elástico NBR -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div class="p-3 bg-white/80 rounded-2xl border border-black/5">
+                        <strong class="text-[#901812] block text-fluid-meta">Inelástico ($\lambda_0 \le 1{,}5$):</strong>
+                        <div class="text-center py-1 font-mono text-fluid-meta overflow-x-auto">
+                            $$\chi = 0{,}658^{\lambda_0^2}$$
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/80 rounded-2xl border border-black/5">
+                        <strong class="text-[#901812] block text-fluid-meta">Elástico ($\lambda_0 > 1{,}5$):</strong>
+                        <div class="text-center py-1 font-mono text-fluid-meta overflow-x-auto">
+                            $$\chi = \frac{0{,}877}{\lambda_0^2}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-black/10 pt-3">
+                <button onclick="moveInGrid(0, 1)" class="w-full py-3.5 bg-[#901812] hover:bg-[#72120e] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md flex items-center justify-center space-x-2">
+                    <span>Laboratório NBR 8800 (Press ↓)</span>
+                    <i class="fa-solid fa-flask-vial"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Coluna 2: ANSI/AISC 360-22 -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3 text-[#D1A705]">
+                        <i class="fa-solid fa-globe text-2xl"></i>
+                        <h3 class="text-fluid-h3 text-white font-bold">ANSI/AISC 360-22</h3>
+                    </div>
+                    <button onclick="document.getElementById('modal-aisc-detalhes-3-0').showModal()" class="px-3 py-1.5 bg-white/10 hover:bg-[#D1A705] hover:text-[#333333] text-[#D1A705] font-bold rounded-xl text-fluid-tag transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Variáveis</span>
+                    </button>
+                </div>
+
+                <p class="text-fluid-body text-[#DEDEDE]">
+                    Tensão crítica nominal $\sigma_{cr}$ delimitada pela tensão elástica de bifurcação $\sigma_e$:
+                </p>
+
+                <!-- Equação Principal AISC 360 -->
+                <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-white/10" style="font-size: clamp(1.1rem, 1.6vw, 1.5rem);">
+                    $$\sigma_{cr} = \frac{P_n}{A_g} \quad \text{onde} \quad \sigma_e = \frac{\pi^2 E}{\left(\frac{L_c}{r}\right)^2}$$
+                </div>
+
+                <!-- Ramos Inelástico e Elástico AISC -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div class="p-3 bg-white/10 rounded-2xl border border-white/10">
+                        <strong class="text-[#D1A705] block text-fluid-meta">Inelástico ($\frac{L_c}{r} \le 4{,}71\sqrt{\frac{E}{\sigma_y}}$):</strong>
+                        <div class="text-center py-1 font-mono text-fluid-meta text-white overflow-x-auto">
+                            $$\sigma_{cr} = \left[0{,}658^{\frac{\sigma_y}{\sigma_e}}\right] \sigma_y$$
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-2xl border border-white/10">
+                        <strong class="text-[#D1A705] block text-fluid-meta">Elástico ($\frac{L_c}{r} > 4{,}71\sqrt{\frac{E}{\sigma_y}}$):</strong>
+                        <div class="text-center py-1 font-mono text-fluid-meta text-white overflow-x-auto">
+                            $$\sigma_{cr} = 0{,}877 \, \sigma_e$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/15 pt-3">
+                <button onclick="moveInGrid(0, 2)" class="w-full py-3.5 bg-[#D1A705] hover:bg-[#b89204] text-[#333333] font-bold rounded-2xl transition-all text-fluid-body shadow-md flex items-center justify-center space-x-2">
+                    <span>Laboratório AISC 360 (Press ↓↓)</span>
+                    <i class="fa-solid fa-microscope"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+    <span class="text-fluid-meta text-[#555555] font-semibold">
+        <i class="fa-solid fa-scale-balanced text-[#901812] mr-2"></i>CIV 153 / CIV 670 — DEC / UFV
+    </span>
+    <span class="text-fluid-tag text-[#901812] font-bold">Slide (3,0) • Formulação Normativa Comparada</span>
+</footer>
+
+<!-- MODAL 1: ELEMENTOS DA FORMULAÇÃO NBR 8800:2024 -->
+<dialog id="modal-nbr-detalhes-3-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-8 card-glass-dark text-white max-w-3xl w-full shadow-2xl border border-white/15">
+    <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">ABNT NBR 8800:2024 — SEÇÃO 5.3</span>
+            <h3 class="text-fluid-h2 text-white font-bold">Variáveis da Curva de Flambagem Brasileira</h3>
+        </div>
+        <button onclick="document.getElementById('modal-nbr-detalhes-3-0').close()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-lg transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="space-y-3 text-fluid-meta text-[#DEDEDE] max-h-[60vh] overflow-y-auto pr-2">
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+            <strong class="text-white block text-fluid-body">$\chi$ (Fator de Redução Adimensional):</strong>
+            Representa a razão $\sigma_{cr} / (Q \cdot \sigma_y)$, expressando a perda de capacidade por instabilidade elastoplástica e imperfeições geométricas.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+            <strong class="text-white block text-fluid-body">$\lambda_0$ (Índice de Esbeltez Reduzido):</strong>
+            Parâmetro normalizado que correlaciona a resistência plástica à carga crítica elástica: $\lambda_0 = \sqrt{Q \cdot \sigma_y / \sigma_e}$.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+            <strong class="text-white block text-fluid-body">$Q$ (Fator de Flambagem Local):</strong>
+            Produto $Q = Q_s \cdot Q_a \le 1{,}0$. Penaliza seções delgadas (elementos AL e AA) antes de atingir a plastificação global.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+            <strong class="text-white block text-fluid-body">$\sigma_e$ (Tensão Elástica de Euler):</strong>
+            Tensão elástica ideal de bifurcação: $\sigma_e = \pi^2 E / \lambda^2$, onde $\lambda = K L / r$.
+        </div>
+    </div>
+</dialog>
+
+<!-- MODAL 2: ELEMENTOS DA FORMULAÇÃO ANSI/AISC 360-22 -->
+<dialog id="modal-aisc-detalhes-3-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-8 card-glass-dark text-white max-w-3xl w-full shadow-2xl border border-white/15">
+    <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">ANSI/AISC 360-22 — CHAPTER E</span>
+            <h3 class="text-fluid-h2 text-white font-bold">Variáveis da Curva de Flambagem Americana</h3>
+        </div>
+        <button onclick="document.getElementById('modal-aisc-detalhes-3-0').close()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-lg transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="space-y-3 text-fluid-meta text-[#DEDEDE] max-h-[60vh] overflow-y-auto pr-2">
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-[#D1A705] block text-fluid-body">$\sigma_{cr}$ (Tensão Crítica Nominal):</strong>
+            Tensão nominal resistente aplicada sobre a área bruta $A_g$ (ou área efetiva $A_e$ para elementos esbeltos sob a Seção E7).
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-[#D1A705] block text-fluid-body">$\sigma_e$ (Tensão Elástica de Flambagem):</strong>
+            Tensão teórica de Euler: $\sigma_e = \pi^2 E / (L_c / r)^2$, onde $L_c = K L$ é o comprimento efetivo de flambagem.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-[#D1A705] block text-fluid-body">Fronteira $4{,}71\sqrt{E/\sigma_y}$ (ou $\sigma_y/\sigma_e = 2{,}25$):</strong>
+            Limite analítico exato correspondente a $\lambda_0 = 1{,}5$, separando a resposta governada por plastificação parcial e imperfeições da flambagem puramente elástica.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-[#D1A705] block text-fluid-body">Coeficiente $0{,}877$:</strong>
+            Fator de atenuação da curva hiperbólica de Euler derivado da curvatura inicial geométrica da barra ($L/1000$).
+        </div>
+    </div>
+</dialog>
+
+</div>
+
+
+
+
+
+<!-- SLIDE (3,1): LABORATÓRIO VIRTUAL DE FLAMBAGEM (ABNT NBR 8800:2024) -->
+<div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL 01 — BRANCH Y=1</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Simulador de Flambagem: ABNT NBR 8800:2024</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-all text-fluid-tag border border-[#901812]/20 flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Teoria (3,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+
+            <!-- Coluna 1: Controles e Parâmetros da Barra (NBR 8800) -->
+            <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-black/10 pb-2">
+                        <div class="flex items-center space-x-2 text-[#901812]">
+                            <i class="fa-solid fa-sliders text-2xl"></i>
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros Estruturais</h3>
+                        </div>
+                        <span class="text-fluid-tag text-[#901812] font-bold uppercase">Aço Estrutural</span>
+                    </div>
+
+                    <!-- Slider 1: Índice de Esbeltez Global (lambda = KL/r) -->
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta font-bold flex justify-between">
+                            <span>Esbeltez Geométrica ($\lambda = KL/r$):</span>
+                            <span id="lbl-nbr-lambda-3-1" class="text-[#901812] font-bold">80.0</span>
+                        </label>
+                        <input type="range" id="input-nbr-lambda-3-1" min="10" max="200" step="1" value="80" class="w-full accent-[#901812] h-4 cursor-pointer" oninput="calcularFlambagemNBR_3_1()">
+                    </div>
+
+                    <!-- Slider 2: Tensão de Escoamento (fy) -->
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta font-bold flex justify-between">
+                            <span>Tensão de Escoamento ($sigma_y$):</span>
+                            <span id="lbl-nbr-fy-3-1" class="text-[#901812] font-bold">345 MPa</span>
+                        </label>
+                        <input type="range" id="input-nbr-fy-3-1" min="250" max="450" step="5" value="345" class="w-full accent-[#901812] h-4 cursor-pointer" oninput="calcularFlambagemNBR_3_1()">
+                    </div>
+
+                    <!-- Slider 3: Fator de Redução Local (Q) -->
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta font-bold flex justify-between">
+                            <span>Fator de Flambagem Local ($Q$):</span>
+                            <span id="lbl-nbr-q-3-1" class="text-[#901812] font-bold">1.00</span>
+                        </label>
+                        <input type="range" id="input-nbr-q-3-1" min="0.50" max="1.00" step="0.02" value="1.00" class="w-full accent-[#901812] h-4 cursor-pointer" oninput="calcularFlambagemNBR_3_1()">
+                    </div>
+
+                    <!-- Slider 4: Módulo de Elasticidade (E) -->
+                    <div class="space-y-1">
+                        <label class="text-fluid-meta font-bold flex justify-between">
+                            <span>Módulo de Elasticidade ($E$):</span>
+                            <span id="lbl-nbr-e-3-1" class="text-[#901812] font-bold">200.0 GPa</span>
+                        </label>
+                        <input type="range" id="input-nbr-e-3-1" min="190" max="210" step="1" value="200" class="w-full accent-[#901812] h-4 cursor-pointer" oninput="calcularFlambagemNBR_3_1()">
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/70 rounded-2xl text-fluid-meta text-[#555555] border border-black/5 flex items-center justify-between">
+                    <span><i class="fa-solid fa-code-branch text-[#901812] mr-2"></i>Ir para Laboratório AISC 360-22:</span>
+                    <button onclick="moveInGrid(0, 1)" class="px-3 py-1.5 bg-[#901812] hover:bg-[#72120e] text-white font-bold rounded-xl text-fluid-tag transition-all">
+                        <span>AISC Lab (Press ↓)</span>
+                        <i class="fa-solid fa-arrow-down ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Métricas de Estabilidade e Auditoria Numérica -->
+            <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">RESULTADOS DE PROJETO (NBR 8800:2024)</span>
+                        <span id="res-nbr-regime-3-1" class="text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white">REGIME INELÁSTICO</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-meta text-[#DEDEDE] block">Tensão Elástica de Euler ($\sigma_e$)</span>
+                            <span id="res-nbr-sigmae-3-1" class="text-fluid-h3 text-white font-mono">308.4 MPa</span>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-meta text-[#DEDEDE] block">Esbeltez Reduzida ($\lambda_0$)</span>
+                            <span id="res-nbr-lambda0-3-1" class="text-fluid-h3 text-white font-mono">1.058</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-meta text-[#DEDEDE] block">Fator de Redução ($\chi$)</span>
+                            <span id="res-nbr-chi-3-1" class="text-fluid-h3 text-[#D1A705] font-mono">0.626</span>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-meta text-[#DEDEDE] block">Eficiência Plástica ($\chi \cdot Q$)</span>
+                            <span id="res-nbr-eficiencia-3-1" class="text-fluid-h3 text-[#D1A705] font-mono">62.6%</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Tensão Crítica Resistente Nominal ($\sigma_{cr} = \chi \cdot Q \cdot sigma_y$)</span>
+                        <span id="res-nbr-sigmacr-3-1" class="text-fluid-h2 text-white font-mono">215.9 MPa</span>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-2xl text-fluid-meta text-[#DEDEDE] flex items-center space-x-3 backdrop-blur-sm border border-white/10">
+                    <i class="fa-solid fa-chart-line text-[#D1A705] text-xl"></i>
+                    <span id="res-nbr-diagnostico-3-1">Transição governada por plastificação parcial com presença de tensões residuais ($\lambda_0 \le 1{,}5$).</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-scale-balanced text-[#901812] mr-2"></i>CIV 153 / CIV 670 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (3,1) • Lab Virtual NBR 8800:2024</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,1) -->
+    <script>
+        function calcularFlambagemNBR_3_1() {
+            const lambda = parseFloat(document.getElementById('input-nbr-lambda-3-1').value);
+            const fy = parseFloat(document.getElementById('input-nbr-fy-3-1').value);
+            const Q = parseFloat(document.getElementById('input-nbr-q-3-1').value);
+            const E_GPa = parseFloat(document.getElementById('input-nbr-e-3-1').value);
+            const E = E_GPa * 1000; // Converte GPa para MPa
+
+            document.getElementById('lbl-nbr-lambda-3-1').innerText = lambda.toFixed(1);
+            document.getElementById('lbl-nbr-fy-3-1').innerText = `${fy.toFixed(0)} MPa`;
+            document.getElementById('lbl-nbr-q-3-1').innerText = Q.toFixed(2);
+            document.getElementById('lbl-nbr-e-3-1').innerText = `${E_GPa.toFixed(1)} GPa`;
+
+            // Tensão de Euler: sigma_e = (pi^2 * E) / lambda^2
+            const sigma_e = (Math.PI * Math.PI * E) / (lambda * lambda);
+
+            // Esbeltez reduzida: lambda_0 = sqrt((Q * fy) / sigma_e)
+            const lambda_0 = Math.sqrt((Q * fy) / sigma_e);
+
+            let chi = 0;
+            const regimeEl = document.getElementById('res-nbr-regime-3-1');
+            const diagEl = document.getElementById('res-nbr-diagnostico-3-1');
+
+            if (lambda_0 <= 1.5) {
+                // Regime inelástico
+                chi = Math.pow(0.658, lambda_0 * lambda_0);
+                regimeEl.innerText = "REGIME INELÁSTICO (λ₀ ≤ 1,5)";
+                regimeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white";
+                diagEl.innerText = "Transição governada por plastificação parcial e tensões residuais (NBR 8800:2024).";
+            } else {
+                // Regime elástico
+                chi = 0.877 / (lambda_0 * lambda_0);
+                regimeEl.innerText = "REGIME ELÁSTICO (λ₀ > 1,5)";
+                regimeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#D1A705] text-[#333333]";
+                diagEl.innerText = "Flambagem elastoplástica de Euler atenuada pelo coeficiente 0,877 por curvatura inicial L/1000.";
+            }
+
+            const sigma_cr = chi * Q * fy;
+            const eficiencia = chi * Q * 100;
+
+            document.getElementById('res-nbr-sigmae-3-1').innerText = `${sigma_e.toFixed(1)} MPa`;
+            document.getElementById('res-nbr-lambda0-3-1').innerText = lambda_0.toFixed(3);
+            document.getElementById('res-nbr-chi-3-1').innerText = chi.toFixed(3);
+            document.getElementById('res-nbr-eficiencia-3-1').innerText = `${eficiencia.toFixed(1)}%`;
+            document.getElementById('res-nbr-sigmacr-3-1').innerText = `${sigma_cr.toFixed(1)} MPa`;
+        }
+
+        // Inicialização imediata ao carregar o DOM
+        if (document.getElementById('input-nbr-lambda-3-1')) {
+            calcularFlambagemNBR_3_1();
+        }
+    </script>
+</div>
+
+
+
+
+<!-- SLIDE (3,2): LABORATÓRIO VIRTUAL DE FLAMBAGEM (AISC 360 22) -->
+<div id="slide-3-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+
+<!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+<header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+    <div>
+        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL 02 — BRANCH Y=2</span>
+        <h2 class="text-fluid-h2 text-[#901812]">Simulador de Flambagem: ANSI/AISC 360-22</h2>
+    </div>
+    <div class="flex items-center space-x-3">
+        <button onclick="moveInGrid(0, -1)" class="px-4 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-all text-fluid-tag border border-[#901812]/20 flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Lab NBR (Press ↑)</span>
+        </button>
+        <button onclick="moveInGrid(0, -2)" class="px-4 py-2.5 bg-white/80 backdrop-blur-md text-[#333333] font-bold rounded-2xl shadow-sm hover:bg-[#333333] hover:text-white transition-all text-fluid-tag border border-black/10 flex items-center space-x-2">
+            <i class="fa-solid fa-angles-up"></i>
+            <span>Teoria (3,0)</span>
+        </button>
+    </div>
+</header>
+
+<!-- Camada 2: Núcleo Centralizado Verticalmente -->
+<div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+
+        <!-- Coluna 1: Controles e Parâmetros Conforme AISC 360-22 (Sections E3 e E7) -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between border-b border-black/10 pb-2">
+                    <div class="flex items-center space-x-2 text-[#D1A705]">
+                        <i class="fa-solid fa-sliders text-2xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros Estruturais AISC 360-22</h3>
+                    </div>
+                    <button onclick="document.getElementById('modal-aisc-e7-info-3-2').showModal()" class="px-2.5 py-1 bg-[#D1A705]/20 hover:bg-[#D1A705] hover:text-[#333333] text-[#333333] font-bold rounded-lg text-fluid-tag transition-all flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Método E7</span>
+                    </button>
+                </div>
+
+                <!-- Slider 1: Slenderness Ratio (Lc/r) -->
+                <div class="space-y-1">
+                    <label class="text-fluid-meta font-bold flex justify-between">
+                        <span>Índice de Esbeltez ($L_c / r = KL / r$):</span>
+                        <span id="lbl-aisc-lambda-3-2" class="text-[#901812] font-bold">80.0</span>
+                    </label>
+                    <input type="range" id="input-aisc-lambda-3-2" min="10" max="200" step="1" value="80" class="w-full accent-[#D1A705] h-4 cursor-pointer" oninput="calcularFlambagemAISC_3_2()">
+                </div>
+
+                <!-- Slider 2: Specified Minimum Yield Stress (sigma_y) -->
+                <div class="space-y-1">
+                    <label class="text-fluid-meta font-bold flex justify-between">
+                        <span>Tensão de Escoamento ($\sigma_y = F_y$):</span>
+                        <span id="lbl-aisc-sigmay-3-2" class="text-[#901812] font-bold">345 MPa</span>
+                    </label>
+                    <input type="range" id="input-aisc-sigmay-3-2" min="250" max="450" step="5" value="345" class="w-full accent-[#D1A705] h-4 cursor-pointer" oninput="calcularFlambagemAISC_3_2()">
+                </div>
+
+                <!-- Slider 3: Effective Area Ratio (Ae / Ag) - Substitui o Fator Q obsoleto -->
+                <div class="space-y-1">
+                    <label class="text-fluid-meta font-bold flex justify-between">
+                        <span>Razão de Área Efetiva E7 ($A_e / A_g$):</span>
+                        <span id="lbl-aisc-aeag-3-2" class="text-[#901812] font-bold">1.00 (Compacta)</span>
+                    </label>
+                    <input type="range" id="input-aisc-aeag-3-2" min="0.50" max="1.00" step="0.02" value="1.00" class="w-full accent-[#D1A705] h-4 cursor-pointer" oninput="calcularFlambagemAISC_3_2()">
+                </div>
+
+                <!-- Slider 4: Modulus of Elasticity (E) -->
+                <div class="space-y-1">
+                    <label class="text-fluid-meta font-bold flex justify-between">
+                        <span>Módulo de Elasticidade ($E$):</span>
+                        <span id="lbl-aisc-e-3-2" class="text-[#901812] font-bold">200.0 GPa</span>
+                    </label>
+                    <input type="range" id="input-aisc-e-3-2" min="190" max="210" step="1" value="200" class="w-full accent-[#D1A705] h-4 cursor-pointer" oninput="calcularFlambagemAISC_3_2()">
+                </div>
+            </div>
+
+            <div class="p-3 bg-white/70 rounded-2xl text-fluid-meta text-[#555555] border border-black/5 flex items-center justify-between">
+                <span><i class="fa-solid fa-code-branch text-[#901812] mr-2"></i>Retornar ao Laboratório NBR 8800:2024:</span>
+                <button onclick="moveInGrid(0, -1)" class="px-3 py-1.5 bg-[#901812] hover:bg-[#72120e] text-white font-bold rounded-xl text-fluid-tag transition-all">
+                    <span>NBR Lab (Press ↑)</span>
+                    <i class="fa-solid fa-arrow-up ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Métricas de Estabilidade e Auditoria Numérica AISC 360-22 -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                    <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">RESULTADOS DE PROJETO (AISC 360-22)</span>
+                    <span id="res-aisc-regime-3-2" class="text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white">INELASTIC BUCKLING</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Tensão de Euler ($\sigma_e = F_e$)</span>
+                        <span id="res-aisc-sigmae-3-2" class="text-fluid-h3 text-white font-mono">308.4 MPa</span>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Fronteira $4{,}71\sqrt{E/\sigma_y}$</span>
+                        <span id="res-aisc-limite-3-2" class="text-fluid-h3 text-white font-mono">113.4</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Razão de Tensão ($\sigma_y / \sigma_e$)</span>
+                        <span id="res-aisc-razao-3-2" class="text-fluid-h3 text-[#D1A705] font-mono">1.119</span>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Eficiência Global ($\sigma_{cr} / \sigma_y$)</span>
+                        <span id="res-aisc-eficiencia-3-2" class="text-fluid-h3 text-[#D1A705] font-mono">62.6%</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Tensão Crítica Global ($\sigma_{cr} = F_{cr}$)</span>
+                        <span id="res-aisc-sigmacr-3-2" class="text-fluid-h3 text-white font-mono">215.9 MPa</span>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+                        <span class="text-fluid-meta text-[#DEDEDE] block">Capacidade Efetiva ($P_n / A_g$)</span>
+                        <span id="res-aisc-pnef-3-2" class="text-fluid-h3 text-[#D1A705] font-mono">215.9 MPa</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-white/5 rounded-2xl text-fluid-meta text-[#DEDEDE] flex items-center space-x-3 backdrop-blur-sm border border-white/10">
+                <i class="fa-solid fa-chart-line text-[#D1A705] text-xl"></i>
+                <span id="res-aisc-diagnostico-3-2">Regime inelástico (AISC Eq. E3-2): $\sigma_{cr} = [0{,}658^{(\sigma_y/\sigma_e)}] \sigma_y$. Flambagem local tratada via $A_e$ (Section E7).</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Camada 3: Rodapé Técnico -->
+<footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+    <span class="text-fluid-meta text-[#555555] font-semibold">
+        <i class="fa-solid fa-scale-balanced text-[#901812] mr-2"></i>CIV 153 / CIV 670 — DEC / UFV
+    </span>
+    <span class="text-fluid-tag text-[#901812] font-bold">Slide (3,2) • Lab Virtual ANSI/AISC 360-22 (Effective Width)</span>
+</footer>
+
+<!-- MODAL LOCAL: DETALHES DO MÉTODO DA LARGURA EFETIVA (AISC 360-22 SECTION E7) -->
+<dialog id="modal-aisc-e7-info-3-2" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-8 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+    <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">ANSI/AISC 360-22 — SECTION E7</span>
+            <h3 class="text-fluid-h2 text-white font-bold">Método da Largura Efetiva</h3>
+        </div>
+        <button onclick="document.getElementById('modal-aisc-e7-info-3-2').close()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-lg transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="space-y-3 text-fluid-meta text-[#DEDEDE] max-h-[60vh] overflow-y-auto pr-2">
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-white block text-fluid-body">Extinção do Fator $Q$:</strong>
+            O fator unificado $Q = Q_s \cdot Q_a$ foi descontinuado na formulação de colunas da AISC. A tensão crítica $\sigma_{cr}$ é calculada sobre a seção inteira usando a tensão de escoamento real $\sigma_y$.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-white block text-fluid-body">Área Efetiva $A_e$ (Eq. E7-1):</strong>
+            A penalização por esbeltez local ocorre na área resistente: $P_n = \sigma_{cr} A_e$, onde $A_e = \sum b_e t$ é a soma das larguras efetivas dos elementos comprimidos calculadas para a tensão $\sigma_{cr}$.
+        </div>
+        <div class="p-3 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+            <strong class="text-white block text-fluid-body">Fronteira Analítica E3:</strong>
+            O limite de transição elastoplástica independe de esbeltez local: $\frac{L_c}{r} \le 4{,}71\sqrt{\frac{E}{\sigma_y}} \iff \frac{\sigma_y}{\sigma_e} \le 2{,}25$.
+        </div>
+    </div>
+</dialog>
+
+<!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,2) -->
+<script>
+    function calcularFlambagemAISC_3_2() {
+        const lambda = parseFloat(document.getElementById('input-aisc-lambda-3-2').value);
+        const sigmay = parseFloat(document.getElementById('input-aisc-sigmay-3-2').value);
+        const ae_ag = parseFloat(document.getElementById('input-aisc-aeag-3-2').value);
+        const E_GPa = parseFloat(document.getElementById('input-aisc-e-3-2').value);
+        const E = E_GPa * 1000; // GPa para MPa
+
+        document.getElementById('lbl-aisc-lambda-3-2').innerText = lambda.toFixed(1);
+        document.getElementById('lbl-aisc-sigmay-3-2').innerText = `${sigmay.toFixed(0)} MPa`;
+        document.getElementById('lbl-aisc-aeag-3-2').innerText = ae_ag === 1.00 ? "1.00 (Compacta)" : `${ae_ag.toFixed(2)} (Esbelta)`;
+        document.getElementById('lbl-aisc-e-3-2').innerText = `${E_GPa.toFixed(1)} GPa`;
+
+        // Tensão Elástica de Euler (AISC 360-22 Eq. E3-4): sigma_e = Fe = (pi^2 * E) / (Lc / r)^2
+        const sigma_e = (Math.PI * Math.PI * E) / (lambda * lambda);
+
+        // Limite normativo exato do AISC 360-22 Section E3: 4,71 * sqrt(E / sigma_y)
+        const limite_lambda = 4.71 * Math.sqrt(E / sigmay);
+
+        // Razão de tensão: sigma_y / sigma_e (fronteira exata em 2,25)
+        const razao_tensao = sigmay / sigma_e;
+
+        let sigma_cr = 0;
+        const regimeEl = document.getElementById('res-aisc-regime-3-2');
+        const diagEl = document.getElementById('res-aisc-diagnostico-3-2');
+
+        // Classificação e cálculo conforme AISC 360-22 Section E3
+        if (lambda <= limite_lambda) {
+            // Regime inelástico (AISC Eq. E3-2)
+            sigma_cr = Math.pow(0.658, razao_tensao) * sigmay;
+            regimeEl.innerText = "INELASTIC BUCKLING (Lc/r ≤ 4,71√(E/σy))";
+            regimeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white";
+            diagEl.innerText = `Regime inelástico (Eq. E3-2): σ_cr = [0,658^(σ_y/σ_e)] σ_y = ${sigma_cr.toFixed(1)} MPa. Penalização local via Ae/Ag = ${ae_ag.toFixed(2)}.`;
+        } else {
+            // Regime elástico (AISC Eq. E3-3)
+            sigma_cr = 0.877 * sigma_e;
+            regimeEl.innerText = "ELASTIC BUCKLING (Lc/r > 4,71√(E/σy))";
+            regimeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#D1A705] text-[#333333]";
+            diagEl.innerText = `Regime puramente elástico de Euler (Eq. E3-3): σ_cr = 0,877 · σ_e = ${sigma_cr.toFixed(1)} MPa. Penalização local via Ae/Ag = ${ae_ag.toFixed(2)}.`;
+        }
+
+        // Tensão média resistente na seção bruta: Pn / Ag = sigma_cr * (Ae / Ag) conforme Eq. E7-1
+        const pn_ag = sigma_cr * ae_ag;
+        const eficiencia = (pn_ag / sigmay) * 100;
+
+        document.getElementById('res-aisc-sigmae-3-2').innerText = `${sigma_e.toFixed(1)} MPa`;
+        document.getElementById('res-aisc-limite-3-2').innerText = limite_lambda.toFixed(1);
+        document.getElementById('res-aisc-razao-3-2').innerText = razao_tensao.toFixed(3);
+        document.getElementById('res-aisc-eficiencia-3-2').innerText = `${eficiencia.toFixed(1)}%`;
+        document.getElementById('res-aisc-sigmacr-3-2').innerText = `${sigma_cr.toFixed(1)} MPa`;
+        document.getElementById('res-aisc-pnef-3-2').innerText = `${pn_ag.toFixed(1)} MPa`;
+    }
+
+    // Inicialização imediata ao carregar o elemento
+    if (document.getElementById('input-aisc-lambda-3-2')) {
+        calcularFlambagemAISC_3_2();
+    }
+</script>
+
+</div>
+
+
+
+
+
+<!-- SLIDE (4,0): CONCRETO ARMADO — NÃO LINEARIDADES E ESBELTEZ LIMITE (NBR 6118) -->
+<div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 04 — ESTRUTURAS DE CONCRETO</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Concreto Armado: Não Linearidades e NBR 6118</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Fenomenologia de 2ª Ordem e Esbeltez Limite -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-cubes-stacked text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Por que o Concreto Ignora a Curva de Euler Pura?</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        O concreto armado não é homogêneo nem linear-elástico: a fissuração do concreto tracionado e a plastificação sob compressão reduzem drasticamente a rigidez flexional efetiva ($(EI)_{ef} \ll E_{ci} I_c$).
+                    </p>
+
+                    <!-- Equação da Esbeltez Limite NBR 6118 -->
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.1rem, 1.7vw, 1.55rem);">
+                        $$\lambda_1 = \frac{25 + 12{,}5 \cdot (e_1 / h)}{\alpha_b} \quad \text{com} \quad 35 \le \lambda_1 \le 90$$
+                    </div>
+
+                    <!-- Definição dos Regimes de Análise -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3.5 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Pilares Robustos ($\lambda \le \lambda_1$):</strong>
+                            <p class="text-fluid-tag text-[#444444] mt-1">Efeitos locais de 2ª ordem são desprezíveis ($< 10\%$). A capacidade resistente é governada pela flexão composta de 1ª ordem.</p>
+                        </div>
+                        <div class="p-3.5 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Pilares Esbeltos ($\lambda > \lambda_1$):</strong>
+                            <p class="text-fluid-tag text-[#444444] mt-1">Obrigatoriedade do cálculo de efeitos de 2ª ordem locais ($M_{2d} = P \cdot y$), onde não linearidade física e geométrica interagem diretamente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-triangle-exclamation text-[#901812] mr-2"></i>Limite normativo superior rigoroso: $\lambda \le 200$ para qualquer pilar.</span>
+                    <button onclick="document.getElementById('modal-nbr6118-params-4-0').showModal()" class="px-4 py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl shadow-sm transition-colors text-fluid-tag border border-[#901812]/20 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Variáveis de $\lambda_1$</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Rigidez Efetiva, Fluência e Popups -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">MECÂNICA COMPÓSITA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Não Linearidades Física e Reológica</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        A rigidez de uma coluna de concreto varia dinamicamente em função da magnitude do carregamento, do tempo e do confinamento:
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-nbr6118-nlf-4-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-chart-line mr-1.5"></i>Não Linearidade Física (NLF):</strong>
+                                Redução da rigidez à flexão decorrente da fissuração do concreto e do diagrama tensão-deformação curvo.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-nbr6118-creep-4-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-hourglass-half mr-1.5"></i>Fluência do Concreto (Creep):</strong>
+                                Deformação lenta diferida no tempo sob carga sustentada que amplia progressivamente as excentricidades laterais.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Instabilidade em Estruturas de Madeira (NBR 7190)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (4,0) • Concreto Armado (NBR 6118)</span>
+    </footer>
+
+    <!-- MODAL 1: PARÂMETROS DA ESBELTEZ LIMITE LAMBDA_1 -->
+    <dialog id="modal-nbr6118-params-4-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ABNT NBR 6118 — ITEM 15.8.2</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Definição das Variáveis de $\lambda_1$</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr6118-params-4-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A esbeltez limite $\lambda_1$ define a fronteira abaixo da qual os efeitos locais de segunda ordem podem ser desconsiderados na estabilidade do pilar:</p>
+
+            <div class="space-y-3 text-fluid-meta">
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+                    <strong class="text-white block text-fluid-body mb-0.5">$e_1 / h$ — Excentricidade Relativa de 1ª Ordem:</strong>
+                    Razão entre a excentricidade de primeira ordem ($e_1$) e a dimensão da seção ($h$) no plano considerado. Quanto maior $e_1/h$, maior a flexão inicial e maior a tolerância limite antes que a 2ª ordem se torne proporcionalmente crítica.
+                </div>
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+                    <strong class="text-white block text-fluid-body mb-0.5">$\alpha_b$ — Coeficiente de Forma do Diagrama de Momentos:</strong>
+                    Avalia a distribuição do momento fletor ao longo do comprimento do elemento:
+                    <ul class="list-disc pl-5 mt-1 space-y-1 text-sm text-[#DEDEDE]">
+                        <li>$\alpha_b = 0{,}60 + 0{,}40 \cdot (M_{1B} / M_{1A}) \ge 0{,}40$ para pilares biarticulados com momentos nas pontas.</li>
+                        <li>$\alpha_b = 1{,}00$ para pilares biarticulados com cargas transversais no vão.</li>
+                        <li>$\alpha_b = 0{,}85$ para pilares em balanço.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 2: NÃO LINEARIDADE FÍSICA E RIGIDEZ EFETIVA -->
+    <dialog id="modal-nbr6118-nlf-4-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ABNT NBR 6118 — ITEM 15.7.3</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Rigidez Secante Efetiva ($(EI)_{sec}$)</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr6118-nlf-4-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Devido à fissuração do concreto e à deformabilidade plástica das armaduras sob compressão, a rigidez flexional teórica $E I$ de Euler é drasticamente atenuada:</p>
+            
+            <div class="bg-white/10 p-3.5 rounded-2xl text-center text-fluid-body font-mono text-[#D1A705] border border-white/10">
+                $$(EI)_{sec} \approx 0{,}20 \cdot E_{ci} I_c + 0{,}80 \cdot E_s I_s$$
+            </div>
+
+            <p class="text-fluid-meta">
+                Para elementos isolados esbeltos, a NBR 6118 adota modelos de aproximação como o <strong>Método do Pilar-Padrão com Curvatura Aproximada</strong> ou com <strong>Rigidez $\kappa$ Aproximada</strong>, estimando a curvatura crítica sem necessitar de integração numérica não linear completa a cada iteração.
+            </p>
+        </div>
+    </dialog>
+
+    <!-- MODAL 3: INFLUÊNCIA DA FLUÊNCIA (CREEP) -->
+    <dialog id="modal-nbr6118-creep-4-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">FENOMENOLOGIA REOLÓGICA</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Excentricidade por Fluência ($e_c$)</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr6118-creep-4-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Pilares sujeitos a ações permanentes prolongadas desenvolvem deformações diferidas no concreto que amplificam a curvatura ao longo dos anos:</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-2 text-fluid-meta">
+                <strong class="text-white block text-fluid-body">Mecanismo de Desestabilização Temporal:</strong>
+                <p>
+                    A excentricidade adicional por fluência $e_c$ é somada à excentricidade inicial de 1ª ordem ($e_1$):
+                </p>
+                <div class="font-mono text-center text-[#D1A705] text-fluid-body py-1">
+                    $$e_c \approx e_{1,sg} \cdot \left[ \exp\left( \frac{\phi \cdot P_{sg}}{P_E - P_{sg}} \right) - 1 \right]$$
+                </div>
+                <p>
+                    Onde $P_{sg}$ é a parcela permanente de quase-longa duração, $\phi$ é o coeficiente de fluência final do concreto e $P_E$ é a carga de Euler equivalente calculada com a rigidez secante.
+                </p>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (5,0): ESTRUTURAS DE MADEIRA — ESBELTEZ, ORTOTROPIA E NBR 7190 -->
+<div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-nature1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 05 — ESTRUTURAS DE MADEIRA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Madeira: Ortocavidade, Esbeltez e ABNT NBR 7190</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Classificação por Esbeltez e Formulação da Estabilidade -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-tree text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Classificação Estrutural por Esbeltez ($\lambda$)</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A ABNT NBR 7190 segmenta as peças comprimidas em três domínios cinemáticos em função da sensibilidade à instabilidade elasto-viscoplástica:
+                    </p>
+
+                    <!-- Equação Teórica de Tensão Crítica / Coeficiente Cp -->
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.05rem, 1.55vw, 1.45rem);">
+                        $$k_{mod} \cdot E_{0,m} \quad \longrightarrow \quad \sigma_{c,cr} = \frac{\pi^2 E_{ef}}{\lambda^2} \quad \text{com} \quad \lambda = \frac{L_{fl}}{i} \le 140$$
+                    </div>
+
+                    <!-- Três Categorias de Peças Comprimidas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-center">
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-tag uppercase">Curtas</strong>
+                            <span class="text-fluid-h3 font-mono font-bold text-[#333333] block my-0.5">$\lambda \le 40$</span>
+                            <span class="text-fluid-tag text-[#555555] block">Esmagamento plástico puro</span>
+                        </div>
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#D1A705] block text-fluid-tag uppercase">Medianamente Esbeltas</strong>
+                            <span class="text-fluid-h3 font-mono font-bold text-[#333333] block my-0.5">$40 < \lambda \le 80$</span>
+                            <span class="text-fluid-tag text-[#555555] block">Flexo-compressão acoplada</span>
+                        </div>
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-tag uppercase">Esbeltas</strong>
+                            <span class="text-fluid-h3 font-mono font-bold text-[#333333] block my-0.5">$80 < \lambda \le 140$</span>
+                            <span class="text-fluid-tag text-[#555555] block">Instabilidade por flexão preponderante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-ban text-[#901812] mr-2"></i>Limite normativo absoluto da NBR 7190: $\lambda \le 140$ para qualquer barra.</span>
+                    <button onclick="document.getElementById('modal-nbr7190-cp-5-0').showModal()" class="px-4 py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl shadow-sm transition-colors text-fluid-tag border border-[#901812]/20 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Fórmula NDS / NBR</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Anisotropia, Reologia e Modais Explicativos -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">COMPLEXIDADE REOLÓGICA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Fatores Físicos de Degradação da Rigidez</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Diferente do aço homogêneo e isotrópico, o colapso por instabilidade da madeira é agravado por defeitos de crescimento e tempo de aplicação da carga:
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-nbr7190-kmod-5-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-droplet mr-1.5"></i>Fator de Modificação ($k_{mod}$):</strong>
+                                Penaliza a rigidez mecânica ($E_{ef}$) em função da umidade ambiental, classe de carregamento e tipo de produto de madeira.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-nbr7190-creep-5-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-hourglass-start mr-1.5"></i>Fluência Reológica Lenta:</strong>
+                                Deformações viscosas incrementais ao longo dos anos causam aumento da excentricidade lateral e desestabilização prematura.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Síntese Comparativa Multimaterial (Slide 6,0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (5,0) • Estruturas de Madeira (NBR 7190)</span>
+    </footer>
+
+    <!-- MODAL 1: FORMULAÇÃO DO COEFICIENTE DE ESTABILIDADE Cp (Ylinen / NDS / NBR) -->
+    <dialog id="modal-nbr7190-cp-5-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">MODELO DE YLINEN & NDS (SLIDE 12)</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Fator de Estabilidade de Colunas ($C_p$)</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr7190-cp-5-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A formulação amplamente aplicada em madeira estrutural (adotada no slide de referência e compatível com a teoria de Ylinen) unifica o esmagamento e a flambagem através do coeficiente $C_p$:</p>
+            
+            <div class="bg-white/10 p-3.5 rounded-2xl text-center text-fluid-body font-mono text-[#D1A705] border border-white/10 overflow-x-auto">
+                $$C_p = \frac{1 + (\sigma_{cE} / f_c)}{2c} - \sqrt{\left[\frac{1 + (\sigma_{cE} / f_c)}{2c}\right]^2 - \frac{\sigma_{cE} / f_c}{c}} \text{}$$
+            </div>
+
+            <div class="space-y-2 text-fluid-meta">
+                <div class="p-3 bg-white/10 rounded-xl">
+                    <strong class="text-white block mb-0.5">Parâmetro de Imperfeição e Seção ($c$):</strong>
+                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#DEDEDE]">
+                        <li>$c = 0{,}80$ para peças de madeira serrada maciça (maior variabilidade e nós).</li>
+                        <li>$c = 0{,}90$ para madeira laminada colada (MLC) (maior homogeneidade e menor defeito inicial).</li>
+                    </ul>
+                </div>
+                <div class="p-3 bg-white/10 rounded-xl">
+                    <strong class="text-white block mb-0.5">Tensão Crítica de Euler Equivalente ($\sigma_{cE}$):</strong>
+                    <div class="font-mono text-center text-[#D1A705] py-1 text-sm">
+                        $$\sigma_{cE} = \frac{0{,}822 \cdot E_{0,ef}}{(L_{fl} / d)^2} \text{}$$
+                    </div>
+                    <span class="text-xs text-[#DEDEDE] block">Onde $d$ é a dimensão da seção transversal no plano de flambagem analisado.</span>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 2: FATOR DE MODIFICAÇÃO KMOD -->
+    <dialog id="modal-nbr7190-kmod-5-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ABNT NBR 7190 — ITEM 6.4</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Composição do Coeficiente $k_{mod}$</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr7190-kmod-5-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>O módulo de elasticidade efetivo que rege a estabilidade elástica depende das condições higrotérmicas e temporais do elemento:</p>
+            
+            <div class="bg-white/10 p-3 rounded-2xl text-center text-fluid-body font-mono text-[#D1A705] border border-white/10">
+                $$E_{0,ef} = k_{mod,1} \cdot k_{mod,2} \cdot k_{mod,3} \cdot E_{0,m}$$
+            </div>
+
+            <div class="space-y-2 text-fluid-meta">
+                <div class="p-3 bg-white/10 rounded-xl">
+                    <strong class="text-white block">$k_{mod,1}$ — Classe de Carregamento:</strong>
+                    Varia de $0{,}60$ (cargas permanentes de longa duração) a $1{,}10$ (cargas instantâneas como vento).
+                </div>
+                <div class="p-3 bg-white/10 rounded-xl">
+                    <strong class="text-white block">$k_{mod,2}$ — Classe de Umidade:</strong>
+                    Penaliza a rigidez mecânica quando a madeira está em equilíbrio com ambientes de umidade relativa superior a $65\%$, $75\%$ ou saturada.
+                </div>
+                <div class="p-3 bg-white/10 rounded-xl">
+                    <strong class="text-white block">$k_{mod,3}$ — Qualidade do Material:</strong>
+                    Diferencia madeira serrada de 1ª classe, de 2ª classe ou madeira industrializada/reconstituída (MLC).
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 3: EXCENTRICIDADES E FLUÊNCIA NA MADEIRA -->
+    <dialog id="modal-nbr7190-creep-5-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ABNT NBR 7190 — ITENS 7.2 E 7.3</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Imperfeições Iniciais e Fluência Temporal</h3>
+            </div>
+            <button onclick="document.getElementById('modal-nbr7190-creep-5-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Assim como no concreto e no aço, as peças reais de madeira comprimidas demandam a consideração de excentricidades acidentais e reológicas:</p>
+            
+            <div class="space-y-3 text-fluid-meta">
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+                    <strong class="text-white block text-fluid-body mb-0.5">Excentricidade Geométrica Acidental ($e_a$):</strong>
+                    Adotada normativamente como no mínimo $e_a \ge L_{fl} / 300$, decorrente de desalinhamentos de montagem, empenamento natural e desvios nas fibras.
+                </div>
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+                    <strong class="text-white block text-fluid-body mb-0.5">Coeficiente de Fluência ($\phi$):</strong>
+                    A deformação por fluência da madeira amplia as flechas laterais sob carregamentos mantidos no tempo:
+                    <div class="font-mono text-center text-[#D1A705] py-1 text-sm">
+                        $$e_{ef} = e_1 \cdot \exp\left( \frac{\phi \cdot P_{perm}}{P_{cr} - P_{perm}} \right)$$
+                    </div>
+                    Para esbeltezes medianas e elevadas, a perda de estabilidade pode ocorrer anos após a construção se a fluência não for computada na rigidez efetiva.
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (6,0): SÍNTESE COMPARATIVA MULTIMATERIAL (AÇO vs. CONCRETO vs. MADEIRA) -->
+<div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-polymer1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 06 — SÍNTESE COMPARATIVA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Panorama Comparativo de Instabilidade Estrutural</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Matriz Comparativa Estruturada -->
+            <div class="lg:col-span-8 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-table-cells text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Matriz Fenomenológica Normativa</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Comparativo direto dos mecanismos que desviam os elementos reais comprimidos da bifurcação analítica ideal de Euler:
+                    </p>
+
+                    <!-- Tabela Responsiva de Comparação -->
+                    <div class="overflow-x-auto overflow-y-hidden rounded-2xl border border-black/10 bg-white/80 backdrop-blur-md shadow-sm">
+                        <table class="w-full text-left border-collapse text-fluid-tag">
+                            <thead>
+                                <tr class="bg-[#901812] text-white">
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Material & Norma</th>
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Natureza Constitutiva</th>
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Mecanismo Crítico de Desvio</th>
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Critério Regulatório</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-black/10 text-[#333333]">
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Aço<br><span class="text-fluid-meta font-normal text-[#555555]">ABNT NBR 8800</span></td>
+                                    <td class="p-3">Isotrópico, elastoplástico homogêneo</td>
+                                    <td class="p-3">Tensões residuais térmicas + flambagem local ($Q$)</td>
+                                    <td class="p-3 font-mono font-bold">$\chi(\lambda_0)$ contínuo</td>
+                                </tr>
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Concreto<br><span class="text-fluid-meta font-normal text-[#555555]">ABNT NBR 6118</span></td>
+                                    <td class="p-3">Heterogêneo compósito, não linear físico</td>
+                                    <td class="p-3">Fissuração da matriz sob tração + fluência reológica</td>
+                                    <td class="p-3 font-mono font-bold">$\lambda_1$ & 2ª ordem local</td>
+                                </tr>
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Madeira<br><span class="text-fluid-meta font-normal text-[#555555]">ABNT NBR 7190</span></td>
+                                    <td class="p-3">Ortotrópico natural, higroscópico reológico</td>
+                                    <td class="p-3">Inclinação de grã, defeitos anatômicos e umidade</td>
+                                    <td class="p-3 font-mono font-bold">Fator $k_{mod}$ e $\lambda \le 140$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-code-compare text-[#901812] mr-2"></i>Nenhum material de engenharia real atinge a capacidade elástica pura de Euler em esbeltezes usuais.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Síntese Mecânica e Popups Detalhados -->
+            <div class="lg:col-span-4 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">MECÂNICA ESTRUTURAL COMPARADA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Domínio de Comportamento</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        A convergência para a solução elástica é assintótica e governada pela rigidez tangencial e pela estabilidade de forma:
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-comparativo-rigidez-6-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-arrows-split-up-and-left mr-1.5"></i>Rigidez Flexional Efetiva:</strong>
+                                Comparativo entre $E_{aço} I$, $(EI)_{sec}$ do concreto e $E_{0,ef} I$ da madeira.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-comparativo-imperf-6-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-ruler mr-1.5"></i>Tolerâncias & Excentricidades:</strong>
+                                Comparação de $e_0$ normativo entre aços ($L/1000$), concreto e madeira ($L/300$).
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Detalhes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Fechamento, Referências e Avaliação (Slide 7,0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-layer-group text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (6,0) • Síntese Multimaterial</span>
+    </footer>
+
+    <!-- MODAL 1: COMPARATIVO DE RIGIDEZ EFETIVA -->
+    <dialog id="modal-comparativo-rigidez-6-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">COMPARATIVO DE RIGIDEZ FLEXIONAL EFETIVA</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Degradação da Rigidez $(EI)_{ef}$</h3>
+            </div>
+            <button onclick="document.getElementById('modal-comparativo-rigidez-6-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A formulação teórica de Euler adota rigidez constante $EI$. Na engenharia prática, a rigidez flexional resistente é atenuada por fenômenos específicos de cada matriz:</p>
+            
+            <div class="space-y-3 text-fluid-meta">
+                <div class="p-3 bg-white/10 rounded-xl border-l-4 border-[#901812]">
+                    <strong class="text-white block">Aço Estrutural:</strong>
+                    $E \approx 200 \text{ GPa}$ constante no regime linear, sofrendo redução para o módulo tangente ($E_t < E$) quando a soma de tensões axiais com tensões residuais excede o limite de proporcionalidade ($sigma_y - \sigma_r$).
+                </div>
+                <div class="p-3 bg-white/10 rounded-xl border-l-4 border-[#D1A705]">
+                    <strong class="text-white block">Concreto Armado:</strong>
+                    $(EI)_{sec} \approx 0{,}20 E_{ci} I_c + 0{,}80 E_s I_s$. A perda de inércia pela fissuração (Estádio II) reduz a rigidez da seção bruta em mais de $50\%$ a $70\%$, agravada pela fluência sob carga contínua.
+                </div>
+                <div class="p-3 bg-white/10 rounded-xl border-l-4 border-white">
+                    <strong class="text-white block">Madeira:</strong>
+                    $E_{ef} = k_{mod} \cdot E_{0,m}$. A viscoelasticidade e o teor de umidade diminuem o módulo longitudinal ao longo do tempo, reduzindo diretamente a carga crítica elástica.
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 2: COMPARATIVO DE IMPERFEIÇÕES NORMATIVAS -->
+    <dialog id="modal-comparativo-imperf-6-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">IMPERFEIÇÕES GEOMÉTRICAS EQUIVALENTES</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Excentricidades Iniciais de Fabricação e Montagem</h3>
+            </div>
+            <button onclick="document.getElementById('modal-comparativo-imperf-6-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Como nenhuma coluna industrial é perfeitamente retilínea, as normas impõem flechas iniciais mínimas para assegurar o cálculo acoplado de flexo-compressão:</p>
+            
+            <div class="space-y-3 text-fluid-meta">
+                <div class="p-3.5 bg-white/10 rounded-xl">
+                    <strong class="text-[#D1A705] block">Aço (NBR 8800):</strong>
+                    Flecha sinusoidal de amplitude $e_0 = L / 1000$ (tolerância industrial rigorosa de laminação e soldagem).
+                </div>
+                <div class="p-3.5 bg-white/10 rounded-xl">
+                    <strong class="text-[#D1A705] block">Concreto Armado (NBR 6118):</strong>
+                    Excentricidade acidental mínima $e_{1,min} = 15 \text{ mm} + 0{,}03 h$, além do desaprumo global angular $\theta_a = 1 / (100 \sqrt{H})$.
+                </div>
+                <div class="p-3.5 bg-white/10 rounded-xl">
+                    <strong class="text-[#D1A705] block">Madeira (NBR 7190):</strong>
+                    Excentricidade acidental mínima $e_a \ge L / 300$, refletindo a maior variabilidade geométrica por empenamento e processamento mecânico das toras.
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (7,0): AVALIAÇÃO FORMATIVA — QUIZ CONCEITUAL & REFERÊNCIAS NORMATIVAS -->
+<div id="slide-7-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks4.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO DE ENCERRAMENTO CONCEITUAL</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Avaliação Formativa & Referências Normativas</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Referências Técnicas & Bibliografia Consolidada -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-book-bookmark text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Quadro Normativo & Bibliografia</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Bases técnicas e bibliografia estrutural que fundamentam as curvas de estabilidade e modelos empíricos analisados:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold">
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-stamp text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">ABNT NBR 8800:2008</strong>
+                                Projeto de estruturas de aço e de estruturas mistas de aço e concreto de edifícios (Anexo F: Flambagem Local e Curva $\chi$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-stamp text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">ABNT NBR 6118:2023</strong>
+                                Projeto de estruturas de concreto — Procedimento (Seção 15: Instabilidade e Efeitos de 2ª Ordem).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-stamp text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">ABNT NBR 7190:2022</strong>
+                                Projeto de estruturas de madeira (Critérios de esbeltez $\lambda \le 140$, classes de carregamento e fatores $k_{mod}$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-graduation-cap text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Beer, F. P., Johnston, E. R., et al.</strong>
+                                <em>Mecânica dos Materiais</em> (7ª ed.). McGraw-Hill Education (Capítulo 10: Colunas e Flambagem).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-info text-[#901812]"></i>
+                    <span>Aula 170: O dimensionamento completo com coeficientes parciais de segurança ($\gamma_f$, $\gamma_m$) será aprofundado na sequência.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Card de Avaliação, QR Code Operacional & Acesso Direto -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705] text-center">
+                <div class="space-y-3">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">VERIFICAÇÃO CONCEITUAL SÍNCRONA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Quiz Formativo — Aula 160</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">
+                        Avaliação individual dos fundamentos de Gordon-Rankine, desvios experimentais e particularidades de aço, concreto e madeira.
+                    </p>
+
+                    <!-- QR Code Oficial Operacional -->
+                    <div class="bg-white/95 backdrop-blur-md p-4 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl border border-white/20">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScfIYQFAB6UM_e0TcQsUK6d8M2DgGVyKokB5hx8gvRgeuJ1hw%2Fviewform%3Fusp%3Dheader&color=901812" alt="QR Code Quiz Aula 160" class="w-full h-auto block rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Aponte a Câmera</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-1">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScfIYQFAB6UM_e0TcQsUK6d8M2DgGVyKokB5hx8gvRgeuJ1hw/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 min-h-[52px]">
+                        <i class="fa-solid fa-pen-to-square text-[#D1A705] text-xl"></i>
+                        <span>Abrir Formulário do Quiz</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                    </a>
+                    <span class="text-fluid-tag text-[#DEDEDE] block">5 questões conceituais • Feedback imediato pós-envio</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-graduation-cap text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <button onclick="moveInGrid(1, 0)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1.5">
+            <span>Ir para Lista de Exercícios [Slide 8,0]</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (8,0): LISTA DE EXERCÍCIOS OFF-CLASS (ATIVIDADE QUANTITATIVA) -->
+<div id="slide-8-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks4.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ATIVIDADE PRÁTICA EXTRACLASSE</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Lista de Exercícios Off-Class: Instabilidade Real</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Estrutura Analítica e Diretrizes de Resolução -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-calculator text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Diretrizes & Escopo Quantitativo</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Conjunto de 10 problemas de cálculo aplicados à mecânica de colunas reais, confrontando as previsões de Euler com os modelos experimentais e parâmetros normativos:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold">
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-square-root-variable text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Gordon-Rankine & Parábolas de Transição:</strong>
+                                Determinação da capacidade crítica combinando escoamento e flambagem elástica via reciprocidade harmônica.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-cubes text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Aço (NBR 8800) & Flambagem Local:</strong>
+                                Cálculo do fator de redução $\chi(\lambda_0)$, atenuação pelo coeficiente $0{,}877$ e penalização por chapas delgadas ($Q$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-cubes-stacked text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Concreto Armado (NBR 6118):</strong>
+                                Verificação de esbeltez limite $\lambda_1$, excentricidades de 1ª ordem relativas e diagnóstico de efeitos locais de 2ª ordem.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-tree text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Madeira Estrutural (NBR 7190):</strong>
+                                Classificação por domínios de esbeltez ($\lambda \le 140$), fatores higrotérmicos $k_{mod}$ e formulação de estabilidade de Ylinen ($C_p$).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-clock text-[#901812]"></i>
+                    <span>Estimativa de resolução: 50 a 70 minutos • Questões autocontidas com resolução analítica passo a passo.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Card de Submissão, QR Code Operacional & Acesso Direto -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705] text-center">
+                <div class="space-y-3">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">SUBMISSÃO DE RESPOSTAS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Formulário de Exercícios Off-Class</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">
+                        Acesse o formulário oficial para envio das respostas e obtenha o feedback passo a passo com a demonstração analítica de cada questão.
+                    </p>
+
+                    <!-- QR Code Oficial Operacional -->
+                    <div class="bg-white/95 backdrop-blur-md p-4 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl border border-white/20">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSeoxY7hy9D3Pb_pxgBP2OeUYDQM8gsEShGrirt3eFzQkBV9Qg%2Fviewform%3Fusp%3Dheader&color=901812" alt="QR Code Lista de Exercicios Aula 160" class="w-full h-auto block rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Aponte a Câmera</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-1">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeoxY7hy9D3Pb_pxgBP2OeUYDQM8gsEShGrirt3eFzQkBV9Qg/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 min-h-[52px]">
+                        <i class="fa-solid fa-list-check text-[#D1A705] text-xl"></i>
+                        <span>Abrir Formulário da Lista</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                    </a>
+                    <span class="text-fluid-tag text-[#DEDEDE] block">10 questões quantitativas • Resolução completa pós-submissão</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-graduation-cap text-[#901812] mr-2"></i>CIV 153: Aula 160 — DEC / UFV
+        </span>
+        <button onclick="moveInGrid(-1, 0)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Retornar ao Quiz [Slide 7,0]</span>
+        </button>
+    </footer>
+</div>
+
+
+
+
+    
+
+    </main>
+
+    <!-- MOTOR DE NAVEGAÇÃO MATRICIAL 2D -->
+    <script>
+        let currentX = 0, currentY = 0;
+        let slideGrid = {};
+
+        function updateSlideGrid() {
+            slideGrid = {};
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                const parts = slide.id.replace('slide-', '').split('-');
+                if (parts.length === 2) slideGrid[`${parts[0]},${parts[1]}`] = slide.id;
+            });
+        }
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            updateSlideGrid();
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const maxH = Math.max(...keysH.map(k => parseInt(k.split(',')[0])), 0);
+            const totalMainSlides = keysH.length;
+            
+            document.getElementById('progressBar').style.width = `${maxH === 0 ? 100 : (currentX / maxH) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX},${currentY}) | ${currentX + 1} of ${totalMainSlides}`;
+
+            const dirs = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in dirs) {
+                const btn = document.getElementById(`btn-nav-${d}`);
+                if (btn) btn.classList.toggle('nav-enabled', hasSlide(currentX + dirs[d][0], currentY + dirs[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            updateSlideGrid();
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                
+                cur.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.add('slide-active');
+
+                currentX = nx; currentY = ny;
+                updateUI();
+                if (window.renderMathInElement) renderMathInElement(nxt);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA','DIALOG'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateUI(); 
+        });
+    </script>
+</body>
+</html>

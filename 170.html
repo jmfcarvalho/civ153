@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIV 153 | Introdução à mecânica das estruturas - PMS UFV</title>
+    
+    <!-- ESSENTIAL CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false });"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=PT+Sans+Narrow:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Preset PMS */
+            --color-primary: #901812;
+            --color-secondary: #D1A705;
+            --color-dark: #333333;
+            --color-bg: #F4F6F5;
+            --bg-shade-left: rgba(244,246,245,0.96);
+            --bg-shade-mid: rgba(244,246,245,0.70);
+            --bg-shade-right: rgba(244,246,245,0.15);
+            --card-light: rgba(255, 255, 255, 0.58);
+            --card-dark: rgba(51, 51, 51, 0.65);
+
+            /* Tipografia Super-Ampliada (Calibração Nativa Full HD / 4k) */
+            --fluid-h1: clamp(2.8rem, 6.2vw, 5.5rem);
+            --fluid-h2: clamp(2.2rem, 4.6vw, 4.0rem);
+            --fluid-h3: clamp(1.75rem, 3.2vw, 2.8rem);
+            --fluid-body: clamp(1.35rem, 2.2vw, 1.95rem);
+            --fluid-meta: clamp(1.15rem, 1.6vw, 1.55rem);
+            --fluid-tag: clamp(1.05rem, 1.4vw, 1.35rem);
+        }
+
+        html, body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: var(--color-bg); 
+            font-family: 'PT Sans Narrow', sans-serif; 
+            color: var(--color-dark); 
+        }
+
+        .text-fluid-h1 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h1); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; }
+        .text-fluid-h2 { font-family: 'Montserrat', sans-serif; font-size: var(--fluid-h2); font-weight: 800; line-height: 1.15; }
+        .text-fluid-h3 { font-size: var(--fluid-h3); font-weight: 700; line-height: 1.25; }
+        .text-fluid-body { font-size: var(--fluid-body); font-weight: 500; line-height: 1.45; }
+        .text-fluid-meta { font-size: var(--fluid-meta); font-weight: 600; }
+        .text-fluid-tag { font-size: var(--fluid-tag); font-weight: 700; letter-spacing: 0.04em; }
+
+        .katex-display { font-size: clamp(1.45rem, 2.7vw, 2.45rem) !important; margin: 0.85rem 0 !important; line-height: 1.25 !important; }
+        .katex { font-size: 1.08em; }
+
+        .slide-screen {
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .slide-active { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; z-index: 10; }
+        .slide-hidden-left  { opacity: 0; transform: translate3d(-100%, 0, 0); }
+        .slide-hidden-right { opacity: 0; transform: translate3d(100%, 0, 0); }
+        .slide-hidden-up    { opacity: 0; transform: translate3d(0, -100%, 0); }
+        .slide-hidden-down  { opacity: 0; transform: translate3d(0, 100%, 0); }
+
+        .slide-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide-screen::-webkit-scrollbar-thumb {
+            background: rgba(144, 24, 18, 0.25);
+            border-radius: 9999px;
+        }
+        .slide-screen::-webkit-scrollbar-thumb:hover {
+            background: rgba(144, 24, 18, 0.65);
+        }
+
+        .card-glass { 
+            border: none !important; 
+            background-color: var(--card-light); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+        .card-glass-dark { 
+            border: none !important; 
+            background-color: var(--card-dark); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            color: white; 
+            box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform, box-shadow; 
+        }
+
+        .card-glass:hover {
+            transform: translateY(-4px);
+            background-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-glass-dark:hover {
+            transform: translateY(-4px);
+            background-color: rgba(51, 51, 51, 0.78);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        .reveal-controls { 
+            position: fixed; 
+            bottom: 1.25rem; 
+            right: 1.25rem; 
+            width: 110px; 
+            height: 110px; 
+            z-index: 1000; 
+            pointer-events: none; 
+        }
+        .control-arrow {
+            position: absolute; 
+            width: 38px; 
+            height: 38px; 
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(6px); 
+            border-radius: 50%; 
+            color: #888888; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0.15; 
+            pointer-events: none;
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            font-size: 0.95rem;
+        }
+        .control-arrow.nav-up { top: 0; left: 36px; }
+        .control-arrow.nav-down { bottom: 0; left: 36px; }
+        .control-arrow.nav-left { top: 36px; left: 0; }
+        .control-arrow.nav-right { top: 36px; right: 0; }
+        .control-arrow.nav-enabled { color: var(--color-primary); opacity: 0.65; pointer-events: auto; }
+        .control-arrow.nav-enabled:hover { background: var(--color-primary); color: #FFF; opacity: 1; transform: scale(1.1); }
+    </style>
+</head>
+<body class="w-screen h-screen relative">
+
+    <div class="fixed top-0 left-0 h-2 bg-[var(--color-secondary)] transition-all duration-300 z-[1000]" id="progressBar" style="width: 0%;"></div>
+
+    <div class="fixed bottom-3 left-3 text-[0.80rem] sm:text-[0.90rem] font-bold text-[var(--color-dark)] bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm z-[1000] flex items-center space-x-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)]"></span>
+        <span id="slideIndicator">Slide (0,0) | 1 of 5</span>
+    </div>
+
+    <div class="reveal-controls">
+        <button id="btn-nav-up" onclick="moveInGrid(0, -1)" class="control-arrow nav-up" aria-label="Up"><i class="fa-solid fa-chevron-up"></i></button>
+        <button id="btn-nav-left" onclick="moveInGrid(-1, 0)" class="control-arrow nav-left" aria-label="Left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="btn-nav-right" onclick="moveInGrid(1, 0)" class="control-arrow nav-right" aria-label="Right"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="btn-nav-down" onclick="moveInGrid(0, 1)" class="control-arrow nav-down" aria-label="Down"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+
+    <main class="w-full h-full relative" id="slideDeck">
+
+         
+        
+
+
+<!-- SLIDE (0,0): TITLE COVER (AULA 170 — PRESET PMS) -->
+<div id="slide-0-0" class="slide-screen slide-active flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center gap-4 flex-shrink-0 mb-2">
+        <div class="flex items-center space-x-4 sm:space-x-6 bg-white/75 backdrop-blur-md px-6 py-3.5 rounded-2xl shadow-sm border border-black/5">
+            <img src="Logo UFV oficial horizontal.png" alt="UFV Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://dci.ufv.br/wp-content/themes/diretorias/assets/images/estrutura/logotipoUFV.png'">
+            <div class="h-10 w-[1px] bg-black/10"></div>
+            <span class="text-fluid-tag text-[#333333] font-bold">CIV 153 • PMS / UFV</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="https://pms.ufv.br" target="_blank" class="block bg-[#333333]/75 backdrop-blur-md p-3.5 rounded-2xl shadow-lg hover:scale-105 transition-transform border border-white/10">
+                <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+            </a>
+            <img src="Logo DEC oficial.png" alt="DEC Logo" class="h-10 sm:h-12 w-auto bg-white/75 backdrop-blur-md px-3 py-2 rounded-2xl shadow-sm border border-black/5" onerror="this.style.display='none'">
+        </div>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
+            <div class="lg:col-span-7 space-y-4">
+                <div class="p-8 sm:p-12 rounded-3xl card-glass border-l-[16px] border-[#901812]">
+                    <span class="text-fluid-tag text-[#D1A705] tracking-wider block mb-2 font-bold uppercase">AULA 170 — DIMENSIONAMENTO ESTRUTURAL ELEMENTAR</span>
+                    <h1 class="text-fluid-h1 mb-3 text-[#901812]">BARRAS SOB CARGA AXIAL<span class="block text-fluid-h2 text-[#333333] font-bold mt-2">Dimensionamento em Aço: Tração e Compressão</span></h1>
+                    <p class="text-fluid-body text-[#444444]">Fundamentos normativos de tensões admissíveis (AISC 360 ASD), esbeltez global e pré-dimensionamento de perfis comerciais para Arquitetura.</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 p-6 sm:p-10 rounded-3xl card-glass-dark text-white flex flex-col justify-between space-y-6">
+                <div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl text-center shadow-md">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fjmfcarvalho.github.io%2Fciv153%2F170.html&color=901812" alt="QR Code Acesso Mobile" class="w-full max-w-[200px] sm:max-w-[240px] mx-auto rounded-lg">
+                    <span class="text-fluid-tag text-[#333333] font-bold mt-3 block">Acompanhamento no Celular</span>
+                </div>
+                <div class="text-center space-y-1">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold">Docência e Coordenação</span>
+                    <p class="text-fluid-body font-bold text-white">Departamento de Engenharia Civil</p>
+                    <p class="text-fluid-meta text-[#DEDEDE]">DEC / CCE — Universidade Federal de Viçosa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico com Ação de Transição -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold"><i class="fa-solid fa-compass text-[#901812] mr-2"></i>Navegação: [→] Iniciar Aula | [↓] Diretrizes Pedagógicas & Disclaimers</span>
+        <button onclick="moveInGrid(0, 1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] hover:bg-[#901812] hover:text-white font-bold rounded-xl shadow-sm transition-all text-fluid-tag flex items-center space-x-2 border border-[#901812]/20">
+            <span>Escopo & Limitações</span>
+            <i class="fa-solid fa-arrow-down"></i>
+        </button>
+    </footer>
+</div>
+
+<!-- SLIDE (0,1): PLANO PEDAGÓGICO, ESCOPO E DISCLAIMERS (BRANCH VERTICAL Y=1) -->
+<div id="slide-0-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-10 md:p-12 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-geometric2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático -->
+    <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase">PLANO PEDAGÓGICO & DIRETRIZES TÉCNICAS</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Objetivos, Escopo Normativo e Limitações</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-6 py-3 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Capa</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full items-stretch">
+            <!-- Card 1: Foco em Arquitetura (2º Semestre) -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[10px] border-[#901812]">
+                <div>
+                    <div class="flex items-center space-x-3 text-[#901812] mb-3">
+                        <i class="fa-solid fa-compass-drafting text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Foco Didático</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">Abordagem formulada para estudantes de Arquitetura: conectar proporcionalidade geométrica e tensões admissíveis à seleção direta em catálogos comerciais.</p>
+                </div>
+                <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <li class="flex items-start"><i class="fa-solid fa-circle-check text-[#901812] mt-1 mr-2"></i>Tração governada pela área de aço ($A$)</li>
+                    <li class="flex items-start"><i class="fa-solid fa-circle-check text-[#901812] mt-1 mr-2"></i>Compressão regida pelo raio de giração ($r_{\text{min}}$)</li>
+                    <li class="flex items-start"><i class="fa-solid fa-circle-check text-[#901812] mt-1 mr-2"></i>Cálculo elástico direto sem iterações densas</li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Critério Normativo AISC 360 ASD -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[10px] border-[#D1A705]">
+                <div>
+                    <div class="flex items-center space-x-3 text-[#D1A705] mb-3">
+                        <i class="fa-solid fa-scale-balanced text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Base Normativa</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">Dimensionamento alinhado ao ANSI/AISC 360 ASD (Chapters D e E), trabalhando com carregamentos nominais de serviço e margens globais de segurança ($\text{FS} = 1{,}67$).</p>
+                </div>
+                <ul class="text-fluid-meta space-y-2 text-[#444444] border-t border-black/10 pt-3 font-semibold">
+                    <li class="flex items-start"><i class="fa-solid fa-arrow-right text-[#D1A705] mt-1 mr-2"></i>Tração: $\sigma_{\text{adm},t} = \sigma_y / 1{,}67 \approx 0{,}60 \sigma_y$</li>
+                    <li class="flex items-start"><i class="fa-solid fa-arrow-right text-[#D1A705] mt-1 mr-2"></i>Compressão: $\sigma_{\text{adm},c} = \sigma_{cr} / 1{,}67$</li>
+                    <li class="flex items-start"><i class="fa-solid fa-arrow-right text-[#D1A705] mt-1 mr-2"></i>Limite regulamentar de esbeltez: $\lambda \le 200$</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Disclaimers e Limites de Aplicação -->
+            <div class="p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[10px] border-white">
+                <div>
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold mb-2 uppercase">DISCLAIMER OBRIGATÓRIO</span>
+                    <h3 class="text-fluid-h3 text-white font-bold mb-3">Limitações de Aplicação</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">Para viabilizar a aplicação direta das equações sem verificações de placas finas, a aula restringe-se a perfis comerciais específicos.</p>
+                </div>
+                <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md text-fluid-meta text-[#E0E0E0] border border-white/10 space-y-1.5">
+                    <div><strong class="text-[#D1A705]">• Seções Não-Esbeltas:</strong> Aplica-se a perfis tubulares (HSS) e laminados com relações $b/t$ compactas (sem risco de flambagem local prematura).</div>
+                    <div><strong class="text-[#D1A705]">• Carga Centrada:</strong> Força axial pura aplicada no baricentro, sem flexão combinada.</div>
+                </div>
+                <button onclick="moveInGrid(1, 0)" class="w-full py-3.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md flex items-center justify-center space-x-2">
+                    <span>Iniciar Módulo 01</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold"><i class="fa-solid fa-shield-halved text-[#901812] mr-2"></i>Critério de Validade: Seções compactas/não-esbeltas segundo AISC 360 Table B4.1a.</span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (0,1) • Enquadramento & Disclaimers</span>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (1,0): FILOSOFIA DE PROJETO E MÉTODO ASD (AISC 360) -->
+<div id="slide-1-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 01 — SEGURANÇA ESTRUTURAL ELEMENTAR</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Filosofia ASD e Fator de Segurança Global (AISC 360)</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: O Princípio Fundamental das Tensões Admissíveis -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-scale-balanced text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">O Critério das Tensões Admissíveis (ASD)</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        O método ASD (<em>Allowable Strength Design</em>) fundamenta-se em limitar as tensões operacionais nominais dentro do regime elástico linear, mantendo uma margem calibrada de segurança ($\text{FS}$) contra os estados limites de escoamento e flambagem:
+                    </p>
+
+                    <!-- Equação Fundamental do ASD -->
+                    <div class="bg-white/85 backdrop-blur-md p-4 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.15rem, 1.8vw, 1.65rem);">
+                        $$\sigma = \frac{N}{A_g} \le \sigma_{\text{adm}} \quad \text{sendo} \quad \sigma_{\text{adm}} = \frac{\sigma_n}{\text{FS}}$$
+                    </div>
+
+                    <!-- Definição dos Termos Normativos -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Tensão Atuante ($\sigma = N / A_g$):</strong>
+                            <p class="text-fluid-tag text-[#444444] mt-1">Força axial normal de serviço sem fatores de majoração ($N$), dividida pela área da seção transversal ($A_g$).</p>
+                        </div>
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Fator de Segurança Global ($\text{FS}$):</strong>
+                            <p class="text-fluid-tag text-[#444444] mt-1">Margem regulamentar unificada: $\text{FS} = 1{,}67$ no escoamento à tração e na compressão axial pura ($\sigma_{\text{adm}} \approx 0{,}60 \sigma_y$).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-circle-check text-[#901812] mr-2"></i>AISC 360: Avaliação direta com cargas reais nominais (sem combinações ponderadas).</span>
+                    <button onclick="document.getElementById('modal-asd-conceito-1-0').showModal()" class="px-4 py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl shadow-sm transition-colors text-fluid-tag border border-[#901812]/20 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Fundamentos ASD</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: O que o Fator de Segurança Absorve na Prática -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">CONCEITO PARA ARQUITETURA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Por que Adotar $\text{FS} = 1{,}67$?</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        O fator de segurança não representa excesso de material, mas a garantia física de integridade diante das realidades de canteiro e uso:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-people-roof text-[#D1A705] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-white block">Sobrecargas de Ocupação:</strong>
+                                Variações nas ações de projeto (layouts, novos equipamentos, reformas imprevistas).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-ruler-combined text-[#D1A705] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-white block">Tolerâncias e Montagem:</strong>
+                                Desaprumos admissíveis, furações, curvaturas iniciais dos perfis e pequenas excentricidades.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start space-x-3">
+                            <i class="fa-solid fa-atom text-[#D1A705] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-white block">Dispersão do Material:</strong>
+                                Variações metalúrgicas na tensão de escoamento ($\sigma_y$) e tensões residuais de fabricação.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Dimensionamento de Tirantes Tracionados (Slide 2,0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-graduation-cap text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (1,0) • Método ASD & Fator de Segurança</span>
+    </footer>
+
+    <!-- MODAL AUTOCONTIDO: COMPREENSÃO NORMATIVA DO ASD -->
+    <dialog id="modal-asd-conceito-1-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ANSI/AISC 360 ASD</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Estrutura do Critério Admissível</h3>
+            </div>
+            <button onclick="document.getElementById('modal-asd-conceito-1-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A especificação AISC 360 estabelece o dimensionamento por resistências admissíveis como um formato unificado:</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-2 text-fluid-meta">
+                <strong class="text-white block text-fluid-body">Formulação de Esforços Nominais ($R_a \le R_n / \text{FS}$):</strong>
+                <p>
+                    O engenheiro/arquiteto calcula a solicitação com cargas de serviço não majoradas ($D + L$). A resistência nominal da barra ($R_n = \sigma_n \cdot A_g$) é reduzida pelo divisor de segurança $\text{FS} = 1{,}67$.
+                </p>
+                <div class="font-mono text-center text-[#D1A705] text-fluid-body py-1">
+                    $$\sigma_{\text{adm}} = \frac{\sigma_y}{1{,}67} = 0{,}5988 \, \sigma_y \approx 0{,}60 \, \sigma_y$$
+                </div>
+                <p class="text-sm text-[#DEDEDE]">
+                    Essa equivalência assegura que a estrutura permaneça dentro dos limites de deformação elástica reversível, sem necessidade de análises não-lineares plásticas complexas no segundo semestre.
+                </p>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,0): BARRAS TRACIONADAS — DIMENSIONAMENTO ELEMENTAR EM AÇO (MÉTODO ASD) -->
+<div id="slide-2-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-concrete1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 02 — ELEMENTOS TRACIONADOS (TIRANTES)</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Tração Axial: Escoamento, Seções Selecionadas e Área Necessária</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Formulação Direta de Dimensionamento ASD -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-arrows-left-right text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Critério Direto de Dimensionamento</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Na tração axial não ocorre instabilidade por flambagem. O dimensionamento requer apenas área de aço suficiente para conter as tensões de serviço no regime elástico:
+                    </p>
+
+                    <!-- Equação da Tensão Admissível e Área Necessária -->
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.15rem, 1.8vw, 1.65rem);">
+                        $$A_{\text{nec}} \ge \frac{N}{\sigma_{\text{adm},t}} \quad \text{com} \quad \sigma_{\text{adm},t} = \frac{\sigma_y}{\text{FS}_t} = \frac{\sigma_y}{1{,}67} \approx 0{,}60 \, \sigma_y$$
+                    </div>
+
+                    <!-- Critérios Normativos AISC 360-22 Section D2 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3.5 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Escoamento na Seção Bruta ($A_g$):</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1 font-mono text-fluid-tag text-[#333333]">
+                                $$N \le 0{,}60 \, \sigma_y \, A_g$$
+                            </div>
+                            <span class="text-fluid-tag text-[#666666] block">Governa o corpo do tirante e impede deformações plásticas permanentes em serviço.</span>
+                        </div>
+                        <div class="p-3.5 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Perfis Adotados para Cálculo Direto:</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1 font-mono text-fluid-tag text-[#333333]">
+                                $$U = 1{,}0 \implies A_e = A_g \text{ (ou } A_n\text{)}$$
+                            </div>
+                            <span class="text-fluid-tag text-[#666666] block">Barras redondas maciças e barras chatas com fixação direta sem efeitos complexos de ligação.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-circle-check text-[#901812] mr-2"></i>AISC Chapter D: Fator de segurança unificado $\text{FS}_t = 1{,}67$.</span>
+                    <button onclick="document.getElementById('modal-tracao-disclaimer-2-0').showModal()" class="px-4 py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl shadow-sm transition-colors text-fluid-tag border border-[#901812]/20 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Disclaimers de Ligação</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Eficiência Material e Aplicação em Arquitetura -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">APLICAÇÃO ARQUITETÔNICA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Leveza e Geometria dos Tirantes</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Na tração axial pura, a rigidez flexional e a forma da seção não interferem na capacidade resistente; apenas a quantidade de aço mobilizada define a resistência:
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-shapes mr-1.5"></i>Independência da Inércia:</strong>
+                            Barras maciças redondas e barras chatas proporcionam máxima transparência visual e facilidade de ancoragem em coberturas leves e marquises.
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-ruler mr-1.5"></i>Limite de Esbeltez Recomendado:</strong>
+                            Para assegurar rigidez durante o manuseio, transporte e evitar vibrações dinâmicas sob rajadas de vento, o AISC Section D1 recomenda $L/r \le 300$ para tirantes rígidos.
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-2">
+                    <span>Simulador de Tirante (Pressione ↓)</span>
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <div class="flex items-center space-x-4">
+            <button onclick="moveInGrid(0, 1)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1">
+                <span>Lab Tirante [↓]</span>
+            </button>
+            <span class="text-fluid-tag text-[#901812] font-bold">Slide (2,0) • Barras Tracionadas</span>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTOCONTIDO: LIMITAÇÕES DE APLICAÇÃO E LIGAÇÕES EM TRAÇÃO -->
+    <dialog id="modal-tracao-disclaimer-2-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">DISCLAIMER NORMATIVO — AISC 360 CHAPTER D</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Hipóteses e Restrições de Cálculo</h3>
+            </div>
+            <button onclick="document.getElementById('modal-tracao-disclaimer-2-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A formulação direta $A_{\text{nec}} = N / (0{,}60 \sigma_y)$ assume premissas construtivas específicas para viabilizar a aplicação em início de curso:</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-2 text-fluid-meta">
+                <strong class="text-white block text-fluid-body">1. Ausência de Redução por Cisalhamento Indireto ($U = 1{,}0$):</strong>
+                <p>
+                    Aplica-se estritamente quando todos os elementos da seção transversal são conectados diretamente à chapa de nó (gusset), como barras chatas soldadas ou barras redondas rosqueadas em garfos axiais.
+                </p>
+                <strong class="text-white block text-fluid-body mt-2">2. Limitação para Cantoneiras e Perfis Abertos:</strong>
+                <p>
+                    Se forem utilizadas cantoneiras aparafusadas apenas por uma das abas, surge o efeito de <em>shear lag</em> ($U < 1{,}0$) e excentricidade inerente na ligação, reduzindo a capacidade resistente e demandando verificações adicionais de ruptura da seção líquida efetiva ($A_e = U \cdot A_n$) e rasgamento terminal (bloco de cisalhamento).
+                </p>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (2,1): LAB VIRTUAL — DIMENSIONAMENTO DE TIRANTE METÁLICO (BRANCH Y=1) -->
+<div id="slide-2-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-polymer1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO INTERATIVO (BRANCH Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Simulador de Tração: Dimensionamento Direto AISC 360 ASD</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Teoria (2,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch w-full">
+            <!-- Painel Esquerdo: Sliders e Parâmetros de Entrada -->
+            <div class="lg:col-span-5 p-5 sm:p-7 rounded-3xl card-glass space-y-3 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between border-b border-black/10 pb-2">
+                        <div class="flex items-center space-x-2.5 text-[#901812]">
+                            <i class="fa-solid fa-sliders text-2xl"></i>
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros de Projeto</h3>
+                        </div>
+                        <span class="text-fluid-tag text-[#901812] font-bold uppercase">AISC Section D2</span>
+                    </div>
+                    <p class="text-fluid-meta text-[#444444]">
+                        Defina a carga axial nominal de serviço e a especificação do aço estrutural para o dimensionamento direto:
+                    </p>
+
+                    <!-- Sliders de Força e Aço -->
+                    <div class="space-y-2 pt-1">
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Força Axial de Serviço ($N$):</span>
+                                <span id="lbl-forca-2-1" class="text-[#901812] font-mono">180 kN</span>
+                            </label>
+                            <input type="range" id="input-forca-2-1" min="20" max="600" step="10" value="180" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularTirante_2_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Aço Estrutural ($\sigma_y$):</span>
+                                <span id="lbl-fy-2-1" class="text-[#901812] font-mono">250 MPa (ASTM A36)</span>
+                            </label>
+                            <input type="range" id="input-fy-2-1" min="1" max="2" step="1" value="1" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularTirante_2_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Comprimento do Tirante ($L$):</span>
+                                <span id="lbl-comp-2-1" class="text-[#901812] font-mono">4,0 m</span>
+                            </label>
+                            <input type="range" id="input-comp-2-1" min="1.0" max="10.0" step="0.5" value="4.0" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularTirante_2_1()">
+                        </div>
+
+                        <div class="p-2.5 bg-white/70 rounded-xl border border-black/5 text-fluid-tag text-[#555555] space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span>Fator de Segurança ($\text{FS}_t$):</span>
+                                <strong class="text-[#901812] font-mono">1,67 (Fixo AISC D2)</strong>
+                            </div>
+                            <div class="flex justify-between items-center border-t border-black/10 pt-1">
+                                <span>Tensão Admissível ($\sigma_{\text{adm},t}$):</span>
+                                <strong id="lbl-sigmaadm-2-1" class="text-[#901812] font-mono">149,7 MPa</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2 bg-white/70 rounded-xl border border-black/5 text-fluid-tag text-[#555555] flex items-center space-x-2">
+                    <i class="fa-solid fa-shield-halved text-[#901812]"></i>
+                    <span>Premissa: Fixação direta sem redução de área líquida ($U = 1{,}0$).</span>
+                </div>
+            </div>
+
+            <!-- Painel Direito: Resultados e Seleção de Perfis Comerciais Padronizados -->
+            <div class="lg:col-span-7 p-5 sm:p-7 rounded-3xl card-glass-dark text-white space-y-3.5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">SELEÇÃO DIRETA DE SEÇÃO COMERCIAL</span>
+                        <span id="res-badge-2-1" class="text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-green-700 text-white">DIMENSIONADO</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2.5 text-center">
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Área Mínima ($A_{\text{req}}$)</span>
+                            <span id="res-anec-2-1" class="text-fluid-h3 text-white font-mono font-bold">12,0 cm²</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Ø Teórico Mínimo</span>
+                            <span id="res-diam-teorico-2-1" class="text-fluid-h3 text-[#D1A705] font-mono font-bold">39,1 mm</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Taxa de Trabalho ($\sigma / \sigma_{\text{adm}}$)</span>
+                            <span id="res-taxa-2-1" class="text-fluid-h3 text-white font-mono font-bold">96,8%</span>
+                        </div>
+                    </div>
+
+                    <!-- Sugestões de Geometrias Comerciais Padronizadas -->
+                    <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10 space-y-2">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">Opções Comerciais Padronizadas (AISC):</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-fluid-tag">
+                            <div class="p-2.5 bg-white/5 rounded-xl border border-white/10 space-y-1">
+                                <strong class="text-white block"><i class="fa-solid fa-circle-dot text-[#D1A705] mr-1"></i>Barra Redonda Maciça:</strong>
+                                <span id="sug-redondo-2-1" class="text-[#DEDEDE] font-mono block">Ø Comercial: 1 5/8" (41,3 mm)</span>
+                                <span id="sug-redondo-dados-2-1" class="text-[#A0A0A0] text-fluid-meta block">Área: 13,4 cm² | Peso: 10,5 kg/m</span>
+                                <span id="sug-redondo-esbeltez-2-1" class="text-[#DEDEDE] text-fluid-meta block">Esbeltez L/r: 387,4</span>
+                            </div>
+                            <div class="p-2.5 bg-white/5 rounded-xl border border-white/10 space-y-1">
+                                <strong class="text-white block"><i class="fa-solid fa-square text-[#D1A705] mr-1"></i>Barra Chata Comercial (Soldada):</strong>
+                                <span id="sug-chata-2-1" class="text-[#DEDEDE] font-mono block">101,6 mm × 12,7 mm (4" × 1/2")</span>
+                                <span id="sug-chata-dados-2-1" class="text-[#A0A0A0] text-fluid-meta block">Área: 12,9 cm² | Peso: 10,1 kg/m</span>
+                                <span id="sug-chata-esbeltez-2-1" class="text-[#DEDEDE] text-fluid-meta block">Esbeltez L/r: 1090,9</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diagnóstico Técnico com Verificação AISC D1 -->
+                    <div class="p-2.5 bg-white/5 rounded-xl border border-white/10 text-fluid-tag text-[#DEDEDE] space-y-1">
+                        <strong class="text-[#D1A705] block">Diagnóstico Regulamentar & Rigidez de Serviço:</strong>
+                        <span id="res-diagnostico-2-1" class="block">Seção plenamente aprovada quanto à resistência elástica em serviço segundo o AISC 360-22 ASD.</span>
+                        <span id="res-esbeltez-alerta-2-1" class="block text-yellow-300"></span>
+                    </div>
+                </div>
+
+                <div class="p-2 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-check text-[#D1A705]"></i>
+                    <span id="res-status-2-1">Critério AISC 360 atendido: Tensão atuante calculada estritamente dentro da faixa elástica admissível.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-1 pt-1.5 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-microscope text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (2,1) • Lab Interativo de Tirantes</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (2,1) -->
+    <script>
+        function calcularTirante_2_1() {
+            const N_kN = parseFloat(document.getElementById('input-forca-2-1').value);
+            const N_N = N_kN * 1000;
+            const steelOpt = parseInt(document.getElementById('input-fy-2-1').value);
+            const L_m = parseFloat(document.getElementById('input-comp-2-1').value);
+            const L_mm = L_m * 1000;
+
+            const fy = steelOpt === 1 ? 250 : 345;
+            const steelLabel = steelOpt === 1 ? "250 MPa (ASTM A36)" : "345 MPa (ASTM A572 Gr. 50)";
+            const Omega_t = 1.67;
+            const σ_adm = fy / Omega_t;
+
+            document.getElementById('lbl-forca-2-1').innerText = `${N_kN.toFixed(0)} kN`;
+            document.getElementById('lbl-fy-2-1').innerText = steelLabel;
+            document.getElementById('lbl-comp-2-1').innerText = `${L_m.toFixed(1)} m`;
+            document.getElementById('lbl-sigmaadm-2-1').innerText = `${σ_adm.toFixed(1)} MPa`;
+
+            // Área necessária teórica mínima (mm² e cm²)
+            const A_req_mm2 = N_N / σ_adm;
+            const A_req_cm2 = A_req_mm2 / 100;
+            const diam_teorico_mm = Math.sqrt((4 * A_req_mm2) / Math.PI);
+
+            document.getElementById('res-anec-2-1').innerText = `${A_req_cm2.toFixed(1)} cm²`;
+            document.getElementById('res-diam-teorico-2-1').innerText = `Ø ${diam_teorico_mm.toFixed(1)} mm`;
+
+            // Tabela comercial de barras redondas maciças padronizadas (polegadas -> mm)
+            const barrasRedondas = [
+                { bitola: '1/2"', d: 12.7 },
+                { bitola: '5/8"', d: 15.88 },
+                { bitola: '3/4"', d: 19.05 },
+                { bitola: '7/8"', d: 22.23 },
+                { bitola: '1"', d: 25.4 },
+                { bitola: '1 1/8"', d: 28.58 },
+                { bitola: '1 1/4"', d: 31.75 },
+                { bitola: '1 3/8"', d: 34.93 },
+                { bitola: '1 1/2"', d: 38.1 },
+                { bitola: '1 5/8"', d: 41.28 },
+                { bitola: '1 3/4"', d: 44.45 },
+                { bitola: '2"', d: 50.8 },
+                { bitola: '2 1/4"', d: 57.15 },
+                { bitola: '2 1/2"', d: 63.5 },
+                { bitola: '2 3/4"', d: 69.85 },
+                { bitola: '3"', d: 76.2 }
+            ];
+
+            let redondoSel = barrasRedondas[barrasRedondas.length - 1];
+            for (let i = 0; i < barrasRedondas.length; i++) {
+                const area = (Math.PI * Math.pow(barrasRedondas[i].d, 2)) / 4;
+                if (area >= A_req_mm2) {
+                    redondoSel = barrasRedondas[i];
+                    break;
+                }
+            }
+
+            const areaRedondoMm2 = (Math.PI * Math.pow(redondoSel.d, 2)) / 4;
+            const areaRedondoCm2 = areaRedondoMm2 / 100;
+            const pesoRedondo = (areaRedondoMm2 * 0.00785); // kg/m
+            const rRedondo = redondoSel.d / 4; // raio de giração de seção circular maciça r = d/4
+            const lambdaRedondo = L_mm / rRedondo;
+
+            document.getElementById('sug-redondo-2-1').innerText = `Ø Comercial: ${redondoSel.bitola} (${redondoSel.d.toFixed(1)} mm)`;
+            document.getElementById('sug-redondo-dados-2-1').innerText = `Área: ${areaRedondoCm2.toFixed(1)} cm² | Massa: ${pesoRedondo.toFixed(1)} kg/m`;
+            document.getElementById('sug-redondo-esbeltez-2-1').innerText = `Esbeltez de Serviço (L/r): ${lambdaRedondo.toFixed(1)}`;
+
+            // Tabela comercial de barras chatas padronizadas (largura x espessura em mm)
+            const barrasChatas = [
+                { desc: '50,8 × 9,5 mm (2" × 3/8")', b: 50.8, t: 9.53 },
+                { desc: '63,5 × 9,5 mm (2 1/2" × 3/8")', b: 63.5, t: 9.53 },
+                { desc: '76,2 × 9,5 mm (3" × 3/8")', b: 76.2, t: 9.53 },
+                { desc: '76,2 × 12,7 mm (3" × 1/2")', b: 76.2, t: 12.7 },
+                { desc: '101,6 × 9,5 mm (4" × 3/8")', b: 101.6, t: 9.53 },
+                { desc: '101,6 × 12,7 mm (4" × 1/2")', b: 101.6, t: 12.7 },
+                { desc: '101,6 × 15,9 mm (4" × 5/8")', b: 101.6, t: 15.88 },
+                { desc: '127,0 × 12,7 mm (5" × 1/2")', b: 127.0, t: 12.7 },
+                { desc: '127,0 × 19,1 mm (5" × 3/4")', b: 127.0, t: 19.05 },
+                { desc: '152,4 × 12,7 mm (6" × 1/2")', b: 152.4, t: 12.7 },
+                { desc: '152,4 × 19,1 mm (6" × 3/4")', b: 152.4, t: 19.05 },
+                { desc: '152,4 × 25,4 mm (6" × 1")', b: 152.4, t: 25.4 }
+            ];
+
+            let chataSel = barrasChatas[barrasChatas.length - 1];
+            for (let i = 0; i < barrasChatas.length; i++) {
+                const area = barrasChatas[i].b * barrasChatas[i].t;
+                if (area >= A_req_mm2) {
+                    chataSel = barrasChatas[i];
+                    break;
+                }
+            }
+
+            const areaChataMm2 = chataSel.b * chataSel.t;
+            const areaChataCm2 = areaChataMm2 / 100;
+            const pesoChata = (areaChataMm2 * 0.00785); // kg/m
+            const rChataMin = chataSel.t / Math.sqrt(12); // raio de giração mínimo no eixo fraco r = t / sqrt(12)
+            const lambdaChata = L_mm / rChataMin;
+
+            document.getElementById('sug-chata-2-1').innerText = chataSel.desc;
+            document.getElementById('sug-chata-dados-2-1').innerText = `Área: ${areaChataCm2.toFixed(1)} cm² | Massa: ${pesoChata.toFixed(1)} kg/m`;
+            document.getElementById('sug-chata-esbeltez-2-1').innerText = `Esbeltez de Serviço (L/r): ${lambdaChata.toFixed(1)}`;
+
+            // Taxa de trabalho calculada sobre o redondo comercial adotado
+            const sigmaAtuante = N_N / areaRedondoMm2;
+            const taxa = (sigmaAtuante / σ_adm) * 100;
+            document.getElementById('res-taxa-2-1').innerText = `${taxa.toFixed(1)}%`;
+
+            // Diagnóstico e recomendação normativa de esbeltez (AISC Section D1)
+            const diagEl = document.getElementById('res-diagnostico-2-1');
+            const alertaEl = document.getElementById('res-esbeltez-alerta-2-1');
+            const badgeEl = document.getElementById('res-badge-2-1');
+
+            diagEl.innerText = `Com o perfil adotado (A = ${areaRedondoCm2.toFixed(1)} cm²), a tensão atuante é de ${sigmaAtuante.toFixed(1)} MPa ≤ ${σ_adm.toFixed(1)} MPa.`;
+
+            if (lambdaRedondo > 300) {
+                badgeEl.innerText = "ATENÇÃO: ESBELTEZ";
+                badgeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-yellow-600 text-white";
+                alertaEl.innerText = `Nota AISC Section D1: A esbeltez de serviço da barra redonda (L/r = ${lambdaRedondo.toFixed(0)}) supera a recomendação de rigidez de manuseio/vibração (L/r ≤ 300). Recomenda-se esticador com pré-tensão ou aumentar o diâmetro.`;
+            } else {
+                badgeEl.innerText = "SEÇÃO APROVADA";
+                badgeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-green-700 text-white";
+                alertaEl.innerText = `A esbeltez de serviço (L/r = ${lambdaRedondo.toFixed(0)}) atende plenamente ao limite recomendado pelo AISC Section D1 (L/r ≤ 300) para barras rígidas sob vento/transporte.`;
+            }
+        }
+
+        if (document.getElementById('input-forca-2-1')) calcularTirante_2_1();
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,0): BARRAS COMPRIMIDAS — FLAMBAGEM GLOBAL E TENSÃO ADMISSÍVEL (AISC 360 ASD) -->
+<div id="slide-3-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks2.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 03 — ELEMENTOS COMPRIMIDOS (PILARETES E BARRAS DE TRELIÇA)</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Compressão Axial: Flambagem Global e Tensão Admissível (AISC 360)</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+
+            <!-- Coluna 1: Formulação Oficial AISC 360 ASD (Chapter E) -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3 text-[#901812]">
+                            <i class="fa-solid fa-arrows-to-dot text-3xl"></i>
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Critério de Tensão Admissível ($\sigma_{\text{adm},c}$)</h3>
+                        </div>
+                        <button onclick="document.getElementById('modal-disclaimer-compressao-3-0').showModal()" class="px-3 py-1.5 bg-[#901812]/10 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl text-fluid-tag transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span>Disclaimers de Seção</span>
+                        </button>
+                    </div>
+
+                    <p class="text-fluid-body text-[#444444]">
+                        Na compressão axial, a capacidade resistente é governada pela instabilidade elástica ou inelástica. A tensão admissível resulta da tensão crítica nominal dividida por $\text{FS}_c = 1{,}67$:
+                    </p>
+
+                    <!-- Equação Principal da Compressão ASD -->
+                    <div class="bg-white/85 backdrop-blur-md p-3.5 rounded-2xl text-center overflow-x-auto overflow-y-hidden border border-black/5" style="font-size: clamp(1.15rem, 1.8vw, 1.65rem);">
+                        $$\sigma = \frac{N}{A_g} \le \sigma_{\text{adm},c} = \frac{\sigma_{cr}}{\text{FS}_c} \quad \text{com} \quad \sigma_e = \frac{\pi^2 E}{\lambda^2}, \quad \lambda = \frac{K L}{r_{\text{min}}}$$
+                    </div>
+
+                    <!-- Ramos Regulamentares AISC 360 Chapter E3 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Ramo Inelástico ($\frac{\sigma_y}{\sigma_e} \le 2{,}25$ ou $\lambda \le 4{,}71\sqrt{\frac{E}{\sigma_y}}$):</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1 font-mono text-fluid-tag text-[#333333]">
+                                $$\sigma_{cr} = \left[0{,}658^{\frac{\sigma_y}{\sigma_e}}\right] \sigma_y$$
+                            </div>
+                            <span class="text-fluid-tag text-[#666666] block">Atenuação decorrente de imperfeições geométricas e tensões residuais.</span>
+                        </div>
+                        <div class="p-3 bg-white/75 rounded-2xl border border-black/5">
+                            <strong class="text-[#901812] block text-fluid-meta">Ramo Elástico de Euler ($\frac{\sigma_y}{\sigma_e} > 2{,}25$):</strong>
+                            <div class="overflow-x-auto overflow-y-hidden text-center py-1 font-mono text-fluid-tag text-[#333333]">
+                                $$\sigma_{cr} = 0{,}877 \, \sigma_e$$
+                            </div>
+                            <span class="text-fluid-tag text-[#666666] block">Instabilidade global por flexão em colunas esbeltas calibrada com curvatura inicial.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-triangle-exclamation text-[#901812] mr-2"></i>AISC Section E2: Limite máximo regulamentar recomendado $\lambda \le 200$.</span>
+                    <span class="text-fluid-tag text-[#901812] font-bold">$\text{FS}_c = 1{,}67$ (ASD)</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Seções Adotadas e Critério Físico em Arquitetura -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">SELEÇÃO GEOMÉTRICA EM ARQUITETURA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">O Papel do Raio de Giração ($r_{\text{min}}$)</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        Na compressão, a área isolada não assegura estabilidade. O perfil deve concentrar massa afastada do centro geométrico para maximizar $r = \sqrt{I/A}$:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-circle-notch mr-1.5"></i>Tubos Estruturais HSS (ASTM A500):</strong>
+                            Perfis circulares e tubos quadrados possuem inércia idêntica em todos os eixos ($r_x = r_y$), eliminando planos fracos de flambagem e otimizando a esbeltez em pilares expostos.
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-grip-lines-vertical mr-1.5"></i>Perfis W / H Compactos (ASTM A572):</strong>
+                            Apresentam eixo de menor inércia ($y$). A verificação da esbeltez global é mandatória no eixo fraco ($r_y < r_x$), salvo se houver travamento intermediário de fachada.
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="moveInGrid(0, 1)" class="w-full py-4 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white font-bold rounded-2xl transition-all text-fluid-body shadow-md min-h-[56px] flex items-center justify-center space-x-2">
+                    <span>Simulador de Coluna AISC (Pressione ↓)</span>
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <div class="flex items-center space-x-4">
+            <button onclick="moveInGrid(0, 1)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1">
+                <span>Lab Coluna [↓]</span>
+            </button>
+            <span class="text-fluid-tag text-[#901812] font-bold">Slide (3,0) • Barras Comprimidas (AISC 360 ASD)</span>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTOCONTIDO: DISCLAIMER OBRIGATÓRIO DE LIMITAÇÃO DE SEÇÕES -->
+    <dialog id="modal-disclaimer-compressao-3-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">DISCLAIMER NORMATIVO — AISC 360 CHAPTER E</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Limitações e Hipóteses de Flambagem</h3>
+            </div>
+            <button onclick="document.getElementById('modal-disclaimer-compressao-3-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>A aplicação direta das formulações do AISC 360 Section E3 exige o cumprimento rigoroso das seguintes condições de projeto:</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-3 text-fluid-meta">
+                <div>
+                    <strong class="text-white block text-fluid-body">1. Hipótese de Seções Não-Esbeltas (Sem Flambagem Local):</strong>
+                    <p class="text-sm mt-0.5">
+                        As equações assumem que as paredes do perfil atendem aos limites de compactação da Tabela B4.1a do AISC 360. Perfis de chapas muito delgadas (como perfis formados a frio leves de espessura inferior a 2 mm) entram em flambagem local prematura antes de atingir $\sigma_{cr}$, demandando o método das larguras efetivas (AISC Section E7 / NBR 14762).
+                    </p>
+                </div>
+                <div>
+                    <strong class="text-white block text-fluid-body">2. Ausência de Flambagem por Flexotorção:</strong>
+                    <p class="text-sm mt-0.5">
+                        A verificação direta por $r_{\text{min}}$ rege seções duplamente simétricas (tubos circulares/retangulares e perfis I/H). Cantoneiras simples ou seções assimétricas sofrem torção acoplada e demandam equações da Section E4.
+                    </p>
+                </div>
+                <div>
+                    <strong class="text-white block text-fluid-body">3. Carga Axial Pura e Centrada:</strong>
+                    <p class="text-sm mt-0.5">
+                        Não se considera excentricidade de apoio de vigas. Havendo momento fletor concorrente, deve-se aplicar as equações de interação do Capítulo H do AISC 360.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (3,1): LAB VIRTUAL — DIMENSIONAMENTO DE COLUNA METÁLICA SOB COMPRESSÃO ASD (BRANCH Y=1) -->
+<div id="slide-3-1" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks3.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO INTERATIVO (BRANCH Y=1)</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Simulador de Compressão: AISC 360 ASD (Perfis Padronizados)</h2>
+        </div>
+        <button onclick="moveInGrid(0, -1)" class="px-5 py-2.5 bg-white/80 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span>Retornar à Teoria (3,0)</span>
+        </button>
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch w-full">
+
+            <!-- Painel Esquerdo: Sliders e Parâmetros Geométricos/Mecânicos da Barra -->
+            <div class="lg:col-span-5 p-5 sm:p-7 rounded-3xl card-glass space-y-3 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between border-b border-black/10 pb-2">
+                        <div class="flex items-center space-x-2.5 text-[#901812]">
+                            <i class="fa-solid fa-sliders text-2xl"></i>
+                            <h3 class="text-fluid-h3 text-[#333333] font-bold">Parâmetros da Coluna</h3>
+                        </div>
+                        <span class="text-fluid-tag text-[#901812] font-bold uppercase">AISC Chapter E</span>
+                    </div>
+                    <p class="text-fluid-meta text-[#444444]">
+                        Defina a carga axial de serviço, comprimento livre, vinculação e selecione o perfil comercial padronizado:
+                    </p>
+
+                    <!-- Sliders de Entrada -->
+                    <div class="space-y-2 pt-1">
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Força Axial de Serviço ($N$):</span>
+                                <span id="lbl-carga-3-1" class="text-[#901812] font-mono">250 kN</span>
+                            </label>
+                            <input type="range" id="input-carga-3-1" min="50" max="800" step="25" value="250" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularColunaAISC_3_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Comprimento Livre da Barra ($L$):</span>
+                                <span id="lbl-comp-3-1" class="text-[#901812] font-mono">3,20 m</span>
+                            </label>
+                            <input type="range" id="input-comp-3-1" min="1.5" max="6.0" step="0.1" value="3.2" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularColunaAISC_3_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Condição de Vinculação ($K$):</span>
+                                <span id="lbl-k-3-1" class="text-[#901812] font-mono">K = 1,0 (Biarticulada)</span>
+                            </label>
+                            <input type="range" id="input-k-3-1" min="1" max="4" step="1" value="2" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularColunaAISC_3_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Perfil Comercial Padronizado:</span>
+                                <span id="lbl-perfil-nome-3-1" class="text-[#901812] font-mono text-sm">HSS 101,6 × 101,6 × 6,4</span>
+                            </label>
+                            <input type="range" id="input-perfil-idx-3-1" min="0" max="5" step="1" value="2" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularColunaAISC_3_1()">
+                        </div>
+
+                        <div class="space-y-0.5">
+                            <label class="text-fluid-tag font-bold flex justify-between text-[#444444]">
+                                <span>Aço Estrutural ($\sigma_y$):</span>
+                                <span id="lbl-fy-3-1" class="text-[#901812] font-mono">345 MPa (ASTM A500 / A572)</span>
+                            </label>
+                            <input type="range" id="input-fy-3-1" min="1" max="2" step="1" value="2" class="w-full accent-[#901812] h-3.5 cursor-pointer" oninput="calcularColunaAISC_3_1()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2.5 bg-white/70 rounded-xl border border-black/5 text-fluid-tag text-[#555555] flex justify-between items-center">
+                    <span>Índice de Esbeltez Resultante ($\lambda = K L / r_{\text{min}}$):</span>
+                    <strong id="lbl-lambda-3-1" class="text-[#901812] font-mono text-fluid-body">82,9</strong>
+                </div>
+            </div>
+
+            <!-- Painel Direito: Resultados de Verificação e Diagnóstico AISC 360 ASD -->
+            <div class="lg:col-span-7 p-5 sm:p-7 rounded-3xl card-glass-dark text-white space-y-3.5 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                        <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">VERIFICAÇÃO DE ESTABILIDADE (AISC 360 ASD)</span>
+                        <span id="res-regime-badge-3-1" class="text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white">INELÁSTICO (Eq. E3-2)</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2.5 text-center">
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Tensão Atuante ($\sigma$)</span>
+                            <span id="res-sigma-atuante-3-1" class="text-fluid-h3 text-white font-mono font-bold">109,2 MPa</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Tensão Admissível ($\sigma_{\text{adm},c}$)</span>
+                            <span id="res-sigma-adm-3-1" class="text-fluid-h3 text-[#D1A705] font-mono font-bold">132,1 MPa</span>
+                        </div>
+                        <div class="bg-white/10 p-2.5 rounded-2xl backdrop-blur-md border border-white/10">
+                            <span class="text-fluid-tag text-[#DEDEDE] block">Taxa de Trabalho ($\eta$)</span>
+                            <span id="res-taxa-3-1" class="text-fluid-h3 text-white font-mono font-bold">82,7%</span>
+                        </div>
+                    </div>
+
+                    <!-- Diagnóstico Gráfico com Barra de Eficiência -->
+                    <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10 space-y-2">
+                        <div class="flex justify-between items-center text-fluid-tag font-bold">
+                            <span class="text-white">Uso da Capacidade Admissível ($N / P_{\text{adm}}$):</span>
+                            <span id="lbl-taxa-status-3-1" class="text-green-400">SEÇÃO SEGURA E EFICIENTE</span>
+                        </div>
+                        <div class="w-full bg-white/20 h-4 rounded-full overflow-hidden p-0.5">
+                            <div id="bar-taxa-3-1" class="bg-green-500 h-full rounded-full transition-all duration-300" style="width: 82.7%;"></div>
+                        </div>
+                        <div class="flex justify-between text-fluid-meta text-[#DEDEDE]">
+                            <span>0% (Subutilizado)</span>
+                            <span>100% (Capacidade Plena)</span>
+                            <span>>100% (Sobrecarga/Flambagem)</span>
+                        </div>
+                    </div>
+
+                    <!-- Parâmetros da Seção Adotada e Equações do AISC 360 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-fluid-tag">
+                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5">Dados da Seção Comercial:</strong>
+                            <span id="res-prop-perfil-3-1" class="text-[#DEDEDE] block">Área $A_g = 22{,}9\text{ cm}^2$ | $r_{\text{min}} = 38{,}6\text{ mm}$</span>
+                            <span id="res-peso-perfil-3-1" class="text-[#A0A0A0] text-fluid-meta block">Massa Linear: 18,0 kg/m (Seção Compacta)</span>
+                        </div>
+                        <div class="p-2.5 bg-white/5 rounded-xl border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5">Capacidade Admissível ($P_{\text{adm}}$):</strong>
+                            <span id="res-padm-3-1" class="text-[#DEDEDE] block">$P_{\text{adm}} = \sigma_{\text{adm},c} \cdot A_g = 302{,}5\text{ kN}$</span>
+                            <span id="res-params-fe-3-1" class="text-[#A0A0A0] text-fluid-meta block">$\sigma_e = 287{,}5\text{ MPa} \mid \sigma_y/\sigma_e = 1{,}20 \le 2{,}25$</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-2 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] flex items-center space-x-2">
+                    <i id="icon-status-global-3-1" class="fa-solid fa-circle-check text-[#D1A705]"></i>
+                    <span id="res-status-global-3-1">Critério AISC 360 ASD atendido com margem de segurança $\text{FS}_c = 1{,}67$.</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-1 pt-1.5 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-microscope text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (3,1) • Lab Virtual AISC 360 ASD (Compressão)</span>
+    </footer>
+
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (3,1) -->
+    <script>
+        function calcularColunaAISC_3_1() {
+            const N_kN = parseFloat(document.getElementById('input-carga-3-1').value);
+            const N_N = N_kN * 1000;
+            const L_m = parseFloat(document.getElementById('input-comp-3-1').value);
+            const L_mm = L_m * 1000;
+            const kIdx = parseInt(document.getElementById('input-k-3-1').value);
+            const perfilIdx = parseInt(document.getElementById('input-perfil-idx-3-1').value);
+            const fyOpt = parseInt(document.getElementById('input-fy-3-1').value);
+
+            const Fy = fyOpt === 1 ? 250 : 345;
+            const fyLabel = fyOpt === 1 ? "250 MPa (ASTM A36)" : "345 MPa (ASTM A500 / A572)";
+
+            const kValues = [0.5, 0.7, 1.0, 2.0];
+            const kLabels = ["K = 0,5 (Biengastada)", "K = 0,7 (Engastada-Apoiada)", "K = 1,0 (Biarticulada)", "K = 2,0 (Em Balanço)"];
+            const K = kValues[kIdx - 1];
+
+            // Perfis comerciais padronizados compactos / não-esbeltas (Tubos HSS e Perfis W leves)
+            const catalogoPerfis = [
+                { nome: "Tubo HSS 76,2 × 76,2 × 4,8", Ag_cm2: 13.0, rmin_mm: 28.7, massa: 10.2, tipo: "Tubo Quadrado HSS" },
+                { nome: "Tubo HSS 88,9 × 88,9 × 4,8", Ag_cm2: 15.4, rmin_mm: 34.0, massa: 12.1, tipo: "Tubo Quadrado HSS" },
+                { nome: "Tubo HSS 101,6 × 101,6 × 6,4", Ag_cm2: 22.9, rmin_mm: 38.6, massa: 18.0, tipo: "Tubo Quadrado HSS" },
+                { nome: "Tubo Circular HSS Ø 114,3 × 6,0", Ag_cm2: 20.4, rmin_mm: 38.3, massa: 16.0, tipo: "Tubo Redondo HSS" },
+                { nome: "Perfil W 150 × 18,0 (Eixo Fraco y)", Ag_cm2: 23.4, rmin_mm: 22.1, massa: 18.0, tipo: "Perfil I/W Laminado" },
+                { nome: "Perfil W 200 × 26,6 (Eixo Fraco y)", Ag_cm2: 34.4, rmin_mm: 33.3, massa: 26.6, tipo: "Perfil I/W Laminado" }
+            ];
+
+            const perfil = catalogoPerfis[perfilIdx];
+            const Ag_mm2 = perfil.Ag_cm2 * 100;
+            const rmin_mm = perfil.rmin_mm;
+
+            document.getElementById('lbl-carga-3-1').innerText = `${N_kN.toFixed(0)} kN`;
+            document.getElementById('lbl-comp-3-1').innerText = `${L_m.toFixed(2)} m`;
+            document.getElementById('lbl-k-3-1').innerText = kLabels[kIdx - 1];
+            document.getElementById('lbl-perfil-nome-3-1').innerText = perfil.nome;
+            document.getElementById('lbl-fy-3-1').innerText = fyLabel;
+
+            // 1. Comprimento efetivo e índice de esbeltez global
+            const Lc_mm = K * L_mm;
+            const lambda = Lc_mm / rmin_mm;
+            document.getElementById('lbl-lambda-3-1').innerText = lambda.toFixed(1);
+
+            // 2. Tensão Crítica Elástica de Euler (AISC Eq. E3-4) com E = 200.000 MPa
+            const E = 200000;
+            const Fe = (Math.PI * Math.PI * E) / (lambda * lambda);
+
+            // 3. Critério de Transição AISC 360-22 (Fy / Fe <= 2,25 ou lambda <= 4,71*sqrt(E/Fy))
+            const limite_lambda = 4.71 * Math.sqrt(E / Fy);
+            const razao_tensao = Fy / Fe;
+            const Omega_c = 1.67;
+
+            let Fcr = 0;
+            const badgeEl = document.getElementById('res-regime-badge-3-1');
+
+            if (lambda <= limite_lambda) {
+                // Regime inelástico (AISC Eq. E3-2)
+                Fcr = Math.pow(0.658, razao_tensao) * Fy;
+                badgeEl.innerText = "INELÁSTICO (Eq. E3-2)";
+                badgeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#901812] text-white";
+            } else {
+                // Regime elástico (AISC Eq. E3-3)
+                Fcr = 0.877 * Fe;
+                badgeEl.innerText = "ELÁSTICO (Eq. E3-3)";
+                badgeEl.className = "text-fluid-tag font-bold uppercase px-3 py-1 rounded-full bg-[#D1A705] text-[#333333]";
+            }
+
+            // Tensão admissível ASD e capacidade nominal de serviço
+            const σ_adm = Fcr / Omega_c;
+            const Padm_kN = (σ_adm * Ag_mm2) / 1000;
+
+            const sigma_atuante = N_N / Ag_mm2;
+            const taxa = (sigma_atuante / σ_adm) * 100;
+
+            document.getElementById('res-sigma-atuante-3-1').innerText = `${sigma_atuante.toFixed(1)} MPa`;
+            document.getElementById('res-sigma-adm-3-1').innerText = `${σ_adm.toFixed(1)} MPa`;
+            document.getElementById('res-taxa-3-1').innerText = `${taxa.toFixed(1)}%`;
+
+            document.getElementById('res-prop-perfil-3-1').innerText = 
+                `Área Ag = ${perfil.Ag_cm2.toFixed(1)} cm² | r_min = ${perfil.rmin_mm.toFixed(1)} mm`;
+            document.getElementById('res-peso-perfil-3-1').innerText = 
+                `Massa: ${perfil.massa.toFixed(1)} kg/m (${perfil.tipo})`;
+
+            document.getElementById('res-padm-3-1').innerText = 
+                `P_adm = ${Padm_kN.toFixed(1)} kN (com FS = 1,67)`;
+            document.getElementById('res-params-fe-3-1').innerText = 
+                `Fe = ${Fe.toFixed(1)} MPa | Fy/Fe = ${razao_tensao.toFixed(2)} | Fcr = ${Fcr.toFixed(1)} MPa`;
+
+            // Atualização da Barra de Taxa e Diagnóstico
+            const barEl = document.getElementById('bar-taxa-3-1');
+            const statusEl = document.getElementById('lbl-taxa-status-3-1');
+            const globalEl = document.getElementById('res-status-global-3-1');
+            const iconGlobal = document.getElementById('icon-status-global-3-1');
+
+            const clampedWidth = Math.min(taxa, 100);
+            barEl.style.width = `${clampedWidth.toFixed(1)}%`;
+
+            if (lambda > 200) {
+                barEl.className = "bg-purple-600 h-full rounded-full transition-all duration-300";
+                statusEl.innerText = "VIOLAÇÃO NORMATIVA (λ > 200)";
+                statusEl.className = "text-purple-400";
+                globalEl.innerText = `A esbeltez λ = ${lambda.toFixed(1)} excede o limite máximo recomendado pelo AISC Section E2 (λ ≤ 200). Reduza o vão livre ou adote perfil com maior r_min.`;
+                iconGlobal.className = "fa-solid fa-triangle-exclamation text-purple-400";
+            } else if (taxa > 100) {
+                barEl.className = "bg-red-600 h-full rounded-full transition-all duration-300";
+                statusEl.innerText = "SOBRECARGA / FLAMBAGEM (η > 100%)";
+                statusEl.className = "text-red-400";
+                globalEl.innerText = `Tensão atuante (${sigma_atuante.toFixed(1)} MPa) excede o limite admissível (${σ_adm.toFixed(1)} MPa). Risco iminente de instabilidade da coluna.`;
+                iconGlobal.className = "fa-solid fa-circle-xmark text-red-400";
+            } else if (taxa >= 70) {
+                barEl.className = "bg-green-500 h-full rounded-full transition-all duration-300";
+                statusEl.innerText = "SEÇÃO SEGURA E EFICIENTE";
+                statusEl.className = "text-green-400";
+                globalEl.innerText = `Critério AISC 360 ASD plenamente atendido: excelente aproveitamento estrutural (${taxa.toFixed(1)}% de P_adm) com FS = 1,67.`;
+                iconGlobal.className = "fa-solid fa-circle-check text-green-400";
+            } else {
+                barEl.className = "bg-yellow-500 h-full rounded-full transition-all duration-300";
+                statusEl.innerText = "SUPERDIMENSIONADO (η < 70%)";
+                statusEl.className = "text-yellow-400";
+                globalEl.innerText = `Seção segura, porém com reserva excessiva de capacidade (${taxa.toFixed(1)}%). Pode-se selecionar um perfil mais leve para economia de projeto.`;
+                iconGlobal.className = "fa-solid fa-circle-exclamation text-yellow-400";
+            }
+        }
+
+        if (document.getElementById('input-carga-3-1')) {
+            calcularColunaAISC_3_1();
+        }
+    </script>
+</div>
+
+
+
+
+
+<!-- SLIDE (4,0): ROTEIRO PRÁTICO DE DIMENSIONAMENTO DE PERFIS COMERCIAIS (MÉTODO ASD) -->
+<div id="slide-4-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 04 — PRÁTICA PROJETUAL EM ARQUITETURA</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Roteiro de Seleção de Perfis Comerciais (AISC 360 ASD)</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: O Procedimento Passo a Passo de Projeto -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-list-check text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Roteiro Sequencial Direto</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Procedimento analítico objetivo para pré-dimensionamento e especificação em projeto executivo com base no AISC 360 ASD:
+                    </p>
+
+                    <!-- Etapas Estruturadas do Algoritmo -->
+                    <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold">
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-[#901812] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</span>
+                            <div>
+                                <strong class="text-[#333333] block">Esforços Nominais e Vinculação ($N, K, L$):</strong>
+                                Levantar a carga axial em serviço e o comprimento destravado. Identificar o plano de menor rigidez ($K_x L_x$ vs $K_y L_y$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-[#901812] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">2</span>
+                            <div>
+                                <strong class="text-[#333333] block">Filtro Regulamentar de Esbeltez ($\lambda \le 200$):</strong>
+                                Fixar o raio de giração mínimo do catálogo: $r_{\text{min}} \ge K L / 200$. Elimina seções flexíveis antes do cálculo de tensões.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-[#901812] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</span>
+                            <div>
+                                <strong class="text-[#333333] block">Estimativa de Área e Pré-Seleção de Perfil:</strong>
+                                Arbitrar $\sigma_{\text{adm},c} \approx 0{,}40 \, \sigma_y$ para colunas usuais ($\lambda \approx 80\text{--}100$) e selecionar perfil com $A_g \ge N / \sigma_{\text{adm},c}$.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <span class="w-7 h-7 rounded-full bg-[#901812] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">4</span>
+                            <div>
+                                <strong class="text-[#333333] block">Verificação Exata AISC Chapter E:</strong>
+                                Calcular $\lambda_{\text{real}} = K L / r_{\text{min}}$, obter $\sigma_{cr}$ (Eq. E3-2 ou E3-3) e validar $\sigma = N / A_g \le \sigma_{cr} / 1{,}67$.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-arrows-rotate text-[#901812] mr-2"></i>Se $\sigma > \sigma_{\text{adm},c}$, adota-se o próximo perfil de maior raio de giração.</span>
+                    <button onclick="document.getElementById('modal-roteiro-fluxo-4-0').showModal()" class="px-4 py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#901812] font-bold rounded-xl shadow-sm transition-colors text-fluid-tag border border-[#901812]/20 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        <span>Fluxograma ASD</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Critérios de Escolha de Tipologia em Arquitetura -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">APLICAÇÃO DE PRODUTO EM PROJETO</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Qual Seção Adotar no Edifício?</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        A geometria da seção governa a volumetria, a linguagem tectônica e a facilidade de fixação no detalhe arquitetônico:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-circle-notch mr-1.5"></i>Tubos Circulares / Quadrados (HSS):</strong>
+                            Ideais para pilares isolados em átrios e passarelas. Eficiência máxima contra flambagem em todas as direções ($r_x = r_y$) e menor área exposta à pintura de proteção.
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-grip-lines-vertical mr-1.5"></i>Perfis W / H Compactos Laminados:</strong>
+                            Ideais para estruturas embutidas em paredes de vedação ou quando há vigas chegando em direções ortogonais, simplificando nós parafusados.
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                            <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-circle-dot mr-1.5"></i>Barras Redondas e Barras Chatas:</strong>
+                            Exclusivas para tirantes de contraventamento de fachadas, coberturas suspensas e marquises esbeltas.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Síntese Conceitual Tração vs. Compressão (Slide 5,0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-building-columns text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (4,0) • Roteiro Prático de Dimensionamento</span>
+    </footer>
+
+    <!-- MODAL AUTOCONTIDO: FLUXOGRAMA COMPARATIVO TRAÇÃO vs COMPRESSÃO -->
+    <dialog id="modal-roteiro-fluxo-4-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">DIAGRAMA DECISÓRIO DE PROJETO</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Tração Direta vs. Compressão Guiada</h3>
+            </div>
+            <button onclick="document.getElementById('modal-roteiro-fluxo-4-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>O contraste conceitual entre o cálculo direto de tirantes e o dimensionamento estabilizado de pilares:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-fluid-meta">
+                <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+                    <strong class="text-white block text-fluid-body mb-1">Caminho da Tração (Direto):</strong>
+                    <div class="font-mono text-center text-[#D1A705] py-2 text-sm bg-white/5 rounded-lg mb-2">
+                        $$N \longrightarrow A_{\text{req}} = \frac{N}{0{,}60 \, \sigma_y} \longrightarrow \text{Catálogo}$$
+                    </div>
+                    <span class="text-xs text-[#DEDEDE] block">Basta escolher seção que forneça $A_g \ge A_{\text{req}}$ e conferir a esbeltez de transporte $L/r \le 300$.</span>
+                </div>
+                <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+                    <strong class="text-white block text-fluid-body mb-1">Caminho da Compressão (Guiado):</strong>
+                    <div class="font-mono text-center text-[#D1A705] py-2 text-sm bg-white/5 rounded-lg mb-2">
+                        $$r_{\text{min}} \ge \frac{KL}{200} \longrightarrow A_{\text{est}} \longrightarrow \sigma_{\text{adm},c}(\lambda) \longrightarrow \text{Ok?}$$
+                    </div>
+                    <span class="text-xs text-[#DEDEDE] block">O filtro por $r_{\text{min}}$ reduz a escolha no catálogo comercial a perfis estáveis, evitando iterações redundantes de cálculo.</span>
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (5,0): SÍNTESE CONCEITUAL — TRAÇÃO VS. COMPRESSÃO EM ARQUITETURA -->
+<div id="slide-5-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-nature1.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO 05 — SÍNTESE DE CONCEPÇÃO ESTRUTURAL</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Tração vs. Compressão: Eficiência e Forma Arquitetônica</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Matriz Comparativa Direta -->
+            <div class="lg:col-span-8 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-code-compare text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Matriz Comparativa de Desempenho (ASD)</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        A natureza do esforço axial impõe restrições físicas distintas sobre a seção transversal e orienta a concepção tectônica do edifício:
+                    </p>
+
+                    <!-- Tabela Estruturada Responsiva -->
+                    <div class="overflow-x-auto overflow-y-hidden rounded-2xl border border-black/10 bg-white/80 backdrop-blur-md shadow-sm">
+                        <table class="w-full text-left border-collapse text-fluid-tag">
+                            <thead>
+                                <tr class="bg-[#901812] text-white">
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Parâmetro de Projeto</th>
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Tração Axial (Tirantes)</th>
+                                    <th class="p-3 sm:p-3.5 font-bold uppercase">Compressão Axial (Pilares)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-black/10 text-[#333333]">
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Mecanismo Crítico</td>
+                                    <td class="p-3">Escoamento plástico elástico ($\sigma_y / 1{,}67$)</td>
+                                    <td class="p-3">Instabilidade por flambagem global ($\sigma_{cr} / 1{,}67$)</td>
+                                </tr>
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Propriedade Geométrica</td>
+                                    <td class="p-3 font-mono font-bold">Área Bruta da Seção ($A_g$)</td>
+                                    <td class="p-3 font-mono font-bold">Raio de Giração Mínimo ($r_{\text{min}}$)</td>
+                                </tr>
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Influência do Vão ($L$)</td>
+                                    <td class="p-3">Nula na capacidade (apenas rigidez $L/r \le 300$)</td>
+                                    <td class="p-3 font-bold text-[#901812]">Crítica: $\sigma_e \propto 1/L^2$ (redução quadrática)</td>
+                                </tr>
+                                <tr class="hover:bg-white/60 transition-colors">
+                                    <td class="p-3 font-bold text-[#901812]">Geometrias Comerciais</td>
+                                    <td class="p-3">Barras redondas maciças e barras chatas</td>
+                                    <td class="p-3">Tubos HSS circulares/quadrados e Perfis W</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-fluid-meta text-[#555555] border-t border-black/10 pt-3">
+                    <span class="flex items-center"><i class="fa-solid fa-lightbulb text-[#901812] mr-2"></i>Diretriz Arquitetônica: Priorizar tirantes para atingir máxima transparência e esbeltez visual.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Impacto na Linguagem Arquitetônica e Modais -->
+            <div class="lg:col-span-4 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705]">
+                <div class="space-y-4">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">LINGUAGEM TECTÔNICA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">A Forma Segue o Tipo de Ação</h3>
+                    <p class="text-fluid-body text-[#DEDEDE]">
+                        O comportamento mecânico define as proporções visuais e a materialidade de cada componente estrutural:
+                    </p>
+
+                    <div class="space-y-3 text-fluid-meta text-[#DEDEDE]">
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-sintese-eficiencia-5-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-weight-hanging mr-1.5"></i>Eficiência de Massa:</strong>
+                                Compreenda por que um tirante consome substancialmente menos aço que um pilar de mesma capacidade.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Ver</span>
+                        </div>
+
+                        <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 flex items-start justify-between cursor-pointer hover:border-[#D1A705] transition-all" onclick="document.getElementById('modal-sintese-travamentos-5-0').showModal()">
+                            <div>
+                                <strong class="text-[#D1A705] block mb-0.5"><i class="fa-solid fa-network-wired mr-1.5"></i>Travamentos no Eixo Fraco:</strong>
+                                Como apoios intermediários aumentam a carga crítica sem alterar o perfil laminado.
+                            </div>
+                            <span class="text-fluid-tag text-[#D1A705] font-bold ml-2 self-center whitespace-nowrap"><i class="fa-solid fa-circle-plus"></i> Ver</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white/5 rounded-xl border border-white/10 text-fluid-meta text-[#DEDEDE] text-center">
+                    <i class="fa-solid fa-arrow-right text-[#D1A705] mr-2"></i>Avançar: Quiz Formativo & Referências (Slide 6,0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-layer-group text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <span class="text-fluid-tag text-[#901812] font-bold">Slide (5,0) • Síntese Tração vs. Compressão</span>
+    </footer>
+
+    <!-- MODAL 1: EFICIÊNCIA DE MASSA RELATIVA -->
+    <dialog id="modal-sintese-eficiencia-5-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">EFICIÊNCIA DE CONSUMO DE AÇO</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Consumo de Aço: Tração vs. Compressão</h3>
+            </div>
+            <button onclick="document.getElementById('modal-sintese-eficiencia-5-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Considere uma carga axial de serviço $N = 250\text{ kN}$ em aço ASTM A36 ($\sigma_y = 250\text{ MPa}$):</p>
+            
+            <div class="space-y-3 text-fluid-meta">
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#D1A705]">
+                    <strong class="text-white block text-fluid-body mb-0.5">Se o elemento trabalha à Tração:</strong>
+                    $\sigma_{\text{adm},t} = 250 / 1{,}67 = 149{,}7\text{ MPa}$.<br>
+                    Área necessária: $A_{\text{req}} = 250.000 / 149{,}7 = 1.670\text{ mm}^2$ ($16{,}7\text{ cm}^2$).<br>
+                    Equivale a uma barra redonda comercial Ø 1 7/8" (massa linear $\approx 13{,}8\text{ kg/m}$).
+                </div>
+                <div class="p-3.5 bg-white/10 rounded-2xl border-l-4 border-[#901812]">
+                    <strong class="text-white block text-fluid-body mb-0.5">Se o elemento trabalha à Compressão ($L = 3{,}5\text{ m}$, $K = 1{,}0$):</strong>
+                    Devido à esbeltez flexional, a tensão admissível reduz para $\sigma_{\text{adm},c} \approx 95\text{ a } 110\text{ MPa}$.<br>
+                    Área requerida: $A_g \ge 250.000 / 105 \approx 2.380\text{ mm}^2$ ($23{,}8\text{ cm}^2$).<br>
+                    Demanda um tubo HSS 101,6 × 101,6 × 6,4 ou perfil laminado equivalente com massa linear $\approx 18{,}0\text{ a } 22{,}0\text{ kg/m}$, exigindo mais material para evitar a instabilidade.
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 2: A IMPORTÂNCIA DOS TRAVAMENTOS -->
+    <dialog id="modal-sintese-travamentos-5-0" class="backdrop:bg-black/60 rounded-3xl p-6 sm:p-10 card-glass-dark text-white max-w-2xl w-full shadow-2xl border border-white/15">
+        <div class="flex justify-between items-start border-b border-white/20 pb-4 mb-4">
+            <div>
+                <span class="text-fluid-tag text-[#D1A705] font-bold block uppercase">ESTRATÉGIAS DE CONCEPÇÃO</span>
+                <h3 class="text-fluid-h2 text-white font-bold">Travamentos no Eixo Fraco ($y$)</h3>
+            </div>
+            <button onclick="document.getElementById('modal-sintese-travamentos-5-0').close()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-[#901812] text-white flex items-center justify-center text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="space-y-4 text-fluid-body text-[#DEDEDE]">
+            <p>Em colunas formadas por perfis I ou W laminados, a rigidez no eixo $y$ é expressivamente inferior à do eixo $x$ ($I_x \gg I_y$):</p>
+            
+            <div class="p-4 bg-white/10 rounded-2xl border-l-4 border-[#D1A705] space-y-2 text-fluid-meta">
+                <strong class="text-white block text-fluid-body">O Efeito do Apoio Intermediário ($L_y = L / 2$):</strong>
+                <p>
+                    A inclusão de uma viga de fechamento ou tirante estabilizador impedindo o deslocamento lateral no plano fraco reduz pela metade o vão de flambagem em $y$ ($L_{fl,y} = L / 2$).
+                </p>
+                <div class="bg-white/85 text-[#333333] p-3 rounded-xl text-center overflow-x-auto overflow-y-hidden my-2 border border-black/5" style="font-size: clamp(1.1rem, 1.8vw, 1.5rem);">
+                    $$\sigma_{e,y} = \frac{\pi^2 E}{(K L_y / r_y)^2} = \frac{\pi^2 E}{\left(\frac{L/2}{r_y}\right)^2} = 4 \cdot \sigma_{e,y,\text{sem travamento}}$$
+                </div>
+                <p class="text-sm text-[#DEDEDE]">
+                    A capacidade elástica no eixo fraco quadruplica, viabilizando o uso de perfis esbeltos em fachadas sem acréscimo de peso estrutural.
+                </p>
+            </div>
+        </div>
+    </dialog>
+</div>
+
+
+
+
+
+<!-- SLIDE (6,0): AVALIAÇÃO FORMATIVA — QUIZ CONCEITUAL & REFERÊNCIAS NORMATIVAS -->
+<div id="slide-6-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks4.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">MÓDULO DE ENCERRAMENTO CONCEITUAL</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Avaliação Formativa & Referências Normativas</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Referências Técnicas & Síntese ASD -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-book-bookmark text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Bases Normativas & Bibliografia</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Fundamentos prescritivos e literatura adotada para o dimensionamento elástico e verificação de barras axiais no AISC 360 ASD:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold">
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-stamp text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">ANSI/AISC 360-22</strong>
+                                <em>Specification for Structural Steel Buildings</em> — Chapter D (Tension Members, $\text{FS}_t = 1{,}67$) e Chapter E (Compression Members, $\text{FS}_c = 1{,}67$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-table-list text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">AISC Table B4.1a</strong>
+                                <em>Limiting Width-to-Thickness Ratios for Compression Elements</em> — Critérios de não-esbeltez local para tubos HSS e perfis laminados compactos.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-graduation-cap text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Beer, F. P., Johnston, E. R., et al.</strong>
+                                <em>Mecânica dos Materiais</em> (7ª ed.). McGraw-Hill — Conceito de tensão de serviço, fator de segurança global e estabilidade elástica de Euler.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-compass-drafting text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Ching, F. D. K., Onouye, B. S., & Zuberbuhler, D.</strong>
+                                <em>Sistemas Estruturais Ilustrados</em>. Bookman — Tectônica dos sistemas aporticados, tirantes em fachadas e pilares tubulares.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-check text-[#901812]"></i>
+                    <span>Diretriz Pedagógica: O método ASD garante clareza analítica direta entre a área/raio de giração e a segurança estrutural.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Card de Avaliação, QR Code Operacional & Acesso Direto -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705] text-center">
+                <div class="space-y-3">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">VERIFICAÇÃO CONCEITUAL SÍNCRONA</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Quiz Formativo — Aula 170</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">
+                        Avaliação individual dos fundamentos de tensões admissíveis (AISC 360 ASD), tirantes diretos, estabilidade de colunas e critérios de não-esbeltez local.
+                    </p>
+
+                    <!-- QR Code Oficial Operacional -->
+                    <div class="bg-white/95 backdrop-blur-md p-4 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl border border-white/20">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfhAPJV9LnVIAoYVnMm4svbJ5USIbGkXnm9XIoLf5oOsSO_4g%2Fviewform%3Fusp%3Dheader&color=901812" alt="QR Code Quiz Aula 170" class="w-full h-auto block rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Aponte a Câmera</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-1">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfhAPJV9LnVIAoYVnMm4svbJ5USIbGkXnm9XIoLf5oOsSO_4g/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 min-h-[52px]">
+                        <i class="fa-solid fa-pen-to-square text-[#D1A705] text-xl"></i>
+                        <span>Abrir Formulário do Quiz</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                    </a>
+                    <span class="text-fluid-tag text-[#DEDEDE] block">5 questões conceituais • Feedback normativo pós-submissão</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-graduation-cap text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <button onclick="moveInGrid(1, 0)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1.5">
+            <span>Ir para Lista de Exercícios [Slide 7,0]</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </footer>
+</div>
+
+
+
+
+
+<!-- SLIDE (7,0): LISTA DE EXERCÍCIOS OFF-CLASS (ATIVIDADE QUANTITATIVA ASD) -->
+<div id="slide-7-0" class="slide-screen slide-hidden-right flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-blocks4.png') center right / cover fixed no-repeat;">
+    <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
+    <header class="w-full flex justify-between items-center flex-shrink-0 mb-2">
+        <div>
+            <span class="text-fluid-tag text-[#901812] font-bold uppercase tracking-wider">ATIVIDADE PRÁTICA EXTRACLASSE</span>
+            <h2 class="text-fluid-h2 text-[#901812]">Lista de Exercícios Off-Class: Dimensionamento ASD</h2>
+        </div>
+        <img src="pms.png" alt="PMS Logo" class="h-10 sm:h-12 w-auto" onerror="this.src='https://raw.githubusercontent.com/jmfcarvalho/civ153/main/assets/pms_logo/pms.png'">
+    </header>
+
+    <!-- Camada 2: Núcleo Centralizado Verticalmente -->
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch w-full">
+            <!-- Coluna 1: Estrutura Analítica e Diretrizes de Cálculo -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl card-glass space-y-4 flex flex-col justify-between border-l-[12px] border-[#901812]">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-3 text-[#901812]">
+                        <i class="fa-solid fa-calculator text-3xl"></i>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Diretrizes & Escopo Quantitativo</h3>
+                    </div>
+                    <p class="text-fluid-body text-[#444444]">
+                        Conjunto de 10 problemas práticos de cálculo estrutural focados no dimensionamento simplificado e na seleção direta de perfis comerciais pelo AISC 360 ASD:
+                    </p>
+
+                    <div class="space-y-2.5 text-fluid-meta text-[#444444] font-semibold">
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-arrows-left-right text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Tirantes em Barras Redondas e Chatas:</strong>
+                                Aplicação da área necessária direta $A_{\text{req}} = N / (0{,}60 \, \sigma_y)$ com premissa de conexão direta sem <em>shear lag</em> ($U = 1{,}0$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-ruler-combined text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Controle Regulamentar de Esbeltez:</strong>
+                                Verificação de limites de serviço para tirantes rígidos ($L/r \le 300$) e limite máximo absoluto para colunas ($K L / r \le 200$).
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-arrows-to-dot text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Colunas em Seções Não-Esbeltas:</strong>
+                                Determinação da tensão crítica $\sigma_{cr}$ (Eq. E3-2 e E3-3) e cálculo da tensão admissível $\sigma_{\text{adm},c} = \sigma_{cr} / 1{,}67$.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white/80 rounded-2xl border border-black/5 flex items-start space-x-3">
+                            <i class="fa-solid fa-table-columns text-[#901812] mt-1 text-base"></i>
+                            <div>
+                                <strong class="text-[#333333] block">Catálogo Comercial & Travamento no Eixo Fraco:</strong>
+                                Seleção de tubos HSS e perfis W com equalização de rigidez por travamento intermediário na meia altura ($L_y = L / 2$).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-fluid-meta text-[#555555] border-t border-black/10 pt-3 flex items-center space-x-2">
+                    <i class="fa-solid fa-clock text-[#901812]"></i>
+                    <span>Estimativa de resolução: 60 a 80 minutos • Questões quantitativas com dados de catálogos comerciais padronizados.</span>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Card de Submissão, QR Code Operacional & Acesso Direto -->
+            <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl card-glass-dark text-white space-y-4 flex flex-col justify-between border-l-[12px] border-[#D1A705] text-center">
+                <div class="space-y-3">
+                    <span class="text-fluid-tag text-[#D1A705] block font-bold uppercase tracking-wider">SUBMISSÃO DE RESPOSTAS</span>
+                    <h3 class="text-fluid-h3 text-white font-bold">Formulário de Exercícios Off-Class</h3>
+                    <p class="text-fluid-meta text-[#DEDEDE]">
+                        Envie suas respostas pelo formulário oficial e receba imediatamente o demonstrativo analítico detalhado com a memória de cálculo.
+                    </p>
+
+                    <!-- QR Code Oficial Operacional -->
+                    <div class="bg-white/95 backdrop-blur-md p-4 rounded-2xl max-w-[210px] sm:max-w-[240px] mx-auto shadow-xl border border-white/20">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfABqZOhCeOyUb2lVxgb8ZC8o84IIjC74zIIhFI2vaIeP_3Qg%2Fviewform%3Fusp%3Dheader&color=901812" alt="QR Code Lista de Exercicios Aula 170" class="w-full h-auto block rounded-lg">
+                        <span class="text-fluid-tag text-[#333333] font-bold mt-2 block">Aponte a Câmera</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-1">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfABqZOhCeOyUb2lVxgb8ZC8o84IIjC74zIIhFI2vaIeP_3Qg/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-6 bg-[#901812] text-white font-bold rounded-2xl hover:bg-[#D1A705] hover:text-[#333333] transition-all text-fluid-body shadow-md inline-flex items-center justify-center space-x-3 min-h-[52px]">
+                        <i class="fa-solid fa-list-check text-[#D1A705] text-xl"></i>
+                        <span>Abrir Formulário da Lista</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm ml-1"></i>
+                    </a>
+                    <span class="text-fluid-tag text-[#DEDEDE] block">10 questões quantitativas • Resolução completa pós-submissão</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camada 3: Rodapé Técnico -->
+    <footer class="w-full flex justify-between items-center flex-shrink-0 mt-2 pt-2 border-t border-black/10">
+        <span class="text-fluid-meta text-[#555555] font-semibold">
+            <i class="fa-solid fa-graduation-cap text-[#901812] mr-2"></i>CIV 153: Aula 170 — DEC / UFV
+        </span>
+        <button onclick="moveInGrid(-1, 0)" class="text-fluid-tag text-[#901812] hover:text-[#D1A705] font-bold flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Retornar ao Quiz [Slide 6,0]</span>
+        </button>
+    </footer>
+</div>
+
+
+
+    
+
+    </main>
+
+    <!-- MOTOR DE NAVEGAÇÃO MATRICIAL 2D -->
+    <script>
+        let currentX = 0, currentY = 0;
+        let slideGrid = {};
+
+        function updateSlideGrid() {
+            slideGrid = {};
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                const parts = slide.id.replace('slide-', '').split('-');
+                if (parts.length === 2) slideGrid[`${parts[0]},${parts[1]}`] = slide.id;
+            });
+        }
+
+        function hasSlide(x, y) { return !!slideGrid[`${x},${y}`]; }
+
+        function updateUI() {
+            updateSlideGrid();
+            const keysH = Object.keys(slideGrid).filter(k => k.endsWith(',0'));
+            const maxH = Math.max(...keysH.map(k => parseInt(k.split(',')[0])), 0);
+            const totalMainSlides = keysH.length;
+            
+            document.getElementById('progressBar').style.width = `${maxH === 0 ? 100 : (currentX / maxH) * 100}%`;
+            document.getElementById('slideIndicator').innerText = `Slide (${currentX},${currentY}) | ${currentX + 1} of ${totalMainSlides}`;
+
+            const dirs = { 'up': [0,-1], 'down': [0,1], 'left': [-1,0], 'right': [1,0] };
+            for (let d in dirs) {
+                const btn = document.getElementById(`btn-nav-${d}`);
+                if (btn) btn.classList.toggle('nav-enabled', hasSlide(currentX + dirs[d][0], currentY + dirs[d][1]));
+            }
+        }
+
+        function moveInGrid(dx, dy) {
+            updateSlideGrid();
+            const nx = currentX + dx, ny = currentY + dy;
+            if (hasSlide(nx, ny)) {
+                const cur = document.getElementById(slideGrid[`${currentX},${currentY}`]);
+                const nxt = document.getElementById(slideGrid[`${nx},${ny}`]);
+                
+                cur.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+                nxt.classList.remove('slide-active', 'slide-hidden-left', 'slide-hidden-right', 'slide-hidden-up', 'slide-hidden-down');
+
+                if (dx > 0) cur.classList.add('slide-hidden-left');
+                else if (dx < 0) cur.classList.add('slide-hidden-right');
+                else if (dy > 0) cur.classList.add('slide-hidden-down');
+                else if (dy < 0) cur.classList.add('slide-hidden-up');
+
+                nxt.classList.add('slide-active');
+
+                currentX = nx; currentY = ny;
+                updateUI();
+                if (window.renderMathInElement) renderMathInElement(nxt);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['INPUT','TEXTAREA','DIALOG'].includes(document.activeElement.tagName)) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') moveInGrid(1, 0);
+            else if (e.key === 'ArrowLeft') moveInGrid(-1, 0);
+            else if (e.key === 'ArrowUp') moveInGrid(0, -1);
+            else if (e.key === 'ArrowDown') moveInGrid(0, 1);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            updateUI(); 
+        });
+    </script>
+</body>
+</html>
