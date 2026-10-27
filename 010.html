@@ -1163,13 +1163,16 @@
     </script>
 </div>
 
-<!-- SLIDE (5,2): LABORATÓRIO VIRTUAL - SIMULADOR FUNICULAR COM PAN E ZOOM (BRANCH Y=2) -->
-<div id="slide-5-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-6 sm:p-8 md:p-10 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay2.png') center right / cover fixed no-repeat;">
+
+
+
+<!-- SLIDE (5,2): LABORATÓRIO VIRTUAL - TIRANTE COM ESFERAS E ESPAÇAMENTO UNIFORME (BRANCH Y=2) -->
+<div id="slide-5-2" class="slide-screen slide-hidden-down flex flex-col justify-between p-4 sm:p-6 md:p-8 h-screen overflow-hidden" style="background: linear-gradient(90deg, var(--bg-shade-left) 25%, var(--bg-shade-mid) 60%, var(--bg-shade-right) 100%), url('bg-clay2.png') center right / cover fixed no-repeat;">
     <!-- Camada 1: Cabeçalho Estático Sempre Visível -->
     <header class="w-full flex justify-between items-center mb-2 flex-shrink-0">
         <div>
-            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO VIRTUAL (RAMIFICAÇÃO Y=2)</span>
-            <h2 class="text-fluid-h2 text-[#901812] font-black">Simulador Funicular e Polígono de Cargas Concentradas</h2>
+            <span class="text-fluid-tag text-[#D1A705] font-bold uppercase tracking-wider">LABORATÓRIO MECÂNICO ANALÍTICO (BRANCH Y=2)</span>
+            <h2 class="text-fluid-h2 text-[#901812] font-black">Tirante Flexível Suspenso ($L_0 = 5\text{ m}$, Vão $S = 4\text{ m}$)</h2>
         </div>
         <button onclick="moveInGrid(0, -2)" class="px-5 py-2.5 bg-white/85 backdrop-blur-md text-[#901812] font-bold rounded-2xl shadow-sm hover:bg-[#901812] hover:text-white transition-colors text-fluid-tag border border-[#901812]/20 min-h-[48px] flex items-center space-x-2 cursor-pointer">
             <i class="fa-solid fa-arrow-up"></i>
@@ -1178,91 +1181,138 @@
     </header>
 
     <!-- Camada 2: Núcleo Centralizado Verticalmente -->
-    <div class="w-full flex-1 flex items-center justify-center my-auto py-2">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
-            <!-- Coluna de Controles Paramétricos e Sliders de Carga -->
-            <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl card-glass space-y-3.5 border-l-[14px] border-[#901812]">
+    <div class="w-full flex-1 flex items-center justify-center my-auto py-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch w-full max-h-[82vh]">
+            
+            <!-- Coluna de Controles Paramétricos (1 a 10 Cargas: 1 a 10 kg) -->
+            <div class="lg:col-span-5 p-4 sm:p-5 rounded-3xl card-glass flex flex-col justify-between border-l-[14px] border-[#901812] overflow-hidden space-y-3">
                 <div class="flex justify-between items-center border-b border-black/10 pb-2">
                     <div>
-                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Nós de Carga Concentrada</h3>
-                        <span class="text-fluid-tag text-[#901812] font-bold uppercase font-mono">Polígono de Forças</span>
+                        <h3 class="text-fluid-h3 text-[#333333] font-bold">Cargas Concentradas Penduradas</h3>
+                        <span class="text-fluid-tag text-[#901812] font-bold uppercase font-mono" id="lbl-status-nos-5-2">3 Cargas (1 a 10)</span>
                     </div>
-                    <button onclick="inverterModoFunicular_5_2()" id="btn-toggle-invert-5-2" class="px-3.5 py-2 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+                    <button onclick="inverterModoFunicular_5_2()" id="btn-toggle-invert-5-2" class="px-3 py-1.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-arrows-up-down"></i>
                         <span>Inverter (Arco)</span>
                     </button>
                 </div>
 
-                <div class="flex gap-2">
-                    <button onclick="adicionarNoCarga_5_2()" class="flex-1 py-2.5 bg-white/80 hover:bg-[#901812] hover:text-white text-[#333333] text-fluid-tag font-bold rounded-xl transition-all shadow-sm border border-black/10 cursor-pointer flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-plus text-xs"></i> Adicionar Nó
+                <!-- Botões de Gestão e Distribuição Geométrica -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="adicionarNoCarga_5_2()" id="btn-add-no-5-2" class="py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#333333] text-fluid-tag font-bold rounded-xl transition-all shadow-sm border border-black/10 cursor-pointer flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-plus text-xs"></i> Adicionar
                     </button>
-                    <button onclick="removerNoCarga_5_2()" class="flex-1 py-2.5 bg-white/80 hover:bg-[#901812] hover:text-white text-[#333333] text-fluid-tag font-bold rounded-xl transition-all shadow-sm border border-black/10 cursor-pointer flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-minus text-xs"></i> Remover Nó
+                    <button onclick="removerNoCarga_5_2()" id="btn-rem-no-5-2" class="py-2 bg-white/80 hover:bg-[#901812] hover:text-white text-[#333333] text-fluid-tag font-bold rounded-xl transition-all shadow-sm border border-black/10 cursor-pointer flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-minus text-xs"></i> Remover
+                    </button>
+                    <button onclick="espacarIgualmente_5_2()" class="py-2 bg-[#D1A705]/20 hover:bg-[#D1A705] hover:text-[#333333] text-[#333333] text-fluid-tag font-bold rounded-xl transition-all shadow-sm border border-[#D1A705]/40 cursor-pointer flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-arrows-split-up-and-left text-xs"></i> Espaçar
                     </button>
                 </div>
 
-                <!-- Lista de Sliders Injetados Dinamicamente -->
-                <div id="sliders-cont-funicular-5-2" class="space-y-2 max-h-[160px] overflow-y-auto pr-1"></div>
+                <!-- Painel com Propriedades Reais do Tirante -->
+                <div class="bg-white/70 p-2.5 rounded-2xl border border-black/5 text-fluid-meta space-y-1">
+                    <div class="flex justify-between">
+                        <span class="text-[#555555]">Cabo de Aço:</span>
+                        <strong class="font-mono text-[#333333]">$\varnothing 3{,}2\text{ mm}$ ($EA \approx 720\text{ kN}$)</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[#555555]">Geometria não esticada:</span>
+                        <strong class="font-mono text-[#333333]">$L_0 = 5{,}00\text{ m}$ | Vão $S = 4{,}00\text{ m}$</strong>
+                    </div>
+                </div>
 
-                <!-- Painel Numérico Informativo -->
-                <div class="bg-[#333333] text-white p-3.5 rounded-2xl space-y-1.5 text-fluid-meta border border-[#D1A705]/40 shadow-inner">
+                <!-- Sliders Individuais com Rolagem -->
+                <div id="sliders-cont-funicular-5-2" class="space-y-2 overflow-y-auto max-h-[175px] pr-1"></div>
+
+                <!-- Painel com Métricas Mecânicas -->
+                <div class="bg-[#2D3748] text-white p-3 rounded-2xl space-y-1.5 text-fluid-meta border border-[#D1A705]/40 shadow-inner">
                     <div class="flex justify-between items-center">
                         <span class="text-[#DEDEDE]">Estado Estrutural:</span>
-                        <strong id="painel-funicular-estado-5-2" class="text-[#D1A705] font-bold uppercase">Tração Pura (Cabo Funicular)</strong>
+                        <strong id="painel-funicular-estado-5-2" class="text-[#D1A705] font-bold uppercase">Tirante Flexível (Tração Pura)</strong>
                     </div>
-                    <div class="flex justify-between items-center border-t border-white/10 pt-1">
-                        <span class="text-[#DEDEDE]">Carga Total Gravitacional:</span>
-                        <strong id="painel-funicular-ptotal-5-2" class="text-white font-mono">350.0 N</strong>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[#DEDEDE]">Flecha Máxima ($f_{\text{max}}$):</span>
-                        <strong id="painel-funicular-flecha-5-2" class="text-green-400 font-mono">112.5 px</strong>
+                    <div class="grid grid-cols-2 gap-2 border-t border-white/10 pt-1 text-[0.95em]">
+                        <div>Massa Total: <strong id="painel-funicular-ptotal-5-2" class="text-white font-mono">0 kg</strong></div>
+                        <div>Flecha Máx. ($f_{\text{max}}$): <strong id="painel-funicular-flecha-5-2" class="text-green-400 font-mono">0 m</strong></div>
+                        <div>Empuxo Horiz. ($H$): <strong id="painel-funicular-h-5-2" class="text-amber-300 font-mono">0 N</strong></div>
+                        <div>Tração Máx. ($T_{\text{max}}$): <strong id="painel-funicular-tmax-5-2" class="text-red-400 font-mono">0 N</strong></div>
+                        <div class="col-span-2 border-t border-white/5 pt-0.5 text-xs text-[#CBD5E1]">
+                            Reações Verticais: $V_A = $ <span id="painel-funicular-va-5-2" class="font-mono">0 N</span> | $V_B = $ <span id="painel-funicular-vb-5-2" class="font-mono">0 N</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="text-fluid-meta text-[#666666] font-semibold flex items-center space-x-2 pt-1">
-                    <i class="fa-solid fa-computer-mouse text-[#901812]"></i>
-                    <span>Roda do mouse: <strong>Zoom</strong> | Arrastar: <strong>Pan</strong> | Duplo clique: <strong>Reset</strong>.</span>
+                <div class="text-fluid-meta text-[#666666] font-semibold flex items-center justify-between pt-0.5">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-computer-mouse text-[#901812]"></i> Pan & Zoom ativos</span>
+                    <button onclick="resetarPanZoom_5_2()" class="text-xs text-[#901812] underline cursor-pointer">Resetar Visão</button>
                 </div>
             </div>
 
-            <!-- Coluna do Canvas SVG Interativo com Fundo Técnico e Suporte Pan/Zoom -->
-            <div class="lg:col-span-7 bg-white rounded-3xl p-5 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden h-[380px] sm:h-[420px] flex items-center justify-center">
-                <svg id="svg-canvas-funicular-5-2" width="100%" height="100%" viewBox="-50 -100 700 400" class="w-full h-full select-none cursor-grab">
+            <!-- Coluna de Renderização Vetorial SVG Autocontida -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-4 shadow-2xl border-2 border-[#DEDEDE] relative overflow-hidden flex flex-col justify-between h-[420px] sm:h-[460px] lg:h-full">
+                <svg id="svg-canvas-funicular-5-2" width="100%" height="100%" viewBox="-30 -40 560 380" class="w-full h-full select-none cursor-grab">
                     <defs>
-                        <pattern id="grid-dots-funicular" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <pattern id="grid-dots-funicular-5-2" width="20" height="20" patternUnits="userSpaceOnUse">
                             <circle cx="2" cy="2" r="1" fill="#E2E8F0" />
                         </pattern>
-                        <marker id="arrow-gold-fun" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#D1A705" />
-                        </marker>
-                        <marker id="arrow-red-fun" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#901812" />
-                        </marker>
+
+                        <!-- Gradientes Esféricos com Brilho Tridimensional -->
+                        <radialGradient id="sphere-grad-red-5-2" cx="35%" cy="30%" r="65%">
+                            <stop offset="0%" stop-color="#FF6B6B" />
+                            <stop offset="25%" stop-color="#DC2626" />
+                            <stop offset="70%" stop-color="#901812" />
+                            <stop offset="100%" stop-color="#450A0A" />
+                        </radialGradient>
+                        <radialGradient id="sphere-grad-gold-5-2" cx="35%" cy="30%" r="65%">
+                            <stop offset="0%" stop-color="#FEF08A" />
+                            <stop offset="30%" stop-color="#EAB308" />
+                            <stop offset="75%" stop-color="#D1A705" />
+                            <stop offset="100%" stop-color="#713F12" />
+                        </radialGradient>
+                        <filter id="sphere-shadow-5-2" x="-20%" y="-20%" width="150%" height="150%">
+                            <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.35" />
+                        </filter>
                     </defs>
 
                     <!-- Fundo Técnico Pontilhado -->
-                    <rect x="-50" y="-100" width="700" height="400" fill="url(#grid-dots-funicular)" />
+                    <rect x="-30" y="-40" width="560" height="380" fill="url(#grid-dots-funicular-5-2)" />
 
-                    <!-- Geometria Funicular Dinâmica Gerada por Script -->
-                    <g id="din-funicular-group"></g>
+                    <!-- Geometria Dinâmica Gerada por Algoritmo de Cabo Real -->
+                    <g id="din-funicular-group-5-2"></g>
                 </svg>
+
+                <div class="absolute bottom-2 left-4 bg-white/85 backdrop-blur-md px-3 py-1 rounded-xl text-xs text-[#555555] border border-black/5 font-mono">
+                    Esferas com diâmetro volumétrico proporcional à massa ($D \propto \sqrt[3]{m}$)
+                </div>
             </div>
+
         </div>
     </div>
 
     <!-- Camada 3: Rodapé Técnico -->
-    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-2 flex-shrink-0">
-        <span class="font-bold">CIV 153: Laboratório Virtual 02 — Modelagem Vetorial e Interativa de Polígonos Funiculares</span>
-        <span class="font-semibold">Pressione <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&uarr;</kbd> para Retornar (Slide 5,1) | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&rarr;</kbd> para Plano de Ensino (Slide 6,0)</span>
+    <footer class="w-full flex justify-between items-center text-fluid-tag text-[#777777] border-t border-black/10 pt-1.5 flex-shrink-0">
+        <span class="font-bold">CIV 153: Modelagem Não Linear de Cabos e Tirantes Flexíveis Suspensos</span>
+        <span class="font-semibold">Navegação: <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&uarr;</kbd> Retornar | <kbd class="px-2 py-0.5 bg-black/10 rounded font-mono text-black">&rarr;</kbd> Próximo</span>
     </footer>
 
-    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (5,2) COM PAN E ZOOM -->
+    <!-- SCRIPT LOCAL AUTOCONTIDO DO SLIDE (5,2) -->
     <script>
         (function() {
             let modoArcoInvertido = false;
-            let pesosAtivos = [100, 150, 100]; // Intensidades em Newtons
+            const g_grav = 9.80665;
+            const spanReal = 4.0;
+            const L0_real = 5.0;
+            const EA = 720000;
+
+            const xA_svg = 50, xB_svg = 450;
+            const scaleSvg = (xB_svg - xA_svg) / spanReal;
+            const yApoios_svg = 60;
+
+            let cargas = [
+                { x: 1.0, m: 2.0 },
+                { x: 2.0, m: 8.0 },
+                { x: 3.2, m: 4.5 }
+            ];
 
             window.inverterModoFunicular_5_2 = function() {
                 modoArcoInvertido = !modoArcoInvertido;
@@ -1271,139 +1321,294 @@
 
                 if (btn) {
                     btn.innerHTML = modoArcoInvertido 
-                        ? `<i class="fa-solid fa-arrows-up-down"></i> <span>Inverter (Cabo)</span>`
+                        ? `<i class="fa-solid fa-arrows-up-down"></i> <span>Inverter (Tirante)</span>`
                         : `<i class="fa-solid fa-arrows-up-down"></i> <span>Inverter (Arco)</span>`;
                     btn.className = modoArcoInvertido
-                        ? "px-3.5 py-2 bg-[#D1A705] hover:bg-[#901812] text-[#333333] hover:text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
-                        : "px-3.5 py-2 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer";
+                        ? "px-3 py-1.5 bg-[#D1A705] hover:bg-[#901812] text-[#333333] hover:text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                        : "px-3 py-1.5 bg-[#901812] hover:bg-[#D1A705] hover:text-[#333333] text-white rounded-xl text-fluid-tag font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer";
                 }
 
                 if (painelEstado) {
                     painelEstado.innerText = modoArcoInvertido 
-                        ? "Compressão Pura (Arco Rígido)" 
-                        : "Tração Pura (Cabo Funicular)";
+                        ? "Arco Rígido Invertido (Compressão)" 
+                        : "Tirante Flexível (Tração Pura)";
                 }
 
-                atualizarSimulacaoFunicular_5_2();
+                calcularEAtualizarFunicular_5_2();
             };
 
             window.adicionarNoCarga_5_2 = function() {
-                if (pesosAtivos.length >= 6) return;
-                pesosAtivos.push(100);
+                if (cargas.length >= 10) return;
+                let coordsX = [0, ...cargas.map(c => c.x), spanReal].sort((a,b) => a - b);
+                let maxDist = 0, newX = 2.0;
+                for (let i = 0; i < coordsX.length - 1; i++) {
+                    let d = coordsX[i+1] - coordsX[i];
+                    if (d > maxDist) {
+                        maxDist = d;
+                        newX = coordsX[i] + d / 2;
+                    }
+                }
+                cargas.push({ x: parseFloat(newX.toFixed(2)), m: 5.0 });
+                ordenarCargas_5_2();
                 renderizarSlidersUI_5_2();
-                atualizarSimulacaoFunicular_5_2();
+                calcularEAtualizarFunicular_5_2();
             };
 
             window.removerNoCarga_5_2 = function() {
-                if (pesosAtivos.length <= 1) return;
-                pesosAtivos.pop();
+                if (cargas.length <= 1) return;
+                cargas.pop();
                 renderizarSlidersUI_5_2();
-                atualizarSimulacaoFunicular_5_2();
+                calcularEAtualizarFunicular_5_2();
             };
 
-            window.atualizarPesoNo_5_2 = function(idx, val) {
-                pesosAtivos[idx] = parseFloat(val);
-                const lbl = document.getElementById(`lbl-peso-val-${idx}`);
-                if (lbl) lbl.innerText = `${val} N`;
-                atualizarSimulacaoFunicular_5_2();
+            window.espacarIgualmente_5_2 = function() {
+                const n = cargas.length;
+                if (n === 0) return;
+                const step = spanReal / (n + 1);
+                for (let i = 0; i < n; i++) {
+                    cargas[i].x = parseFloat(((i + 1) * step).toFixed(2));
+                }
+                renderizarSlidersUI_5_2();
+                calcularEAtualizarFunicular_5_2();
+            };
+
+            function ordenarCargas_5_2() {
+                cargas.sort((a, b) => a.x - b.x);
+            }
+
+            window.atualizarParametroCarga_5_2 = function(idx, tipo, val) {
+                if (!cargas[idx]) return;
+                if (tipo === 'm') {
+                    cargas[idx].m = parseFloat(val);
+                    const lbl = document.getElementById(`lbl-m-val-${idx}`);
+                    if (lbl) lbl.innerText = `${cargas[idx].m.toFixed(1)} kg (${(cargas[idx].m * g_grav).toFixed(0)} N)`;
+                } else if (tipo === 'x') {
+                    cargas[idx].x = parseFloat(val);
+                    const lbl = document.getElementById(`lbl-x-val-${idx}`);
+                    if (lbl) lbl.innerText = `${cargas[idx].x.toFixed(2)} m`;
+                }
+                calcularEAtualizarFunicular_5_2();
             };
 
             function renderizarSlidersUI_5_2() {
                 const cont = document.getElementById('sliders-cont-funicular-5-2');
+                const lblStatus = document.getElementById('lbl-status-nos-5-2');
+                const btnAdd = document.getElementById('btn-add-no-5-2');
+                const btnRem = document.getElementById('btn-rem-no-5-2');
+
+                if (lblStatus) lblStatus.innerText = `${cargas.length} Cargas (1 a 10)`;
+                if (btnAdd) btnAdd.disabled = cargas.length >= 10;
+                if (btnRem) btnRem.disabled = cargas.length <= 1;
+
                 if (!cont) return;
 
-                cont.innerHTML = pesosAtivos.map((val, idx) => `
-                    <div class="bg-white/80 p-2 rounded-xl border border-black/5 shadow-sm space-y-1">
-                        <div class="flex justify-between text-fluid-meta font-bold">
-                            <span class="text-[#333333]">Força $P_{${idx+1}}$:</span>
-                            <span id="lbl-peso-val-${idx}" class="text-[#901812] font-mono font-bold">${val} N</span>
+                cont.innerHTML = cargas.map((c, idx) => `
+                    <div class="bg-white/80 p-2 rounded-2xl border border-black/5 shadow-sm space-y-1">
+                        <div class="flex justify-between items-center text-fluid-meta font-bold">
+                            <span class="text-[#901812]">Carga $P_{${idx+1}}$:</span>
+                            <span id="lbl-m-val-${idx}" class="text-[#901812] font-mono">${c.m.toFixed(1)} kg (${(c.m * g_grav).toFixed(0)} N)</span>
                         </div>
-                        <input type="range" min="30" max="250" step="5" value="${val}" class="w-full accent-[#901812] h-2.5 cursor-pointer" oninput="atualizarPesoNo_5_2(${idx}, this.value)">
+                        <input type="range" min="1.0" max="10.0" step="0.5" value="${c.m}" class="w-full accent-[#901812] h-2 cursor-pointer" oninput="atualizarParametroCarga_5_2(${idx}, 'm', this.value)">
+                        
+                        <div class="flex justify-between items-center text-fluid-tag text-[#555555]">
+                            <span>Posição $x_{${idx+1}}$:</span>
+                            <span id="lbl-x-val-${idx}" class="font-mono text-[#333333] font-bold">${c.x.toFixed(2)} m</span>
+                        </div>
+                        <input type="range" min="0.20" max="3.80" step="0.05" value="${c.x}" class="w-full accent-[#D1A705] h-1.5 cursor-pointer" oninput="atualizarParametroCarga_5_2(${idx}, 'x', this.value)">
                     </div>
                 `).join('');
+
+                if (window.renderMathInElement) {
+                    renderMathInElement(cont, {
+                        delimiters: [{left: '$', right: '$', display: false}],
+                        throwOnError: false
+                    });
+                }
             }
 
-            window.atualizarSimulacaoFunicular_5_2 = function() {
-                const g = document.getElementById('din-funicular-group');
-                const painelTotal = document.getElementById('painel-funicular-ptotal-5-2');
-                const painelFlecha = document.getElementById('painel-funicular-flecha-5-2');
+            function resolverEmpuxoRealH(cargasOrdenadas) {
+                const n = cargasOrdenadas.length;
+                let sumP = 0, sumM_A = 0;
+                for (let c of cargasOrdenadas) {
+                    const P = c.m * g_grav;
+                    sumP += P;
+                    sumM_A += P * c.x;
+                }
+                const VB_iso = sumM_A / spanReal;
+                const VA_iso = sumP - VB_iso;
+
+                function calcComprimentoTotal(H_cand) {
+                    let prevX = 0, prevY = 0;
+                    let compTotal = 0;
+                    let currentShear = VA_iso;
+
+                    for (let i = 0; i < n; i++) {
+                        const curX = cargasOrdenadas[i].x;
+                        const P_i = cargasOrdenadas[i].m * g_grav;
+                        
+                        let M0 = VA_iso * curX;
+                        for (let j = 0; j < i; j++) {
+                            M0 -= (cargasOrdenadas[j].m * g_grav) * (curX - cargasOrdenadas[j].x);
+                        }
+                        const curY = M0 / H_cand;
+                        const dx = curX - prevX;
+                        const dy = curY - prevY;
+                        const ds_geom = Math.sqrt(dx * dx + dy * dy);
+                        const T_seg = Math.sqrt(H_cand * H_cand + currentShear * currentShear);
+                        const ds_el = ds_geom * (1 + T_seg / EA);
+
+                        compTotal += ds_el;
+                        prevX = curX;
+                        prevY = curY;
+                        currentShear -= P_i;
+                    }
+
+                    const dx = spanReal - prevX;
+                    const dy = 0 - prevY;
+                    const ds_geom = Math.sqrt(dx * dx + dy * dy);
+                    const T_seg = Math.sqrt(H_cand * H_cand + currentShear * currentShear);
+                    compTotal += ds_geom * (1 + T_seg / EA);
+
+                    return compTotal;
+                }
+
+                let hLow = 1.0, hHigh = 10000.0;
+                for (let iter = 0; iter < 45; iter++) {
+                    const hMid = (hLow + hHigh) / 2;
+                    const lenMid = calcComprimentoTotal(hMid);
+                    if (lenMid > L0_real) {
+                        hLow = hMid;
+                    } else {
+                        hHigh = hMid;
+                    }
+                }
+
+                return { H: (hLow + hHigh) / 2, VA: VA_iso, VB: VB_iso, sumP: sumP };
+            }
+
+            window.calcularEAtualizarFunicular_5_2 = function() {
+                ordenarCargas_5_2();
+                const g = document.getElementById('din-funicular-group-5-2');
                 if (!g) return;
 
-                const n = pesosAtivos.length;
-                const startX = 40, endX = 560;
-                const spanX = endX - startX;
-                const stepX = spanX / (n + 1);
-                const baseY = modoArcoInvertido ? 240 : 40;
+                const sol = resolverEmpuxoRealH(cargas);
+                const H = sol.H;
+                const VA = sol.VA;
+                const VB = sol.VB;
+                const sumP = sol.sumP;
+                const totalMassa = cargas.reduce((acc, c) => acc + c.m, 0);
 
-                const cargaTotal = pesosAtivos.reduce((a, b) => a + b, 0);
-                if (painelTotal) painelTotal.innerText = `${cargaTotal.toFixed(1)} N`;
+                let pts = [{ x: 0, y: 0, x_svg: xA_svg, y_svg: yApoios_svg }];
+                let maxDeflexReal = 0;
+                let maxTension = 0;
+                let currentShear = VA;
 
-                const coords = [{ x: startX, y: baseY }];
-                let maxDeflex = 0;
+                for (let i = 0; i < cargas.length; i++) {
+                    const xi = cargas[i].x;
+                    let M0 = VA * xi;
+                    for (let j = 0; j < i; j++) {
+                        M0 -= (cargas[j].m * g_grav) * (xi - cargas[j].x);
+                    }
+                    const yi = M0 / H;
+                    if (yi > maxDeflexReal) maxDeflexReal = yi;
 
-                for (let i = 0; i < n; i++) {
-                    const cx = startX + stepX * (i + 1);
-                    const p = pesosAtivos[i];
-                    const deflex = p * 0.75;
-                    if (deflex > maxDeflex) maxDeflex = deflex;
-                    const cy = modoArcoInvertido ? (baseY - deflex) : (baseY + deflex);
-                    coords.push({ x: cx, y: cy });
+                    const T_seg = Math.sqrt(H * H + currentShear * currentShear);
+                    if (T_seg > maxTension) maxTension = T_seg;
+                    currentShear -= (cargas[i].m * g_grav);
+
+                    const x_svg = xA_svg + xi * scaleSvg;
+                    const y_svg = modoArcoInvertido 
+                        ? (yApoios_svg - yi * scaleSvg) 
+                        : (yApoios_svg + yi * scaleSvg);
+
+                    pts.push({ x: xi, y: yi, x_svg: x_svg, y_svg: y_svg, m: cargas[i].m, p: cargas[i].m * g_grav });
                 }
-                coords.push({ x: endX, y: baseY });
 
-                if (painelFlecha) painelFlecha.innerText = `${maxDeflex.toFixed(1)} px`;
+                const T_final = Math.sqrt(H * H + currentShear * currentShear);
+                if (T_final > maxTension) maxTension = T_final;
 
-                let d = `M ${coords[0].x},${coords[0].y}`;
-                for (let i = 1; i < coords.length; i++) {
-                    d += ` L ${coords[i].x},${coords[i].y}`;
+                pts.push({ x: spanReal, y: 0, x_svg: xB_svg, y_svg: yApoios_svg });
+
+                const elPtotal = document.getElementById('painel-funicular-ptotal-5-2');
+                const elFlecha = document.getElementById('painel-funicular-flecha-5-2');
+                const elH = document.getElementById('painel-funicular-h-5-2');
+                const elVA = document.getElementById('painel-funicular-va-5-2');
+                const elVB = document.getElementById('painel-funicular-vb-5-2');
+                const elTmax = document.getElementById('painel-funicular-tmax-5-2');
+
+                if (elPtotal) elPtotal.innerText = `${totalMassa.toFixed(1)} kg (${sumP.toFixed(0)} N)`;
+                if (elFlecha) elFlecha.innerText = `${maxDeflexReal.toFixed(3)} m`;
+                if (elH) elH.innerText = `${H.toFixed(1)} N`;
+                if (elVA) elVA.innerText = `${VA.toFixed(1)} N`;
+                if (elVB) elVB.innerText = `${VB.toFixed(1)} N`;
+                if (elTmax) elTmax.innerText = `${maxTension.toFixed(1)} N`;
+
+                let dPath = `M ${pts[0].x_svg},${pts[0].y_svg}`;
+                for (let i = 1; i < pts.length; i++) {
+                    dPath += ` L ${pts[i].x_svg},${pts[i].y_svg}`;
                 }
 
-                let nodesSVG = '';
-                for (let i = 1; i <= n; i++) {
-                    const pt = coords[i];
-                    const offset = modoArcoInvertido ? -28 : 28;
-                    const r = 5.5 + (pesosAtivos[i-1] * 0.03);
-                    const pVal = pesosAtivos[i-1];
+                let svgNodes = '';
+                for (let i = 1; i < pts.length - 1; i++) {
+                    const pt = pts[i];
+                    
+                    // Raio volumétrico tridimensional proporcional a m^(1/3)
+                    const rSphere = 6.0 + Math.cbrt(pt.m) * 5.0;
+                    const ySphereCenter = modoArcoInvertido ? (pt.y_svg - rSphere) : (pt.y_svg + rSphere);
 
-                    nodesSVG += `
-                        <!-- Linha de Carga Concentrada -->
-                        <line x1="${pt.x}" y1="${pt.y}" x2="${pt.x}" y2="${pt.y + offset}" stroke="#64748B" stroke-width="2" stroke-dasharray="2 2"/>
-                        <!-- Vetor / Esfera de Peso -->
-                        <circle cx="${pt.x}" cy="${pt.y + offset}" r="${r}" fill="${modoArcoInvertido ? '#D1A705' : '#901812'}" stroke="#FFFFFF" stroke-width="1.5"/>
-                        <!-- Nó de Interseção Funicular -->
-                        <circle cx="${pt.x}" cy="${pt.y}" r="4" fill="#333333" stroke="#FFFFFF" stroke-width="1.2"/>
-                        <!-- Rótulo do Valor da Carga -->
-                        <text x="${pt.x}" y="${modoArcoInvertido ? (pt.y + offset - 10) : (pt.y + offset + 20)}" text-anchor="middle" fill="#333333" font-size="12" font-family="'PT Sans Narrow', sans-serif" font-weight="bold">${pVal}N</text>
+                    svgNodes += `
+                        <!-- Nó Físico de Suspensão do Cabo -->
+                        <circle cx="${pt.x_svg}" cy="${pt.y_svg}" r="3" fill="#1E293B" stroke="#FFFFFF" stroke-width="1"/>
+
+                        <!-- Esfera Maciça Tridimensional de Massa (Sem traço nem vetor) -->
+                        <circle cx="${pt.x_svg}" cy="${ySphereCenter}" r="${rSphere}" 
+                                fill="url(${modoArcoInvertido ? '#sphere-grad-gold-5-2' : '#sphere-grad-red-5-2'})" 
+                                filter="url(#sphere-shadow-5-2)"/>
+
+                        <!-- Rótulo Numérico da Massa -->
+                        <text x="${pt.x_svg}" y="${modoArcoInvertido ? (ySphereCenter - rSphere - 4) : (ySphereCenter + rSphere + 13)}" 
+                              text-anchor="middle" fill="#1E293B" font-size="11" font-family="'PT Sans Narrow', sans-serif" font-weight="bold">
+                              ${pt.m.toFixed(1)}kg
+                        </text>
                     `;
                 }
 
                 g.innerHTML = `
-                    <!-- Linha de Terra / Nível Base de Apoios -->
-                    <line x1="20" y1="${baseY}" x2="580" y2="${baseY}" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4 4"/>
+                    <!-- Linha Reta de Nível Inicial Entre Apoios -->
+                    <line x1="${xA_svg - 15}" y1="${yApoios_svg}" x2="${xB_svg + 15}" y2="${yApoios_svg}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <text x="${(xA_svg + xB_svg)/2}" y="${yApoios_svg - 10}" fill="#94A3B8" font-size="11" text-anchor="middle" font-family="'PT Sans Narrow', sans-serif">
+                        Vão horizontal $S = 4{,}00\text{ m}$ | Tirante $L_0 = 5{,}00\text{ m}$
+                    </text>
 
-                    <!-- Polígono Funicular de Tração ou Arco de Compressão -->
-                    <path d="${d}" fill="none" stroke="${modoArcoInvertido ? '#D1A705' : '#1E40AF'}" stroke-width="${modoArcoInvertido ? 6 : 4}" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Cabo Funicular Contínuo Deformado -->
+                    <path d="${dPath}" fill="none" 
+                          stroke="${modoArcoInvertido ? '#D1A705' : '#1E40AF'}" 
+                          stroke-width="${modoArcoInvertido ? 4.5 : 3.5}" 
+                          stroke-linecap="round" stroke-linejoin="round"/>
 
-                    <!-- Apoios Articulados Extremidades (Esquerda e Direita) -->
-                    <circle cx="${startX}" cy="${baseY}" r="7" fill="#333333" stroke="#FFFFFF" stroke-width="2"/>
-                    <circle cx="${endX}" cy="${baseY}" r="7" fill="#333333" stroke="#FFFFFF" stroke-width="2"/>
-                    <text x="${startX - 15}" y="${baseY + 5}" fill="#333333" font-size="14" font-family="'Montserrat', sans-serif" font-weight="bold">A</text>
-                    <text x="${endX + 10}" y="${baseY + 5}" fill="#333333" font-size="14" font-family="'Montserrat', sans-serif" font-weight="bold">B</text>
+                    <!-- Apoio Articulado Fixo Esquerdo (Apoio A) -->
+                    <polygon points="${xA_svg},${yApoios_svg} ${xA_svg-9},${yApoios_svg+15} ${xA_svg+9},${yApoios_svg+15}" fill="#64748B" />
+                    <line x1="${xA_svg-12}" y1="${yApoios_svg+15}" x2="${xA_svg+12}" y2="${yApoios_svg+15}" stroke="#333333" stroke-width="2"/>
+                    <circle cx="${xA_svg}" cy="${yApoios_svg}" r="4.5" fill="#901812" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <text x="${xA_svg-14}" y="${yApoios_svg-6}" fill="#901812" font-size="13" font-family="'Montserrat', sans-serif" font-weight="900">A</text>
 
-                    <!-- Elementos Dinâmicos de Carga e Nós -->
-                    ${nodesSVG}
+                    <!-- Apoio Articulado Fixo Direito (Apoio B) -->
+                    <polygon points="${xB_svg},${yApoios_svg} ${xB_svg-9},${yApoios_svg+15} ${xB_svg+9},${yApoios_svg+15}" fill="#64748B" />
+                    <line x1="${xB_svg-12}" y1="${yApoios_svg+15}" x2="${xB_svg+12}" y2="${yApoios_svg+15}" stroke="#333333" stroke-width="2"/>
+                    <circle cx="${xB_svg}" cy="${yApoios_svg}" r="4.5" fill="#901812" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <text x="${xB_svg+8}" y="${yApoios_svg-6}" fill="#901812" font-size="13" font-family="'Montserrat', sans-serif" font-weight="900">B</text>
+
+                    <!-- Esferas Maciças Suspensas -->
+                    ${svgNodes}
                 `;
             };
 
-            // MOTOR DE ZOOM E PAN BASEADO NO VIEWBOX
             function initSvgPointerZoom(svgId) {
                 const svg = document.getElementById(svgId);
                 if (!svg) return;
 
-                const baseW = 700;
-                const baseH = 400;
-                const baseMinX = -50;
-                const baseMinY = -100;
+                const baseW = 560, baseH = 380;
+                const baseMinX = -30, baseMinY = -40;
 
                 let vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
                 let isDragging = false;
@@ -1414,7 +1619,10 @@
                     svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
                 }
 
-                svg.style.cursor = 'grab';
+                window.resetarPanZoom_5_2 = function() {
+                    vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
+                    applyViewBox();
+                };
 
                 svg.addEventListener('wheel', function(e) {
                     e.preventDefault();
@@ -1433,7 +1641,7 @@
                     const newW = vb.w * zoomFactor;
                     const newH = vb.h * zoomFactor;
 
-                    if (newW > baseW * 4.0 || newW < baseW * 0.25) return;
+                    if (newW > baseW * 3.5 || newW < baseW * 0.3) return;
 
                     vb.x = pX - (mouseX / rect.width) * newW;
                     vb.y = pY - (mouseY / rect.height) * newH;
@@ -1474,21 +1682,20 @@
                 });
 
                 svg.addEventListener('dblclick', function() {
-                    vb = { x: baseMinX, y: baseMinY, w: baseW, h: baseH };
-                    applyViewBox();
+                    resetarPanZoom_5_2();
                 });
             }
 
-            function montarLabFunicular() {
+            function inicializarLab_5_2() {
                 renderizarSlidersUI_5_2();
-                atualizarSimulacaoFunicular_5_2();
+                calcularEAtualizarFunicular_5_2();
                 initSvgPointerZoom('svg-canvas-funicular-5-2');
             }
 
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', montarLabFunicular);
+                document.addEventListener('DOMContentLoaded', inicializarLab_5_2);
             } else {
-                montarLabFunicular();
+                inicializarLab_5_2();
             }
         })();
     </script>
